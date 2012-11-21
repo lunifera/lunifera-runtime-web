@@ -1,0 +1,275 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<prerequisites>
+		<maven>3.0</maven>
+	</prerequisites>
+
+	<groupId>org.lunifera.web</groupId>
+	<artifactId>org.lunifera.web</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Lunifera :: OSGi bundles for web : Parent POM</name>
+
+	<properties>
+		<next-release>0.0.2-SNAPSHOT</next-release>
+		<tycho-version>0.16.0-SNAPSHOT</tycho-version>
+
+		<eclipse-p2>http://download.eclipse.org/releases/juno</eclipse-p2>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<orbit-p2>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</orbit-p2>
+		<xtext-p2>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtext-p2>
+		<bpmn2-p2>https://hudson.eclipse.org/hudson/job/bpmn2-nightly/ws/org.eclipse.bpmn2.site/target/site/</bpmn2-p2>
+		<gemini-jpa-p2>https://hudson.eclipse.org/hudson/job/gemini-jpa/lastSuccessfulBuild/artifact/org.eclipse.gemini.jpa.updatesite/target/repository/</gemini-jpa-p2>
+		<m2e-buildhelper-p2>http://repository.tesla.io:8081/nexus/content/sites/m2e.extras/m2eclipse-buildhelper/0.15.0/N/0.15.0.201207090124/</m2e-buildhelper-p2>
+		<m2e-tycho-p2>http://repository.tesla.io:8081/nexus/content/sites/m2e.extras/m2eclipse-tycho/0.6.0/N/0.6.0.201207302152/</m2e-tycho-p2>
+	</properties>
+
+	<developers>
+		<developer>
+			<id>cvgaviao</id>
+			<name>Cristiano Gavião</name>
+			<email>cvgaviao@gmail.com</email>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>florianpirchner</id>
+			<name>Florian Pirchner</name>
+			<email>florian.pirchner@gmail.com</email>
+			<timezone>+2</timezone>
+		</developer>
+		<developer>
+			<id>haglo</id>
+			<name>Hans-George Glöckler</name>
+			<email>hans-georg.gloeckler@uni-ulm.de</email>
+			<timezone>+2</timezone>
+		</developer>
+        <developer>
+			<id>rhandsch</id>
+			<name>Robert Handschmann</name>
+			<email>robert.handschmann@gmail.com</email>
+			<timezone>+2</timezone>
+		</developer>
+	</developers>
+
+	<repositories>
+		<repository>
+			<id>BPMN2</id>
+			<url>${bpmn2-p2}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>gemini-jpa</id>
+			<url>${gemini-jpa-p2}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>m2e-buildhelper</id>
+			<url>${m2e-buildhelper-p2}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>m2e-tycho</id>
+			<url>${m2e-tycho-p2}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>Orbit</id>
+			<url>${orbit-p2}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>Xtext</id>
+			<url>${xtext-p2}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>Eclipse</id>
+			<url>${eclipse-p2}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>fornax</id>
+			<url>http://www.fornax-platform.org/m2/repository</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<!-- <pluginRepository> -->
+		<!-- <id>fornax-snapshots</id> -->
+		<!-- <url>http://www.fornax-platform.org/archiva/repository/snapshots/</url> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>true</enabled> -->
+		<!-- </snapshots> -->
+		<!-- </pluginRepository> -->
+		<pluginRepository>
+			<id>tycho-snapshots</id>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>xtend</id>
+			<url>http://build.eclipse.org/common/xtend/maven</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<!-- enable tycho build -->
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-maven-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<extensions>true</extensions>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-compiler-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<compilerVersion>1.6</compilerVersion>
+						<encoding>UTF-8</encoding>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>target-platform-configuration</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<resolver>p2</resolver>
+						<pomDependencies>consider</pomDependencies>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<includes>
+							<include>**/*Tests.java</include>
+						</includes>
+						<showEclipseLog>true</showEclipseLog>
+						<useUIHarness>false</useUIHarness>
+						<useUIThread>false</useUIThread>
+						<failIfNoTests>false</failIfNoTests>
+						<!-- <appArgLine>-Dfile.encoding=UTF-8</appArgLine> -->
+						<argLine>-Dfile.encoding=UTF-8</argLine>
+						<!-- Kill test JVM if tests take more than 10 minutes (600 seconds) 
+							to finish -->
+						<forkedProcessTimeoutInSeconds>600</forkedProcessTimeoutInSeconds>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.fornax.toolsupport</groupId>
+					<artifactId>fornax-oaw-m2-plugin</artifactId>
+					<version>3.4.0</version>
+					<configuration>
+						<workflowEngine>mwe2</workflowEngine>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.xtend</groupId>
+					<artifactId>xtend-maven-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<organization>
+		<name>Lunifera.org</name>
+		<url>www.lunifera.org</url>
+	</organization>
+</project>
