@@ -272,4 +272,8 @@
 		<name>Lunifera.org</name>
 		<url>www.lunifera.org</url>
 	</organization>
+    <modules>
+		<module>org.lunifera.web.p2.repo.juno</module>
+		<module>org.lunifera.web.p2.target.juno</module>
+	</modules>
 </project>
