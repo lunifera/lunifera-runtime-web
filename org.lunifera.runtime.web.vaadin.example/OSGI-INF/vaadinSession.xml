@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" factory="org.lunifera.web.vaadin.Session/vaadin7demo" name="org.lunifera.web.vaadin.example.session">
+   <implementation class="org.lunifera.web.vaadin.common.OSGiVaadinServiceSession"/>
+
+   <reference bind="addUI" cardinality="0..n" interface="org.osgi.service.component.ComponentFactory" name="UIs" policy="static" target="(component.factory=org.lunifera.web.vaadin.UI/*)"/>
+</scr:component>
+ 

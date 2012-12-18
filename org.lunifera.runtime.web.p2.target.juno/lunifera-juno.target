@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+
+<target name="lunifera-target-definition-juno" sequenceNumber="58">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.json" version="1.0.0.v201011060100"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.lunifera.runtime.feature.configuration.manager.feature.group" version="0.0.1.201211262109"/>
+<unit id="org.lunifera.runtime.feature.utils.assertions.feature.group" version="0.0.1.201211262109"/>
+<unit id="org.lunifera.dependencies.feature.camel.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.db4o.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.derby.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.jbpm.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.weld.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.mongodb.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.mysql.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="0.0.1.201212170456"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.0.1.201212170456"/>
+<repository location="http://lunifera.github.com/lunifera-p2/repository"/>
+</location>
+<location path="${eclipse_home}" type="Profile"/>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.gyrex.features.sdk.feature.group" version="1.2.0.v20121007-0820-7A95-F9sLyMDuT0fd8AoGz0yMPz0"/>
+<repository location="http://download.eclipse.org/gyrex/1.2/integration"/>
+</location>
+</locations>
+<environment>
+<os>macosx</os>
+<arch>x86_64</arch>
+</environment>
+</target>

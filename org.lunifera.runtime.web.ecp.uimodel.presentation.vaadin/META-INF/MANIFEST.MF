@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Vaadin
+Bundle-SymbolicName: org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin
+Bundle-Version: 0.0.1.qualifier
+Require-Bundle: org.eclipse.emf.ecp.ui.uimodel.core.editparts;bundle-version="0.0.1";visibility:=reexport,
+ com.vaadin.shared;bundle-version="7.0.0";visibility:=reexport,
+ com.vaadin.vaadin-client;bundle-version="7.0.0";visibility:=reexport,
+ com.vaadin.vaadin-server;bundle-version="7.0.0";visibility:=reexport,
+ org.eclipse.emf.ecp.ui.model.core.uimodel;bundle-version="0.0.1";visibility:=reexport
+Import-Package: org.osgi.framework;version="1.7.0",
+ org.slf4j;version="1.6.4"
+Export-Package: org.lunifera.web.ecp.uimodel.presentation.vaadin,
+ org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;x-internal:=true
+Service-Component: OSGI-INF/presentationFactory.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

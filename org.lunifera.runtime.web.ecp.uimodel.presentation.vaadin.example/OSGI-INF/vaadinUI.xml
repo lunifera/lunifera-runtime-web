@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="org.lunifera.web.vaadin.UI/org.lunifera.web.ecp.uimodel.presentation.vaadin.example.UiModelDemoUI" name="org.lunifera.web.ecp.uimodel.presentation.vaadin.example.ui">
+   <implementation class="org.lunifera.web.ecp.uimodel.presentation.vaadin.example.UiModelDemoUI"/>
+</scr:component>
