@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.example;
 
-import org.eclipse.emf.ecp.ui.model.core.datatypes.YTextDDesc;
+import org.eclipse.emf.ecp.ui.model.core.datatypes.YDatadescription;
 import org.eclipse.emf.ecp.ui.model.core.uimodel.YUiView;
 import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiAlignment;
 import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout;
@@ -36,7 +36,8 @@ import com.vaadin.ui.themes.Reindeer;
 @Theme(Reindeer.THEME_NAME)
 public class UiModelDemoUI extends UI {
 
-	private static final Logger logger = LoggerFactory.getLogger(UiModelDemoUI.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UiModelDemoUI.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -134,20 +135,22 @@ public class UiModelDemoUI extends UI {
 		}
 	}
 
-	protected YUiGridLayoutCellStyle createCellStyle(YUiGridLayout yGridLayout, YUiTextField yText1) {
+	protected YUiGridLayoutCellStyle createCellStyle(YUiGridLayout yGridLayout,
+			YUiTextField yText1) {
 		return factory.createGridLayoutCellStyle(yText1, yGridLayout);
 	}
 
 	/**
 	 * Creates a new text field.
 	 * 
-	 * @param label the label to show
+	 * @param label
+	 *            the label to show
 	 * @return textField
 	 */
 	protected YUiTextField newText(String label) {
 		YUiTextField field = factory.createTextField();
 		if (label != null) {
-			YTextDDesc dtd = factory.createTextDatadescription();
+			YDatadescription dtd = factory.createDatadescription();
 			field.setDatadescription(dtd);
 			dtd.setLabel(label);
 		}
