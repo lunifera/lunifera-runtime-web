@@ -3,6 +3,8 @@ bin/
 **/xtend-gen
 **/src-gen
 **/resources/VAADIN/widgetsets
+**/WebContent/VAADIN/widgetsets
+**/build
 .DS_Store
 target
 .classpath

@@ -280,6 +280,7 @@
         <module>org.lunifera.runtime.web.vaadin</module>
         <module>org.lunifera.runtime.web.vaadin.example</module>
         <module>org.lunifera.runtime.web.vaadin.example.widgetset</module>
+		<module>org.lunifera.runtime.web.vaadin.example.widgetset.builder</module>
         <module>org.lunifera.runtime.web.gyrex.vaadin</module>
 	</modules>
 </project>
