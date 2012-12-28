@@ -1,0 +1,1 @@
+use lunifera-juno-gyrex-local.target if gyrex is cloned from eclipse git repos

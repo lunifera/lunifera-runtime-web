@@ -6,8 +6,8 @@
 		<maven>3.0</maven>
 	</prerequisites>
 
-	<groupId>org.lunifera.web</groupId>
-	<artifactId>org.lunifera.web</artifactId>
+	<groupId>org.lunifera.runtime.web</groupId>
+	<artifactId>org.lunifera.runtime.web</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Lunifera :: OSGi bundles for web : Parent POM</name>
@@ -273,7 +273,13 @@
 		<url>www.lunifera.org</url>
 	</organization>
     <modules>
-		<module>org.lunifera.web.p2.repo.juno</module>
-		<module>org.lunifera.web.p2.target.juno</module>
+		<module>org.lunifera.runtime.web.p2.repo.juno</module>
+		<module>org.lunifera.runtime.web.p2.target.juno</module>
+        <module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin</module>
+        <module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin.example</module>
+        <module>org.lunifera.runtime.web.vaadin</module>
+        <module>org.lunifera.runtime.web.vaadin.example</module>
+        <module>org.lunifera.runtime.web.vaadin.example.widgetset</module>
+        <module>org.lunifera.runtime.web.gyrex.vaadin</module>
 	</modules>
 </project>
