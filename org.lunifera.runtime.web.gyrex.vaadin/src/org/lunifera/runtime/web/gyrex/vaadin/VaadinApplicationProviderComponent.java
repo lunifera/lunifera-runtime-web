@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.gyrex.vaadin;
 
+import java.util.Dictionary;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.gyrex.context.IRuntimeContext;
 import org.eclipse.gyrex.http.application.Application;
@@ -46,6 +48,9 @@ public class VaadinApplicationProviderComponent extends ApplicationProvider {
 	 */
 	public static final String APPLICATION_PROVIDER_ID = "applicationProviderId";
 
+	@SuppressWarnings("rawtypes")
+	private Dictionary webAppProperties;
+
 	public void activate(final ComponentContext context) {
 		if (VaadinDebug.debug) {
 			LOG.debug(
@@ -68,6 +73,7 @@ public class VaadinApplicationProviderComponent extends ApplicationProvider {
 								context.getBundleContext().getBundle() });
 			}
 			setId(applicationProviderId);
+			this.webAppProperties = context.getProperties();
 		} catch (final IllegalStateException e) {
 			// compare and only continue if match
 			if (!applicationProviderId.equals(getId())) {
@@ -83,7 +89,7 @@ public class VaadinApplicationProviderComponent extends ApplicationProvider {
 	public Application createApplication(final String applicationId,
 			final IRuntimeContext context) throws CoreException {
 		// return an application that scan the bundle
-		return new VaadinApplication(applicationId, context);
+		return new VaadinApplication(applicationId, context, webAppProperties);
 	}
 
 	public void deactivate(final ComponentContext context) {
@@ -94,6 +100,7 @@ public class VaadinApplicationProviderComponent extends ApplicationProvider {
 							ComponentConstants.COMPONENT_NAME), context
 							.getBundleContext().getBundle());
 		}
+		this.webAppProperties = null;
 	}
 
 	private String getApplicationProviderId(final ComponentContext context) {

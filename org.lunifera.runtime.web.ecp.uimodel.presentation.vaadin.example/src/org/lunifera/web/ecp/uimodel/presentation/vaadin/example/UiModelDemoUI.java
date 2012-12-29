@@ -21,6 +21,7 @@ import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiTextField;
 import org.eclipse.emf.ecp.ui.model.core.uimodel.util.SimpleModelFactory;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.context.ContextException;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.VaadinRenderer;
+import org.lunifera.web.vaadin.common.OSGiUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ import com.vaadin.ui.themes.Reindeer;
  * Specify the class name after the factory name.
  */
 @Theme(Reindeer.THEME_NAME)
-public class UiModelDemoUI extends UI {
+public class UiModelDemoUI extends OSGiUI {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UiModelDemoUI.class);

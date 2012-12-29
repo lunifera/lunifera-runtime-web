@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.gyrex.vaadin;
 
+import java.util.Dictionary;
+
 import javax.servlet.Filter;
 
 import org.apache.shiro.web.servlet.IniShiroFilter;
@@ -35,6 +37,9 @@ public class VaadinApplication extends Application {
 
 	private final String RESOURCE_BASE = "/VAADIN";
 
+	@SuppressWarnings("rawtypes")
+	private Dictionary webAppProperties;
+
 	private static final org.slf4j.Logger logger = LoggerFactory
 			.getLogger(VaadinApplication.class);
 
@@ -42,10 +47,16 @@ public class VaadinApplication extends Application {
 	 * Creates a new instance.
 	 * 
 	 * @param id
+	 *            The application ID.
 	 * @param context
+	 *            The runtime context.
+	 * @param webAppProperties
+	 *            Properties specified by the http web application.
 	 */
-	protected VaadinApplication(final String id, final IRuntimeContext context) {
+	protected VaadinApplication(final String id, final IRuntimeContext context,
+			@SuppressWarnings("rawtypes") Dictionary webAppProperties) {
 		super(id, context);
+		this.webAppProperties = webAppProperties;
 	}
 
 	/**
@@ -54,7 +65,7 @@ public class VaadinApplication extends Application {
 	 * @return the vaadin servlet object (must not be <code>null</code>)
 	 */
 	protected VaadinServlet createVaadinServlet() {
-		return new VaadinOSGiServlet();
+		return new VaadinOSGiServlet(webAppProperties);
 	}
 
 	/**
@@ -84,8 +95,8 @@ public class VaadinApplication extends Application {
 		VaadinResourceProvider resourceProvider = new VaadinResourceProvider(
 				VaadinActivator.getInstance().getBundle());
 		getApplicationContext().registerServlet(getAlias(), servlet, null);
-		getApplicationContext().registerFilter(getAlias(), getSecurityFilter(),
-				null);
+//		getApplicationContext().registerFilter(getAlias(), getSecurityFilter(),
+//				null);
 		getApplicationContext().registerResources(RESOURCE_BASE, RESOURCE_BASE,
 				resourceProvider);
 	}

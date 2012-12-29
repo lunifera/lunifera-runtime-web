@@ -6,4 +6,5 @@
    <service>
       <provide interface="org.eclipse.gyrex.http.application.provider.ApplicationProvider"/>
    </service>
+   <property name="lunifera.web.vaadin.widgetset" type="String" value="org.lunifera.runtime.web.vaadin.example.widgetset.widgetset.Widgetset"/>
 </scr:component>

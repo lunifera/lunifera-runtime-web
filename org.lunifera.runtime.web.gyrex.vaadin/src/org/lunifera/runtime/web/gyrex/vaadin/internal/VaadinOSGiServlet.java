@@ -17,6 +17,7 @@
 package org.lunifera.runtime.web.gyrex.vaadin.internal;
 
 import java.io.IOException;
+import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -57,7 +58,17 @@ public class VaadinOSGiServlet extends VaadinServlet {
 
 	private UiProviderTracker tracker;
 
-	public VaadinOSGiServlet() {
+	private Dictionary webAppProperties;
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param webAppProperties
+	 *            The properties specified by the vaadin http application OSGi
+	 *            service.
+	 */
+	public VaadinOSGiServlet(Dictionary webAppProperties) {
+		this.webAppProperties = webAppProperties;
 	}
 
 	@Override
@@ -137,7 +148,7 @@ public class VaadinOSGiServlet extends VaadinServlet {
 	protected OSGiServletService createServletService(
 			DeploymentConfiguration deploymentConfiguration) {
 		OSGiServletService service = new OSGiServletService(this,
-				deploymentConfiguration,
+				deploymentConfiguration, webAppProperties,
 				new OSGiServletService.IVaadinSessionFactory() {
 					@Override
 					public VaadinSession createSession(VaadinRequest request,

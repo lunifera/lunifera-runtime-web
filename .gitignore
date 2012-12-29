@@ -4,6 +4,7 @@ bin/
 **/src-gen
 **/resources/VAADIN/widgetsets
 **/WebContent/VAADIN/widgetsets
+**/localTarget
 **/build
 .DS_Store
 target
