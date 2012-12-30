@@ -1,8 +1,10 @@
-package org.lunifera.runtime.web.vaadin.example.widgetset;
+package org.lunifera.runtime.web.gyrex.vaadin.example.widgetset;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 
+@SuppressWarnings("serial")
 public class WidgetsetUI extends UI {
 	@Override
 	public void init(VaadinRequest request) {

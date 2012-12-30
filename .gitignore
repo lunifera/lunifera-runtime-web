@@ -6,6 +6,7 @@ bin/
 **/WebContent/VAADIN/widgetsets
 **/localTarget
 **/build
+**/WebContent/WEB-INF/lib
 .DS_Store
 target
 .classpath
@@ -14,4 +15,3 @@ src-gen/
 xtend-gen/
 plugin.xml_gen
 .project
-

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Widgetset
-Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.example.widgetset
+Bundle-SymbolicName: org.lunifera.runtime.web.gyrex.vaadin.example.widgetset
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Vaadin-Resources: resources

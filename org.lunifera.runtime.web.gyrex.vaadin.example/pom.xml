@@ -5,5 +5,5 @@
     <artifactId>org.lunifera.runtime.web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>org.lunifera.runtime.web.vaadin.example.widgetset</artifactId>
+  <artifactId>org.lunifera.runtime.web.gyrex.vaadin.example</artifactId>
 </project>

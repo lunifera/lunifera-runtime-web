@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Example
-Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.example
+Bundle-SymbolicName: org.lunifera.runtime.web.gyrex.vaadin.example
 Bundle-Version: 1.0.0.qualifier
 Service-Component: OSGI-INF/vaadinUI.xml, OSGI-INF/vaadin-application.xml
 Import-Package: org.osgi.service.component;version="1.2.0"
