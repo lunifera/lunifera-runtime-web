@@ -3,6 +3,7 @@ bin/
 **/xtend-gen
 **/src-gen
 **/resources/VAADIN/widgetsets
+**/resources/VAADIN/gwt-unitCache
 **/WebContent/VAADIN/widgetsets
 **/localTarget
 **/build

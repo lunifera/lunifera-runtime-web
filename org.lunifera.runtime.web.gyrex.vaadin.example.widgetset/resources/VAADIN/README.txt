@@ -1,0 +1,1 @@
+By running the build "mvn clean verify" the widgetset will be placed here.

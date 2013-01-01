@@ -1,1 +1,0 @@
-Copy this widgetset to the org.lunifera.runtime.web.vaadin.example.widgetset project
