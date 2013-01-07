@@ -5,8 +5,8 @@
     <artifactId>org.lunifera.web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>org.lunifera.web.p2.target.juno</artifactId>
-  <packaging>pom</packaging>
+  <artifactId>org.lunifera.dsl.p2</artifactId>
+  <packaging>eclipse-repository</packaging>
   <name>Target for lunifera Web</name>
   <description>Target for lunifera Web</description>
 </project>

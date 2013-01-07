@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.lunifera.runtime.web.feature.gyrex.vaadin_0.0.1.qualifier.jar" id="org.lunifera.runtime.web.feature.gyrex.vaadin" version="0.0.1.qualifier">
+      <category name="lunifera-web-features"/>
+   </feature>
+   <feature url="features/org.lunifera.runtime.web.feature.gyrex.vaadin_0.0.1.qualifier.jar" id="org.lunifera.runtime.web.feature.gyrex.vaadin" version="0.0.1.qualifier">
+      <category name="lunifera-web-features"/>
+   </feature>
+   <feature url="features/org.lunifera.runtime.web.feature.vaadin_0.0.1.qualifier.jar" id="org.lunifera.runtime.web.feature.vaadin" version="0.0.1.qualifier">
+      <category name="lunifera-web-features"/>
+   </feature>
+   <feature url="features/org.lunifera.runtime.web.feature.gyrex.vaadin.example_0.0.1.qualifier.jar" id="org.lunifera.runtime.web.feature.gyrex.vaadin.example" version="0.0.1.qualifier">
+      <category name="lunifera-web-features"/>
+   </feature>
+   <category-def name="lunifera-web-features" label="Lunifera Web Features"/>
+</site>

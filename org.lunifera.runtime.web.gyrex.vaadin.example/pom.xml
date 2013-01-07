@@ -6,4 +6,5 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>org.lunifera.runtime.web.gyrex.vaadin.example</artifactId>
+  <packaging>eclipse-plugin</packaging>
 </project>

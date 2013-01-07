@@ -5,8 +5,8 @@
     <artifactId>org.lunifera.runtime.web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>org.lunifera.runtime.web.p2.repo.juno</artifactId>
-  <packaging>eclipse-repository</packaging>
-  <name>P2 Repository for Web</name>
-  <description>P2 Repository for Web</description>
+  <artifactId>org.lunifera.runtime.web.feature.gyrex.vaadin</artifactId>
+  <packaging>eclipse-feature</packaging>
+  <name>Gyrex application for vaadin</name>
+  <description>Gyrex application for vaadin	</description>
 </project>

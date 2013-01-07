@@ -5,8 +5,6 @@
     <artifactId>org.lunifera.runtime.web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>org.lunifera.runtime.web.p2.target.juno</artifactId>
-  <packaging>pom</packaging>
-  <name>Target for lunifera Web</name>
-  <description>Target for lunifera Web</description>
+  <artifactId>org.lunifera.runtime.web.feature.gyrex.vaadin.example</artifactId>
+  <packaging>eclipse-feature</packaging>
 </project>

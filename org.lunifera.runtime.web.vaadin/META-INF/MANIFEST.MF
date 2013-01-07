@@ -4,7 +4,7 @@ Bundle-Name: Shiro
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin
 Bundle-Version: 0.0.1.qualifier
 Bundle-ActivationPolicy: lazy
-Import-Package: org.apache.shiro.web.servlet;version="1.2.0",
+Import-Package: org.apache.shiro.web.servlet;version="1.2.1",
  org.eclipse.equinox.http.jetty,
  org.eclipse.equinox.http.servlet;version="1.1.0",
  org.json,
@@ -22,3 +22,4 @@ Require-Bundle: javax.servlet;bundle-version="3.0.0";visibility:=reexport,
  com.vaadin.shared.deps;bundle-version="1.0.2";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.web.vaadin.common
+Bundle-Vendor: lunifera.org
