@@ -6,9 +6,11 @@ Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin,
  org.json;bundle-version="1.0.0",
  org.jsoup;bundle-version="1.6.3",
- org.lunifera.runtime.web.vaadin;bundle-version="0.0.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+ org.lunifera.runtime.web.vaadin;bundle-version="0.0.1",
+ org.lunifera.runtime.web.gyrex.vaadin;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
-Import-Package: org.osgi.service.component;version="1.2.0",
+Import-Package: org.eclipse.gyrex.http.application.provider;version="1.0.0",
+ org.osgi.service.component;version="1.2.0",
  org.slf4j;version="1.6.4"
-Service-Component: OSGI-INF/vaadinSession.xml, OSGI-INF/vaadinUI.xml
+Service-Component: OSGI-INF/vaadin-application.xml, OSGI-INF/vaadinUI.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

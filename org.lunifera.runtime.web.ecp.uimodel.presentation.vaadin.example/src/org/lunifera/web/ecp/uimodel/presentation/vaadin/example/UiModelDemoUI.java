@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.Reindeer;
 
 /**

@@ -21,7 +21,7 @@ import org.eclipse.emf.ecp.ui.uimodel.core.editparts.context.ViewContext;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IRenderer;
 
 import com.vaadin.ui.ComponentContainer;
-
+ 
 /**
  * A special implementation for ECP that offers convenience methods.
  */

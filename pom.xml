@@ -73,7 +73,40 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>build-widgetsets</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<defaultGoal>verify</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho-version}</version>
+						<configuration>
+							<!-- <resolver>p2</resolver> -->
+							<!-- <pomDependencies>consider</pomDependencies> -->
+							<ignoreTychoRepositories>true</ignoreTychoRepositories>
+							<target>
+								<artifact>
+									<groupId>org.lunifera.runtime.web</groupId>
+									<artifactId>org.lunifera.runtime.web.target.kepler</artifactId>
+									<version>${project.version}</version>
+								</artifact>
+							</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<modules>
+				<module>org.lunifera.runtime.web.target.kepler</module>
 
+				<module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin.example.widgetset</module>
+				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
+			</modules>
+		</profile>
 		<profile>
 			<id>p2-juno</id>
 			<activation>
@@ -203,7 +236,7 @@
 			</build>
 		</profile>
 	</profiles>
-	
+
 	<repositories>
 		<repository>
 			<id>vaadin-addons</id>

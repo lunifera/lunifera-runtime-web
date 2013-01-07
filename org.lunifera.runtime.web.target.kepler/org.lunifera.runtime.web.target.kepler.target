@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.p2.target.juno" sequenceNumber="64">
+<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.p2.target.juno" sequenceNumber="68">
 <locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.4.0.v201212180716"/>
+<unit id="org.eclipse.platform.sdk" version="4.3.0.I20121214-0730"/>
+<repository location="http://download.eclipse.org/releases/kepler"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.lunifera.runtime.feature.utils.assertions.feature.group" version="0.0.1.201211262109"/>
+<unit id="org.lunifera.runtime.feature.configuration.manager.feature.group" version="0.0.1.201211262109"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.0.1.201301052352"/>
+<unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="0.0.1.201301052352"/>
+<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="0.0.1.201301052352"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="0.0.1.201301052352"/>
+<repository location="http://lunifera.github.com/lunifera-p2/repository"/>
+</location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
 <unit id="org.slf4j.api" version="1.6.4.v20120130-2120"/>
@@ -13,30 +27,19 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.xtext.sdk.feature.group" version="2.4.0.v201212180716"/>
-<unit id="org.eclipse.platform.sdk" version="4.3.0.I20121214-0730"/>
-<repository location="http://download.eclipse.org/releases/kepler"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.gyrex.features.sdk.feature.group" version="1.2.0.v20121007-0820-7A95-F9sHy1DoF0bO-GF89mXFd3X"/>
-<repository location="http://download.eclipse.org/gyrex/1.2/integration/I-I20130105-201301050717"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.lunifera.runtime.feature.utils.assertions.feature.group" version="0.0.1.201211262109"/>
-<unit id="org.lunifera.runtime.feature.configuration.manager.feature.group" version="0.0.1.201211262109"/>
-<unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.0.1.201301052352"/>
-<unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="0.0.1.201301052352"/>
-<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="0.0.1.201301052352"/>
-<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="0.0.1.201301052352"/>
-<repository location="http://lunifera.github.com/lunifera-p2/repository"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.gyrex.features.sdk.feature.group" version="1.2.0.v20121007-0820-7A95-F9sHy1DoF0bO-GF89mXFd3X"/>
 <repository location="http://download.eclipse.org/gyrex/1.2/integration/I-I20130105-201301050717"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.8.0.v20120912-125810-7M7iA78fz0c6_Mey1mItD4Lmfdx9"/>
-<unit id="org.eclipse.gyrex.features.sdk.withoutdeps.feature.group" version="1.2.0.v20121007-0820-7J7R-F8O_55bRtamz0ua6AcF-sQV"/>
+<repository location="http://download.eclipse.org/releases/kepler"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.json" version="1.0.0.v201011060100"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.9.0.v20121217-0429"/>
 <repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
 </locations>
