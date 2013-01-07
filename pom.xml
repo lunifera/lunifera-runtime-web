@@ -161,8 +161,6 @@
 				<!-- end P2 features -->
 
 				<!-- P2 bundles -->
-				<module>org.lunifera.runtime.web.p2.repo.juno</module>
-				<module>org.lunifera.runtime.web.p2.target.juno</module>
 				<module>org.lunifera.runtime.web.vaadin</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
