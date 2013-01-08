@@ -15,3 +15,4 @@ Export-Package: org.lunifera.web.ecp.uimodel.presentation.vaadin,
  org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;x-internal:=true
 Service-Component: OSGI-INF/presentationFactory.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
