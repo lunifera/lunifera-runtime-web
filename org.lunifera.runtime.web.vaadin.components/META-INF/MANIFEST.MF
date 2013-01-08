@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Components
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Require-Bundle: com.vaadin.server;bundle-version="7.0.0";visibility:=reexport,
  com.vaadin.shared;bundle-version="7.0.0";visibility:=reexport,
  org.json;bundle-version="1.0.0";visibility:=reexport,
