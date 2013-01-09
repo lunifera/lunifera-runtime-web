@@ -14,8 +14,11 @@ import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiViewEditpart;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.context.IViewContext;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiCheckboxEditpart;
+import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiComboBoxEditpart;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiGridLayoutEditpart;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiLabelEditpart;
+import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiListEditpart;
+import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiTableEditpart;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiTextAreaEditpart;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiTextFieldEditpart;
 import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IPresentationFactory;
@@ -50,6 +53,12 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new TextAreaPresentation(editpart);
 		} else if (editpart instanceof IUiCheckboxEditpart) {
 			return (A) new CheckBoxPresentation(editpart);
+		} else if (editpart instanceof IUiComboBoxEditpart) {
+			return (A) new ComboBoxPresentation(editpart);
+		} else if (editpart instanceof IUiListEditpart) {
+			return (A) new ListPresentation(editpart);
+		} else if (editpart instanceof IUiTableEditpart) {
+			return (A) new TablePresentation(editpart);
 		} else if (editpart instanceof IUiGridLayoutEditpart) {
 			return (A) new GridLayoutPresentation(editpart);
 		}
