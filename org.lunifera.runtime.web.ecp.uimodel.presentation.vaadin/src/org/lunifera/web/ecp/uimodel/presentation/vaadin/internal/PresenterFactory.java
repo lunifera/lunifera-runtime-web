@@ -27,6 +27,10 @@ import org.lunifera.web.ecp.uimodel.presentation.vaadin.VaadinRenderer;
  */
 public class PresenterFactory implements IPresentationFactory {
 
+	public PresenterFactory(){
+		
+	}
+	
 	@Override
 	public boolean isFor(IViewContext uiContext, IUiElementEditpart editpart) {
 		String presentationURI = uiContext.getPresentationURI();
