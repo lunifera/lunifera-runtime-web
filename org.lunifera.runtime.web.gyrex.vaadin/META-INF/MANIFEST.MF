@@ -19,9 +19,9 @@ Require-Bundle: javax.servlet;bundle-version="3.0.0";visibility:=reexport,
  org.eclipse.gyrex.context;bundle-version="1.0.0",
  org.eclipse.gyrex.http;bundle-version="1.0.0",
  org.eclipse.gyrex.monitoring;bundle-version="1.0.0",
- org.lunifera.runtime.web.vaadin;bundle-version="0.0.1",
  com.vaadin.shared.deps;bundle-version="1.0.2",
- org.vaadin.addon.icepush;bundle-version="0.0.1"
+ org.vaadin.addon.icepush;bundle-version="0.0.1",
+ org.lunifera.runtime.web.vaadin.common;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.runtime.web.gyrex.vaadin,
  org.lunifera.runtime.web.gyrex.vaadin.internal;x-internal:=true

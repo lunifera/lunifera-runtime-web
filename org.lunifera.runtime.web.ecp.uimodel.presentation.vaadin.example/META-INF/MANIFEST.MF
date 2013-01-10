@@ -6,7 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin,
  org.json;bundle-version="1.0.0",
  org.jsoup;bundle-version="1.6.3",
- org.lunifera.runtime.web.vaadin;bundle-version="0.0.1",
+ org.lunifera.runtime.web.vaadin.common;bundle-version="0.0.1",
  org.lunifera.runtime.web.gyrex.vaadin;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.gyrex.http.application.provider;version="1.0.0",

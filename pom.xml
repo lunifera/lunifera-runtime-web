@@ -151,7 +151,7 @@
 				<module>org.lunifera.runtime.web.vaadin.components</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
-				<module>org.lunifera.runtime.web.gyrex.vaadin</module>
+				<module>org.lunifera.runtime.web.vaadin.common</module>
 				<!-- end P2 bundles -->
 			</modules>
 		</profile>
@@ -199,7 +199,7 @@
 				<module>org.lunifera.runtime.web.vaadin.components</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
-				<module>org.lunifera.runtime.web.gyrex.vaadin</module>
+				<module>org.lunifera.runtime.web.vaadin.common</module>
 				<!-- end P2 bundles -->
 			</modules>
 

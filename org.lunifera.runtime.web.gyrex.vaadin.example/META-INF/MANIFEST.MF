@@ -6,7 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Service-Component: OSGI-INF/vaadinUI.xml, OSGI-INF/vaadin-application.xml
 Import-Package: org.osgi.service.component;version="1.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.lunifera.runtime.web.vaadin;bundle-version="0.0.1",
+Require-Bundle: org.lunifera.runtime.web.vaadin.common;bundle-version="0.0.1",
  javax.servlet;bundle-version="3.0.0",
  com.vaadin.shared;bundle-version="7.0.0",
  com.vaadin.server;bundle-version="7.0.0",

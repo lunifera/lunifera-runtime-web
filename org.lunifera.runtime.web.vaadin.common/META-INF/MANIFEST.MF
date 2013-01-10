@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Shiro
-Bundle-SymbolicName: org.lunifera.runtime.web.vaadin
+Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.common
 Bundle-Version: 0.0.1.qualifier
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.shiro.web.servlet;version="1.2.1",
