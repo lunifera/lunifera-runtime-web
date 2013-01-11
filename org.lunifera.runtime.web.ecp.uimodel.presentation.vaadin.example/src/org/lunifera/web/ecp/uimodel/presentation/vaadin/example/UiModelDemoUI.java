@@ -46,6 +46,8 @@ public class UiModelDemoUI extends OSGiUI {
 
 		// add all examples
 		//
-		sheet.addTab(new GridlayoutFactory().createComponent(), "Gridlayout");
+		sheet.addTab(new GridLayoutFactory().createComponent(), "GridLayout");
+		sheet.addTab(new HorizontalLayoutFactory().createComponent(), "HorizontalLayout");
+		sheet.addTab(new VerticalLayoutFactory().createComponent(), "VerticalLayout");
 	}
 }
