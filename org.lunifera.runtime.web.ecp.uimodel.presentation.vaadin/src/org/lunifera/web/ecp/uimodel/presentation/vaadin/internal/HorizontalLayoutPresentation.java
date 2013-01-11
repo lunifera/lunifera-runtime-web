@@ -38,7 +38,8 @@ import com.vaadin.ui.HorizontalLayout;
  */
 public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
-	private static final Logger logger = LoggerFactory.getLogger(HorizontalLayoutPresentation.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(HorizontalLayoutPresentation.class);
 
 	private CssLayout componentBase;
 	private HorizontalLayout horizontalLayout;
@@ -47,11 +48,13 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * The constructor.
 	 * 
-	 * @param editpart The editpart of that presentation.
+	 * @param editpart
+	 *            The editpart of that presentation.
 	 */
 	public HorizontalLayoutPresentation(IUiElementEditpart editpart) {
 		super((IUiLayoutEditpart) editpart);
-		this.modelAccess = new ModelAccess((YUiHorizontalLayout) editpart.getModel());
+		this.modelAccess = new ModelAccess(
+				(YUiHorizontalLayout) editpart.getModel());
 	}
 
 	@Override
@@ -63,15 +66,15 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	public void add(IWidgetPresentation<?> presentation) {
 		super.add(presentation);
 
-		refreshUI();
+		YUiEmbeddable yChild = (YUiEmbeddable) presentation.getModel();
+		addChild(presentation, modelAccess.getCellStyle(yChild));
 	}
 
 	@Override
 	public void remove(IWidgetPresentation<?> presentation) {
 		super.remove(presentation);
 
-		presentation.unrender();
-		refreshUI();
+		horizontalLayout.removeComponent((Component) presentation.getWidget());
 	}
 
 	@Override
@@ -89,7 +92,8 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	}
 
 	/**
-	 * Is called to refresh the UI. The element will be removed from the grid layout and added to it again afterwards.
+	 * Is called to refresh the UI. The element will be removed from the grid
+	 * layout and added to it again afterwards.
 	 */
 	protected void refreshUI() {
 		horizontalLayout.removeAllComponents();
@@ -107,7 +111,8 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 		// iterate all elements and build the child element
 		//
 		for (IUiEmbeddableEditpart editPart : getEditpart().getElements()) {
-			IWidgetPresentation<?> childPresentation = editPart.getPresentation();
+			IWidgetPresentation<?> childPresentation = editPart
+					.getPresentation();
 			YUiEmbeddable yChild = (YUiEmbeddable) childPresentation.getModel();
 			addChild(childPresentation, yStyles.get(yChild));
 		}
@@ -115,19 +120,23 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	}
 
 	/**
-	 * Is called to create the child component and apply layouting defaults to it.
+	 * Is called to create the child component and apply layouting defaults to
+	 * it.
 	 * 
 	 * @param presentation
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation, YUiHorizontalLayoutCellStyle yStyle) {
+	protected Cell addChild(IWidgetPresentation<?> presentation,
+			YUiHorizontalLayoutCellStyle yStyle) {
 
-		Component child = (Component) presentation.createWidget(horizontalLayout);
+		Component child = (Component) presentation
+				.createWidget(horizontalLayout);
 
 		// calculate and apply the alignment to be used
 		//
-		YUiAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
+		YUiAlignment yAlignment = yStyle != null
+				&& yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
 		if (yAlignment == null) {
 			// use default
 			yAlignment = YUiAlignment.TOP_LEFT;
@@ -157,59 +166,75 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 			child.setHeight("-1%");
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
-				horizontalLayout.setComponentAlignment(child, Alignment.BOTTOM_CENTER);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.BOTTOM_CENTER);
 				break;
 			case BOTTOM_FILL:
-				horizontalLayout.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.BOTTOM_LEFT);
 				child.setWidth("100%");
 				break;
 			case BOTTOM_LEFT:
-				horizontalLayout.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.BOTTOM_LEFT);
 				break;
 			case BOTTOM_RIGHT:
-				horizontalLayout.setComponentAlignment(child, Alignment.BOTTOM_RIGHT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.BOTTOM_RIGHT);
 				break;
 			case MIDDLE_CENTER:
-				horizontalLayout.setComponentAlignment(child, Alignment.MIDDLE_CENTER);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.MIDDLE_CENTER);
 				break;
 			case MIDDLE_FILL:
-				horizontalLayout.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.MIDDLE_LEFT);
 				child.setWidth("100%");
 				break;
 			case MIDDLE_LEFT:
-				horizontalLayout.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.MIDDLE_LEFT);
 				break;
 			case MIDDLE_RIGHT:
-				horizontalLayout.setComponentAlignment(child, Alignment.MIDDLE_RIGHT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.MIDDLE_RIGHT);
 				break;
 			case TOP_CENTER:
-				horizontalLayout.setComponentAlignment(child, Alignment.TOP_CENTER);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.TOP_CENTER);
 				break;
 			case TOP_FILL:
-				horizontalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.TOP_LEFT);
 				child.setWidth("100%");
 				break;
 			case TOP_LEFT:
-				horizontalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.TOP_LEFT);
 				break;
 			case TOP_RIGHT:
-				horizontalLayout.setComponentAlignment(child, Alignment.TOP_RIGHT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.TOP_RIGHT);
 				break;
 			case FILL_CENTER:
-				horizontalLayout.setComponentAlignment(child, Alignment.TOP_CENTER);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.TOP_CENTER);
 				child.setHeight("100%");
 				break;
 			case FILL_FILL:
-				horizontalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.TOP_LEFT);
 				child.setWidth("100%");
 				child.setHeight("100%");
 				break;
 			case FILL_LEFT:
-				horizontalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.TOP_LEFT);
 				child.setHeight("100%");
 				break;
 			case FILL_RIGHT:
-				horizontalLayout.setComponentAlignment(child, Alignment.TOP_RIGHT);
+				horizontalLayout.setComponentAlignment(child,
+						Alignment.TOP_RIGHT);
 				child.setHeight("100%");
 				break;
 			default:
@@ -221,7 +246,8 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * Maps the vertical part of the alignment to FILL.
 	 * 
-	 * @param yAlignment the alignment
+	 * @param yAlignment
+	 *            the alignment
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
@@ -260,7 +286,8 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * Maps the horizontal part of the alignment to FILL.
 	 * 
-	 * @param yAlignment the alignment
+	 * @param yAlignment
+	 *            the alignment
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
@@ -352,7 +379,8 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -453,6 +481,10 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 		 */
 		public EList<YUiHorizontalLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
+		}
+
+		public YUiHorizontalLayoutCellStyle getCellStyle(YUiEmbeddable element) {
+			return yLayout.getCellStyle(element);
 		}
 
 		/**
