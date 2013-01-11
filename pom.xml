@@ -105,6 +105,7 @@
 
 				<module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin.example.widgetset</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
+				<module>org.lunifera.runtime.web.vaadin.standalone.example.widgetset</module>
 			</modules>
 		</profile>
 		<profile>
@@ -141,17 +142,24 @@
 				<module>org.lunifera.runtime.web.p2</module>
 
 				<!-- P2 features -->
-				<module>org.lunifera.runtime.web.feature.vaadin</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.standalone.example</module>
 				<module>org.lunifera.runtime.web.feature.gyrex.vaadin</module>
 				<module>org.lunifera.runtime.web.feature.gyrex.vaadin.example</module>
 				<!-- end P2 features -->
 
 				<!-- P2 bundles -->
-				<module>org.lunifera.runtime.web.vaadin</module>
 				<module>org.lunifera.runtime.web.vaadin.components</module>
+				<module>org.lunifera.runtime.web.vaadin.common</module>
+
+				<module>org.lunifera.runtime.web.vaadin.standalone</module>
+				<module>org.lunifera.runtime.web.vaadin.standalone.example</module>
+				<module>org.lunifera.runtime.web.vaadin.standalone.example.widgetset</module>
+
+				<module>org.lunifera.runtime.web.gyrex.vaadin</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
-				<module>org.lunifera.runtime.web.vaadin.common</module>
 				<!-- end P2 bundles -->
 			</modules>
 		</profile>
@@ -189,17 +197,24 @@
 				<module>org.lunifera.runtime.web.p2</module>
 
 				<!-- P2 features -->
-				<module>org.lunifera.runtime.web.feature.vaadin</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.standalone.example</module>
 				<module>org.lunifera.runtime.web.feature.gyrex.vaadin</module>
 				<module>org.lunifera.runtime.web.feature.gyrex.vaadin.example</module>
 				<!-- end P2 features -->
 
 				<!-- P2 bundles -->
-				<module>org.lunifera.runtime.web.vaadin</module>
 				<module>org.lunifera.runtime.web.vaadin.components</module>
+				<module>org.lunifera.runtime.web.vaadin.common</module>
+
+				<module>org.lunifera.runtime.web.vaadin.standalone</module>
+				<module>org.lunifera.runtime.web.vaadin.standalone.example</module>
+				<module>org.lunifera.runtime.web.vaadin.standalone.example.widgetset</module>
+
+				<module>org.lunifera.runtime.web.gyrex.vaadin</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example</module>
 				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
-				<module>org.lunifera.runtime.web.vaadin.common</module>
 				<!-- end P2 bundles -->
 			</modules>
 

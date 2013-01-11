@@ -6,7 +6,7 @@
 		<artifactId>org.lunifera.runtime.web</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.lunifera.runtime.web.feature.vaadin</artifactId>
+	<artifactId>org.lunifera.runtime.web.feature.vaadin.common</artifactId>
 	<packaging>eclipse-feature</packaging>
 	<name>Feature containing vaadin implementiation</name>
 

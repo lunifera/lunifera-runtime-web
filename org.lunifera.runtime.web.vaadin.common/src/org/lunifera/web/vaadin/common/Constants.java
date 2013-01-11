@@ -10,7 +10,17 @@
 package org.lunifera.web.vaadin.common;
 
 public class Constants {
+	
+	/**
+	 * The OSGi property for specifying the widgetset.
+	 */
+	public static final String PROP_WIDGETSET = "lunifera.web.vaadin.widgetset";
 
+	/**
+	 * The OSGi property value that should be used as alias to register the servlet.
+	 */
+	public static final String PROP_WEBAPP__ALIAS = "lunifera.web.vaadin.alias";
+	
 	/**
 	 * OSGi property component.factory for the vaadin UI (tab sheet). The
 	 * vaadin.ui.class name is part of the factory name and putted after the /.
@@ -29,6 +39,7 @@ public class Constants {
 	 * Factory name: org.lunifera.web.vaadin.UI/org.lunifera.web.vaadin.example.
 	 * Vaadin7DemoUI
 	 */
-	public static final String PREFIX__UI_CLASS = OSGI_COMP_FACTORY__VAADIN_UI + "/";
-
+	public static final String PREFIX__UI_CLASS = OSGI_COMP_FACTORY__VAADIN_UI
+			+ "/";
+	
 }
