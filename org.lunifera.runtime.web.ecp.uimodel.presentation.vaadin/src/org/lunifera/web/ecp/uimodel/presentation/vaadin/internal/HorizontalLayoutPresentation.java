@@ -1,0 +1,492 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Florian Pirchner
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ * Florian Pirchner - initial API and implementation
+ *******************************************************************************/
+package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecp.ui.model.core.uimodel.YUiEmbeddable;
+import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiAlignment;
+import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout;
+import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayoutCellStyle;
+import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
+import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiEmbeddableEditpart;
+import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiLayoutEditpart;
+import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IWidgetPresentation;
+import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
+
+/**
+ * This presenter is responsible to render a text field on the given layout.
+ */
+public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
+
+	private static final Logger logger = LoggerFactory.getLogger(HorizontalLayoutPresentation.class);
+
+	private CssLayout componentBase;
+	private HorizontalLayout horizontalLayout;
+	private ModelAccess modelAccess;
+
+	/**
+	 * The constructor.
+	 * 
+	 * @param editpart The editpart of that presentation.
+	 */
+	public HorizontalLayoutPresentation(IUiElementEditpart editpart) {
+		super((IUiLayoutEditpart) editpart);
+		this.modelAccess = new ModelAccess((YUiHorizontalLayout) editpart.getModel());
+	}
+
+	@Override
+	public Object getModel() {
+		return getEditpart().getModel();
+	}
+
+	@Override
+	public void add(IWidgetPresentation<?> presentation) {
+		super.add(presentation);
+
+		refreshUI();
+	}
+
+	@Override
+	public void remove(IWidgetPresentation<?> presentation) {
+		super.remove(presentation);
+
+		presentation.unrender();
+		refreshUI();
+	}
+
+	@Override
+	public void insert(IWidgetPresentation<?> presentation, int index) {
+		super.insert(presentation, index);
+
+		refreshUI();
+	}
+
+	@Override
+	public void move(IWidgetPresentation<?> presentation, int index) {
+		super.move(presentation, index);
+
+		refreshUI();
+	}
+
+	/**
+	 * Is called to refresh the UI. The element will be removed from the grid layout and added to it again afterwards.
+	 */
+	protected void refreshUI() {
+		horizontalLayout.removeAllComponents();
+
+		// create a map containing the style for the embeddable
+		//
+		Map<YUiEmbeddable, YUiHorizontalLayoutCellStyle> yStyles = new HashMap<YUiEmbeddable, YUiHorizontalLayoutCellStyle>();
+		for (YUiHorizontalLayoutCellStyle style : modelAccess.getCellStyles()) {
+			if (yStyles.containsKey(style.getTarget())) {
+				logger.warn("Multiple style for element {}", style.getTarget());
+			}
+			yStyles.put(style.getTarget(), style);
+		}
+
+		// iterate all elements and build the child element
+		//
+		for (IUiEmbeddableEditpart editPart : getEditpart().getElements()) {
+			IWidgetPresentation<?> childPresentation = editPart.getPresentation();
+			YUiEmbeddable yChild = (YUiEmbeddable) childPresentation.getModel();
+			addChild(childPresentation, yStyles.get(yChild));
+		}
+
+	}
+
+	/**
+	 * Is called to create the child component and apply layouting defaults to it.
+	 * 
+	 * @param presentation
+	 * @param yStyle
+	 * @return
+	 */
+	protected Cell addChild(IWidgetPresentation<?> presentation, YUiHorizontalLayoutCellStyle yStyle) {
+
+		Component child = (Component) presentation.createWidget(horizontalLayout);
+
+		// calculate and apply the alignment to be used
+		//
+		YUiAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
+		if (yAlignment == null) {
+			// use default
+			yAlignment = YUiAlignment.TOP_LEFT;
+
+			if (modelAccess.isFillHorizontal()) {
+				// ensure that horizontal alignment is FILL
+				yAlignment = mapToHorizontalFill(yAlignment);
+			}
+		}
+
+		horizontalLayout.addComponent(child);
+		applyAlignment(child, yAlignment);
+
+		return new Cell(child, yAlignment);
+	}
+
+	/**
+	 * Sets the alignment to the component.
+	 * 
+	 * @param child
+	 * @param yAlignment
+	 */
+	protected void applyAlignment(Component child, YUiAlignment yAlignment) {
+
+		if (yAlignment != null) {
+			child.setWidth("-1%");
+			child.setHeight("-1%");
+			switch (yAlignment) {
+			case BOTTOM_CENTER:
+				horizontalLayout.setComponentAlignment(child, Alignment.BOTTOM_CENTER);
+				break;
+			case BOTTOM_FILL:
+				horizontalLayout.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
+				child.setWidth("100%");
+				break;
+			case BOTTOM_LEFT:
+				horizontalLayout.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
+				break;
+			case BOTTOM_RIGHT:
+				horizontalLayout.setComponentAlignment(child, Alignment.BOTTOM_RIGHT);
+				break;
+			case MIDDLE_CENTER:
+				horizontalLayout.setComponentAlignment(child, Alignment.MIDDLE_CENTER);
+				break;
+			case MIDDLE_FILL:
+				horizontalLayout.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
+				child.setWidth("100%");
+				break;
+			case MIDDLE_LEFT:
+				horizontalLayout.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
+				break;
+			case MIDDLE_RIGHT:
+				horizontalLayout.setComponentAlignment(child, Alignment.MIDDLE_RIGHT);
+				break;
+			case TOP_CENTER:
+				horizontalLayout.setComponentAlignment(child, Alignment.TOP_CENTER);
+				break;
+			case TOP_FILL:
+				horizontalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
+				child.setWidth("100%");
+				break;
+			case TOP_LEFT:
+				horizontalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
+				break;
+			case TOP_RIGHT:
+				horizontalLayout.setComponentAlignment(child, Alignment.TOP_RIGHT);
+				break;
+			case FILL_CENTER:
+				horizontalLayout.setComponentAlignment(child, Alignment.TOP_CENTER);
+				child.setHeight("100%");
+				break;
+			case FILL_FILL:
+				horizontalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
+				child.setWidth("100%");
+				child.setHeight("100%");
+				break;
+			case FILL_LEFT:
+				horizontalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
+				child.setHeight("100%");
+				break;
+			case FILL_RIGHT:
+				horizontalLayout.setComponentAlignment(child, Alignment.TOP_RIGHT);
+				child.setHeight("100%");
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Maps the vertical part of the alignment to FILL.
+	 * 
+	 * @param yAlignment the alignment
+	 * @return alignment the mapped alignment
+	 */
+	// BEGIN SUPRESS CATCH EXCEPTION
+	protected YUiAlignment mapToVerticalFill(YUiAlignment yAlignment) {
+		// END SUPRESS CATCH EXCEPTION
+		if (yAlignment != null) {
+			switch (yAlignment) {
+			case BOTTOM_CENTER:
+			case MIDDLE_CENTER:
+			case TOP_CENTER:
+				return YUiAlignment.FILL_CENTER;
+			case BOTTOM_FILL:
+			case MIDDLE_FILL:
+			case TOP_FILL:
+				return YUiAlignment.FILL_FILL;
+			case BOTTOM_LEFT:
+			case MIDDLE_LEFT:
+			case TOP_LEFT:
+				return YUiAlignment.FILL_LEFT;
+			case BOTTOM_RIGHT:
+			case MIDDLE_RIGHT:
+			case TOP_RIGHT:
+				return YUiAlignment.FILL_RIGHT;
+			case FILL_FILL:
+			case FILL_LEFT:
+			case FILL_RIGHT:
+			case FILL_CENTER:
+				return YUiAlignment.FILL_FILL;
+			default:
+				break;
+			}
+		}
+		return YUiAlignment.FILL_FILL;
+	}
+
+	/**
+	 * Maps the horizontal part of the alignment to FILL.
+	 * 
+	 * @param yAlignment the alignment
+	 * @return alignment the mapped alignment
+	 */
+	// BEGIN SUPRESS CATCH EXCEPTION
+	protected YUiAlignment mapToHorizontalFill(YUiAlignment yAlignment) {
+		// END SUPRESS CATCH EXCEPTION
+		if (yAlignment != null) {
+			switch (yAlignment) {
+			case BOTTOM_CENTER:
+			case BOTTOM_FILL:
+			case BOTTOM_LEFT:
+			case BOTTOM_RIGHT:
+				return YUiAlignment.BOTTOM_FILL;
+			case MIDDLE_CENTER:
+			case MIDDLE_FILL:
+			case MIDDLE_LEFT:
+			case MIDDLE_RIGHT:
+				return YUiAlignment.MIDDLE_FILL;
+			case TOP_CENTER:
+			case TOP_FILL:
+			case TOP_LEFT:
+			case TOP_RIGHT:
+				return YUiAlignment.TOP_FILL;
+			case FILL_FILL:
+			case FILL_LEFT:
+			case FILL_RIGHT:
+			case FILL_CENTER:
+				return YUiAlignment.FILL_FILL;
+			default:
+				break;
+			}
+		}
+		return YUiAlignment.FILL_FILL;
+	}
+
+	@Override
+	public ComponentContainer createWidget(Object parent) {
+		if (componentBase == null) {
+			componentBase = new CssLayout();
+			componentBase.setSizeFull();
+			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			if (modelAccess.isCssIdValid()) {
+				componentBase.setId(modelAccess.getCssID());
+			} else {
+				componentBase.setId(getEditpart().getId());
+			}
+
+			horizontalLayout = new HorizontalLayout();
+			horizontalLayout.setSizeFull();
+			horizontalLayout.setSpacing(false);
+			componentBase.addComponent(horizontalLayout);
+
+			if (modelAccess.isMargin()) {
+				horizontalLayout.addStyleName(IConstants.CSS_CLASS__MARGIN);
+				horizontalLayout.setMargin(true);
+			}
+
+			if (modelAccess.isSpacing()) {
+				horizontalLayout.setData(IConstants.CSS_CLASS__SPACING);
+				horizontalLayout.setSpacing(true);
+			}
+
+			if (modelAccess.isCssClassValid()) {
+				horizontalLayout.addStyleName(modelAccess.getCssClass());
+			} else {
+				horizontalLayout.addStyleName(CSS_CLASS__CONTROL);
+			}
+
+			renderChildren(false);
+		}
+
+		return componentBase;
+	}
+
+	@Override
+	public ComponentContainer getWidget() {
+		return componentBase;
+	}
+
+	@Override
+	public boolean isRendered() {
+		return componentBase != null;
+	}
+
+	@Override
+	protected void internalDispose() {
+		unrender();
+	}
+
+	@Override
+	public void unrender() {
+		if (componentBase != null) {
+			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			if (parent != null) {
+				parent.removeComponent(componentBase);
+			}
+			componentBase = null;
+			horizontalLayout = null;
+
+			// unrender the childs
+			for (IWidgetPresentation<?> child : getChildren()) {
+				child.unrender();
+			}
+		}
+	}
+
+	@Override
+	public void renderChildren(boolean force) {
+		if (force) {
+			unrenderChildren();
+		}
+
+		refreshUI();
+	}
+
+	/**
+	 * Will unrender all children.
+	 */
+	protected void unrenderChildren() {
+		for (IWidgetPresentation<?> presentation : getChildren()) {
+			if (presentation.isRendered()) {
+				presentation.unrender();
+			}
+		}
+	}
+
+	/**
+	 * An internal helper class.
+	 */
+	private static class ModelAccess {
+		private final YUiHorizontalLayout yLayout;
+
+		public ModelAccess(YUiHorizontalLayout yLayout) {
+			super();
+			this.yLayout = yLayout;
+		}
+
+		/**
+		 * @return
+		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 */
+		public String getCssClass() {
+			return yLayout.getCssClass();
+		}
+
+		/**
+		 * Returns true, if the css class is not null and not empty.
+		 * 
+		 * @return
+		 */
+		public boolean isCssClassValid() {
+			return getCssClass() != null && !getCssClass().equals("");
+		}
+
+		/**
+		 * @return
+		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout#isSpacing()
+		 */
+		public boolean isSpacing() {
+			return yLayout.isSpacing();
+		}
+
+		/**
+		 * @return
+		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 */
+		public String getCssID() {
+			return yLayout.getCssID();
+		}
+
+		/**
+		 * Returns true, if the css id is not null and not empty.
+		 * 
+		 * @return
+		 */
+		public boolean isCssIdValid() {
+			return getCssID() != null && !getCssID().equals("");
+		}
+
+		/**
+		 * @return
+		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout#isMargin()
+		 */
+		public boolean isMargin() {
+			return yLayout.isMargin();
+		}
+
+		/**
+		 * @return
+		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout#getCellStyles()
+		 */
+		public EList<YUiHorizontalLayoutCellStyle> getCellStyles() {
+			return yLayout.getCellStyles();
+		}
+
+		/**
+		 * @return
+		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout#isFillHorizontal()
+		 */
+		public boolean isFillHorizontal() {
+			return yLayout.isFillHorizontal();
+		}
+	}
+
+	public static class Cell {
+		private final Component component;
+		private final YUiAlignment alignment;
+
+		public Cell(Component component, YUiAlignment alignment) {
+			super();
+			this.component = component;
+			this.alignment = alignment;
+		}
+
+		/**
+		 * @return the component
+		 */
+		protected Component getComponent() {
+			return component;
+		}
+
+		/**
+		 * @return the alignment
+		 */
+		protected YUiAlignment getAlignment() {
+			return alignment;
+		}
+
+	}
+}
