@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 
-public class GridlayoutFactory {
+public class GridLayoutFactory {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UiModelDemoUI.class);
