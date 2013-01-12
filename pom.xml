@@ -74,41 +74,6 @@
 			</build>
 		</profile>
 		<profile>
-			<id>build-widgetsets</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<defaultGoal>verify</defaultGoal>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho-version}</version>
-						<configuration>
-							<!-- <resolver>p2</resolver> -->
-							<!-- <pomDependencies>consider</pomDependencies> -->
-							<ignoreTychoRepositories>true</ignoreTychoRepositories>
-							<target>
-								<artifact>
-									<groupId>org.lunifera.runtime.web</groupId>
-									<artifactId>org.lunifera.runtime.web.target.kepler</artifactId>
-									<version>${project.version}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-			<modules>
-				<module>org.lunifera.runtime.web.target.kepler</module>
-
-				<module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin.example.widgetset</module>
-				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
-				<module>org.lunifera.runtime.web.vaadin.standalone.example.widgetset</module>
-			</modules>
-		</profile>
-		<profile>
 			<id>p2-juno</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -144,22 +109,13 @@
 				<!-- P2 features -->
 				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
-				<module>org.lunifera.runtime.web.feature.vaadin.standalone.example</module>
-				<module>org.lunifera.runtime.web.feature.gyrex.vaadin</module>
-				<module>org.lunifera.runtime.web.feature.gyrex.vaadin.example</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
 				<!-- end P2 features -->
 
 				<!-- P2 bundles -->
 				<module>org.lunifera.runtime.web.vaadin.components</module>
 				<module>org.lunifera.runtime.web.vaadin.common</module>
-
 				<module>org.lunifera.runtime.web.vaadin.standalone</module>
-				<module>org.lunifera.runtime.web.vaadin.standalone.example</module>
-				<module>org.lunifera.runtime.web.vaadin.standalone.example.widgetset</module>
-
-				<module>org.lunifera.runtime.web.gyrex.vaadin</module>
-				<module>org.lunifera.runtime.web.gyrex.vaadin.example</module>
-				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
 				<!-- end P2 bundles -->
 			</modules>
 		</profile>
@@ -199,22 +155,13 @@
 				<!-- P2 features -->
 				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
-				<module>org.lunifera.runtime.web.feature.vaadin.standalone.example</module>
-				<module>org.lunifera.runtime.web.feature.gyrex.vaadin</module>
-				<module>org.lunifera.runtime.web.feature.gyrex.vaadin.example</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
 				<!-- end P2 features -->
 
 				<!-- P2 bundles -->
 				<module>org.lunifera.runtime.web.vaadin.components</module>
 				<module>org.lunifera.runtime.web.vaadin.common</module>
-
 				<module>org.lunifera.runtime.web.vaadin.standalone</module>
-				<module>org.lunifera.runtime.web.vaadin.standalone.example</module>
-				<module>org.lunifera.runtime.web.vaadin.standalone.example.widgetset</module>
-
-				<module>org.lunifera.runtime.web.gyrex.vaadin</module>
-				<module>org.lunifera.runtime.web.gyrex.vaadin.example</module>
-				<module>org.lunifera.runtime.web.gyrex.vaadin.example.widgetset</module>
 				<!-- end P2 bundles -->
 			</modules>
 
