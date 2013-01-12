@@ -8,4 +8,27 @@
 	</parent>
 	<artifactId>org.lunifera.runtime.web.target.kepler</artifactId>
 	<packaging>eclipse-target-definition</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>target-platform-validation-plugin</artifactId>
+				<version>${tychoExtrasVersion}</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>validate-target-platform</goal>
+						</goals>
+						<configuration>
+							<targetFiles>
+								<param>org.lunifera.runtime.web.target.kepler.target</param>
+							</targetFiles>
+							<failOnError>true</failOnError>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
