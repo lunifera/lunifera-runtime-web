@@ -9,7 +9,7 @@
 
 	<artifactId>org.lunifera.runtime.web.target.juno</artifactId>
 	<packaging>eclipse-target-definition</packaging>
-	<build>
+<!-- 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
@@ -31,5 +31,5 @@
 				</executions>
 			</plugin>
 		</plugins>
-	</build>
+	</build> -->
 </project>
