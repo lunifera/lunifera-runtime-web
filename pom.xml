@@ -2,244 +2,25 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<prerequisites>
-		<maven>3.0</maven>
-	</prerequisites>
+	<parent>
+		<groupId>org.lunifera</groupId>
+		<artifactId>org.lunifera</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../lunifera-releng/</relativePath>
+	</parent>
 
 	<groupId>org.lunifera.runtime.web</groupId>
 	<artifactId>org.lunifera.runtime.web</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Lunifera :: OSGi bundles for web : Parent POM</name>
+	<name>Lunifera :: Runtime Components for Web : Parent POM</name>
 
 	<properties>
 		<next-release>0.0.2-SNAPSHOT</next-release>
 		<tycho-version>0.16.0</tycho-version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<tychoExtrasVersion>0.16.0</tychoExtrasVersion>
-		<vaadin-version>7.0.0.beta11</vaadin-version>
-		<shiro-version>1.2.1</shiro-version>
-		<vaadin-icepush-version>0.5.4</vaadin-icepush-version>
-		<icepush-version>3.0.1</icepush-version>
-		<icepush-gwt-version>1.0.0</icepush-gwt-version>
 	</properties>
 
-	<organization>
-		<name>Lunifera.org</name>
-		<url>www.lunifera.org</url>
-	</organization>
-
-	<developers>
-		<developer>
-			<id>cvgaviao</id>
-			<name>Cristiano Gavião</name>
-			<email>cvgaviao@gmail.com</email>
-			<timezone>-3</timezone>
-		</developer>
-		<developer>
-			<id>florianpirchner</id>
-			<name>Florian Pirchner</name>
-			<email>florian.pirchner@gmail.com</email>
-			<timezone>+2</timezone>
-		</developer>
-	</developers>
-
-	<profiles>
-		<profile>
-			<id>prepare-for-next-release</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<defaultGoal>org.eclipse.tycho:tycho-versions-plugin:set-version</defaultGoal>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-versions-plugin</artifactId>
-						<version>${tycho-version}</version>
-						<executions>
-							<execution>
-								<id>change-next-release</id>
-								<goals>
-									<goal>set-version</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<newVersion>${next-release}</newVersion>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>p2-juno</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<defaultGoal>verify</defaultGoal>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho-version}</version>
-						<configuration>
-							<!-- <resolver>p2</resolver> -->
-							<!-- <pomDependencies>consider</pomDependencies> -->
-							<ignoreTychoRepositories>true</ignoreTychoRepositories>
-							<target>
-								<artifact>
-									<groupId>org.lunifera.runtime.web</groupId>
-									<artifactId>org.lunifera.runtime.web.target.juno</artifactId>
-									<version>${project.version}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-			<modules>
-				<module>org.lunifera.runtime.web.target.juno</module>
-
-				<!-- exclusive for P2 -->
-				<module>org.lunifera.runtime.web.p2</module>
-
-				<!-- P2 features -->
-				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
-				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
-				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
-				<!-- end P2 features -->
-
-				<!-- P2 bundles -->
-				<module>org.lunifera.runtime.web.vaadin.components</module>
-				<module>org.lunifera.runtime.web.vaadin.common</module>
-				<module>org.lunifera.runtime.web.vaadin.standalone</module>
-				<!-- end P2 bundles -->
-			</modules>
-		</profile>
-		<profile>
-			<id>p2-kepler</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<defaultGoal>verify</defaultGoal>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho-version}</version>
-						<configuration>
-							<!-- <resolver>p2</resolver> -->
-							<!-- <pomDependencies>consider</pomDependencies> -->
-							<ignoreTychoRepositories>true</ignoreTychoRepositories>
-							<target>
-								<artifact>
-									<groupId>org.lunifera.runtime.web</groupId>
-									<artifactId>org.lunifera.runtime.web.target.kepler</artifactId>
-									<version>${project.version}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-			<modules>
-				<module>org.lunifera.runtime.web.target.kepler</module>
-
-				<!-- exclusive for P2 -->
-				<module>org.lunifera.runtime.web.p2</module>
-
-				<!-- P2 features -->
-				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
-				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
-				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
-				<!-- end P2 features -->
-
-				<!-- P2 bundles -->
-				<module>org.lunifera.runtime.web.vaadin.components</module>
-				<module>org.lunifera.runtime.web.vaadin.common</module>
-				<module>org.lunifera.runtime.web.vaadin.standalone</module>
-				<!-- end P2 bundles -->
-			</modules>
-
-		</profile>
-
-		<!-- This profile is used to gather code coverage for Sonar -->
-		<profile>
-			<id>codeCoverage</id>
-			<properties>
-				<!-- Properties to enable jacoco code coverage analysis -->
-				<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-				<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-				<sonar.jacoco.reportPath>../org.demo.camp.nantes.parent/target/jacoco.exec</sonar.jacoco.reportPath>
-			</properties>
-
-			<build>
-				<plugins>
-					<!-- Enabling use of jacoco -->
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.5.8.201207111220</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>prepare-agent</goal>
-								</goals>
-								<configuration>
-									<!-- Where to put jacoco coverage report -->
-									<destFile>${sonar.jacoco.reportPath}</destFile>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
-	<repositories>
-		<repository>
-			<id>vaadin-addons</id>
-			<url>http://maven.vaadin.com/vaadin-addons</url>
-		</repository>
-		<repository>
-			<id>vaadin-snapshots</id>
-			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>vaadin-snapshots</id>
-			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<build>
-		<sourceDirectory>src</sourceDirectory>
-
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-			</plugin>
-
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
@@ -254,97 +35,93 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 			</plugin>
-
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-source-plugin</artifactId>
-			</plugin>
 		</plugins>
 
-		<pluginManagement>
-			<plugins>
-				<!-- enable tycho build -->
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-maven-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<extensions>true</extensions>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-compiler-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<configuration>
-						<compilerVersion>1.6</compilerVersion>
-						<encoding>UTF-8</encoding>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.5</version>
-					<configuration>
-						<encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-source-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<executions>
-						<execution>
-							<id>plugin-source</id>
-							<goals>
-								<goal>plugin-source</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-surefire-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<configuration>
-						<includes>
-							<include>**/*Tests.java</include>
-						</includes>
-						<showEclipseLog>true</showEclipseLog>
-						<useUIHarness>false</useUIHarness>
-						<useUIThread>false</useUIThread>
-						<failIfNoTests>false</failIfNoTests>
-						<!-- <appArgLine>-Dfile.encoding=UTF-8</appArgLine> -->
-						<argLine>-Dfile.encoding=UTF-8</argLine>
-						<!-- Kill test JVM if tests take more than 10 minutes (600 seconds) 
-							to finish -->
-						<forkedProcessTimeoutInSeconds>600</forkedProcessTimeoutInSeconds>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.fornax.toolsupport</groupId>
-					<artifactId>fornax-oaw-m2-plugin</artifactId>
-					<version>3.4.0</version>
-					<configuration>
-						<workflowEngine>mwe2</workflowEngine>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.xtend</groupId>
-					<artifactId>xtend-maven-plugin</artifactId>
-					<version>2.3.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.5</version>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>1.7</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
+	<profiles>
+		<profile>
+			<id>p2-juno</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>org.lunifera.runtime.web.p2</module>
+				<module>org.lunifera.runtime.web.target.juno</module>
+				
+				<module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin</module>
+				<module>org.lunifera.runtime.web.vaadin.common</module>
+				<module>org.lunifera.runtime.web.vaadin.components</module>
+				<module>org.lunifera.runtime.web.vaadin.standalone</module>
+
+				<module>org.lunifera.runtime.web.feature.ecp.uimodel.presentation.vaadin</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
+			</modules>
+			<build>
+				<defaultGoal>clean verify</defaultGoal>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>target-platform-configuration</artifactId>
+							<version>${tycho-version}</version>
+							<configuration>
+								<ignoreTychoRepositories>true</ignoreTychoRepositories>
+								<target>
+									<artifact>
+										<groupId>org.lunifera.runtime.web</groupId>
+										<artifactId>org.lunifera.runtime.web.target.juno</artifactId>
+										<version>${project.version}</version>
+									</artifact>
+								</target>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+		<profile>
+			<id>p2-kepler</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>org.lunifera.runtime.web.p2</module>
+				<module>org.lunifera.runtime.web.target.kepler</module>
+				
+				<module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin</module>
+				<module>org.lunifera.runtime.web.vaadin.common</module>
+				<module>org.lunifera.runtime.web.vaadin.components</module>
+				<module>org.lunifera.runtime.web.vaadin.standalone</module>
+
+				<module>org.lunifera.runtime.web.feature.ecp.uimodel.presentation.vaadin</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
+			</modules>
+			<build>
+				<defaultGoal>clean verify</defaultGoal>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>target-platform-configuration</artifactId>
+							<version>${tycho-version}</version>
+							<configuration>
+								<ignoreTychoRepositories>true</ignoreTychoRepositories>
+								<target>
+									<artifact>
+										<groupId>org.lunifera.runtime.web</groupId>
+										<artifactId>org.lunifera.runtime.web.target.kepler</artifactId>
+										<version>${project.version}</version>
+									</artifact>
+								</target>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 </project>

@@ -9,4 +9,27 @@
 
 	<artifactId>org.lunifera.runtime.web.target.juno</artifactId>
 	<packaging>eclipse-target-definition</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>target-platform-validation-plugin</artifactId>
+				<version>${tychoExtrasVersion}</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>validate-target-platform</goal>
+						</goals>
+						<configuration>
+							<targetFiles>
+								<param>org.lunifera.runtime.web.target.juno.target</param>
+							</targetFiles>
+							<failOnError>true</failOnError>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

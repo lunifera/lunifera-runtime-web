@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.m2e.Maven2LaunchConfigurationType">
 <booleanAttribute key="M2_DEBUG_OUTPUT" value="false"/>
-<stringAttribute key="M2_GOALS" value="clean verify"/>
+<stringAttribute key="M2_GOALS" value="clean verify -fn"/>
 <booleanAttribute key="M2_NON_RECURSIVE" value="false"/>
 <booleanAttribute key="M2_OFFLINE" value="false"/>
 <stringAttribute key="M2_PROFILES" value="p2-kepler"/>
@@ -17,5 +17,5 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-XX:MaxPermSize=256m"/>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/lunifera-runtime-web}"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/org.lunifera.runtime.web}"/>
 </launchConfiguration>
