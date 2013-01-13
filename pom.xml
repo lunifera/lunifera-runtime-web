@@ -6,7 +6,6 @@
 		<groupId>org.lunifera</groupId>
 		<artifactId>org.lunifera</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../lunifera-releng/</relativePath>
 	</parent>
 
 	<groupId>org.lunifera.runtime.web</groupId>
