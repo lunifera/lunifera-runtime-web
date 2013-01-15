@@ -8,6 +8,4 @@
 	</parent>
 	<artifactId>org.lunifera.runtime.web.feature.vaadin.components</artifactId>
 	<packaging>eclipse-feature</packaging>
-	<name>Feature containing vaadin components</name>
-
 </project>

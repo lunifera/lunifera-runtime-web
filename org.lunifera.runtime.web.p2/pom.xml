@@ -8,7 +8,108 @@
 	</parent>
 	<artifactId>org.lunifera.runtime.web.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
-	<name>P2 Repository for Web</name>
-	<description>P2 Repository for Web</description>
 
+	<build>
+		<plugins>
+			<!-- Build helper maven plugin sets the parsedVersion.osgiVersion property -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+						<phase>validate</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-publisher-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<publishArtifacts>true</publishArtifacts>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<includeAllDependencies>false</includeAllDependencies>
+					<createArtifactRepository>true</createArtifactRepository>
+					<compress>true</compress>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>deploy-p2</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>LUNIFERA-DEPLOY-DIR</name>
+				</property>
+			</activation>
+			<properties>
+				<from-repo>${project.build.directory}/repository</from-repo>
+				<output.dir>${PLATFORM-LUNIFERA-DEPLOY-DIR}/${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${build.timestamp}</output.dir>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<configuration>
+									<quiet>true</quiet>
+									<target>
+										<!-- called AFTER generating p2 repo to add in extra content -->
+										<ant antfile="build.xml" target="copy.repo.to.dir" dir=".">
+											<property name="output.dir" value="${output.dir}" />
+											<property name="inputRepo" value="${from-repo}" />
+										</ant>
+									</target>
+
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.ant</groupId>
+								<artifactId>ant</artifactId>
+								<version>1.8.4</version>
+							</dependency>
+							<dependency>
+								<groupId>ant-contrib</groupId>
+								<artifactId>ant-contrib</artifactId>
+								<version>1.0b3</version>
+								<exclusions>
+									<exclusion>
+										<groupId>ant</groupId>
+										<artifactId>ant</artifactId>
+									</exclusion>
+								</exclusions>
+							</dependency>
+							<dependency>
+								<groupId>net.sf.saxon</groupId>
+								<artifactId>Saxon-HE</artifactId>
+								<version>9.4</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

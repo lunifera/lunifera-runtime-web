@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Sep 27, 2012 2:17:28 PM                                                        
+
+     P2-deployment    
+     description
+                   
+     cvgaviao                                                                
+     ====================================================================== -->
+<project default="copy.repo.to.dir" name="Lunifera P2 deployment.">
+
+	<target name="copy.repo.to.dir">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset includes="**/*" dir="${to_repo_final}" />
+		</delete>
+		<delete dir="${output.dir}" />
+		<mkdir dir="${output.dir}" />
+		<copy todir="${output.dir}">
+			<fileset dir="${from-repo}" includes="**/*" />
+		</copy>
+	</target>
+
+</project>

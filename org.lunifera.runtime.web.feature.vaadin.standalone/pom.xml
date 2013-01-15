@@ -7,6 +7,4 @@
   </parent>
   <artifactId>org.lunifera.runtime.web.feature.vaadin.standalone</artifactId>
   <packaging>eclipse-feature</packaging>
-  <name>vaadin standalone</name>
-  <description>vaadin standalone</description>
 </project>
