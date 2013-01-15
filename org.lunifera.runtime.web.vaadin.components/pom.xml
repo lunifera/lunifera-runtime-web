@@ -7,6 +7,4 @@
   </parent>
   <artifactId>org.lunifera.runtime.web.vaadin.components</artifactId>
   <packaging>eclipse-plugin</packaging>
-  <name>Vaadin components</name>
-  <description>Vaadin components</description>
 </project>
