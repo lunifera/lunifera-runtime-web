@@ -6,17 +6,14 @@
 		<groupId>org.lunifera</groupId>
 		<artifactId>org.lunifera</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../lunifera-releng/</relativePath>
 	</parent>
 
 	<groupId>org.lunifera.runtime.web</groupId>
 	<artifactId>org.lunifera.runtime.web</artifactId>
 	<packaging>pom</packaging>
-	<name>Lunifera :: Runtime Components for Web : Parent POM</name>
 
 	<properties>
 		<next-release>0.0.2-SNAPSHOT</next-release>
-		<tycho-version>0.16.0</tycho-version>
 	</properties>
 
 	<build>
@@ -39,51 +36,15 @@
 
 	</build>
 	<profiles>
-		<profile>
-			<id>p2-juno</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<modules>
-				<module>org.lunifera.runtime.web.p2</module>
-				<module>org.lunifera.runtime.web.target.juno</module>
-				
-				<module>org.lunifera.runtime.web.vaadin.common</module>
-				<module>org.lunifera.runtime.web.vaadin.components</module>
-				<module>org.lunifera.runtime.web.vaadin.standalone</module>
 
-				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
-				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
-				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
-			</modules>
-			<build>
-				<defaultGoal>clean verify</defaultGoal>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.eclipse.tycho</groupId>
-							<artifactId>target-platform-configuration</artifactId>
-							<version>${tycho-version}</version>
-							<configuration>
-								<ignoreTychoRepositories>true</ignoreTychoRepositories>
-								<target>
-									<artifact>
-										<groupId>org.lunifera.runtime.web</groupId>
-										<artifactId>org.lunifera.runtime.web.target.juno</artifactId>
-										<version>${project.version}</version>
-									</artifact>
-								</target>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
-		</profile>
 		<profile>
 			<id>p2-kepler</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
+			<properties>
+				<PLATFORM-LUNIFERA-DEPLOY-DIR>${LUNIFERA-DEPLOY-DIR}/kepler/runtime-web</PLATFORM-LUNIFERA-DEPLOY-DIR>			
+			</properties>
 			<modules>
 				<module>org.lunifera.runtime.web.p2</module>
 				<module>org.lunifera.runtime.web.target.kepler</module>
