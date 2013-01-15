@@ -8,4 +8,25 @@
 	</parent>
 	<artifactId>org.lunifera.runtime.web.feature.vaadin.components</artifactId>
 	<packaging>eclipse-feature</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>tycho-source-feature-plugin</artifactId>
+				<version>${tychoExtrasVersion}</version>
+				<executions>
+					<execution>
+						<id>source-feature</id>
+						<phase>package</phase>
+						<goals>
+							<goal>source-feature</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<labelSuffix>Source of </labelSuffix>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
