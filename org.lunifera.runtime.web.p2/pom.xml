@@ -9,44 +9,6 @@
 	<artifactId>org.lunifera.runtime.web.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
 
-	<build>
-		<plugins>
-			<!-- Build helper maven plugin sets the parsedVersion.osgiVersion property -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>parse-version</id>
-						<goals>
-							<goal>parse-version</goal>
-						</goals>
-						<phase>validate</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-p2-publisher-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<publishArtifacts>true</publishArtifacts>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-p2-repository-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<includeAllDependencies>false</includeAllDependencies>
-					<createArtifactRepository>true</createArtifactRepository>
-					<compress>true</compress>
-				</configuration>
-			</plugin>
-
-		</plugins>
-	</build>
-
 	<profiles>
 		<profile>
 			<id>deploy-p2</id>
@@ -62,6 +24,20 @@
 			</properties>
 			<build>
 				<plugins>
+					<!-- Build helper maven plugin sets the parsedVersion.osgiVersion property -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>parse-version</id>
+								<goals>
+									<goal>parse-version</goal>
+								</goals>
+								<phase>validate</phase>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<artifactId>maven-antrun-plugin</artifactId>
 						<version>1.7</version>
