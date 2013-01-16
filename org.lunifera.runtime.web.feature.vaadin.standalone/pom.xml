@@ -24,8 +24,25 @@
 					</execution>
 				</executions>
 				<configuration>
-					<labelSuffix>Source of </labelSuffix>
+					<labelSuffix> (source)</labelSuffix>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- workaround while bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=398250 
+					is not fixed -->
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>attached-p2-metadata</id>
+						<phase>package</phase>
+						<goals>
+							<goal>p2-metadata</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
