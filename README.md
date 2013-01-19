@@ -1,4 +1,4 @@
 lunifera-web
 ============
 
-Web stuff for lunifera.org
+Bundles for runtime web.
