@@ -57,6 +57,10 @@
 				<module>org.lunifera.runtime.web.vaadin.common</module>
 				<module>org.lunifera.runtime.web.vaadin.components</module>
 				<module>org.lunifera.runtime.web.vaadin.standalone</module>
+				
+				<module>org.lunifera.runtime.web.vaadin.databinding</module>
+				
+				
 
 				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.components</module>

@@ -1,30 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?>
-
-<target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="10">
+<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="73">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.core.runtime.feature.feature.group" version="1.1.0.v20120521-2346-7H7OFJJBpeIn_ddTiXpom8fJ0XZ9"/>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.9.0.v20121217-0429"/>
 <repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.lunifera.dependencies.feature.weld.feature.group" version="1.2.0.201301150557"/>
-<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="3.9.0.201301150557"/>
-<unit id="org.lunifera.dependencies.feature.xtext.headless.feature.group" version="2.4.0.201301150557"/>
-<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.0.0.201301150557"/>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.4.0.v201212180716"/>
+<unit id="org.eclipse.platform.sdk" version="4.3.0.I20121214-0730"/>
+<repository location="http://download.eclipse.org/releases/kepler"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.8.0.v20120912-125810-7M7iA78fz0c6_Mey1mItD4Lmfdx9"/>
+<repository location="http://download.eclipse.org/releases/kepler"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
+<unit id="org.slf4j.api" version="1.6.4.v20120130-2120"/>
+<unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
+<unit id="org.junit" version="4.10.0.v4_10_0_v20120426-0900"/>
+<unit id="org.hamcrest.integration" version="1.1.0.v20090501071000"/>
+<unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
+<unit id="org.hamcrest.core" version="1.1.0.v20090501071000"/>
+<unit id="org.apache.derby" version="10.5.1.1_v201108232300"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.json" version="1.0.0.v201011060100"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.1"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.0.0.201301161532"/>
 <unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.5.4"/>
+<unit id="org.lunifera.dependencies.feature.xtext.headless.feature.group" version="2.4.0.201301161532"/>
 <repository location="http://lunifera.github.com/p2/kepler"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rcp.feature.group" version="4.3.0.v20130104-140745-7IAUA7Bs-Qiz0UoWYOwRmVFEbBhO"/>
+<unit id="org.eclipse.rcp.source.feature.group" version="4.3.0.v20130104-140745-7IAUA7Bs-Qiz0UoWYOwRmVFEbBhO"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.3-I-builds"/>
+</location>
 </locations>
-<includeBundles>
-<feature id="org.lunifera.dependencies.feature.vaadin.addon.icepush"/>
-<feature id="org.lunifera.dependencies.feature.weld"/>
-<feature id="org.lunifera.dependencies.feature.equinox"/>
-<feature id="org.eclipse.equinox.core.feature"/>
-<feature id="org.lunifera.dependencies.feature.vaadin"/>
-<feature id="org.lunifera.dependencies.feature.security.shiro"/>
-<feature id="org.lunifera.dependencies.feature.xtext.headless"/>
-<feature id="org.eclipse.core.runtime.feature"/>
-</includeBundles>
 </target>
