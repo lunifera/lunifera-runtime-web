@@ -22,6 +22,8 @@ import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPicke
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentDescriptionProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentFocusedProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.SimpleAccessorProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SizeableHeightProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SizeableWidthProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelMaxSplitPositionProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelMaxSplitPositionUnitProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelMinSplitPositionProperty;
@@ -114,6 +116,14 @@ public class VaadinProperties {
 
 	public static IComponentValueProperty color_ColorPickerSelect() {
 		return new ColorPickerSelectColorProperty();
+	}
+	
+	public static IComponentValueProperty height() {
+		return new SizeableHeightProperty();
+	}
+	
+	public static IComponentValueProperty width() {
+		return new SizeableWidthProperty();
 	}
 
 	public static IModelValueProperty itemPropertyset() {

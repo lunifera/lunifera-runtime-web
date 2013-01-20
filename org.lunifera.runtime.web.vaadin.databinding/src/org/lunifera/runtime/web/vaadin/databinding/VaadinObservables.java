@@ -529,16 +529,14 @@ public class VaadinObservables {
 	}
 
 	public static IVaadinObservableValue observeHeight(Sizeable component) {
-		return VaadinProperties.accessor(Sizeable.class, "height").observe(
-				component);
+		return VaadinProperties.height().observe(component);
 	}
 
 	public static IVaadinObservableValue observeWidth(Sizeable component) {
-		return VaadinProperties.accessor(Sizeable.class, "width").observe(
-				component);
+		return VaadinProperties.width().observe(component);
 	}
 
-	public static IVaadinObservableValue observeWidth(SpacingHandler component) {
+	public static IVaadinObservableValue observeSpacing(SpacingHandler component) {
 		return VaadinProperties.accessor(SpacingHandler.class, "spacing")
 				.observe(component);
 	}
