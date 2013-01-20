@@ -11,8 +11,9 @@ Require-Bundle: javax.servlet;bundle-version="3.0.0";visibility:=reexport,
  org.eclipse.core.databinding;bundle-version="1.4.1";visibility:=reexport,
  org.eclipse.core.databinding.beans;bundle-version="1.2.200";visibility:=reexport,
  org.eclipse.core.databinding.observable;bundle-version="1.4.1";visibility:=reexport,
- org.eclipse.core.databinding.property;bundle-version="1.4.200";visibility:=reexport
+ org.eclipse.core.databinding.property;bundle-version="1.4.200";visibility:=reexport,
+ org.apache.commons.beanutils;bundle-version="1.8.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.runtime.web.vaadin.databinding,
- org.lunifera.runtime.web.vaadin.databinding.internal;x-internal:=true
+ org.lunifera.runtime.web.vaadin.databinding.component.internal;x-internal:=true
 Bundle-Vendor: lunifera.org

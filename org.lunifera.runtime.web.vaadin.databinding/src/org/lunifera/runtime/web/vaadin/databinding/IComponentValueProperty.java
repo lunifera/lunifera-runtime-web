@@ -36,6 +36,17 @@ public interface IComponentValueProperty extends IValueProperty {
 	public IVaadinObservableValue observe(Component component);
 
 	/**
+	 * Returns an observable value observing this value property on the given
+	 * property source.
+	 * 
+	 * @param source
+	 *            the property source
+	 * @return an observable value observing this value property on the given
+	 *         property source
+	 */
+	public IVaadinObservableValue observe(Object source);
+
+	/**
 	 * Returns an {@link IVaadinObservableValue} observing this value property
 	 * on the given Component, which delays notification of value changes until
 	 * at least <code>delay</code> milliseconds have elapsed since that last

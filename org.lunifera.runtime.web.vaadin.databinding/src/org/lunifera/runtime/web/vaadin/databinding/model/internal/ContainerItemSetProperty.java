@@ -12,34 +12,43 @@
  * 		Florian Pirchner - porting swt databinding to support vaadin
  * 
  *******************************************************************************/
-package org.lunifera.runtime.web.vaadin.databinding.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
-import com.vaadin.ui.Component;
+import java.util.Collection;
 
-public class ComponentEnabledProperty extends AbstractComponentValueProperty {
+import org.eclipse.core.databinding.property.INativePropertyListener;
+import org.eclipse.core.databinding.property.ISimplePropertyListener;
 
-	public String toString() {
-		return "ComponentEnabledProperty"; //$NON-NLS-1$
+import com.vaadin.data.Container;
+
+/**
+ */
+public class ContainerItemSetProperty extends AbstractModelProperty {
+
+	public ContainerItemSetProperty() {
+
 	}
 
-	public ComponentEnabledProperty() {
-		super();
+	public INativePropertyListener adaptListener(
+			ISimplePropertyListener listener) {
+		return new ContainerItemSetChangeListener(this, listener);
 	}
 
+	@Override
 	public Object getValueType() {
-		return Boolean.class;
+		return Collection.class;
 	}
 
+	@Override
 	protected Object doGetValue(Object source) {
-		Component component = (Component) source;
-		return component.isEnabled();
+		Container container = (Container) source;
+		return container.getItemIds();
 	}
 
+	@Override
 	protected void doSetValue(Object source, Object value) {
-		Component component = (Component) source;
-		component.setEnabled((Boolean) value);
+		throw new UnsupportedOperationException();
 	}
 
 }

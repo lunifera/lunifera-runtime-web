@@ -13,35 +13,37 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.eclipse.core.databinding.property.INativePropertyListener;
+import org.eclipse.core.databinding.property.ISimplePropertyListener;
 
-import com.vaadin.ui.Component;
+import com.vaadin.data.Property;
 
 /**
- * 
  */
-public class ComponentCaptionProperty extends AbstractComponentValueProperty {
-	public String toString() {
-		return "ComponentPrimaryStylenameProperty"; //$NON-NLS-1$
-	}
-
-	public ComponentCaptionProperty() {
+public class ViewerPropertyDatasourceProperty extends AbstractModelProperty {
+	public ViewerPropertyDatasourceProperty() {
 		super();
 	}
 
+	@Override
+	public INativePropertyListener adaptListener(
+			ISimplePropertyListener listener) {
+		return null;
+	}
+
 	public Object getValueType() {
-		return String.class;
+		return Property.class;
 	}
 
 	protected Object doGetValue(Object source) {
-		Component component = (Component) source;
-		return component.getCaption();
+		Property.Viewer component = (Property.Viewer) source;
+		return component.getPropertyDataSource();
 	}
 
 	protected void doSetValue(Object source, Object value) {
-		Component component = (Component) source;
-		component.setCaption((String) value);
+		Property.Viewer component = (Property.Viewer) source;
+		component.setPropertyDataSource((Property<?>) value);
 	}
 }

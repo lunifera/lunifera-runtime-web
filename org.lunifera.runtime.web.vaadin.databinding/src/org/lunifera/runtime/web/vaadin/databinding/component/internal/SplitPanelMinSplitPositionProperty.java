@@ -13,34 +13,46 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
 
-import com.vaadin.ui.Field;
+import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.ui.AbstractSplitPanel;
 
 /**
  */
-public class FieldRequiredErrorProperty extends AbstractComponentValueProperty {
+public class SplitPanelMinSplitPositionProperty extends
+		AbstractComponentValueProperty {
 	public String toString() {
-		return "FieldRequiredErrorProperty"; //$NON-NLS-1$
+		return "SplitPanelMinSplitPositionProperty"; //$NON-NLS-1$
 	}
 
-	public FieldRequiredErrorProperty() {
+	public SplitPanelMinSplitPositionProperty() {
 		super();
 	}
 
 	public Object getValueType() {
-		return String.class;
+		return Integer.class;
 	}
 
 	protected Object doGetValue(Object source) {
-		Field<?> component = (Field<?>) source;
-		return component.getRequiredError();
+		AbstractSplitPanel component = (AbstractSplitPanel) source;
+		return component.getMinSplitPosition();
 	}
 
 	protected void doSetValue(Object source, Object value) {
-		Field<?> component = (Field<?>) source;
-		component.setRequiredError((String) value);
+		AbstractSplitPanel component = (AbstractSplitPanel) source;
+		Unit unit = component.getMinSplitPositionUnit();
+
+		int pos = (Integer) value;
+		if (unit != Unit.PIXELS && unit != Unit.PERCENTAGE) {
+			if (pos <= 100) {
+				unit = Unit.PERCENTAGE;
+			} else {
+				unit = Unit.PIXELS;
+			}
+		}
+		component.setMinSplitPosition((Integer) value, unit);
 	}
 }

@@ -13,7 +13,7 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.eclipse.core.databinding.property.value.DelegatingValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.IComponentValueProperty;
@@ -41,8 +41,13 @@ abstract class ComponentDelegatingValueProperty extends DelegatingValueProperty
 				VaadinObservables.getRealm(widget.getUI()), widget);
 	}
 
+	public IVaadinObservableValue observe(Object source) {
+		return (IVaadinObservableValue) super.observe(source);
+	}
+
 	public IVaadinObservableValue observeDelayed(int delay, Component widget) {
 		// return VaadinObservables.observeDelayedValue(delay, observe(widget));
 		throw new IllegalStateException("Delayed not allowed");
 	}
+
 }

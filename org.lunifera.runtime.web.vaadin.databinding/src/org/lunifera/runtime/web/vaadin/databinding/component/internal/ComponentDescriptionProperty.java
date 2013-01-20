@@ -13,42 +13,37 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.Viewer;
-import com.vaadin.ui.Field;
+import com.vaadin.ui.Component;
 
 /**
+ * 
  */
-public class FieldValueProperty extends AbstractComponentValueProperty {
+public class ComponentDescriptionProperty extends
+		AbstractComponentValueProperty {
 	public String toString() {
-		return "FieldValueProperty"; //$NON-NLS-1$
+		return "ComponentDescriptionProperty"; //$NON-NLS-1$
 	}
 
-	public FieldValueProperty() {
-		super(Field.ValueChangeEvent.class);
+	public ComponentDescriptionProperty() {
+		super();
 	}
 
 	public Object getValueType() {
-		return Object.class;
+		return String.class;
 	}
 
 	protected Object doGetValue(Object source) {
-		Property.Viewer viewer = (Viewer) source;
-		Property<?> property = (Property<?>) (viewer.getPropertyDataSource() != null ? viewer
-				.getPropertyDataSource() : viewer);
-		return property.getValue();
+		Component component = (Component) source;
+		return component.getDescription();
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void doSetValue(Object source, Object value) {
-		Property.Viewer viewer = (Viewer) source;
-		@SuppressWarnings("rawtypes")
-		Property property = (Property) (viewer.getPropertyDataSource() != null ? viewer
-				.getPropertyDataSource() : viewer);
-		property.setValue(value);
+		// Component component = (Component) source;
+		// component.setCaption((String) value);
+		throw new UnsupportedOperationException("setDescription missing in interface!");
 	}
 }

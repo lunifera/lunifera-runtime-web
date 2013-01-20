@@ -12,34 +12,43 @@
  * 		Florian Pirchner - porting swt databinding to support vaadin
  * 
  *******************************************************************************/
-package org.lunifera.runtime.web.vaadin.databinding.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
-import com.vaadin.ui.Field;
+import java.util.Collection;
 
-public class FieldRequiredProperty extends AbstractComponentValueProperty {
+import org.eclipse.core.databinding.property.INativePropertyListener;
+import org.eclipse.core.databinding.property.ISimplePropertyListener;
 
-	public String toString() {
-		return "FieldRequiredProperty"; //$NON-NLS-1$
+import com.vaadin.data.Container;
+
+/**
+ */
+public class ContainerPropertySetProperty extends AbstractModelProperty {
+
+	public ContainerPropertySetProperty() {
+
 	}
 
-	public FieldRequiredProperty() {
-		super();
+	public INativePropertyListener adaptListener(
+			ISimplePropertyListener listener) {
+		return new ContainerPropertySetChangeListener(this, listener);
 	}
 
+	@Override
 	public Object getValueType() {
-		return Boolean.class;
+		return Collection.class;
 	}
 
+	@Override
 	protected Object doGetValue(Object source) {
-		Field<?> component = (Field<?>) source;
-		return component.isRequired();
+		Container container = (Container) source;
+		return container.getContainerPropertyIds();
 	}
 
+	@Override
 	protected void doSetValue(Object source, Object value) {
-		Field<?> component = (Field<?>) source;
-		component.setRequired((Boolean) value);
+		throw new UnsupportedOperationException();
 	}
 
 }

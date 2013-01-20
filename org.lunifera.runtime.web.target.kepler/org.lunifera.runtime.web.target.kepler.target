@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="73">
+<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="77">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.9.0.v20121217-0429"/>
@@ -30,16 +30,24 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.1"/>
-<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.0.0.201301161532"/>
-<unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.5.4"/>
-<unit id="org.lunifera.dependencies.feature.xtext.headless.feature.group" version="2.4.0.201301161532"/>
-<repository location="http://lunifera.github.com/p2/kepler"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.rcp.feature.group" version="4.3.0.v20130104-140745-7IAUA7Bs-Qiz0UoWYOwRmVFEbBhO"/>
 <unit id="org.eclipse.rcp.source.feature.group" version="4.3.0.v20130104-140745-7IAUA7Bs-Qiz0UoWYOwRmVFEbBhO"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.3-I-builds"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
+<unit id="org.apache.commons.beanutils.source" version="1.8.0.v201205091237"/>
+<unit id="org.apache.commons.collections.source" version="3.2.0.v201005080500"/>
+<unit id="org.apache.commons.collections" version="3.2.0.v201005080500"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.lunifera.runtime.feature.configuration.manager.source.feature.group" version="0.0.1.201301161535"/>
+<unit id="org.lunifera.runtime.feature.configuration.manager.feature.group" version="0.0.1.201301161535"/>
+<unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.1"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.0.0.201301161532"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.5.4"/>
+<repository location="http://lunifera.github.com/p2/kepler"/>
 </location>
 </locations>
 </target>

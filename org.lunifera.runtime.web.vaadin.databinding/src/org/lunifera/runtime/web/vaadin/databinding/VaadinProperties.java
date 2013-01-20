@@ -15,20 +15,30 @@
 
 package org.lunifera.runtime.web.vaadin.databinding;
 
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentCaptionProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentEnabledProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentFocusedProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentIconProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentPrimaryStylenameProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentReadonlyProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentStylenameProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentVisibleProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.FieldRequiredErrorProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.FieldRequiredProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.FieldValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPickerGradientColorProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPickerGridColorProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPickerHistoryColorProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPickerSelectColorProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentDescriptionProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentFocusedProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SimpleAccessorProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelMaxSplitPositionProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelMaxSplitPositionUnitProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelMinSplitPositionProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelMinSplitPositionUnitProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelSplitPositionProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelSplitPositionUnitProperty;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.TabSheetSelectedTabProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerItemSetProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerPropertySetProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyReadonlyProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerContainerDatasourceProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerItemDatasourceProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerPropertyDatasourceProperty;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 
 /**
  * A factory for creating properties of SWT {@link Component components}.
@@ -37,139 +47,105 @@ import com.vaadin.ui.Field;
  */
 public class VaadinProperties {
 
-	// /**
-	// * Returns a value property for observing the bounds of a {@link
-	// Component}.
-	// *
-	// * @return a value property for observing the bounds of a {@link
-	// Component}.
-	// */
-	// public static IComponentValueProperty bounds() {
-	// return new ComponentBoundsProperty();
-	// }
-	//
-	// /**
-	// * Returns a value property for observing the readonly state of a
-	// * component.
-	// *
-	// * @return a value property for observing the editable state of a
-	// * {@link CCombo}, {@link StyledText}, or {@link Text}.
-	// */
-	// public static IComponentValueProperty readonly() {
-	// return new ComponentReadonlyProperty();
-	// }
-	//
-	// /**
-	// * Returns a value property for observing the enablement state of a
-	// * {@link Component}.
-	// *
-	// * @return a value property for observing the enablement state of a
-	// * {@link Component}.
-	// */
-	// public static IComponentValueProperty enabled() {
-	// return new ComponentEnabledProperty();
-	// }
-	//
-	// /**
-	// * Returns a value property for observing the focus state of a
-	// * {@link Component}.
-	// *
-	// * @return a value property for observing the focus state of a
-	// * {@link Component}.
-	// */
-	// public static IComponentValueProperty focused() {
-	// return new ComponentFocusedProperty();
-	// }
-
-	// /**
-	// * Returns a list property for observing the items of a {@link
-	// Container$Viewer}.
-	// *
-	// * @return a list property for observing the items of a {@link
-	// Container$Viewer}.
-	// */
-	// public static IComponentListProperty items() {
-	// return new ContainerViewerItemsProperty();
-	// }
-	//
-	// /**
-	// * Returns a value property for observing the single selection index of a
-	// * {@link Container$Viewer}.
-	// *
-	// * @return a value property for the single selection index of a {@link
-	// Container$Viewer}.
-	// */
-	// public static IComponentValueProperty singleSelectionIndex() {
-	// return new ContainerViewerSingleSelectionIndexProperty();
-	// }
-
-	/**
-	 * Returns a value property for observing the value of a {@link Field}.
-	 * 
-	 * @return a value property for observing the text of a {@link Field}.
-	 */
-	public static IComponentValueProperty value() {
-		return new FieldValueProperty();
+	public static IComponentValueProperty accessor(Class<?> componentClass,
+			String property) {
+		return new SimpleAccessorProperty(componentClass, property);
 	}
+
+	// /**
+	// * Returns a value property for observing the value of a {@link Field}.
+	// *
+	// * @param type
+	// * The type of the value. Can be <code>null</code>.
+	// *
+	// * @return a value property for observing the text of a {@link Field}.
+	// */
+	// public static IComponentValueProperty fieldValue(Class<?> type) {
+	// return new FieldValueProperty(type);
+	// }
 
 	public static IComponentValueProperty focus() {
 		return new ComponentFocusedProperty();
 	}
 
-	public static IComponentValueProperty caption() {
-		return new ComponentCaptionProperty();
+	public static IComponentValueProperty description() {
+		return new ComponentDescriptionProperty();
 	}
 
-	public static IComponentValueProperty enabled() {
-		return new ComponentEnabledProperty();
+	public static IComponentValueProperty maxSplitPosition() {
+		return new SplitPanelMaxSplitPositionProperty();
 	}
 
-	public static IComponentValueProperty icon() {
-		return new ComponentIconProperty();
+	public static IComponentValueProperty maxSplitPositionUnit() {
+		return new SplitPanelMaxSplitPositionUnitProperty();
 	}
 
-	public static IComponentValueProperty primaryStylename() {
-		return new ComponentPrimaryStylenameProperty();
+	public static IComponentValueProperty minSplitPosition() {
+		return new SplitPanelMinSplitPositionProperty();
 	}
 
-	public static IComponentValueProperty readonly() {
-		return new ComponentReadonlyProperty();
+	public static IComponentValueProperty minSplitPositionUnit() {
+		return new SplitPanelMinSplitPositionUnitProperty();
 	}
 
-	public static IComponentValueProperty stylename() {
-		return new ComponentStylenameProperty();
+	public static IComponentValueProperty splitPosition() {
+		return new SplitPanelSplitPositionProperty();
 	}
 
-	public static IComponentValueProperty visible() {
-		return new ComponentVisibleProperty();
+	public static IComponentValueProperty splitPositionUnit() {
+		return new SplitPanelSplitPositionUnitProperty();
 	}
 
-	public static IComponentValueProperty required() {
-		return new FieldRequiredProperty();
+	public static IComponentValueProperty selectedTab() {
+		return new TabSheetSelectedTabProperty();
 	}
 
-	public static IComponentValueProperty requiredError() {
-		return new FieldRequiredErrorProperty();
+	public static IComponentValueProperty color_ColorPickerGradient() {
+		return new ColorPickerGradientColorProperty();
 	}
 
-	// /**
-	// * Returns a value property for observing the tooltip text of a
-	// * component.
-	// *
-	// * @return a value property for observing the tooltip text.
-	// */
-	// public static IComponentValueProperty tooltip() {
-	// return new ComponentTooltipTextProperty();
-	// }
-	//
-	// /**
-	// * Returns a value property for observing the visibility state of a
-	// * {@link Component}.
-	// *
-	// * @return a value property for observing the visibility state of a
-	// * {@link Component}.
-	// */
-	// public static IComponentValueProperty visible() {
-	// return new ComponentVisibleProperty();
-	// }
+	public static IComponentValueProperty color_ColorPickerGrid() {
+		return new ColorPickerGridColorProperty();
+	}
+
+	public static IComponentValueProperty color_ColorPickerHistory() {
+		return new ColorPickerHistoryColorProperty();
+	}
+
+	public static IComponentValueProperty color_ColorPickerSelect() {
+		return new ColorPickerSelectColorProperty();
+	}
+
+	public static IModelValueProperty itemPropertyset() {
+		return new ItemPropertySetProperty();
+	}
+
+	public static IModelValueProperty containerPropertyset() {
+		return new ContainerPropertySetProperty();
+	}
+
+	public static IModelValueProperty containerItemset() {
+		return new ContainerItemSetProperty();
+	}
+
+	public static IModelValueProperty containerDatasource() {
+		return new ViewerContainerDatasourceProperty();
+	}
+
+	public static IModelValueProperty itemDatasource() {
+		return new ViewerItemDatasourceProperty();
+	}
+
+	public static IModelValueProperty propertyDatasource() {
+		return new ViewerPropertyDatasourceProperty();
+	}
+
+	public static IModelValueProperty propertyValue() {
+		return new PropertyValueProperty();
+	}
+
+	public static IModelValueProperty readonly() {
+		return new PropertyReadonlyProperty();
+	}
+
 }

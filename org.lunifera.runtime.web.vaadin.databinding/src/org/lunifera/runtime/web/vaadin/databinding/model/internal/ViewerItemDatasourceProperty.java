@@ -13,35 +13,37 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.eclipse.core.databinding.property.INativePropertyListener;
+import org.eclipse.core.databinding.property.ISimplePropertyListener;
 
-import com.vaadin.ui.AbstractField.ReadOnlyStatusChangeEvent;
-import com.vaadin.ui.Component;
+import com.vaadin.data.Item;
 
 /**
  */
-public class ComponentVisibleProperty extends AbstractComponentValueProperty {
-	public String toString() {
-		return "ComponentVisibleProperty"; //$NON-NLS-1$
+public class ViewerItemDatasourceProperty extends AbstractModelProperty {
+	public ViewerItemDatasourceProperty() {
+		super();
 	}
 
-	public ComponentVisibleProperty() {
-		super(ReadOnlyStatusChangeEvent.class);
+	@Override
+	public INativePropertyListener adaptListener(
+			ISimplePropertyListener listener) {
+		return null;
 	}
 
 	public Object getValueType() {
-		return Boolean.class;
+		return Item.class;
 	}
 
 	protected Object doGetValue(Object source) {
-		Component component = (Component) source;
-		return component.isVisible();
+		Item.Viewer component = (Item.Viewer) source;
+		return component.getItemDataSource();
 	}
 
 	protected void doSetValue(Object source, Object value) {
-		Component component = (Component) source;
-		component.setVisible((Boolean) value);
+		Item.Viewer component = (Item.Viewer) source;
+		component.setItemDataSource((Item) value);
 	}
 }

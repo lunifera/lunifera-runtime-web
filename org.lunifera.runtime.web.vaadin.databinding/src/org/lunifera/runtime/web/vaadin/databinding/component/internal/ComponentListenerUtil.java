@@ -12,7 +12,7 @@
  * 		Florian Pirchner - porting swt databinding to support vaadin
  * 
  *******************************************************************************/
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import java.lang.reflect.Method;
 

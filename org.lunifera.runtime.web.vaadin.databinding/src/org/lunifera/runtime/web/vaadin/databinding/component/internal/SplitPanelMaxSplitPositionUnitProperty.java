@@ -13,36 +13,33 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
 
-import com.vaadin.server.Resource;
-import com.vaadin.ui.AbstractField.ReadOnlyStatusChangeEvent;
-import com.vaadin.ui.Component;
+import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.ui.AbstractSplitPanel;
 
 /**
  */
-public class ComponentIconProperty extends AbstractComponentValueProperty {
-	public String toString() {
-		return "ComponentIconProperty"; //$NON-NLS-1$
-	}
-
-	public ComponentIconProperty() {
-		super(ReadOnlyStatusChangeEvent.class);
+public class SplitPanelMaxSplitPositionUnitProperty extends
+		AbstractComponentValueProperty {
+	public SplitPanelMaxSplitPositionUnitProperty() {
+		super();
 	}
 
 	public Object getValueType() {
-		return Resource.class;
+		return Unit.class;
 	}
 
 	protected Object doGetValue(Object source) {
-		Component component = (Component) source;
-		return component.getIcon();
+		AbstractSplitPanel component = (AbstractSplitPanel) source;
+		return component.getMaxSplitPositionUnit();
 	}
 
 	protected void doSetValue(Object source, Object value) {
-		Component component = (Component) source;
-		component.setIcon((Resource) value);
+		AbstractSplitPanel component = (AbstractSplitPanel) source;
+		component.setMaxSplitPosition(component.getMaxSplitPosition(),
+				(Unit) value);
 	}
 }

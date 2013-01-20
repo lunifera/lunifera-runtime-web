@@ -13,22 +13,19 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.eclipse.core.databinding.property.INativePropertyListener;
+import org.eclipse.core.databinding.property.ISimplePropertyListener;
 
-import com.vaadin.ui.AbstractField.ReadOnlyStatusChangeEvent;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.AbstractField;
 
 /**
  */
-public class ComponentReadonlyProperty extends AbstractComponentValueProperty {
-	public String toString() {
-		return "ComponentReadonlyProperty"; //$NON-NLS-1$
-	}
+public class PropertyReadonlyProperty extends AbstractModelProperty {
 
-	public ComponentReadonlyProperty() {
-		super(ReadOnlyStatusChangeEvent.class);
+	public PropertyReadonlyProperty() {
+		super();
 	}
 
 	public Object getValueType() {
@@ -36,12 +33,18 @@ public class ComponentReadonlyProperty extends AbstractComponentValueProperty {
 	}
 
 	protected Object doGetValue(Object source) {
-		Component component = (Component) source;
+		AbstractField<?> component = (AbstractField<?>) source;
 		return component.isReadOnly();
 	}
 
 	protected void doSetValue(Object source, Object value) {
-		Component component = (Component) source;
+		AbstractField<?> component = (AbstractField<?>) source;
 		component.setReadOnly((Boolean) value);
+	}
+
+	@Override
+	public INativePropertyListener adaptListener(
+			ISimplePropertyListener listener) {
+		return new PropertyReadonlyChangeListener(this, listener);
 	}
 }

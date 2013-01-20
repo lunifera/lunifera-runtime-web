@@ -13,7 +13,7 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.eclipse.core.databinding.observable.value.DecoratingObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;

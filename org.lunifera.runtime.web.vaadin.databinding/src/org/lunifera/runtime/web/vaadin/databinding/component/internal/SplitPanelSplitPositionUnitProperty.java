@@ -13,35 +13,33 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
 
-import com.vaadin.ui.Component;
+import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.ui.AbstractSplitPanel;
 
 /**
  */
-public class ComponentStylenameProperty extends
+public class SplitPanelSplitPositionUnitProperty extends
 		AbstractComponentValueProperty {
-	public String toString() {
-		return "ComponentStylenameProperty"; //$NON-NLS-1$
-	}
 
-	public ComponentStylenameProperty() {
+	public SplitPanelSplitPositionUnitProperty() {
 		super();
 	}
 
 	public Object getValueType() {
-		return String.class;
+		return Unit.class;
 	}
 
 	protected Object doGetValue(Object source) {
-		Component component = (Component) source;
-		return component.getStyleName();
+		AbstractSplitPanel component = (AbstractSplitPanel) source;
+		return component.getSplitPositionUnit();
 	}
 
 	protected void doSetValue(Object source, Object value) {
-		Component component = (Component) source;
-		component.setStyleName((String) value);
+		AbstractSplitPanel component = (AbstractSplitPanel) source;
+		component.setSplitPosition(component.getSplitPosition(), (Unit) value);
 	}
 }

@@ -12,38 +12,35 @@
  * 		Florian Pirchner - porting swt databinding to support vaadin
  * 
  *******************************************************************************/
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
 
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.ui.Field;
+import com.vaadin.shared.ui.colorpicker.Color;
+import com.vaadin.ui.components.colorpicker.ColorChangeEvent;
+import com.vaadin.ui.components.colorpicker.ColorPickerSelect;
 
-public class ComponentFocusedProperty extends AbstractComponentValueProperty {
+/**
+ */
+public class ColorPickerSelectColorProperty extends
+		AbstractComponentValueProperty {
 
-	public String toString() {
-		return "ComponentFocusedProperty"; //$NON-NLS-1$
-	}
-
-	public ComponentFocusedProperty() {
-		super(FocusEvent.class);
+	public ColorPickerSelectColorProperty() {
+		super(ColorChangeEvent.class);
 	}
 
 	public Object getValueType() {
-		return Boolean.class;
+		return Color.class;
 	}
- 
+
 	protected Object doGetValue(Object source) {
-		return false;
+		ColorPickerSelect component = (ColorPickerSelect) source;
+		return component.getColor();
 	}
 
-	@SuppressWarnings("rawtypes")
 	protected void doSetValue(Object source, Object value) {
-		Boolean booleanValue = (Boolean) value;
-		if (booleanValue) {
-			Field field = (Field) source;
-			field.focus();
-		}
+		ColorPickerSelect component = (ColorPickerSelect) source;
+		component.setColor((Color) value);
 	}
-
 }

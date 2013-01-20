@@ -20,8 +20,8 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.value.SimpleValueProperty;
-import org.lunifera.runtime.web.vaadin.databinding.internal.ComponentListener;
-import org.lunifera.runtime.web.vaadin.databinding.internal.VaadinObservableValueDecorator;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentListener;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.VaadinObservableValueDecorator;
 
 import com.vaadin.ui.Component;
 
@@ -102,11 +102,11 @@ public abstract class VaadinValueProperty extends SimpleValueProperty implements
 		return new ComponentListener(this, listener, changeEvents, staleEvents);
 	}
 
-	public IObservableValue observe(Object source) {
+	public IVaadinObservableValue observe(Object source) {
 		if (source instanceof Component) {
 			return observe((Component) source);
 		}
-		return super.observe(source);
+		return (IVaadinObservableValue) super.observe(source);
 	}
 
 	public IObservableValue observe(Realm realm, Object source) {

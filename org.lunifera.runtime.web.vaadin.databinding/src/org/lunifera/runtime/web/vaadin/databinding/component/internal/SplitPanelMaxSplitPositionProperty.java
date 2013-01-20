@@ -12,37 +12,47 @@
  * 		Florian Pirchner - porting swt databinding to support vaadin
  * 
  *******************************************************************************/
-package org.lunifera.runtime.web.vaadin.databinding.internal;
+
+package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
 
-import com.vaadin.ui.Component;
+import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.ui.AbstractSplitPanel;
 
 /**
- * @since 3.3
- * 
  */
-public class ComponentPrimaryStylenameProperty extends
+public class SplitPanelMaxSplitPositionProperty extends
 		AbstractComponentValueProperty {
 	public String toString() {
-		return "ComponentPrimaryStylenameProperty"; //$NON-NLS-1$
+		return "SplitPanelMaxSplitPositionProperty"; //$NON-NLS-1$
 	}
 
-	public ComponentPrimaryStylenameProperty() {
+	public SplitPanelMaxSplitPositionProperty() {
 		super();
 	}
 
 	public Object getValueType() {
-		return String.class;
+		return Integer.class;
 	}
 
 	protected Object doGetValue(Object source) {
-		Component component = (Component) source;
-		return component.getPrimaryStyleName();
+		AbstractSplitPanel component = (AbstractSplitPanel) source;
+		return component.getMaxSplitPosition();
 	}
 
 	protected void doSetValue(Object source, Object value) {
-		Component component = (Component) source;
-		component.setPrimaryStyleName((String) value);
+		AbstractSplitPanel component = (AbstractSplitPanel) source;
+		Unit unit = component.getMaxSplitPositionUnit();
+
+		int pos = (Integer) value;
+		if (unit != Unit.PIXELS && unit != Unit.PERCENTAGE) {
+			if (pos <= 100) {
+				unit = Unit.PERCENTAGE;
+			} else {
+				unit = Unit.PIXELS;
+			}
+		}
+		component.setMaxSplitPosition((Integer) value, unit);
 	}
 }
