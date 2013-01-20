@@ -25,7 +25,7 @@ import com.vaadin.ui.Component;
  */
 public interface IComponentValueProperty extends IValueProperty {
 	/**
-	 * Returns an {@link IVaadinObservableValue} observing this value property
+	 * Returns an {@link IVaadinComponentObservableValue} observing this value property
 	 * on the given Component
 	 * 
 	 * @param Component
@@ -33,7 +33,7 @@ public interface IComponentValueProperty extends IValueProperty {
 	 * @return an observable value observing this value property on the given
 	 *         Component
 	 */
-	public IVaadinObservableValue observe(Component component);
+	public IVaadinComponentObservableValue observe(Component component);
 
 	/**
 	 * Returns an observable value observing this value property on the given
@@ -44,10 +44,10 @@ public interface IComponentValueProperty extends IValueProperty {
 	 * @return an observable value observing this value property on the given
 	 *         property source
 	 */
-	public IVaadinObservableValue observe(Object source);
+	public IVaadinComponentObservableValue observe(Object source);
 
 	/**
-	 * Returns an {@link IVaadinObservableValue} observing this value property
+	 * Returns an {@link IVaadinComponentObservableValue} observing this value property
 	 * on the given Component, which delays notification of value changes until
 	 * at least <code>delay</code> milliseconds have elapsed since that last
 	 * change event, or until a FocusOut event is received from the Component
@@ -66,5 +66,5 @@ public interface IComponentValueProperty extends IValueProperty {
 	 *         Component, and which delays change notifications for
 	 *         <code>delay</code> milliseconds.
 	 */
-	public IVaadinObservableValue observeDelayed(int delay, Component component);
+	public IVaadinComponentObservableValue observeDelayed(int delay, Component component);
 }

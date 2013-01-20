@@ -19,10 +19,7 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.SimpleValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.IModelValueProperty;
-import org.lunifera.runtime.web.vaadin.databinding.IVaadinObservableValue;
-import org.lunifera.runtime.web.vaadin.databinding.component.internal.VaadinObservableValueDecorator;
-
-import com.vaadin.ui.Component;
+import org.lunifera.runtime.web.vaadin.databinding.IVaadinModelObservableValue;
 
 /**
  */
@@ -37,17 +34,18 @@ public abstract class AbstractModelProperty extends SimpleValueProperty
 
 	}
 
-	public IVaadinObservableValue observe(Object source) {
-		return (IVaadinObservableValue) super.observe(source);
+	public IVaadinModelObservableValue observe(Object source) {
+		return (IVaadinModelObservableValue) wrapObservable(
+				super.observe(source), source);
 	}
 
 	public IObservableValue observe(Realm realm, Object source) {
-		return wrapObservable(super.observe(realm, source), (Component) source);
+		return super.observe(realm, source);
 	}
 
-	protected IVaadinObservableValue wrapObservable(
-			IObservableValue observable, Component widget) {
-		return new VaadinObservableValueDecorator(observable, widget);
+	protected IVaadinModelObservableValue wrapObservable(
+			IObservableValue observable, Object source) {
+		return new VaadinObservableModelValueDecorator(observable, source);
 	}
 
 }

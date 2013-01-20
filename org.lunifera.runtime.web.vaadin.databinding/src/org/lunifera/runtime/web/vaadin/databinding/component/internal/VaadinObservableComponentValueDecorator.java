@@ -17,22 +17,22 @@ package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.eclipse.core.databinding.observable.value.DecoratingObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.lunifera.runtime.web.vaadin.databinding.IVaadinObservableValue;
+import org.lunifera.runtime.web.vaadin.databinding.IVaadinComponentObservableValue;
 
 import com.vaadin.ui.Component;
 
 /**
  */
 @SuppressWarnings("serial")
-public class VaadinObservableValueDecorator extends DecoratingObservableValue
-		implements IVaadinObservableValue, Component.Listener {
+public class VaadinObservableComponentValueDecorator extends DecoratingObservableValue
+		implements IVaadinComponentObservableValue, Component.Listener {
 	private Component widget;
 
 	/**
 	 * @param decorated
 	 * @param widget
 	 */
-	public VaadinObservableValueDecorator(IObservableValue decorated,
+	public VaadinObservableComponentValueDecorator(IObservableValue decorated,
 			Component widget) {
 		super(decorated, true);
 		this.widget = widget;

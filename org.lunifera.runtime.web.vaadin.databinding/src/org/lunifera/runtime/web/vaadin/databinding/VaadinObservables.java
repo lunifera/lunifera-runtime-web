@@ -138,7 +138,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinObservableValue observePropertySet(
+	public static IVaadinModelObservableValue observePropertySet(
 			Item.PropertySetChangeNotifier notifier) {
 		return VaadinProperties.itemPropertyset().observe(notifier);
 	}
@@ -150,7 +150,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinObservableValue observePropertySet(
+	public static IVaadinModelObservableValue observePropertySet(
 			Container.PropertySetChangeNotifier notifier) {
 		return VaadinProperties.containerPropertyset().observe(notifier);
 	}
@@ -162,7 +162,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinObservableValue observeItemSet(
+	public static IVaadinModelObservableValue observeItemSet(
 			Container.ItemSetChangeNotifier notifier) {
 		return VaadinProperties.containerItemset().observe(notifier);
 	}
@@ -173,7 +173,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinObservableValue observeContainerDatasource(
+	public static IVaadinModelObservableValue observeContainerDatasource(
 			Container.Viewer viewer) {
 		return VaadinProperties.containerDatasource().observe(viewer);
 	}
@@ -184,7 +184,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinObservableValue observeItemDatasource(
+	public static IVaadinModelObservableValue observeItemDatasource(
 			Item.Viewer viewer) {
 		return VaadinProperties.itemDatasource().observe(viewer);
 	}
@@ -195,7 +195,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinObservableValue observeItemDatasource(
+	public static IVaadinModelObservableValue observeItemDatasource(
 			Property.Viewer viewer) {
 		return VaadinProperties.propertyDatasource().observe(viewer);
 	}
@@ -206,7 +206,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinObservableValue observeValue(
+	public static IVaadinModelObservableValue observeValue(
 			Property.ValueChangeNotifier notifier) {
 		return VaadinProperties.propertyValue().observe(notifier);
 	}
@@ -218,7 +218,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinObservableValue observeReadonly(
+	public static IVaadinModelObservableValue observeReadonly(
 			Property.ReadOnlyStatusChangeNotifier notifier) {
 		return VaadinProperties.readonly().observe(notifier);
 	}
@@ -231,7 +231,8 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeFocus(Focusable focusable) {
+	public static IVaadinComponentObservableValue observeFocus(
+			Focusable focusable) {
 		return VaadinProperties.focus().observe(focusable);
 	}
 
@@ -241,7 +242,8 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeCaption(Component component) {
+	public static IVaadinComponentObservableValue observeCaption(
+			Component component) {
 		return VaadinProperties.accessor(Component.class, "caption").observe(
 				component);
 	}
@@ -253,7 +255,8 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeEnabled(Component component) {
+	public static IVaadinComponentObservableValue observeEnabled(
+			Component component) {
 		return VaadinProperties.accessor(Component.class, "enabled").observe(
 				component);
 	}
@@ -265,7 +268,8 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeDescription(Component component) {
+	public static IVaadinComponentObservableValue observeDescription(
+			Component component) {
 		return VaadinProperties.description().observe(component);
 	}
 
@@ -275,7 +279,8 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeIcon(Component component) {
+	public static IVaadinComponentObservableValue observeIcon(
+			Component component) {
 		return VaadinProperties.accessor(Component.class, "icon").observe(
 				component);
 	}
@@ -287,7 +292,7 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observePrimaryStyleName(
+	public static IVaadinComponentObservableValue observePrimaryStyleName(
 			Component component) {
 		return VaadinProperties.accessor(Component.class, "primaryStyleName")
 				.observe(component);
@@ -299,7 +304,8 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeStyleName(Component component) {
+	public static IVaadinComponentObservableValue observeStyleName(
+			Component component) {
 		return VaadinProperties.accessor(Component.class, "styleName").observe(
 				component);
 	}
@@ -311,7 +317,8 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeVisible(Component component) {
+	public static IVaadinComponentObservableValue observeVisible(
+			Component component) {
 		return VaadinProperties.accessor(Component.class, "visible").observe(
 				component);
 	}
@@ -323,7 +330,7 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeRequired(Field<?> field) {
+	public static IVaadinComponentObservableValue observeRequired(Field<?> field) {
 		return VaadinProperties.accessor(Field.class, "required")
 				.observe(field);
 	}
@@ -335,842 +342,918 @@ public class VaadinObservables {
 	 * @param field
 	 * @return
 	 */
-	public static IVaadinObservableValue observeRequiredError(Field<?> field) {
+	public static IVaadinComponentObservableValue observeRequiredError(
+			Field<?> field) {
 		return VaadinProperties.accessor(Field.class, "requiredError").observe(
 				field);
 	}
 
-	public static IVaadinObservableValue observeAlternateText(
+	public static IVaadinComponentObservableValue observeAlternateText(
 			AbstractEmbedded component) {
 		return VaadinProperties.accessor(AbstractEmbedded.class,
 				"alternateText").observe(component);
 	}
 
-	public static IVaadinObservableValue observeSource(
+	public static IVaadinComponentObservableValue observeSource(
 			AbstractEmbedded component) {
 		return VaadinProperties.accessor(AbstractEmbedded.class, "source")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeItemCaptionMode(
+	public static IVaadinComponentObservableValue observeItemCaptionMode(
 			AbstractSelect component) {
 		return VaadinProperties.accessor(AbstractSelect.class,
 				"itemCaptionMode").observe(component);
 	}
 
-	public static IVaadinObservableValue observeItemCaptionPropertyId(
+	public static IVaadinComponentObservableValue observeItemCaptionPropertyId(
 			AbstractSelect component) {
 		return VaadinProperties.accessor(AbstractSelect.class,
 				"itemCaptionPropertyId").observe(component);
 	}
 
-	public static IVaadinObservableValue observeItemIconPropertyId(
+	public static IVaadinComponentObservableValue observeItemIconPropertyId(
 			AbstractSelect component) {
 		return VaadinProperties.accessor(AbstractSelect.class,
 				"itemIconPropertyId").observe(component);
 	}
 
-	public static IVaadinObservableValue observeMultiSelect(
+	public static IVaadinComponentObservableValue observeMultiSelect(
 			AbstractSelect component) {
 		return VaadinProperties.accessor(AbstractSelect.class, "multiSelect")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeNewItemHandler(
+	public static IVaadinComponentObservableValue observeNewItemHandler(
 			AbstractSelect component) {
 		return VaadinProperties
 				.accessor(AbstractSelect.class, "newItemHandler").observe(
 						component);
 	}
 
-	public static IVaadinObservableValue observeNewItemsAllowed(
+	public static IVaadinComponentObservableValue observeNewItemsAllowed(
 			AbstractSelect component) {
 		return VaadinProperties.accessor(AbstractSelect.class,
 				"newItemsAllowed").observe(component);
 	}
 
-	public static IVaadinObservableValue observeNullSelectionAllowed(
+	public static IVaadinComponentObservableValue observeNullSelectionAllowed(
 			AbstractSelect component) {
 		return VaadinProperties.accessor(AbstractSelect.class,
 				"nullSelectionAllowed").observe(component);
 	}
 
-	public static IVaadinObservableValue observeBuffered(Buffered component) {
+	public static IVaadinComponentObservableValue observeBuffered(
+			Buffered component) {
 		return VaadinProperties.accessor(Buffered.class, "buffered").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeInvalidCommitted(
+	public static IVaadinComponentObservableValue observeInvalidCommitted(
 			BufferedValidatable component) {
 		return VaadinProperties.accessor(Buffered.class, "invalidCommitted")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeInvalidCommitted(
+	public static IVaadinComponentObservableValue observeInvalidCommitted(
 			ComboBox component) {
 		return VaadinProperties.accessor(ComboBox.class, "pageLength").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeScrollToSelectedItem(
+	public static IVaadinComponentObservableValue observeScrollToSelectedItem(
 			ComboBox component) {
 		return VaadinProperties
 				.accessor(ComboBox.class, "scrollToSelectedItem").observe(
 						component);
 	}
 
-	public static IVaadinObservableValue observeTextInputAllowed(
+	public static IVaadinComponentObservableValue observeTextInputAllowed(
 			ComboBox component) {
 		return VaadinProperties.accessor(ComboBox.class, "textInputAllowed")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeTemplateContents(
+	public static IVaadinComponentObservableValue observeTemplateContents(
 			CustomLayout component) {
 		return VaadinProperties
 				.accessor(CustomLayout.class, "templateContents").observe(
 						component);
 	}
 
-	public static IVaadinObservableValue observeTemplateNameProperty(
+	public static IVaadinComponentObservableValue observeTemplateNameProperty(
 			CustomLayout component) {
 		return VaadinProperties.accessor(CustomLayout.class,
 				"templateNameProperty").observe(component);
 	}
 
-	public static IVaadinObservableValue observeDateFormat(DateField component) {
+	public static IVaadinComponentObservableValue observeDateFormat(
+			DateField component) {
 		return VaadinProperties.accessor(DateField.class, "dateFormat")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeLenient(DateField component) {
+	public static IVaadinComponentObservableValue observeLenient(
+			DateField component) {
 		return VaadinProperties.accessor(DateField.class, "lenient").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeParseErrorMessage(
+	public static IVaadinComponentObservableValue observeParseErrorMessage(
 			DateField component) {
 		return VaadinProperties.accessor(DateField.class, "parseErrorMessage")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeResolution(DateField component) {
+	public static IVaadinComponentObservableValue observeResolution(
+			DateField component) {
 		return VaadinProperties.accessor(DateField.class, "resolution")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeShowISOWeekNumbers(
+	public static IVaadinComponentObservableValue observeShowISOWeekNumbers(
 			DateField component) {
 		return VaadinProperties.accessor(DateField.class, "showISOWeekNumbers")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeTextFieldEnabled(
+	public static IVaadinComponentObservableValue observeTextFieldEnabled(
 			DateField component) {
 		return VaadinProperties.accessor(DateField.class, "textFieldEnabled")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeTimeZone(DateField component) {
+	public static IVaadinComponentObservableValue observeTimeZone(
+			DateField component) {
 		return VaadinProperties.accessor(DateField.class, "timeZone").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeValidationVisible(
+	public static IVaadinComponentObservableValue observeValidationVisible(
 			AbstractField<?> component) {
 		return VaadinProperties.accessor(AbstractField.class,
 				"validationVisible").observe(component);
 	}
 
-	public static IVaadinObservableValue observeColumns(GridLayout component) {
+	public static IVaadinComponentObservableValue observeColumns(
+			GridLayout component) {
 		return VaadinProperties.accessor(GridLayout.class, "columns").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeCursorX(GridLayout component) {
+	public static IVaadinComponentObservableValue observeCursorX(
+			GridLayout component) {
 		return VaadinProperties.accessor(GridLayout.class, "cursorX").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeCursorY(GridLayout component) {
+	public static IVaadinComponentObservableValue observeCursorY(
+			GridLayout component) {
 		return VaadinProperties.accessor(GridLayout.class, "cursorY").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeRows(GridLayout component) {
+	public static IVaadinComponentObservableValue observeRows(
+			GridLayout component) {
 		return VaadinProperties.accessor(GridLayout.class, "rows").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeRows(ListSelect component) {
+	public static IVaadinComponentObservableValue observeRows(
+			ListSelect component) {
 		return VaadinProperties.accessor(ListSelect.class, "rows").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeRows(MarginHandler component) {
+	public static IVaadinComponentObservableValue observeRows(
+			MarginHandler component) {
 		return VaadinProperties.accessor(MarginHandler.class, "marginInfo")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeRows(OptionGroup component) {
+	public static IVaadinComponentObservableValue observeRows(
+			OptionGroup component) {
 		return VaadinProperties.accessor(OptionGroup.class,
 				"htmlContentAllowed").observe(component);
 	}
 
-	public static IVaadinObservableValue observeRows(PopupDateField component) {
+	public static IVaadinComponentObservableValue observeRows(
+			PopupDateField component) {
 		return VaadinProperties.accessor(PopupDateField.class, "inputPrompt")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeTextFieldEnabled(
+	public static IVaadinComponentObservableValue observeTextFieldEnabled(
 			PopupDateField component) {
 		return VaadinProperties.accessor(PopupDateField.class,
 				"textFieldEnabled").observe(component);
 	}
 
-	public static IVaadinObservableValue observeHeight(Sizeable component) {
+	public static IVaadinComponentObservableValue observeHeight(
+			Sizeable component) {
 		return VaadinProperties.height().observe(component);
 	}
 
-	public static IVaadinObservableValue observeWidth(Sizeable component) {
+	public static IVaadinComponentObservableValue observeWidth(
+			Sizeable component) {
 		return VaadinProperties.width().observe(component);
 	}
 
-	public static IVaadinObservableValue observeSpacing(SpacingHandler component) {
+	public static IVaadinComponentObservableValue observeSpacing(
+			SpacingHandler component) {
 		return VaadinProperties.accessor(SpacingHandler.class, "spacing")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeFirstComponent(
+	public static IVaadinComponentObservableValue observeFirstComponent(
 			AbstractSplitPanel component) {
 		return VaadinProperties.accessor(AbstractSplitPanel.class,
 				"firstComponent").observe(component);
 	}
 
-	public static IVaadinObservableValue observeLocked(
+	public static IVaadinComponentObservableValue observeLocked(
 			AbstractSplitPanel component) {
 		return VaadinProperties.accessor(AbstractSplitPanel.class, "locked")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeMaxSplitPosition(
+	public static IVaadinComponentObservableValue observeMaxSplitPosition(
 			AbstractSplitPanel component) {
 		return VaadinProperties.maxSplitPosition().observe(component);
 	}
 
-	public static IVaadinObservableValue observeMaxSplitPositionUnit(
+	public static IVaadinComponentObservableValue observeMaxSplitPositionUnit(
 			AbstractSplitPanel component) {
 		return VaadinProperties.maxSplitPositionUnit().observe(component);
 	}
 
-	public static IVaadinObservableValue observeMinSplitPosition(
+	public static IVaadinComponentObservableValue observeMinSplitPosition(
 			AbstractSplitPanel component) {
 		return VaadinProperties.minSplitPosition().observe(component);
 	}
 
-	public static IVaadinObservableValue observeMinSplitPositionUnit(
+	public static IVaadinComponentObservableValue observeMinSplitPositionUnit(
 			AbstractSplitPanel component) {
 		return VaadinProperties.minSplitPositionUnit().observe(component);
 	}
 
-	public static IVaadinObservableValue observeSplitPosition(
+	public static IVaadinComponentObservableValue observeSplitPosition(
 			AbstractSplitPanel component) {
 		return VaadinProperties.splitPosition().observe(component);
 	}
 
-	public static IVaadinObservableValue observeSplitPositionUnit(
+	public static IVaadinComponentObservableValue observeSplitPositionUnit(
 			AbstractSplitPanel component) {
 		return VaadinProperties.splitPositionUnit().observe(component);
 	}
 
-	public static IVaadinObservableValue observeSeconComponent(
+	public static IVaadinComponentObservableValue observeSeconComponent(
 			AbstractSplitPanel component) {
 		return VaadinProperties.accessor(AbstractSplitPanel.class,
 				"secondComponent").observe(component);
 	}
 
-	public static IVaadinObservableValue observeCache(Table component) {
+	public static IVaadinComponentObservableValue observeCache(Table component) {
 		return VaadinProperties.accessor(Table.class, "cache").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeCellStyleGenerator(
+	public static IVaadinComponentObservableValue observeCellStyleGenerator(
 			Table component) {
 		return VaadinProperties.accessor(Table.class, "cellStyleGenerator")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeColumnAlignments(Table component) {
+	public static IVaadinComponentObservableValue observeColumnAlignments(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "columnAlignments")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeColumnCollapsingAllowed(
+	public static IVaadinComponentObservableValue observeColumnCollapsingAllowed(
 			Table component) {
 		return VaadinProperties
 				.accessor(Table.class, "columnCollapsingAllowed").observe(
 						component);
 	}
 
-	public static IVaadinObservableValue observeColumnHeaderMode(Table component) {
+	public static IVaadinComponentObservableValue observeColumnHeaderMode(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "columnHeaderMode")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeColumnHeaders(Table component) {
+	public static IVaadinComponentObservableValue observeColumnHeaders(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "columnHeaders").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeColumnIcons(Table component) {
+	public static IVaadinComponentObservableValue observeColumnIcons(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "columnIcons").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeColumnReorderingAllowed(
+	public static IVaadinComponentObservableValue observeColumnReorderingAllowed(
 			Table component) {
 		return VaadinProperties
 				.accessor(Table.class, "columnReorderingAllowed").observe(
 						component);
 	}
 
-	public static IVaadinObservableValue observeCurrentPageFirstItemId(
+	public static IVaadinComponentObservableValue observeCurrentPageFirstItemId(
 			Table component) {
 		return VaadinProperties.accessor(Table.class, "currentPageFirstItemId")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeCurrentPageFirstItemIndex(
+	public static IVaadinComponentObservableValue observeCurrentPageFirstItemIndex(
 			Table component) {
 		return VaadinProperties.accessor(Table.class,
 				"currentPageFirstItemIndex").observe(component);
 	}
 
-	public static IVaadinObservableValue observeDropHandler(Table component) {
+	public static IVaadinComponentObservableValue observeDropHandler(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "dropHandler").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeDragMode(Table component) {
+	public static IVaadinComponentObservableValue observeDragMode(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "dragMode").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeEditable(Table component) {
+	public static IVaadinComponentObservableValue observeEditable(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "editable").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeTableFieldFactory(
+	public static IVaadinComponentObservableValue observeTableFieldFactory(
 			Table component) {
 		return VaadinProperties.accessor(Table.class, "tableFieldFactory")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeFooterVisible(Table component) {
+	public static IVaadinComponentObservableValue observeFooterVisible(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "footerVisible").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeItemDescriptionGenerator(
+	public static IVaadinComponentObservableValue observeItemDescriptionGenerator(
 			Table component) {
 		return VaadinProperties.accessor(Table.class,
 				"itemDescriptionGenerator").observe(component);
 	}
 
-	public static IVaadinObservableValue observeMultiSelectMode(Table component) {
+	public static IVaadinComponentObservableValue observeMultiSelectMode(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "multiSelectMode")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeRowGenerator(Table component) {
+	public static IVaadinComponentObservableValue observeRowGenerator(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "rowGenerator").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeRowHeaderMode(Table component) {
+	public static IVaadinComponentObservableValue observeRowHeaderMode(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "rowHeaderMode").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeSelectable(Table component) {
+	public static IVaadinComponentObservableValue observeSelectable(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "selectable").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeSortAscending(Table component) {
+	public static IVaadinComponentObservableValue observeSortAscending(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "sortAscending").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeSortContainerPropertyId(
+	public static IVaadinComponentObservableValue observeSortContainerPropertyId(
 			Table component) {
 		return VaadinProperties
 				.accessor(Table.class, "sortContainerPropertyId").observe(
 						component);
 	}
 
-	public static IVaadinObservableValue observeSortEnabled(Table component) {
+	public static IVaadinComponentObservableValue observeSortEnabled(
+			Table component) {
 		return VaadinProperties.accessor(Table.class, "sortEnabled").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeVisible(Table component) {
+	public static IVaadinComponentObservableValue observeVisible(Table component) {
 		return VaadinProperties.accessor(Table.class, "visible").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeSelectedTab(TabSheet component) {
+	public static IVaadinComponentObservableValue observeSelectedTab(
+			TabSheet component) {
 		return VaadinProperties.selectedTab().observe(component);
 	}
 
-	public static IVaadinObservableValue observeTabIndex(TabSheet component) {
+	public static IVaadinComponentObservableValue observeTabIndex(
+			TabSheet component) {
 		return VaadinProperties.accessor(Table.class, "tabIndex").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeRows(TextArea component) {
+	public static IVaadinComponentObservableValue observeRows(TextArea component) {
 		return VaadinProperties.accessor(TextArea.class, "rows").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeWordWrap(TextArea component) {
+	public static IVaadinComponentObservableValue observeWordWrap(
+			TextArea component) {
 		return VaadinProperties.accessor(TextArea.class, "wordWrap").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeTextChangeEventMode(
+	public static IVaadinComponentObservableValue observeTextChangeEventMode(
 			AbstractTextField component) {
 		return VaadinProperties.accessor(AbstractTextField.class,
 				"textChangeEventMode").observe(component);
 	}
 
-	public static IVaadinObservableValue observeTextChangeTimeout(
+	public static IVaadinComponentObservableValue observeTextChangeTimeout(
 			AbstractTextField component) {
 		return VaadinProperties.accessor(AbstractTextField.class,
 				"textChangeTimeout").observe(component);
 	}
 
-	public static IVaadinObservableValue observeColumns(
+	public static IVaadinComponentObservableValue observeColumns(
 			AbstractTextField component) {
 		return VaadinProperties.accessor(AbstractTextField.class, "columns")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeCursorPosition(
+	public static IVaadinComponentObservableValue observeCursorPosition(
 			AbstractTextField component) {
 		return VaadinProperties.accessor(AbstractTextField.class,
 				"cursorPosition").observe(component);
 	}
 
-	public static IVaadinObservableValue observeInputPrompt(
+	public static IVaadinComponentObservableValue observeInputPrompt(
 			AbstractTextField component) {
 		return VaadinProperties
 				.accessor(AbstractTextField.class, "inputPrompt").observe(
 						component);
 	}
 
-	public static IVaadinObservableValue observeMaxLength(
+	public static IVaadinComponentObservableValue observeMaxLength(
 			AbstractTextField component) {
 		return VaadinProperties.accessor(AbstractTextField.class, "maxLength")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeNullRepresentation(
+	public static IVaadinComponentObservableValue observeNullRepresentation(
 			AbstractTextField component) {
 		return VaadinProperties.accessor(AbstractTextField.class,
 				"nullRepresentation").observe(component);
 	}
 
-	public static IVaadinObservableValue observeNullSettingAllowed(
+	public static IVaadinComponentObservableValue observeNullSettingAllowed(
 			AbstractTextField component) {
 		return VaadinProperties.accessor(AbstractTextField.class,
 				"nullSettingAllowed").observe(component);
 	}
 
-	public static IVaadinObservableValue observeDragMode(Tree component) {
+	public static IVaadinComponentObservableValue observeDragMode(Tree component) {
 		return VaadinProperties.accessor(Tree.class, "dragMode").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeDropHandler(Tree component) {
+	public static IVaadinComponentObservableValue observeDropHandler(
+			Tree component) {
 		return VaadinProperties.accessor(Tree.class, "dropHandler").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeItemDescriptionGenerator(
+	public static IVaadinComponentObservableValue observeItemDescriptionGenerator(
 			Tree component) {
 		return VaadinProperties
 				.accessor(Tree.class, "itemDescriptionGenerator").observe(
 						component);
 	}
 
-	public static IVaadinObservableValue observeItemStyleGenerator(
+	public static IVaadinComponentObservableValue observeItemStyleGenerator(
 			Tree component) {
 		return VaadinProperties.accessor(Tree.class, "itemStyleGenerator")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeMultiSelectMode(Tree component) {
+	public static IVaadinComponentObservableValue observeMultiSelectMode(
+			Tree component) {
 		return VaadinProperties.accessor(Tree.class, "multiSelectMode")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeSelectable(Tree component) {
+	public static IVaadinComponentObservableValue observeSelectable(
+			Tree component) {
 		return VaadinProperties.accessor(Tree.class, "selectable").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeSelectable(TreeTable component) {
+	public static IVaadinComponentObservableValue observeSelectable(
+			TreeTable component) {
 		return VaadinProperties.accessor(TreeTable.class, "animationsEnabled")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeHierachyColumnId(
+	public static IVaadinComponentObservableValue observeHierachyColumnId(
 			TreeTable component) {
 		return VaadinProperties.accessor(TreeTable.class, "hierachyColumnId")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeRows(TwinColSelect component) {
+	public static IVaadinComponentObservableValue observeRows(
+			TwinColSelect component) {
 		return VaadinProperties.accessor(TwinColSelect.class, "rows").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeLeftColumnCaption(
+	public static IVaadinComponentObservableValue observeLeftColumnCaption(
 			TwinColSelect component) {
 		return VaadinProperties.accessor(TwinColSelect.class,
 				"leftColumnCaption").observe(component);
 	}
 
-	public static IVaadinObservableValue observeRightColumnCaption(
+	public static IVaadinComponentObservableValue observeRightColumnCaption(
 			TwinColSelect component) {
 		return VaadinProperties.accessor(TwinColSelect.class,
 				"rightColumnCaption").observe(component);
 	}
 
-	public static IVaadinObservableValue observeInvalidAllowed(
+	public static IVaadinComponentObservableValue observeInvalidAllowed(
 			Validatable component) {
 		return VaadinProperties.accessor(Validatable.class, "invalidAllowed")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeIndeterminate(
+	public static IVaadinComponentObservableValue observeIndeterminate(
 			ProgressIndicator component) {
 		return VaadinProperties.accessor(ProgressIndicator.class,
 				"indeterminate").observe(component);
 	}
 
-	public static IVaadinObservableValue observePollingInterval(
+	public static IVaadinComponentObservableValue observePollingInterval(
 			ProgressIndicator component) {
 		return VaadinProperties.accessor(ProgressIndicator.class,
 				"pollingInterval").observe(component);
 	}
 
-	public static IVaadinObservableValue observeNullRepresentation(
+	public static IVaadinComponentObservableValue observeNullRepresentation(
 			RichTextArea component) {
 		return VaadinProperties.accessor(RichTextArea.class,
 				"nullRepresentation").observe(component);
 	}
 
-	public static IVaadinObservableValue observeNullSettingAllowed(
+	public static IVaadinComponentObservableValue observeNullSettingAllowed(
 			RichTextArea component) {
 		return VaadinProperties.accessor(RichTextArea.class,
 				"nullSettingAllowed").observe(component);
 	}
 
-	public static IVaadinObservableValue observeMax(Slider component) {
+	public static IVaadinComponentObservableValue observeMax(Slider component) {
 		return VaadinProperties.accessor(Slider.class, "max")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeMin(Slider component) {
+	public static IVaadinComponentObservableValue observeMin(Slider component) {
 		return VaadinProperties.accessor(Slider.class, "min")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeOrientation(Slider component) {
+	public static IVaadinComponentObservableValue observeOrientation(
+			Slider component) {
 		return VaadinProperties.accessor(Slider.class, "orientation").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeResolution(Slider component) {
+	public static IVaadinComponentObservableValue observeResolution(
+			Slider component) {
 		return VaadinProperties.accessor(Slider.class, "resolution").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeAltText(AbstractMedia component) {
+	public static IVaadinComponentObservableValue observeAltText(
+			AbstractMedia component) {
 		return VaadinProperties.accessor(AbstractMedia.class, "altText")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeAutoplay(AbstractMedia component) {
+	public static IVaadinComponentObservableValue observeAutoplay(
+			AbstractMedia component) {
 		return VaadinProperties.accessor(AbstractMedia.class, "autoplay")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeHtmlContentAllowed(
+	public static IVaadinComponentObservableValue observeHtmlContentAllowed(
 			AbstractMedia component) {
 		return VaadinProperties.accessor(AbstractMedia.class,
 				"htmlContentAllowed").observe(component);
 	}
 
-	public static IVaadinObservableValue observeMuted(AbstractMedia component) {
+	public static IVaadinComponentObservableValue observeMuted(
+			AbstractMedia component) {
 		return VaadinProperties.accessor(AbstractMedia.class, "muted").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeShowControls(
+	public static IVaadinComponentObservableValue observeShowControls(
 			AbstractMedia component) {
 		return VaadinProperties.accessor(AbstractMedia.class, "showControls")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observePoster(Video component) {
+	public static IVaadinComponentObservableValue observePoster(Video component) {
 		return VaadinProperties.accessor(Video.class, "poster").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeScrollLeft(Scrollable component) {
+	public static IVaadinComponentObservableValue observeScrollLeft(
+			Scrollable component) {
 		return VaadinProperties.accessor(Scrollable.class, "scrollLeft")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeScrollTop(Scrollable component) {
+	public static IVaadinComponentObservableValue observeScrollTop(
+			Scrollable component) {
 		return VaadinProperties.accessor(Scrollable.class, "scrollTop")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeClosable(Window component) {
+	public static IVaadinComponentObservableValue observeClosable(
+			Window component) {
 		return VaadinProperties.accessor(Window.class, "closable").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeScrollTop(Window component) {
+	public static IVaadinComponentObservableValue observeScrollTop(
+			Window component) {
 		return VaadinProperties.accessor(Window.class, "scrollTop").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeDraggable(Window component) {
+	public static IVaadinComponentObservableValue observeDraggable(
+			Window component) {
 		return VaadinProperties.accessor(Window.class, "draggable").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeModal(Window component) {
+	public static IVaadinComponentObservableValue observeModal(Window component) {
 		return VaadinProperties.accessor(Window.class, "modal").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeResizeable(Window component) {
+	public static IVaadinComponentObservableValue observeResizeable(
+			Window component) {
 		return VaadinProperties.accessor(Window.class, "resizable").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeResizeLazy(Window component) {
+	public static IVaadinComponentObservableValue observeResizeLazy(
+			Window component) {
 		return VaadinProperties.accessor(Window.class, "resizeLazy").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observePositionX(Window component) {
+	public static IVaadinComponentObservableValue observePositionX(
+			Window component) {
 		return VaadinProperties.accessor(Window.class, "positionX").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observePositionY(Window component) {
+	public static IVaadinComponentObservableValue observePositionY(
+			Window component) {
 		return VaadinProperties.accessor(Window.class, "positionY").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeColor(ColorSelector component) {
+	public static IVaadinComponentObservableValue observeColor(
+			ColorSelector component) {
 		return VaadinProperties.accessor(ColorSelector.class, "color").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeContent(
+	public static IVaadinComponentObservableValue observeContent(
 			SingleComponentContainer component) {
 		return VaadinProperties.accessor(SingleComponentContainer.class,
 				"content").observe(component);
 	}
 
-	public static IVaadinObservableValue observeLastHeartbeatTimestamp(
+	public static IVaadinComponentObservableValue observeLastHeartbeatTimestamp(
 			UI component) {
 		return VaadinProperties.accessor(UI.class, "lastHeartbeatTimestamp")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeNavigator(UI component) {
+	public static IVaadinComponentObservableValue observeNavigator(UI component) {
 		return VaadinProperties.accessor(UI.class, "navigator").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeResizeLazy(UI component) {
+	public static IVaadinComponentObservableValue observeResizeLazy(UI component) {
 		return VaadinProperties.accessor(UI.class, "resizeLazy").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeScrollLeft(UI component) {
+	public static IVaadinComponentObservableValue observeScrollLeft(UI component) {
 		return VaadinProperties.accessor(UI.class, "scrollLeft").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeScrollTop(UI component) {
+	public static IVaadinComponentObservableValue observeScrollTop(UI component) {
 		return VaadinProperties.accessor(UI.class, "scrollTop").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeSession(UI component) {
+	public static IVaadinComponentObservableValue observeSession(UI component) {
 		return VaadinProperties.accessor(UI.class, "session")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeDisableOnClick(Button component) {
+	public static IVaadinComponentObservableValue observeDisableOnClick(
+			Button component) {
 		return VaadinProperties.accessor(Button.class, "disableOnClick")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeHtmlContentAllowed(
+	public static IVaadinComponentObservableValue observeHtmlContentAllowed(
 			Button component) {
 		return VaadinProperties.accessor(Button.class, "htmlContentAllowed")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeColor(
+	public static IVaadinComponentObservableValue observeColor(
 			ColorPickerGradient component) {
 		return VaadinProperties.color_ColorPickerGradient().observe(component);
 	}
 
-	public static IVaadinObservableValue observeColor(ColorPickerGrid component) {
+	public static IVaadinComponentObservableValue observeColor(
+			ColorPickerGrid component) {
 		return VaadinProperties.color_ColorPickerGrid().observe(component);
 	}
 
-	public static IVaadinObservableValue observeColor(
+	public static IVaadinComponentObservableValue observeColor(
 			ColorPickerHistory component) {
 		return VaadinProperties.color_ColorPickerHistory().observe(component);
 	}
 
-	public static IVaadinObservableValue observeColor(
+	public static IVaadinComponentObservableValue observeColor(
 			ColorPickerSelect component) {
 		return VaadinProperties.color_ColorPickerSelect().observe(component);
 	}
 
-	public static IVaadinObservableValue observeAlternateText(Embedded component) {
+	public static IVaadinComponentObservableValue observeAlternateText(
+			Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "alternateText")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeArchive(Embedded component) {
+	public static IVaadinComponentObservableValue observeArchive(
+			Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "archive").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeClassId(Embedded component) {
+	public static IVaadinComponentObservableValue observeClassId(
+			Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "classId").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeCodebase(Embedded component) {
+	public static IVaadinComponentObservableValue observeCodebase(
+			Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "codebase").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeCodetype(Embedded component) {
+	public static IVaadinComponentObservableValue observeCodetype(
+			Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "codetype").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeMimeType(Embedded component) {
+	public static IVaadinComponentObservableValue observeMimeType(
+			Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "mimeType").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeSource(Embedded component) {
+	public static IVaadinComponentObservableValue observeSource(
+			Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "source").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeStandby(Embedded component) {
+	public static IVaadinComponentObservableValue observeStandby(
+			Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "standby").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeType(Embedded component) {
+	public static IVaadinComponentObservableValue observeType(Embedded component) {
 		return VaadinProperties.accessor(Embedded.class, "type").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeContentMode(Label component) {
+	public static IVaadinComponentObservableValue observeContentMode(
+			Label component) {
 		return VaadinProperties.accessor(Label.class, "contentMode").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeConverter(Label component) {
+	public static IVaadinComponentObservableValue observeConverter(
+			Label component) {
 		return VaadinProperties.accessor(Label.class, "converter").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeResource(Link component) {
+	public static IVaadinComponentObservableValue observeResource(Link component) {
 		return VaadinProperties.accessor(Link.class, "resource").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeTargetBorder(Link component) {
+	public static IVaadinComponentObservableValue observeTargetBorder(
+			Link component) {
 		return VaadinProperties.accessor(Link.class, "targetBorder").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeTargetHeight(Link component) {
+	public static IVaadinComponentObservableValue observeTargetHeight(
+			Link component) {
 		return VaadinProperties.accessor(Link.class, "targetHeight").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeTargetName(Link component) {
+	public static IVaadinComponentObservableValue observeTargetName(
+			Link component) {
 		return VaadinProperties.accessor(Link.class, "targetName").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeTargetWidth(Link component) {
+	public static IVaadinComponentObservableValue observeTargetWidth(
+			Link component) {
 		return VaadinProperties.accessor(Link.class, "targetWidth").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeAutoOpen(MenuBar component) {
+	public static IVaadinComponentObservableValue observeAutoOpen(
+			MenuBar component) {
 		return VaadinProperties.accessor(MenuBar.class, "autoOpen").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeHtmlContentAllowed(
+	public static IVaadinComponentObservableValue observeHtmlContentAllowed(
 			MenuBar component) {
 		return VaadinProperties.accessor(MenuBar.class, "htmlContentAllowed")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeMoreMenuItem(MenuBar component) {
+	public static IVaadinComponentObservableValue observeMoreMenuItem(
+			MenuBar component) {
 		return VaadinProperties.accessor(MenuBar.class, "moreMenuItem")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeContent(PopupView component) {
+	public static IVaadinComponentObservableValue observeContent(
+			PopupView component) {
 		return VaadinProperties.accessor(PopupView.class, "content").observe(
 				component);
 	}
 
-	public static IVaadinObservableValue observeHideOnMouseOut(
+	public static IVaadinComponentObservableValue observeHideOnMouseOut(
 			PopupView component) {
 		return VaadinProperties.accessor(PopupView.class, "hideOnMouseOut")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observePopupVisible(PopupView component) {
+	public static IVaadinComponentObservableValue observePopupVisible(
+			PopupView component) {
 		return VaadinProperties.accessor(PopupView.class, "popupVisible")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeButtonCaption(Upload component) {
+	public static IVaadinComponentObservableValue observeButtonCaption(
+			Upload component) {
 		return VaadinProperties.accessor(PopupView.class, "buttonCaption")
 				.observe(component);
 	}
 
-	public static IVaadinObservableValue observeReceiver(Upload component) {
+	public static IVaadinComponentObservableValue observeReceiver(
+			Upload component) {
 		return VaadinProperties.accessor(PopupView.class, "receiver").observe(
 				component);
 	}

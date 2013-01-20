@@ -32,7 +32,7 @@ public interface IModelValueProperty extends IValueProperty {
 	 * @return an observable value observing this value property on the given
 	 *         property source
 	 */
-	public IVaadinObservableValue observe(Object source);
+	public IVaadinModelObservableValue observe(Object source);
 
 	// /**
 	// * Returns an {@link IVaadinObservableValue} observing this value property

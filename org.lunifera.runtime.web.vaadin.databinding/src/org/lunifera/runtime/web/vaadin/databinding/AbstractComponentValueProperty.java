@@ -21,7 +21,7 @@ import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.value.SimpleValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentListener;
-import org.lunifera.runtime.web.vaadin.databinding.component.internal.VaadinObservableValueDecorator;
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.VaadinObservableComponentValueDecorator;
 
 import com.vaadin.ui.Component;
 
@@ -33,7 +33,7 @@ import com.vaadin.ui.Component;
  * <li>Calling {@link #observe(Object)} should create the observable on the UI
  * realm of the widget, rather than the current default realm
  * <li>All <code>observe()</code> methods should return an
- * {@link IVaadinObservableValue}
+ * {@link IVaadinComponentObservableValue}
  * </ul>
  * This class also provides a default widget listener implementation using
  * vaadins event concept. Subclasses may pass one or more vaadin event types
@@ -104,28 +104,28 @@ public abstract class AbstractComponentValueProperty extends
 		return new ComponentListener(this, listener, changeEvents, staleEvents);
 	}
 
-	public IVaadinObservableValue observe(Object source) {
+	public IVaadinComponentObservableValue observe(Object source) {
 		if (source instanceof Component) {
 			return observe((Component) source);
 		}
-		return (IVaadinObservableValue) super.observe(source);
+		return (IVaadinComponentObservableValue) super.observe(source);
 	}
 
 	public IObservableValue observe(Realm realm, Object source) {
 		return wrapObservable(super.observe(realm, source), (Component) source);
 	}
 
-	protected IVaadinObservableValue wrapObservable(
+	protected IVaadinComponentObservableValue wrapObservable(
 			IObservableValue observable, Component widget) {
-		return new VaadinObservableValueDecorator(observable, widget);
+		return new VaadinObservableComponentValueDecorator(observable, widget);
 	}
 
-	public IVaadinObservableValue observe(Component widget) {
-		return (IVaadinObservableValue) observe(
+	public IVaadinComponentObservableValue observe(Component widget) {
+		return (IVaadinComponentObservableValue) observe(
 				VaadinObservables.getRealm(widget.getUI()), widget);
 	}
 
-	public IVaadinObservableValue observeDelayed(int delay, Component widget) {
+	public IVaadinComponentObservableValue observeDelayed(int delay, Component widget) {
 		throw new UnsupportedOperationException("Delayed not allowed");
 	}
 }

@@ -17,9 +17,17 @@ package org.lunifera.runtime.web.vaadin.databinding;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 
+import com.vaadin.ui.Component;
+
 /**
  * {@link IObservableValue} observing an vaadin Component.
  */
-public interface IVaadinObservableValue extends IVaadinObservable, IObservableValue {
+public interface IVaadinComponentObservableValue extends IVaadinObservable, IObservableValue {
 
+	/**
+	 * Returns the Component of this observable
+	 * 
+	 * @return the Component
+	 */
+	public Component getComponent();
 }
