@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="77">
+<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="78">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.9.0.v20121217-0429"/>
@@ -48,6 +48,11 @@
 <unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.0.0.201301161532"/>
 <unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.5.4"/>
 <repository location="http://lunifera.github.com/p2/kepler"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+<unit id="org.apache.commons.logging.source" version="1.1.1.v201101211721"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
 </location>
 </locations>
 </target>
