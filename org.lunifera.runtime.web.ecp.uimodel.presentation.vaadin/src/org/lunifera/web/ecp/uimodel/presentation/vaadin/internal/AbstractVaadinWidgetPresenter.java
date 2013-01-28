@@ -13,15 +13,19 @@ package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.services.IServiceRegistry;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 
 /**
  * An abstract implementation of the {@link IWidgetPresentation}.
  */
-public abstract class AbstractSWTWidgetPresenter extends AbstractDisposable implements IWidgetPresentation<Component> {
+public abstract class AbstractVaadinWidgetPresenter<A extends Component>
+		extends AbstractDisposable implements IWidgetPresentation<A> {
 
 	/**
 	 * See {@link IConstants#CSS_CLASS__CONTROL_BASE}.
@@ -35,7 +39,7 @@ public abstract class AbstractSWTWidgetPresenter extends AbstractDisposable impl
 
 	private final IEmbeddableEditpart editpart;
 
-	public AbstractSWTWidgetPresenter(IEmbeddableEditpart editpart) {
+	public AbstractVaadinWidgetPresenter(IEmbeddableEditpart editpart) {
 		this.editpart = editpart;
 	}
 
@@ -47,18 +51,31 @@ public abstract class AbstractSWTWidgetPresenter extends AbstractDisposable impl
 	protected IEmbeddableEditpart getEditpart() {
 		return editpart;
 	}
-	
+
 	@Override
 	public Object getModel() {
 		return getEditpart().getModel();
 	}
-	
+
 	/**
 	 * Returns the view context.
 	 * 
 	 * @return viewContext
 	 */
-	protected IViewContext getViewContext() {
+	public IViewContext getViewContext() {
 		return getEditpart().getView().getContext();
 	}
+
+	/**
+	 * Creates the bindings for the given elements.
+	 * 
+	 * @param yEmbeddable
+	 * @param field
+	 */
+	protected void createBindings(YEmbeddable yEmbeddable, Field<?> field) {
+		BindingManager bindingManger = getViewContext().getService(
+				IServiceRegistry.SERVICE__BINDING_MANAGER);
+		bindingManger.bindVisible(yEmbeddable, field);
+	}
+
 }

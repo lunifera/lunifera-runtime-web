@@ -22,7 +22,7 @@ import com.vaadin.ui.TextArea;
 /**
  * This presenter is responsible to render a text area on the given layout.
  */
-public class TextAreaPresentation extends AbstractSWTWidgetPresenter {
+public class TextAreaPresentation extends AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;

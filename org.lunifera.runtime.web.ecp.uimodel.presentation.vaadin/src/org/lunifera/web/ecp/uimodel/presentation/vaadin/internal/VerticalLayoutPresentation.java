@@ -36,9 +36,11 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
+public class VerticalLayoutPresentation extends
+		AbstractLayoutPresenter<ComponentContainer> {
 
-	private static final Logger logger = LoggerFactory.getLogger(VerticalLayoutPresentation.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(VerticalLayoutPresentation.class);
 
 	private CssLayout componentBase;
 	private VerticalLayout verticalLayout;
@@ -47,16 +49,13 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * The constructor.
 	 * 
-	 * @param editpart The editpart of that presentation.
+	 * @param editpart
+	 *            The editpart of that presentation.
 	 */
 	public VerticalLayoutPresentation(IElementEditpart editpart) {
 		super((ILayoutEditpart) editpart);
-		this.modelAccess = new ModelAccess((YVerticalLayout) editpart.getModel());
-	}
-
-	@Override
-	public Object getModel() {
-		return getEditpart().getModel();
+		this.modelAccess = new ModelAccess(
+				(YVerticalLayout) editpart.getModel());
 	}
 
 	@Override
@@ -89,7 +88,8 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	}
 
 	/**
-	 * Is called to refresh the UI. The element will be removed from the grid layout and added to it again afterwards.
+	 * Is called to refresh the UI. The element will be removed from the grid
+	 * layout and added to it again afterwards.
 	 */
 	protected void refreshUI() {
 		verticalLayout.removeAllComponents();
@@ -107,7 +107,8 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 		// iterate all elements and build the child element
 		//
 		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
-			IWidgetPresentation<?> childPresentation = editPart.getPresentation();
+			IWidgetPresentation<?> childPresentation = editPart
+					.getPresentation();
 			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			addChild(childPresentation, yStyles.get(yChild));
 		}
@@ -115,19 +116,22 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	}
 
 	/**
-	 * Is called to create the child component and apply layouting defaults to it.
+	 * Is called to create the child component and apply layouting defaults to
+	 * it.
 	 * 
 	 * @param presentation
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation, YVerticalLayoutCellStyle yStyle) {
+	protected Cell addChild(IWidgetPresentation<?> presentation,
+			YVerticalLayoutCellStyle yStyle) {
 
 		Component child = (Component) presentation.createWidget(verticalLayout);
 
 		// calculate and apply the alignment to be used
 		//
-		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
+		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle
+				.getAlignment() : null;
 		if (yAlignment == null) {
 			// use default
 			yAlignment = YAlignment.TOP_LEFT;
@@ -157,33 +161,42 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 			child.setHeight("-1%");
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
-				verticalLayout.setComponentAlignment(child, Alignment.BOTTOM_CENTER);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.BOTTOM_CENTER);
 				break;
 			case BOTTOM_FILL:
-				verticalLayout.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.BOTTOM_LEFT);
 				child.setWidth("100%");
 				break;
 			case BOTTOM_LEFT:
-				verticalLayout.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.BOTTOM_LEFT);
 				break;
 			case BOTTOM_RIGHT:
-				verticalLayout.setComponentAlignment(child, Alignment.BOTTOM_RIGHT);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.BOTTOM_RIGHT);
 				break;
 			case MIDDLE_CENTER:
-				verticalLayout.setComponentAlignment(child, Alignment.MIDDLE_CENTER);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.MIDDLE_CENTER);
 				break;
 			case MIDDLE_FILL:
-				verticalLayout.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.MIDDLE_LEFT);
 				child.setWidth("100%");
 				break;
 			case MIDDLE_LEFT:
-				verticalLayout.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.MIDDLE_LEFT);
 				break;
 			case MIDDLE_RIGHT:
-				verticalLayout.setComponentAlignment(child, Alignment.MIDDLE_RIGHT);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.MIDDLE_RIGHT);
 				break;
 			case TOP_CENTER:
-				verticalLayout.setComponentAlignment(child, Alignment.TOP_CENTER);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.TOP_CENTER);
 				break;
 			case TOP_FILL:
 				verticalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
@@ -193,10 +206,12 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 				verticalLayout.setComponentAlignment(child, Alignment.TOP_LEFT);
 				break;
 			case TOP_RIGHT:
-				verticalLayout.setComponentAlignment(child, Alignment.TOP_RIGHT);
+				verticalLayout
+						.setComponentAlignment(child, Alignment.TOP_RIGHT);
 				break;
 			case FILL_CENTER:
-				verticalLayout.setComponentAlignment(child, Alignment.TOP_CENTER);
+				verticalLayout.setComponentAlignment(child,
+						Alignment.TOP_CENTER);
 				child.setHeight("100%");
 				break;
 			case FILL_FILL:
@@ -209,7 +224,8 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 				child.setHeight("100%");
 				break;
 			case FILL_RIGHT:
-				verticalLayout.setComponentAlignment(child, Alignment.TOP_RIGHT);
+				verticalLayout
+						.setComponentAlignment(child, Alignment.TOP_RIGHT);
 				child.setHeight("100%");
 				break;
 			default:
@@ -221,7 +237,8 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * Maps the vertical part of the alignment to FILL.
 	 * 
-	 * @param yAlignment the alignment
+	 * @param yAlignment
+	 *            the alignment
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
@@ -260,7 +277,8 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * Maps the horizontal part of the alignment to FILL.
 	 * 
-	 * @param yAlignment the alignment
+	 * @param yAlignment
+	 *            the alignment
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
@@ -352,7 +370,8 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}

@@ -22,7 +22,7 @@ import com.vaadin.ui.CssLayout;
 /**
  * This presenter is responsible to render a checkBox on the given layout.
  */
-public class CheckBoxPresentation extends AbstractSWTWidgetPresenter {
+public class CheckBoxPresentation extends AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;

@@ -40,9 +40,11 @@ import com.vaadin.ui.GridLayout.Area;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class GridLayoutPresentation extends AbstractLayoutPresenter {
+public class GridLayoutPresentation extends
+		AbstractLayoutPresenter<ComponentContainer> {
 
-	private static final Logger logger = LoggerFactory.getLogger(GridLayoutPresentation.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(GridLayoutPresentation.class);
 
 	private CssLayout componentBase;
 	private GridLayout gridlayout;
@@ -51,16 +53,12 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * The constructor.
 	 * 
-	 * @param editpart The editpart of that presentation.
+	 * @param editpart
+	 *            The editpart of that presentation.
 	 */
 	public GridLayoutPresentation(IElementEditpart editpart) {
 		super((ILayoutEditpart) editpart);
 		this.modelAccess = new ModelAccess((YGridLayout) editpart.getModel());
-	}
-
-	@Override
-	public Object getModel() {
-		return getEditpart().getModel();
 	}
 
 	@Override
@@ -93,7 +91,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	}
 
 	/**
-	 * Is called to refresh the UI. The element will be removed from the grid layout and added to it again afterwards.
+	 * Is called to refresh the UI. The element will be removed from the grid
+	 * layout and added to it again afterwards.
 	 */
 	protected void refreshUI() {
 		gridlayout.removeAllComponents();
@@ -112,14 +111,16 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 		//
 		List<Cell> cells = new ArrayList<Cell>();
 		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
-			IWidgetPresentation<?> childPresentation = editPart.getPresentation();
+			IWidgetPresentation<?> childPresentation = editPart
+					.getPresentation();
 			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			Cell cell = addChild(childPresentation, yStyles.get(yChild));
 			cells.add(cell);
 		}
 
 		// Build a model of rows and columns.
-		// Each coordinate (row/column) has an assigned cell. If a cell is spanned,
+		// Each coordinate (row/column) has an assigned cell. If a cell is
+		// spanned,
 		// it will be assigned to many coordinates.
 		List<Row> rows = new ArrayList<Row>();
 		for (int i = 0; i < gridlayout.getRows(); i++) {
@@ -132,7 +133,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		for (Cell cell : cells) {
 			for (int r = cell.area.getRow1(); r <= cell.area.getRow2(); r++) {
-				for (int c = cell.area.getColumn1(); c <= cell.area.getColumn2(); c++) {
+				for (int c = cell.area.getColumn1(); c <= cell.area
+						.getColumn2(); c++) {
 					Row row = rows.get(r);
 					row.addCell(c, cell);
 					Column col = columns.get(c);
@@ -157,9 +159,11 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 			}
 		}
 
-		// handle packaging - therefore a new row / column is added and set to expandRatio = 1.0f. This will cause the
+		// handle packaging - therefore a new row / column is added and set to
+		// expandRatio = 1.0f. This will cause the
 		// last row / column to grab excess space.
-		// If there is already a row / column that is expanded, we do not need to add a helper row
+		// If there is already a row / column that is expanded, we do not need
+		// to add a helper row
 		if (!expandVerticalFound && !modelAccess.isFillVertical()) {
 			int packingHelperRowIndex = gridlayout.getRows();
 			gridlayout.setRows(packingHelperRowIndex + 1);
@@ -175,13 +179,15 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	}
 
 	/**
-	 * Is called to create the child component and apply layouting defaults to it.
+	 * Is called to create the child component and apply layouting defaults to
+	 * it.
 	 * 
 	 * @param presentation
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation, YGridLayoutCellStyle yStyle) {
+	protected Cell addChild(IWidgetPresentation<?> presentation,
+			YGridLayoutCellStyle yStyle) {
 
 		Component child = (Component) presentation.createWidget(gridlayout);
 
@@ -204,7 +210,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		// calculate and apply the alignment to be used
 		//
-		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
+		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle
+				.getAlignment() : null;
 		if (yAlignment == null) {
 			// use default
 			yAlignment = YAlignment.TOP_LEFT;
@@ -228,7 +235,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 			gridlayout.addComponent(child);
 		} else {
 			gridlayout.addComponent(child);
-			logger.warn("Invalid span: col1 {}, row1 {}, col2 {}, row2{}", new Object[] { col1, row1, col2, row2 });
+			logger.warn("Invalid span: col1 {}, row1 {}, col2 {}, row2{}",
+					new Object[] { col1, row1, col2, row2 });
 		}
 		applyAlignment(child, yAlignment);
 
@@ -250,7 +258,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 			child.setHeight("-1%");
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
-				gridlayout.setComponentAlignment(child, Alignment.BOTTOM_CENTER);
+				gridlayout
+						.setComponentAlignment(child, Alignment.BOTTOM_CENTER);
 				break;
 			case BOTTOM_FILL:
 				gridlayout.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
@@ -263,7 +272,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 				gridlayout.setComponentAlignment(child, Alignment.BOTTOM_RIGHT);
 				break;
 			case MIDDLE_CENTER:
-				gridlayout.setComponentAlignment(child, Alignment.MIDDLE_CENTER);
+				gridlayout
+						.setComponentAlignment(child, Alignment.MIDDLE_CENTER);
 				break;
 			case MIDDLE_FILL:
 				gridlayout.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
@@ -314,7 +324,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * Maps the vertical part of the alignment to FILL.
 	 * 
-	 * @param yAlignment the alignment
+	 * @param yAlignment
+	 *            the alignment
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
@@ -353,7 +364,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	/**
 	 * Maps the horizontal part of the alignment to FILL.
 	 * 
-	 * @param yAlignment the alignment
+	 * @param yAlignment
+	 *            the alignment
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
@@ -445,7 +457,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -591,7 +604,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 			// if not already sure, that it should expand
 			// try to find out
 			if (!shouldExpandVertical) {
-				// If the cell should FILL-vertical, then we test if the cell is spanned.
+				// If the cell should FILL-vertical, then we test if the cell is
+				// spanned.
 				// --> If not spanned, then "shouldExpandVertical" is true.
 				// --> Otherwise we test, if the cell is the most bottom cell.
 				// ----> If not most bottom, then no span.
@@ -602,11 +616,13 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 				case FILL_RIGHT:
 				case FILL_FILL:
 					if (!cell.isSpanned()) {
-						// if the cell is not spanned, then "shouldExpandHorizontal" is true
+						// if the cell is not spanned, then
+						// "shouldExpandHorizontal" is true
 						shouldExpandVertical = true;
 					} else {
 						if (cell.getArea().getRow2() == rowindex) {
-							// if the cell is the most right one, then "shouldExpandHorizontal" is true
+							// if the cell is the most right one, then
+							// "shouldExpandHorizontal" is true
 							shouldExpandVertical = true;
 						}
 					}
@@ -651,7 +667,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 			// if not already sure, that it should expand
 			// try to find out
 			if (!shouldExpandHorizontal) {
-				// If the cell should FILL-horizontal, then we test if the cell is spanned.
+				// If the cell should FILL-horizontal, then we test if the cell
+				// is spanned.
 				// --> If not spanned, then "shouldExpandHorizontal" is true.
 				// --> Otherwise we test, if the cell is the most right cell.
 				// ----> If not most right, then no span.
@@ -662,11 +679,13 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 				case TOP_FILL:
 				case FILL_FILL:
 					if (!cell.isSpanned()) {
-						// if the cell is not spanned, then "shouldExpandHorizontal" is true
+						// if the cell is not spanned, then
+						// "shouldExpandHorizontal" is true
 						shouldExpandHorizontal = true;
 					} else {
 						if (cell.getArea().getColumn2() == cells.size() - 1) {
-							// if the cell is the most right one, then "shouldExpandHorizontal" is true
+							// if the cell is the most right one, then
+							// "shouldExpandHorizontal" is true
 							shouldExpandHorizontal = true;
 						}
 					}
@@ -699,7 +718,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 		private final YAlignment alignment;
 		private final Area area;
 
-		public Cell(Component component, YAlignment alignment, GridLayout.Area area) {
+		public Cell(Component component, YAlignment alignment,
+				GridLayout.Area area) {
 			super();
 			this.component = component;
 			this.alignment = alignment;
@@ -733,7 +753,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 		 * @return
 		 */
 		public boolean isSpanned() {
-			return area.getRow1() != area.getRow2() || area.getColumn1() != area.getColumn2();
+			return area.getRow1() != area.getRow2()
+					|| area.getColumn1() != area.getColumn2();
 		}
 
 	}

@@ -12,8 +12,8 @@ package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
 import java.util.Map;
 
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
@@ -29,9 +29,11 @@ import com.vaadin.ui.CssLayout;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class ViewPresentation extends AbstractDisposable implements IViewPresentation<Component> {
+public class ViewPresentation extends AbstractDisposable implements
+		IViewPresentation<Component> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ViewPresentation.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ViewPresentation.class);
 
 	private ModelAccess modelAccess;
 	private final IViewEditpart editpart;
@@ -42,7 +44,8 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 	/**
 	 * Constructor.
 	 * 
-	 * @param editpart The editpart for that presentation.
+	 * @param editpart
+	 *            The editpart for that presentation.
 	 */
 	public ViewPresentation(IViewEditpart editpart) {
 		this.editpart = editpart;
@@ -59,7 +62,7 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 	 * 
 	 * @return editpart
 	 */
-	public IElementEditpart getEditpart() {
+	public IViewEditpart getEditpart() {
 		checkDisposed();
 		return editpart;
 	}
@@ -71,7 +74,8 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 		if (editpart.getContent() != null) {
 			contentPresentation = editpart.getContent().getPresentation();
 		}
-		ComponentContainer parent = (ComponentContainer) editpart.getContext().getRootLayout();
+		ComponentContainer parent = (ComponentContainer) editpart.getContext()
+				.getRootLayout();
 		createWidget(parent);
 
 	}
@@ -85,7 +89,8 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 		}
 
 		if (contentPresentation != null) {
-			Component contentComponent = (Component) contentPresentation.createWidget(component);
+			Component contentComponent = (Component) contentPresentation
+					.createWidget(component);
 			component.addComponent(contentComponent);
 		} else {
 			LOGGER.warn("Content is null");
@@ -150,7 +155,8 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -189,6 +195,11 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 	@Override
 	public IWidgetPresentation<?> getContent() {
 		return contentPresentation;
+	}
+
+	@Override
+	public IViewContext getViewContext() {
+		return getEditpart().getContext();
 	}
 
 	/**

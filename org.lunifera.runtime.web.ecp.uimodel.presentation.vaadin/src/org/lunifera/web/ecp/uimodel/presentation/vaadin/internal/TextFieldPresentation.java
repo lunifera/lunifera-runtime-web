@@ -22,7 +22,8 @@ import com.vaadin.ui.TextField;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
+public class TextFieldPresentation extends
+		AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -31,7 +32,8 @@ public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
 	/**
 	 * Constructor.
 	 * 
-	 * @param editpart The editpart of that presenter
+	 * @param editpart
+	 *            The editpart of that presenter
 	 */
 	public TextFieldPresentation(IElementEditpart editpart) {
 		super((ITextFieldEditpart) editpart);
@@ -55,6 +57,14 @@ public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
 			text = new TextField();
 			text.addStyleName(CSS_CLASS__CONTROL);
 			text.setSizeFull();
+
+			// creates the binding for the field
+			createBindings(modelAccess.yText, text);
+
+			text.setEnabled(modelAccess.yText.isInitialEnabled());
+			text.setReadOnly(!modelAccess.yText.isInitialEditable());
+			text.setVisible(!modelAccess.yText.isInitialVisible());
+
 			componentBase.addComponent(text);
 
 			if (modelAccess.isCssClassValid()) {
@@ -66,6 +76,11 @@ public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
 			}
 		}
 		return componentBase;
+	}
+
+	protected void createBindings(YTextField yEmbeddable, TextField field) {
+		super.createBindings(yEmbeddable, field);
+
 	}
 
 	@Override
@@ -84,7 +99,8 @@ public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -153,7 +169,8 @@ public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
 		 * @return
 		 */
 		public boolean isLabelValid() {
-			return yText.getDatadescription() != null && yText.getDatadescription().getLabel() != null;
+			return yText.getDatadescription() != null
+					&& yText.getDatadescription().getLabel() != null;
 		}
 
 		/**

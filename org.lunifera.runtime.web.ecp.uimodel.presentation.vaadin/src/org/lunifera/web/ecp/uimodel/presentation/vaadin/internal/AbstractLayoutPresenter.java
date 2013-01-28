@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
 import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
@@ -26,8 +26,9 @@ import com.vaadin.ui.ComponentContainer;
 /**
  * An abstract base class implementing {@link ILayoutPresentation}.
  */
-public abstract class AbstractLayoutPresenter extends AbstractDisposable implements
-	ILayoutPresentation<ComponentContainer> {
+public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
+		extends AbstractVaadinWidgetPresenter<A> implements
+		ILayoutPresentation<A> {
 
 	/**
 	 * See {@link IConstants#CSS_CLASS__CONTROL_BASE}.
@@ -38,12 +39,10 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	 */
 	public static final String CSS_CLASS__CONTROL = IConstants.CSS_CLASS__CONTROL;
 
-	private final ILayoutEditpart editpart;
-
 	private List<IWidgetPresentation<?>> children;
 
 	public AbstractLayoutPresenter(ILayoutEditpart editpart) {
-		this.editpart = editpart;
+		super(editpart);
 	}
 
 	/**
@@ -52,12 +51,12 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	 * @return the editpart
 	 */
 	protected ILayoutEditpart getEditpart() {
-		return editpart;
+		return (ILayoutEditpart) super.getEditpart();
 	}
 
 	@Override
-	public Object getModel() {
-		return getEditpart().getModel();
+	public YLayout getModel() {
+		return (YLayout) getEditpart().getModel();
 	}
 
 	/**
@@ -65,14 +64,14 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	 * 
 	 * @return viewContext
 	 */
-	protected IViewContext getViewContext() {
+	public IViewContext getViewContext() {
 		return getEditpart().getView().getContext();
 	}
 
 	@Override
 	public List<IWidgetPresentation<?>> getChildren() {
-		return children != null ? Collections.unmodifiableList(children) : Collections
-			.<IWidgetPresentation<?>> emptyList();
+		return children != null ? Collections.unmodifiableList(children)
+				: Collections.<IWidgetPresentation<?>> emptyList();
 	}
 
 	@Override
@@ -92,10 +91,12 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	}
 
 	/**
-	 * This method is called after the presentation was successfully added to the children collection.<br>
+	 * This method is called after the presentation was successfully added to
+	 * the children collection.<br>
 	 * Subclasses should handle the add of the UI element in that method.
 	 * 
-	 * @param presentation The presentation to be added
+	 * @param presentation
+	 *            The presentation to be added
 	 */
 	protected void internalAdd(IWidgetPresentation<?> presentation) {
 
@@ -113,10 +114,13 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	}
 
 	/**
-	 * This method is called after the presentation was successfully removed from the children collection.<br>
-	 * Subclasses should handle the unrendering of the UI element in that method.
+	 * This method is called after the presentation was successfully removed
+	 * from the children collection.<br>
+	 * Subclasses should handle the unrendering of the UI element in that
+	 * method.
 	 * 
-	 * @param presentation The presentation to be removed
+	 * @param presentation
+	 *            The presentation to be removed
 	 */
 	protected void internalRemove(IWidgetPresentation<?> presentation) {
 
@@ -129,8 +133,9 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 		int currentIndex = children.indexOf(presentation);
 		if (currentIndex > -1 && currentIndex != index) {
 			throw new RuntimeException(
-				String.format("Insert at index %d not possible since presentation already contained at index %d",
-					index, currentIndex));
+					String.format(
+							"Insert at index %d not possible since presentation already contained at index %d",
+							index, currentIndex));
 		}
 
 		children.add(index, presentation);
@@ -138,11 +143,14 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	}
 
 	/**
-	 * This method is called after the presentation was successfully inserted to the children collection.<br>
+	 * This method is called after the presentation was successfully inserted to
+	 * the children collection.<br>
 	 * Subclasses should handle the insert of the UI element in that method.
 	 * 
-	 * @param presentation The presentation to be inserted
-	 * @param index The index where the presentation should be inserted
+	 * @param presentation
+	 *            The presentation to be inserted
+	 * @param index
+	 *            The index where the presentation should be inserted
 	 */
 	protected void internalInsert(IWidgetPresentation<?> presentation, int index) {
 
@@ -151,12 +159,15 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	@Override
 	public void move(IWidgetPresentation<?> presentation, int index) {
 		if (children == null) {
-			throw new RuntimeException("Move not possible. No children present.");
+			throw new RuntimeException(
+					"Move not possible. No children present.");
 		}
 
 		if (!children.contains(presentation)) {
-			throw new RuntimeException(String.format("Move to index %d not possible since presentation not added yet!",
-				index));
+			throw new RuntimeException(
+					String.format(
+							"Move to index %d not possible since presentation not added yet!",
+							index));
 		}
 
 		int currentIndex = children.indexOf(presentation);
@@ -167,14 +178,20 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	}
 
 	/**
-	 * This method is called after the presentation was successfully moved inside the children collection.<br>
+	 * This method is called after the presentation was successfully moved
+	 * inside the children collection.<br>
 	 * Subclasses should handle the move of the UI element in that method.
 	 * 
-	 * @param presentation The presentation to be moved.
-	 * @param oldIndex The old index where the control was located.
-	 * @param newIndex The new index where the control should be located after the move operation.
+	 * @param presentation
+	 *            The presentation to be moved.
+	 * @param oldIndex
+	 *            The old index where the control was located.
+	 * @param newIndex
+	 *            The new index where the control should be located after the
+	 *            move operation.
 	 */
-	protected void internalMove(IWidgetPresentation<?> presentation, int oldIndex, int newIndex) {
+	protected void internalMove(IWidgetPresentation<?> presentation,
+			int oldIndex, int newIndex) {
 
 	}
 

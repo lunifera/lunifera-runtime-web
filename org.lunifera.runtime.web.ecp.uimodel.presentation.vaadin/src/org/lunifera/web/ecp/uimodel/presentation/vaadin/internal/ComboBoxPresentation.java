@@ -22,7 +22,7 @@ import com.vaadin.ui.CssLayout;
 /**
  * This presenter is responsible to render a combo box on the given layout.
  */
-public class ComboBoxPresentation extends AbstractSWTWidgetPresenter {
+public class ComboBoxPresentation extends AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;

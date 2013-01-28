@@ -36,7 +36,7 @@ import com.vaadin.ui.HorizontalLayout;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
+public class HorizontalLayoutPresentation extends AbstractLayoutPresenter<ComponentContainer> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(HorizontalLayoutPresentation.class);
@@ -55,11 +55,6 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 		super((ILayoutEditpart) editpart);
 		this.modelAccess = new ModelAccess(
 				(YHorizontalLayout) editpart.getModel());
-	}
-
-	@Override
-	public Object getModel() {
-		return getEditpart().getModel();
 	}
 
 	@Override
@@ -135,8 +130,8 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
 		// calculate and apply the alignment to be used
 		//
-		YAlignment yAlignment = yStyle != null
-				&& yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
+		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle
+				.getAlignment() : null;
 		if (yAlignment == null) {
 			// use default
 			yAlignment = YAlignment.TOP_LEFT;

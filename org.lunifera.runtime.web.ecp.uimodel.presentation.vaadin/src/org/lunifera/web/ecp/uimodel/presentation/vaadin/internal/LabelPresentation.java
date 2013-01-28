@@ -22,7 +22,7 @@ import com.vaadin.ui.Label;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class LabelPresentation extends AbstractSWTWidgetPresenter {
+public class LabelPresentation extends AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;

@@ -22,7 +22,7 @@ import com.vaadin.ui.Table;
 /**
  * This presenter is responsible to render a table on the given layout.
  */
-public class TablePresentation extends AbstractSWTWidgetPresenter {
+public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
