@@ -31,9 +31,9 @@ import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanel
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelSplitPositionProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelSplitPositionUnitProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.TabSheetSelectedTabProperty;
-import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerItemSetProperty;
-import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerPropertySetProperty;
-import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerItemSetValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetInfoValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyReadonlyProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerContainerDatasourceProperty;
@@ -117,25 +117,25 @@ public class VaadinProperties {
 	public static IComponentValueProperty color_ColorPickerSelect() {
 		return new ColorPickerSelectColorProperty();
 	}
-	
+
 	public static IComponentValueProperty height() {
 		return new SizeableHeightProperty();
 	}
-	
+
 	public static IComponentValueProperty width() {
 		return new SizeableWidthProperty();
 	}
 
-	public static IModelValueProperty itemPropertyset() {
-		return new ItemPropertySetProperty();
+	public static IModelValueProperty itemPropertysetValue() {
+		return new ItemPropertySetValueProperty();
 	}
 
-	public static IModelValueProperty containerPropertyset() {
-		return new ContainerPropertySetProperty();
+	public static IModelValueProperty itemPropertysetInfoValue() {
+		return new ItemPropertySetInfoValueProperty();
 	}
 
-	public static IModelValueProperty containerItemset() {
-		return new ContainerItemSetProperty();
+	public static IModelValueProperty containerItemsetValue() {
+		return new ContainerItemSetValueProperty();
 	}
 
 	public static IModelValueProperty containerDatasource() {

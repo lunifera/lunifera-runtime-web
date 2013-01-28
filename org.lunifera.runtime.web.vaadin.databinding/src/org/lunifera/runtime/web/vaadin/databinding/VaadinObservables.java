@@ -120,16 +120,17 @@ public class VaadinObservables {
 		return property;
 	}
 
-	// /**
-	// * Returns an observable value tracking the value of the given field.
-	// *
-	// * @param field
-	// * @return
-	// */
-	// public static IVaadinObservableValue observeValue(Field<?> field) {
-	// return VaadinProperties.fieldValue(getPropertyType(field)).observe(
-	// field);
-	// }
+	/**
+	 * Returns an observable value tracking the propertyset of the given item
+	 * notifier.
+	 * 
+	 * @param notifier
+	 * @return
+	 */
+	public static IVaadinModelObservableValue observeItemPropertySetValue(
+			Item.PropertySetChangeNotifier notifier) {
+		return VaadinProperties.itemPropertysetValue().observe(notifier);
+	}
 
 	/**
 	 * Returns an observable value tracking the propertyset of the given item
@@ -138,21 +139,9 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinModelObservableValue observePropertySet(
+	public static IVaadinModelObservableValue observeItemPropertySetInfoValue(
 			Item.PropertySetChangeNotifier notifier) {
-		return VaadinProperties.itemPropertyset().observe(notifier);
-	}
-
-	/**
-	 * Returns an observable value tracking the property set of the given item
-	 * notifier.
-	 * 
-	 * @param notifier
-	 * @return
-	 */
-	public static IVaadinModelObservableValue observePropertySet(
-			Container.PropertySetChangeNotifier notifier) {
-		return VaadinProperties.containerPropertyset().observe(notifier);
+		return VaadinProperties.itemPropertysetInfoValue().observe(notifier);
 	}
 
 	/**
@@ -162,9 +151,9 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinModelObservableValue observeItemSet(
+	public static IVaadinModelObservableValue observeContainerItemSetValue(
 			Container.ItemSetChangeNotifier notifier) {
-		return VaadinProperties.containerItemset().observe(notifier);
+		return VaadinProperties.containerItemsetValue().observe(notifier);
 	}
 
 	/**
@@ -1259,7 +1248,7 @@ public class VaadinObservables {
 	}
 
 	private static class UIRealm extends Realm {
-		private UI ui;
+		private final UI ui;
 
 		/**
 		 * @param ui
@@ -1269,10 +1258,12 @@ public class VaadinObservables {
 			setDefault(this);
 		}
 
+		@Override
 		public boolean isCurrent() {
 			return UI.getCurrent() == ui;
 		}
 
+		@Override
 		public void asyncExec(final Runnable runnable) {
 			// Runnable safeRunnable = new Runnable() {
 			// public void run() {
@@ -1282,14 +1273,17 @@ public class VaadinObservables {
 			throw new UnsupportedOperationException("Not a valid call!");
 		}
 
+		@Override
 		public void timerExec(int milliseconds, final Runnable runnable) {
 			throw new UnsupportedOperationException("Not a valid call!");
 		}
 
+		@Override
 		public int hashCode() {
 			return (ui == null) ? 0 : ui.hashCode();
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
@@ -1306,4 +1300,5 @@ public class VaadinObservables {
 			return true;
 		}
 	}
+
 }

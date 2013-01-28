@@ -14,6 +14,9 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.databinding.property.IProperty;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.NativePropertyListener;
@@ -32,11 +35,13 @@ public class ItemPropertySetChangeListener extends NativePropertyListener
 		super(property, listener);
 	}
 
+	@Override
 	protected void doAddTo(Object source) {
 		Item.PropertySetChangeNotifier notifier = (Item.PropertySetChangeNotifier) source;
 		notifier.addPropertySetChangeListener(this);
 	}
 
+	@Override
 	protected void doRemoveFrom(Object source) {
 		Item.PropertySetChangeNotifier notifier = (Item.PropertySetChangeNotifier) source;
 		notifier.removePropertySetChangeListener(this);
@@ -44,7 +49,9 @@ public class ItemPropertySetChangeListener extends NativePropertyListener
 
 	@Override
 	public void itemPropertySetChange(PropertySetChangeEvent event) {
-		fireChange(event.getItem(), null);
+		List<Object> propertyList = new ArrayList<Object>(event.getItem()
+				.getItemPropertyIds());
+		fireChange(propertyList, null);
 	}
 
 }

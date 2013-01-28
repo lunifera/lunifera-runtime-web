@@ -19,24 +19,28 @@ import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValuePropert
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 
 /**
  */
 public class TabSheetSelectedTabProperty extends AbstractComponentValueProperty {
 
 	public TabSheetSelectedTabProperty() {
-		super();
+		super(SelectedTabChangeEvent.class);
 	}
 
+	@Override
 	public Object getValueType() {
 		return Component.class;
 	}
 
+	@Override
 	protected Object doGetValue(Object source) {
 		TabSheet component = (TabSheet) source;
 		return component.getSelectedTab();
 	}
 
+	@Override
 	protected void doSetValue(Object source, Object value) {
 		TabSheet component = (TabSheet) source;
 		component.setSelectedTab((Component) value);

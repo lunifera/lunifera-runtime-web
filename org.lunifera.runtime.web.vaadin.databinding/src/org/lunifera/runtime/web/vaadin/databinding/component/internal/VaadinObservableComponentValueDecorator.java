@@ -36,7 +36,7 @@ public class VaadinObservableComponentValueDecorator extends DecoratingObservabl
 			Component widget) {
 		super(decorated, true);
 		this.widget = widget;
-		// ComponentListenerUtil.asyncAddListener(widget, Vaadin.Dispose, this);
+		// ComponentListenerUtil.asyncAddListener(widget, SWT.Dispose, this);
 	}
 
 	// public void handleEvent(Event event) {
@@ -44,10 +44,12 @@ public class VaadinObservableComponentValueDecorator extends DecoratingObservabl
 	// dispose();
 	// }
 
+	@Override
 	public Component getComponent() {
 		return widget;
 	}
 
+	@Override
 	public synchronized void dispose() {
 		if (widget != null) {
 			// ComponentListenerUtil.asyncRemoveListener(widget, Vaadin.Dispose,

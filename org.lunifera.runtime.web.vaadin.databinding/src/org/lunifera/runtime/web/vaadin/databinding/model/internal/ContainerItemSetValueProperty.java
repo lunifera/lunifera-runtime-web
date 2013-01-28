@@ -15,6 +15,7 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.databinding.property.INativePropertyListener;
@@ -24,12 +25,13 @@ import com.vaadin.data.Container;
 
 /**
  */
-public class ContainerItemSetProperty extends AbstractModelProperty {
+public class ContainerItemSetValueProperty extends AbstractModelProperty {
 
-	public ContainerItemSetProperty() {
+	public ContainerItemSetValueProperty() {
 
 	}
 
+	@Override
 	public INativePropertyListener adaptListener(
 			ISimplePropertyListener listener) {
 		return new ContainerItemSetChangeListener(this, listener);
@@ -43,12 +45,28 @@ public class ContainerItemSetProperty extends AbstractModelProperty {
 	@Override
 	protected Object doGetValue(Object source) {
 		Container container = (Container) source;
-		return container.getItemIds();
+		return new ArrayList<Object>(container.getItemIds());
 	}
+
+//	@Override
+//	protected void doSetValue(Object source, Object value) {
+//		throw new UnsupportedOperationException();
+//	}
 
 	@Override
 	protected void doSetValue(Object source, Object value) {
-		throw new UnsupportedOperationException();
+		Container container = (Container) source;
+		@SuppressWarnings("unchecked")
+		Collection<Object> itemIds = (Collection<Object>) value;
+
+		for (Object id : container.getItemIds().toArray()) {
+			container.removeItem(id);
+		}
+
+		for (Object id : itemIds) {
+			container.addItem(id);
+		}
 	}
+
 
 }

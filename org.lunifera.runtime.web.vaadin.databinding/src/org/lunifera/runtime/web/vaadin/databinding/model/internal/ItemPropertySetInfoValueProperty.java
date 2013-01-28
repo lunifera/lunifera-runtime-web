@@ -15,24 +15,27 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
+import org.lunifera.runtime.web.vaadin.databinding.PropertyInfo;
 
-import com.vaadin.data.Container;
+import com.vaadin.data.Item;
 
 /**
  */
-public class ContainerPropertySetProperty extends AbstractModelProperty {
+public class ItemPropertySetInfoValueProperty extends AbstractModelProperty {
 
-	public ContainerPropertySetProperty() {
-
+	public ItemPropertySetInfoValueProperty() {
 	}
 
+	@Override
 	public INativePropertyListener adaptListener(
 			ISimplePropertyListener listener) {
-		return new ContainerPropertySetChangeListener(this, listener);
+		return new ItemPropertySetInfoChangeListener(this, listener);
 	}
 
 	@Override
@@ -42,13 +45,30 @@ public class ContainerPropertySetProperty extends AbstractModelProperty {
 
 	@Override
 	protected Object doGetValue(Object source) {
-		Container container = (Container) source;
-		return container.getContainerPropertyIds();
+		Item item = (Item) source;
+
+		List<PropertyInfo> infos = new ArrayList<PropertyInfo>();
+		for (Object id : item.getItemPropertyIds()) {
+			infos.add(new PropertyInfo(id, item.getItemProperty(id)));
+		}
+
+		return infos;
 	}
 
 	@Override
 	protected void doSetValue(Object source, Object value) {
-		throw new UnsupportedOperationException();
+		Item item = (Item) source;
+		@SuppressWarnings("unchecked")
+		Collection<PropertyInfo> props = (Collection<PropertyInfo>) value;
+
+		for (Object id : item.getItemPropertyIds().toArray()) {
+			item.removeItemProperty(id);
+		}
+
+		for (PropertyInfo info : props) {
+			item.addItemProperty(info.getId(), info.getProperty());
+		}
+
 	}
 
 }

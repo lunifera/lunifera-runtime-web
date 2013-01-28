@@ -15,6 +15,7 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.databinding.property.INativePropertyListener;
@@ -24,12 +25,13 @@ import com.vaadin.data.Item;
 
 /**
  */
-public class ItemPropertySetProperty extends AbstractModelProperty {
+public class ItemPropertySetValueProperty extends AbstractModelProperty {
 
-	public ItemPropertySetProperty() {
+	public ItemPropertySetValueProperty() {
 
 	}
 
+	@Override
 	public INativePropertyListener adaptListener(
 			ISimplePropertyListener listener) {
 		return new ItemPropertySetChangeListener(this, listener);
@@ -43,7 +45,7 @@ public class ItemPropertySetProperty extends AbstractModelProperty {
 	@Override
 	protected Object doGetValue(Object source) {
 		Item item = (Item) source;
-		return item.getItemPropertyIds();
+		return new ArrayList<Object>(item.getItemPropertyIds());
 	}
 
 	@Override
