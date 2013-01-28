@@ -10,9 +10,9 @@
  */
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiLabel;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiLabelEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -33,9 +33,9 @@ public class LabelPresentation extends AbstractSWTWidgetPresenter {
 	 * 
 	 * @param editpart The editpart of that presenter
 	 */
-	public LabelPresentation(IUiElementEditpart editpart) {
-		super((IUiLabelEditpart) editpart);
-		this.modelAccess = new ModelAccess((YUiLabel) editpart.getModel());
+	public LabelPresentation(IElementEditpart editpart) {
+		super((ILabelEditpart) editpart);
+		this.modelAccess = new ModelAccess((YLabel) editpart.getModel());
 	}
 
 	/**
@@ -106,16 +106,16 @@ public class LabelPresentation extends AbstractSWTWidgetPresenter {
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiLabel yLabel;
+		private final YLabel yLabel;
 
-		public ModelAccess(YUiLabel yLabel) {
+		public ModelAccess(YLabel yLabel) {
 			super();
 			this.yLabel = yLabel;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLabel.getCssClass();
@@ -132,7 +132,7 @@ public class LabelPresentation extends AbstractSWTWidgetPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLabel.getCssID();

@@ -15,14 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.YUiEmbeddable;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiAlignment;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayoutCellStyle;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiEmbeddableEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiLayoutEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
+import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayoutCellStyle;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +51,10 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @param editpart
 	 *            The editpart of that presentation.
 	 */
-	public HorizontalLayoutPresentation(IUiElementEditpart editpart) {
-		super((IUiLayoutEditpart) editpart);
+	public HorizontalLayoutPresentation(IElementEditpart editpart) {
+		super((ILayoutEditpart) editpart);
 		this.modelAccess = new ModelAccess(
-				(YUiHorizontalLayout) editpart.getModel());
+				(YHorizontalLayout) editpart.getModel());
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	public void add(IWidgetPresentation<?> presentation) {
 		super.add(presentation);
 
-		YUiEmbeddable yChild = (YUiEmbeddable) presentation.getModel();
+		YEmbeddable yChild = (YEmbeddable) presentation.getModel();
 		addChild(presentation, modelAccess.getCellStyle(yChild));
 	}
 
@@ -100,8 +100,8 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
 		// create a map containing the style for the embeddable
 		//
-		Map<YUiEmbeddable, YUiHorizontalLayoutCellStyle> yStyles = new HashMap<YUiEmbeddable, YUiHorizontalLayoutCellStyle>();
-		for (YUiHorizontalLayoutCellStyle style : modelAccess.getCellStyles()) {
+		Map<YEmbeddable, YHorizontalLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YHorizontalLayoutCellStyle>();
+		for (YHorizontalLayoutCellStyle style : modelAccess.getCellStyles()) {
 			if (yStyles.containsKey(style.getTarget())) {
 				logger.warn("Multiple style for element {}", style.getTarget());
 			}
@@ -110,10 +110,10 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
 		// iterate all elements and build the child element
 		//
-		for (IUiEmbeddableEditpart editPart : getEditpart().getElements()) {
+		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
 			IWidgetPresentation<?> childPresentation = editPart
 					.getPresentation();
-			YUiEmbeddable yChild = (YUiEmbeddable) childPresentation.getModel();
+			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			addChild(childPresentation, yStyles.get(yChild));
 		}
 
@@ -128,18 +128,18 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @return
 	 */
 	protected Cell addChild(IWidgetPresentation<?> presentation,
-			YUiHorizontalLayoutCellStyle yStyle) {
+			YHorizontalLayoutCellStyle yStyle) {
 
 		Component child = (Component) presentation
 				.createWidget(horizontalLayout);
 
 		// calculate and apply the alignment to be used
 		//
-		YUiAlignment yAlignment = yStyle != null
+		YAlignment yAlignment = yStyle != null
 				&& yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
 		if (yAlignment == null) {
 			// use default
-			yAlignment = YUiAlignment.TOP_LEFT;
+			yAlignment = YAlignment.TOP_LEFT;
 
 			if (modelAccess.isFillHorizontal()) {
 				// ensure that horizontal alignment is FILL
@@ -159,7 +159,7 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @param child
 	 * @param yAlignment
 	 */
-	protected void applyAlignment(Component child, YUiAlignment yAlignment) {
+	protected void applyAlignment(Component child, YAlignment yAlignment) {
 
 		if (yAlignment != null) {
 			child.setWidth("-1%");
@@ -251,36 +251,36 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YUiAlignment mapToVerticalFill(YUiAlignment yAlignment) {
+	protected YAlignment mapToVerticalFill(YAlignment yAlignment) {
 		// END SUPRESS CATCH EXCEPTION
 		if (yAlignment != null) {
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
 			case MIDDLE_CENTER:
 			case TOP_CENTER:
-				return YUiAlignment.FILL_CENTER;
+				return YAlignment.FILL_CENTER;
 			case BOTTOM_FILL:
 			case MIDDLE_FILL:
 			case TOP_FILL:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			case BOTTOM_LEFT:
 			case MIDDLE_LEFT:
 			case TOP_LEFT:
-				return YUiAlignment.FILL_LEFT;
+				return YAlignment.FILL_LEFT;
 			case BOTTOM_RIGHT:
 			case MIDDLE_RIGHT:
 			case TOP_RIGHT:
-				return YUiAlignment.FILL_RIGHT;
+				return YAlignment.FILL_RIGHT;
 			case FILL_FILL:
 			case FILL_LEFT:
 			case FILL_RIGHT:
 			case FILL_CENTER:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			default:
 				break;
 			}
 		}
-		return YUiAlignment.FILL_FILL;
+		return YAlignment.FILL_FILL;
 	}
 
 	/**
@@ -291,7 +291,7 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YUiAlignment mapToHorizontalFill(YUiAlignment yAlignment) {
+	protected YAlignment mapToHorizontalFill(YAlignment yAlignment) {
 		// END SUPRESS CATCH EXCEPTION
 		if (yAlignment != null) {
 			switch (yAlignment) {
@@ -299,27 +299,27 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 			case BOTTOM_FILL:
 			case BOTTOM_LEFT:
 			case BOTTOM_RIGHT:
-				return YUiAlignment.BOTTOM_FILL;
+				return YAlignment.BOTTOM_FILL;
 			case MIDDLE_CENTER:
 			case MIDDLE_FILL:
 			case MIDDLE_LEFT:
 			case MIDDLE_RIGHT:
-				return YUiAlignment.MIDDLE_FILL;
+				return YAlignment.MIDDLE_FILL;
 			case TOP_CENTER:
 			case TOP_FILL:
 			case TOP_LEFT:
 			case TOP_RIGHT:
-				return YUiAlignment.TOP_FILL;
+				return YAlignment.TOP_FILL;
 			case FILL_FILL:
 			case FILL_LEFT:
 			case FILL_RIGHT:
 			case FILL_CENTER:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			default:
 				break;
 			}
 		}
-		return YUiAlignment.FILL_FILL;
+		return YAlignment.FILL_FILL;
 	}
 
 	@Override
@@ -418,16 +418,16 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 	 * An internal helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiHorizontalLayout yLayout;
+		private final YHorizontalLayout yLayout;
 
-		public ModelAccess(YUiHorizontalLayout yLayout) {
+		public ModelAccess(YHorizontalLayout yLayout) {
 			super();
 			this.yLayout = yLayout;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLayout.getCssClass();
@@ -444,7 +444,7 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout#isSpacing()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YHorizontalLayout#isSpacing()
 		 */
 		public boolean isSpacing() {
 			return yLayout.isSpacing();
@@ -452,7 +452,7 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLayout.getCssID();
@@ -469,7 +469,7 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout#isMargin()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YHorizontalLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yLayout.isMargin();
@@ -477,19 +477,19 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout#getCellStyles()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YHorizontalLayout#getCellStyles()
 		 */
-		public EList<YUiHorizontalLayoutCellStyle> getCellStyles() {
+		public EList<YHorizontalLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
 		}
 
-		public YUiHorizontalLayoutCellStyle getCellStyle(YUiEmbeddable element) {
+		public YHorizontalLayoutCellStyle getCellStyle(YEmbeddable element) {
 			return yLayout.getCellStyle(element);
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiHorizontalLayout#isFillHorizontal()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YHorizontalLayout#isFillHorizontal()
 		 */
 		public boolean isFillHorizontal() {
 			return yLayout.isFillHorizontal();
@@ -498,9 +498,9 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 
 	public static class Cell {
 		private final Component component;
-		private final YUiAlignment alignment;
+		private final YAlignment alignment;
 
-		public Cell(Component component, YUiAlignment alignment) {
+		public Cell(Component component, YAlignment alignment) {
 			super();
 			this.component = component;
 			this.alignment = alignment;
@@ -516,7 +516,7 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter {
 		/**
 		 * @return the alignment
 		 */
-		protected YUiAlignment getAlignment() {
+		protected YAlignment getAlignment() {
 			return alignment;
 		}
 

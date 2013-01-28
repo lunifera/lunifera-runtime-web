@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.YUiEmbeddable;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiAlignment;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayoutCellStyle;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiSpanInfo;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiEmbeddableEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiLayoutEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
+import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayoutCellStyle;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YSpanInfo;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +53,9 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	 * 
 	 * @param editpart The editpart of that presentation.
 	 */
-	public GridLayoutPresentation(IUiElementEditpart editpart) {
-		super((IUiLayoutEditpart) editpart);
-		this.modelAccess = new ModelAccess((YUiGridLayout) editpart.getModel());
+	public GridLayoutPresentation(IElementEditpart editpart) {
+		super((ILayoutEditpart) editpart);
+		this.modelAccess = new ModelAccess((YGridLayout) editpart.getModel());
 	}
 
 	@Override
@@ -100,8 +100,8 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		// create a map containing the style for the embeddable
 		//
-		Map<YUiEmbeddable, YUiGridLayoutCellStyle> yStyles = new HashMap<YUiEmbeddable, YUiGridLayoutCellStyle>();
-		for (YUiGridLayoutCellStyle style : modelAccess.getCellStyles()) {
+		Map<YEmbeddable, YGridLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YGridLayoutCellStyle>();
+		for (YGridLayoutCellStyle style : modelAccess.getCellStyles()) {
 			if (yStyles.containsKey(style.getTarget())) {
 				logger.warn("Multiple style for element {}", style.getTarget());
 			}
@@ -111,9 +111,9 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 		// iterate all elements and build the child element
 		//
 		List<Cell> cells = new ArrayList<Cell>();
-		for (IUiEmbeddableEditpart editPart : getEditpart().getElements()) {
+		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
 			IWidgetPresentation<?> childPresentation = editPart.getPresentation();
-			YUiEmbeddable yChild = (YUiEmbeddable) childPresentation.getModel();
+			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			Cell cell = addChild(childPresentation, yStyles.get(yChild));
 			cells.add(cell);
 		}
@@ -181,7 +181,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation, YUiGridLayoutCellStyle yStyle) {
+	protected Cell addChild(IWidgetPresentation<?> presentation, YGridLayoutCellStyle yStyle) {
 
 		Component child = (Component) presentation.createWidget(gridlayout);
 
@@ -193,7 +193,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 		int col2 = -1;
 		int row2 = -1;
 		if (yStyle != null) {
-			YUiSpanInfo ySpanInfo = yStyle.getSpanInfo();
+			YSpanInfo ySpanInfo = yStyle.getSpanInfo();
 			if (ySpanInfo != null) {
 				col1 = ySpanInfo.getColumnFrom();
 				row1 = ySpanInfo.getRowFrom();
@@ -204,10 +204,10 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		// calculate and apply the alignment to be used
 		//
-		YUiAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
+		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
 		if (yAlignment == null) {
 			// use default
-			yAlignment = YUiAlignment.TOP_LEFT;
+			yAlignment = YAlignment.TOP_LEFT;
 
 			if (modelAccess.isFillVertical()) {
 				// ensure that vertical alignment is FILL
@@ -243,7 +243,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	 * @param child
 	 * @param yAlignment
 	 */
-	protected void applyAlignment(Component child, YUiAlignment yAlignment) {
+	protected void applyAlignment(Component child, YAlignment yAlignment) {
 
 		if (yAlignment != null) {
 			child.setWidth("-1%");
@@ -318,36 +318,36 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YUiAlignment mapToVerticalFill(YUiAlignment yAlignment) {
+	protected YAlignment mapToVerticalFill(YAlignment yAlignment) {
 		// END SUPRESS CATCH EXCEPTION
 		if (yAlignment != null) {
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
 			case MIDDLE_CENTER:
 			case TOP_CENTER:
-				return YUiAlignment.FILL_CENTER;
+				return YAlignment.FILL_CENTER;
 			case BOTTOM_FILL:
 			case MIDDLE_FILL:
 			case TOP_FILL:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			case BOTTOM_LEFT:
 			case MIDDLE_LEFT:
 			case TOP_LEFT:
-				return YUiAlignment.FILL_LEFT;
+				return YAlignment.FILL_LEFT;
 			case BOTTOM_RIGHT:
 			case MIDDLE_RIGHT:
 			case TOP_RIGHT:
-				return YUiAlignment.FILL_RIGHT;
+				return YAlignment.FILL_RIGHT;
 			case FILL_FILL:
 			case FILL_LEFT:
 			case FILL_RIGHT:
 			case FILL_CENTER:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			default:
 				break;
 			}
 		}
-		return YUiAlignment.FILL_FILL;
+		return YAlignment.FILL_FILL;
 	}
 
 	/**
@@ -357,7 +357,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YUiAlignment mapToHorizontalFill(YUiAlignment yAlignment) {
+	protected YAlignment mapToHorizontalFill(YAlignment yAlignment) {
 		// END SUPRESS CATCH EXCEPTION
 		if (yAlignment != null) {
 			switch (yAlignment) {
@@ -365,27 +365,27 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 			case BOTTOM_FILL:
 			case BOTTOM_LEFT:
 			case BOTTOM_RIGHT:
-				return YUiAlignment.BOTTOM_FILL;
+				return YAlignment.BOTTOM_FILL;
 			case MIDDLE_CENTER:
 			case MIDDLE_FILL:
 			case MIDDLE_LEFT:
 			case MIDDLE_RIGHT:
-				return YUiAlignment.MIDDLE_FILL;
+				return YAlignment.MIDDLE_FILL;
 			case TOP_CENTER:
 			case TOP_FILL:
 			case TOP_LEFT:
 			case TOP_RIGHT:
-				return YUiAlignment.TOP_FILL;
+				return YAlignment.TOP_FILL;
 			case FILL_FILL:
 			case FILL_LEFT:
 			case FILL_RIGHT:
 			case FILL_CENTER:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			default:
 				break;
 			}
 		}
-		return YUiAlignment.FILL_FILL;
+		return YAlignment.FILL_FILL;
 	}
 
 	@Override
@@ -483,16 +483,16 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 	 * An internal helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiGridLayout yLayout;
+		private final YGridLayout yLayout;
 
-		public ModelAccess(YUiGridLayout yLayout) {
+		public ModelAccess(YGridLayout yLayout) {
 			super();
 			this.yLayout = yLayout;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLayout.getCssClass();
@@ -509,7 +509,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout#isSpacing()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isSpacing()
 		 */
 		public boolean isSpacing() {
 			return yLayout.isSpacing();
@@ -517,7 +517,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLayout.getCssID();
@@ -534,7 +534,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout#isMargin()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yLayout.isMargin();
@@ -542,7 +542,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout#getColumns()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#getColumns()
 		 */
 		public int getColumns() {
 			int columns = yLayout.getColumns();
@@ -551,15 +551,15 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout#getCellStyles()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#getCellStyles()
 		 */
-		public EList<YUiGridLayoutCellStyle> getCellStyles() {
+		public EList<YGridLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout#isFillHorizontal()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isFillHorizontal()
 		 */
 		public boolean isFillHorizontal() {
 			return yLayout.isFillHorizontal();
@@ -567,7 +567,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout#isFillVertical()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isFillVertical()
 		 */
 		public boolean isFillVertical() {
 			return yLayout.isFillVertical();
@@ -587,7 +587,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 		public void addCell(int column, Cell cell) {
 			cells.add(column, cell);
 
-			YUiAlignment alignment = cell.getAlignment();
+			YAlignment alignment = cell.getAlignment();
 			// if not already sure, that it should expand
 			// try to find out
 			if (!shouldExpandVertical) {
@@ -647,7 +647,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 		public void addCell(int row, Cell cell) {
 			cells.add(row, cell);
 
-			YUiAlignment alignment = cell.getAlignment();
+			YAlignment alignment = cell.getAlignment();
 			// if not already sure, that it should expand
 			// try to find out
 			if (!shouldExpandHorizontal) {
@@ -696,10 +696,10 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 
 	public static class Cell {
 		private final Component component;
-		private final YUiAlignment alignment;
+		private final YAlignment alignment;
 		private final Area area;
 
-		public Cell(Component component, YUiAlignment alignment, GridLayout.Area area) {
+		public Cell(Component component, YAlignment alignment, GridLayout.Area area) {
 			super();
 			this.component = component;
 			this.alignment = alignment;
@@ -716,7 +716,7 @@ public class GridLayoutPresentation extends AbstractLayoutPresenter {
 		/**
 		 * @return the alignment
 		 */
-		protected YUiAlignment getAlignment() {
+		protected YAlignment getAlignment() {
 			return alignment;
 		}
 

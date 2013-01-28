@@ -10,21 +10,21 @@
  */
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiViewEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.context.IViewContext;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiCheckboxEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiComboBoxEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiGridLayoutEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiHorizontalLayoutEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiLabelEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiListEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiTableEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiTextAreaEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiTextFieldEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiVerticalLayoutEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IPresentationFactory;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.presentation.IPresentationFactory;
+import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IGridLayoutEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IHorizontalLayoutEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IVerticalLayoutEditpart;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.VaadinRenderer;
 
 /**
@@ -37,35 +37,35 @@ public class PresenterFactory implements IPresentationFactory {
 	}
 	
 	@Override
-	public boolean isFor(IViewContext uiContext, IUiElementEditpart editpart) {
+	public boolean isFor(IViewContext uiContext, IElementEditpart editpart) {
 		String presentationURI = uiContext.getPresentationURI();
 		return presentationURI != null && presentationURI.equals(VaadinRenderer.UI_KIT_URI);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <A extends IWidgetPresentation<?>> A createPresentation(IViewContext uiContext, IUiElementEditpart editpart) {
-		if (editpart instanceof IUiViewEditpart) {
-			return (A) new ViewPresentation((IUiViewEditpart) editpart);
-		} else if (editpart instanceof IUiTextFieldEditpart) {
+	public <A extends IWidgetPresentation<?>> A createPresentation(IViewContext uiContext, IElementEditpart editpart) {
+		if (editpart instanceof IViewEditpart) {
+			return (A) new ViewPresentation((IViewEditpart) editpart);
+		} else if (editpart instanceof ITextFieldEditpart) {
 			return (A) new TextFieldPresentation(editpart);
-		} else if (editpart instanceof IUiLabelEditpart) {
+		} else if (editpart instanceof ILabelEditpart) {
 			return (A) new LabelPresentation(editpart);
-		} else if (editpart instanceof IUiTextAreaEditpart) {
+		} else if (editpart instanceof ITextAreaEditpart) {
 			return (A) new TextAreaPresentation(editpart);
-		} else if (editpart instanceof IUiCheckboxEditpart) {
+		} else if (editpart instanceof ICheckboxEditpart) {
 			return (A) new CheckBoxPresentation(editpart);
-		} else if (editpart instanceof IUiComboBoxEditpart) {
+		} else if (editpart instanceof IComboBoxEditpart) {
 			return (A) new ComboBoxPresentation(editpart);
-		} else if (editpart instanceof IUiListEditpart) {
+		} else if (editpart instanceof IListEditpart) {
 			return (A) new ListPresentation(editpart);
-		} else if (editpart instanceof IUiTableEditpart) {
+		} else if (editpart instanceof ITableEditpart) {
 			return (A) new TablePresentation(editpart);
-		} else if (editpart instanceof IUiGridLayoutEditpart) {
+		} else if (editpart instanceof IGridLayoutEditpart) {
 			return (A) new GridLayoutPresentation(editpart);
-		} else if (editpart instanceof IUiHorizontalLayoutEditpart) {
+		} else if (editpart instanceof IHorizontalLayoutEditpart) {
 			return (A) new HorizontalLayoutPresentation(editpart);
-		} else if (editpart instanceof IUiVerticalLayoutEditpart) {
+		} else if (editpart instanceof IVerticalLayoutEditpart) {
 			return (A) new VerticalLayoutPresentation(editpart);
 		}
 

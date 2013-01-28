@@ -10,9 +10,9 @@
  */
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiTextArea;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiTextAreaEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextArea;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -33,9 +33,9 @@ public class TextAreaPresentation extends AbstractSWTWidgetPresenter {
 	 * 
 	 * @param editpart The editpart of that presenter
 	 */
-	public TextAreaPresentation(IUiElementEditpart editpart) {
-		super((IUiTextAreaEditpart) editpart);
-		this.modelAccess = new ModelAccess((YUiTextArea) editpart.getModel());
+	public TextAreaPresentation(IElementEditpart editpart) {
+		super((ITextAreaEditpart) editpart);
+		this.modelAccess = new ModelAccess((YTextArea) editpart.getModel());
 	}
 
 	/**
@@ -106,16 +106,16 @@ public class TextAreaPresentation extends AbstractSWTWidgetPresenter {
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiTextArea yTextArea;
+		private final YTextArea yTextArea;
 
-		public ModelAccess(YUiTextArea yTextArea) {
+		public ModelAccess(YTextArea yTextArea) {
 			super();
 			this.yTextArea = yTextArea;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yTextArea.getCssClass();
@@ -132,7 +132,7 @@ public class TextAreaPresentation extends AbstractSWTWidgetPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yTextArea.getCssID();

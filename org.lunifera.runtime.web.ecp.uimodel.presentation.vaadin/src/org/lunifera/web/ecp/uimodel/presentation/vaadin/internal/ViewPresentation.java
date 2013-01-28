@@ -12,12 +12,12 @@ package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ui.model.core.uimodel.YUiView;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiViewEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.disposal.AbstractDisposable;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IViewPresentation;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YView;
+import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
+import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 	private static final Logger LOGGER = LoggerFactory.getLogger(ViewPresentation.class);
 
 	private ModelAccess modelAccess;
-	private final IUiViewEditpart editpart;
+	private final IViewEditpart editpart;
 	private CssLayout componentBase;
 	private CssLayout component;
 	private IWidgetPresentation<?> contentPresentation;
@@ -44,9 +44,9 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 	 * 
 	 * @param editpart The editpart for that presentation.
 	 */
-	public ViewPresentation(IUiViewEditpart editpart) {
+	public ViewPresentation(IViewEditpart editpart) {
 		this.editpart = editpart;
-		this.modelAccess = new ModelAccess((YUiView) editpart.getModel());
+		this.modelAccess = new ModelAccess((YView) editpart.getModel());
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 	 * 
 	 * @return editpart
 	 */
-	public IUiElementEditpart getEditpart() {
+	public IElementEditpart getEditpart() {
 		checkDisposed();
 		return editpart;
 	}
@@ -195,16 +195,16 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 	 * An internal helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiView yView;
+		private final YView yView;
 
-		public ModelAccess(YUiView yView) {
+		public ModelAccess(YView yView) {
 			super();
 			this.yView = yView;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yView.getCssClass();
@@ -221,7 +221,7 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yView.getCssID();
@@ -238,7 +238,7 @@ public class ViewPresentation extends AbstractDisposable implements IViewPresent
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiGridLayout#isMargin()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yView.isMargin();

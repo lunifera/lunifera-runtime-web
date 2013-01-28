@@ -10,10 +10,10 @@
  */
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiEmbeddableEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.context.IViewContext;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.disposal.AbstractDisposable;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
+import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.Component;
@@ -33,9 +33,9 @@ public abstract class AbstractSWTWidgetPresenter extends AbstractDisposable impl
 	 */
 	public static final String CSS_CLASS__CONTROL = IConstants.CSS_CLASS__CONTROL;
 
-	private final IUiEmbeddableEditpart editpart;
+	private final IEmbeddableEditpart editpart;
 
-	public AbstractSWTWidgetPresenter(IUiEmbeddableEditpart editpart) {
+	public AbstractSWTWidgetPresenter(IEmbeddableEditpart editpart) {
 		this.editpart = editpart;
 	}
 
@@ -44,7 +44,7 @@ public abstract class AbstractSWTWidgetPresenter extends AbstractDisposable impl
 	 * 
 	 * @return the editpart
 	 */
-	protected IUiEmbeddableEditpart getEditpart() {
+	protected IEmbeddableEditpart getEditpart() {
 		return editpart;
 	}
 	

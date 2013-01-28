@@ -15,14 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.YUiEmbeddable;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiAlignment;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiVerticalLayout;
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiVerticalLayoutCellStyle;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiEmbeddableEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiLayoutEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
+import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayoutCellStyle;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +49,9 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	 * 
 	 * @param editpart The editpart of that presentation.
 	 */
-	public VerticalLayoutPresentation(IUiElementEditpart editpart) {
-		super((IUiLayoutEditpart) editpart);
-		this.modelAccess = new ModelAccess((YUiVerticalLayout) editpart.getModel());
+	public VerticalLayoutPresentation(IElementEditpart editpart) {
+		super((ILayoutEditpart) editpart);
+		this.modelAccess = new ModelAccess((YVerticalLayout) editpart.getModel());
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 
 		// create a map containing the style for the embeddable
 		//
-		Map<YUiEmbeddable, YUiVerticalLayoutCellStyle> yStyles = new HashMap<YUiEmbeddable, YUiVerticalLayoutCellStyle>();
-		for (YUiVerticalLayoutCellStyle style : modelAccess.getCellStyles()) {
+		Map<YEmbeddable, YVerticalLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YVerticalLayoutCellStyle>();
+		for (YVerticalLayoutCellStyle style : modelAccess.getCellStyles()) {
 			if (yStyles.containsKey(style.getTarget())) {
 				logger.warn("Multiple style for element {}", style.getTarget());
 			}
@@ -106,9 +106,9 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 
 		// iterate all elements and build the child element
 		//
-		for (IUiEmbeddableEditpart editPart : getEditpart().getElements()) {
+		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
 			IWidgetPresentation<?> childPresentation = editPart.getPresentation();
-			YUiEmbeddable yChild = (YUiEmbeddable) childPresentation.getModel();
+			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			addChild(childPresentation, yStyles.get(yChild));
 		}
 
@@ -121,16 +121,16 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation, YUiVerticalLayoutCellStyle yStyle) {
+	protected Cell addChild(IWidgetPresentation<?> presentation, YVerticalLayoutCellStyle yStyle) {
 
 		Component child = (Component) presentation.createWidget(verticalLayout);
 
 		// calculate and apply the alignment to be used
 		//
-		YUiAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
+		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle.getAlignment() : null;
 		if (yAlignment == null) {
 			// use default
-			yAlignment = YUiAlignment.TOP_LEFT;
+			yAlignment = YAlignment.TOP_LEFT;
 
 			if (modelAccess.isFillVertical()) {
 				// ensure that vertical alignment is FILL
@@ -150,7 +150,7 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @param child
 	 * @param yAlignment
 	 */
-	protected void applyAlignment(Component child, YUiAlignment yAlignment) {
+	protected void applyAlignment(Component child, YAlignment yAlignment) {
 
 		if (yAlignment != null) {
 			child.setWidth("-1%");
@@ -225,36 +225,36 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YUiAlignment mapToVerticalFill(YUiAlignment yAlignment) {
+	protected YAlignment mapToVerticalFill(YAlignment yAlignment) {
 		// END SUPRESS CATCH EXCEPTION
 		if (yAlignment != null) {
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
 			case MIDDLE_CENTER:
 			case TOP_CENTER:
-				return YUiAlignment.FILL_CENTER;
+				return YAlignment.FILL_CENTER;
 			case BOTTOM_FILL:
 			case MIDDLE_FILL:
 			case TOP_FILL:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			case BOTTOM_LEFT:
 			case MIDDLE_LEFT:
 			case TOP_LEFT:
-				return YUiAlignment.FILL_LEFT;
+				return YAlignment.FILL_LEFT;
 			case BOTTOM_RIGHT:
 			case MIDDLE_RIGHT:
 			case TOP_RIGHT:
-				return YUiAlignment.FILL_RIGHT;
+				return YAlignment.FILL_RIGHT;
 			case FILL_FILL:
 			case FILL_LEFT:
 			case FILL_RIGHT:
 			case FILL_CENTER:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			default:
 				break;
 			}
 		}
-		return YUiAlignment.FILL_FILL;
+		return YAlignment.FILL_FILL;
 	}
 
 	/**
@@ -264,7 +264,7 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	 * @return alignment the mapped alignment
 	 */
 	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YUiAlignment mapToHorizontalFill(YUiAlignment yAlignment) {
+	protected YAlignment mapToHorizontalFill(YAlignment yAlignment) {
 		// END SUPRESS CATCH EXCEPTION
 		if (yAlignment != null) {
 			switch (yAlignment) {
@@ -272,27 +272,27 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 			case BOTTOM_FILL:
 			case BOTTOM_LEFT:
 			case BOTTOM_RIGHT:
-				return YUiAlignment.BOTTOM_FILL;
+				return YAlignment.BOTTOM_FILL;
 			case MIDDLE_CENTER:
 			case MIDDLE_FILL:
 			case MIDDLE_LEFT:
 			case MIDDLE_RIGHT:
-				return YUiAlignment.MIDDLE_FILL;
+				return YAlignment.MIDDLE_FILL;
 			case TOP_CENTER:
 			case TOP_FILL:
 			case TOP_LEFT:
 			case TOP_RIGHT:
-				return YUiAlignment.TOP_FILL;
+				return YAlignment.TOP_FILL;
 			case FILL_FILL:
 			case FILL_LEFT:
 			case FILL_RIGHT:
 			case FILL_CENTER:
-				return YUiAlignment.FILL_FILL;
+				return YAlignment.FILL_FILL;
 			default:
 				break;
 			}
 		}
-		return YUiAlignment.FILL_FILL;
+		return YAlignment.FILL_FILL;
 	}
 
 	@Override
@@ -390,16 +390,16 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 	 * An internal helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiVerticalLayout yLayout;
+		private final YVerticalLayout yLayout;
 
-		public ModelAccess(YUiVerticalLayout yLayout) {
+		public ModelAccess(YVerticalLayout yLayout) {
 			super();
 			this.yLayout = yLayout;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLayout.getCssClass();
@@ -416,7 +416,7 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiVerticalLayout#isSpacing()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YVerticalLayout#isSpacing()
 		 */
 		public boolean isSpacing() {
 			return yLayout.isSpacing();
@@ -424,7 +424,7 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLayout.getCssID();
@@ -441,7 +441,7 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiVerticalLayout#isMargin()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YVerticalLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yLayout.isMargin();
@@ -449,15 +449,15 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiVerticalLayout#getCellStyles()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YVerticalLayout#getCellStyles()
 		 */
-		public EList<YUiVerticalLayoutCellStyle> getCellStyles() {
+		public EList<YVerticalLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiVerticalLayout#isFillVertical()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YVerticalLayout#isFillVertical()
 		 */
 		public boolean isFillVertical() {
 			return yLayout.isFillVertical();
@@ -466,9 +466,9 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 
 	public static class Cell {
 		private final Component component;
-		private final YUiAlignment alignment;
+		private final YAlignment alignment;
 
-		public Cell(Component component, YUiAlignment alignment) {
+		public Cell(Component component, YAlignment alignment) {
 			super();
 			this.component = component;
 			this.alignment = alignment;
@@ -484,7 +484,7 @@ public class VerticalLayoutPresentation extends AbstractLayoutPresenter {
 		/**
 		 * @return the alignment
 		 */
-		protected YUiAlignment getAlignment() {
+		protected YAlignment getAlignment() {
 			return alignment;
 		}
 

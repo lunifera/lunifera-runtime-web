@@ -10,9 +10,9 @@
  */
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiComboBox;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiComboBoxEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -34,9 +34,9 @@ public class ComboBoxPresentation extends AbstractSWTWidgetPresenter {
 	 * @param editpart
 	 *            The editpart of that presenter
 	 */
-	public ComboBoxPresentation(IUiElementEditpart editpart) {
-		super((IUiComboBoxEditpart) editpart);
-		this.modelAccess = new ModelAccess((YUiComboBox) editpart.getModel());
+	public ComboBoxPresentation(IElementEditpart editpart) {
+		super((IComboBoxEditpart) editpart);
+		this.modelAccess = new ModelAccess((YComboBox) editpart.getModel());
 	}
 
 	/**
@@ -108,16 +108,16 @@ public class ComboBoxPresentation extends AbstractSWTWidgetPresenter {
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiComboBox yCombo;
+		private final YComboBox yCombo;
 
-		public ModelAccess(YUiComboBox yCombo) {
+		public ModelAccess(YComboBox yCombo) {
 			super();
 			this.yCombo = yCombo;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yCombo.getCssClass();
@@ -134,7 +134,7 @@ public class ComboBoxPresentation extends AbstractSWTWidgetPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yCombo.getCssID();

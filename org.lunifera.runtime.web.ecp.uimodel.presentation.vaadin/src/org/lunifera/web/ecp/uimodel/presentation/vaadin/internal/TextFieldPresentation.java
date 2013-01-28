@@ -10,9 +10,9 @@
  */
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiTextField;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiTextFieldEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -33,9 +33,9 @@ public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
 	 * 
 	 * @param editpart The editpart of that presenter
 	 */
-	public TextFieldPresentation(IUiElementEditpart editpart) {
-		super((IUiTextFieldEditpart) editpart);
-		this.modelAccess = new ModelAccess((YUiTextField) editpart.getModel());
+	public TextFieldPresentation(IElementEditpart editpart) {
+		super((ITextFieldEditpart) editpart);
+		this.modelAccess = new ModelAccess((YTextField) editpart.getModel());
 	}
 
 	/**
@@ -106,16 +106,16 @@ public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiTextField yText;
+		private final YTextField yText;
 
-		public ModelAccess(YUiTextField yText) {
+		public ModelAccess(YTextField yText) {
 			super();
 			this.yText = yText;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yText.getCssClass();
@@ -132,7 +132,7 @@ public class TextFieldPresentation extends AbstractSWTWidgetPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yText.getCssID();

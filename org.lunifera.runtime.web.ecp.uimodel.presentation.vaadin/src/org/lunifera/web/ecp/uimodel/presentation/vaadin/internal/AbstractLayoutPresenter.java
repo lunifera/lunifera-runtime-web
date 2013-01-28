@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiLayoutEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.context.IViewContext;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.disposal.AbstractDisposable;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.ILayoutPresentation;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
+import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
+import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
+import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
+import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.ComponentContainer;
@@ -38,11 +38,11 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	 */
 	public static final String CSS_CLASS__CONTROL = IConstants.CSS_CLASS__CONTROL;
 
-	private final IUiLayoutEditpart editpart;
+	private final ILayoutEditpart editpart;
 
 	private List<IWidgetPresentation<?>> children;
 
-	public AbstractLayoutPresenter(IUiLayoutEditpart editpart) {
+	public AbstractLayoutPresenter(ILayoutEditpart editpart) {
 		this.editpart = editpart;
 	}
 
@@ -51,7 +51,7 @@ public abstract class AbstractLayoutPresenter extends AbstractDisposable impleme
 	 * 
 	 * @return the editpart
 	 */
-	protected IUiLayoutEditpart getEditpart() {
+	protected ILayoutEditpart getEditpart() {
 		return editpart;
 	}
 

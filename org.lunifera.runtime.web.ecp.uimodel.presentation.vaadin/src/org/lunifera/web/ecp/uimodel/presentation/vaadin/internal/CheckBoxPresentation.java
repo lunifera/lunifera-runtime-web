@@ -10,9 +10,9 @@
  */
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ui.model.core.uimodel.extension.YUiCheckBox;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.IUiElementEditpart;
-import org.eclipse.emf.ecp.ui.uimodel.core.editparts.extension.IUiCheckboxEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -33,9 +33,9 @@ public class CheckBoxPresentation extends AbstractSWTWidgetPresenter {
 	 * 
 	 * @param editpart The editpart of that presenter
 	 */
-	public CheckBoxPresentation(IUiElementEditpart editpart) {
-		super((IUiCheckboxEditpart) editpart);
-		this.modelAccess = new ModelAccess((YUiCheckBox) editpart.getModel());
+	public CheckBoxPresentation(IElementEditpart editpart) {
+		super((ICheckboxEditpart) editpart);
+		this.modelAccess = new ModelAccess((YCheckBox) editpart.getModel());
 	}
 
 	/**
@@ -106,16 +106,16 @@ public class CheckBoxPresentation extends AbstractSWTWidgetPresenter {
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YUiCheckBox yCheckBox;
+		private final YCheckBox yCheckBox;
 
-		public ModelAccess(YUiCheckBox yCheckBox) {
+		public ModelAccess(YCheckBox yCheckBox) {
 			super();
 			this.yCheckBox = yCheckBox;
 		}
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssClass()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yCheckBox.getCssClass();
@@ -132,7 +132,7 @@ public class CheckBoxPresentation extends AbstractSWTWidgetPresenter {
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ui.model.core.uimodel.YUiCssAble#getCssID()
+		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yCheckBox.getCssID();

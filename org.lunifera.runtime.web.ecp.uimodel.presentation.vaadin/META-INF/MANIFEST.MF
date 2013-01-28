@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin
 Bundle-SymbolicName: org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin
 Bundle-Version: 0.0.1.qualifier
-Require-Bundle: org.eclipse.emf.ecp.ui.uimodel.core.editparts;bundle-version="0.0.1";visibility:=reexport,
- org.eclipse.emf.ecp.ui.model.core.uimodel;bundle-version="0.0.1";visibility:=reexport,
+Require-Bundle: org.eclipse.emf.ecp.ecview.extension.editparts;bundle-version="0.0.1";visibility:=reexport,
+ org.eclipse.emf.ecp.ecview.extension.model;bundle-version="1.0.0";visibility:=reexport,
  com.vaadin.shared;bundle-version="7.0.0";visibility:=reexport,
  com.vaadin.client;bundle-version="7.0.0",
  com.vaadin.server;bundle-version="7.0.0",
