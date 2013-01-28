@@ -11,6 +11,7 @@
 package org.lunifera.web.ecp.uimodel.presentation.vaadin.internal;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.util.CoreModelUtil;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 
@@ -61,10 +62,6 @@ public class TextFieldPresentation extends
 			// creates the binding for the field
 			createBindings(modelAccess.yText, text);
 
-			text.setEnabled(modelAccess.yText.isInitialEnabled());
-			text.setReadOnly(!modelAccess.yText.isInitialEditable());
-			text.setVisible(!modelAccess.yText.isInitialVisible());
-
 			componentBase.addComponent(text);
 
 			if (modelAccess.isCssClassValid()) {
@@ -78,9 +75,14 @@ public class TextFieldPresentation extends
 		return componentBase;
 	}
 
-	protected void createBindings(YTextField yEmbeddable, TextField field) {
-		super.createBindings(yEmbeddable, field);
-
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YTextField yField, TextField field) {
+		super.createBindings(yField, field);
 	}
 
 	@Override

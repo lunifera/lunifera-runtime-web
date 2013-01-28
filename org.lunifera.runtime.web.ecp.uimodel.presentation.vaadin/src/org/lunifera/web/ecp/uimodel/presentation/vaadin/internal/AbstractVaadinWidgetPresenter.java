@@ -14,10 +14,13 @@ import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
+import org.eclipse.emf.ecp.ecview.common.model.core.YField;
+import org.eclipse.emf.ecp.ecview.common.model.core.util.CoreModelUtil;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.common.services.IServiceRegistry;
 import org.lunifera.web.ecp.uimodel.presentation.vaadin.IConstants;
 
+import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
@@ -73,9 +76,39 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * @param field
 	 */
 	protected void createBindings(YEmbeddable yEmbeddable, Field<?> field) {
+
+		// initialize the transient values
+		//
+		CoreModelUtil.initTransientValues(yEmbeddable);
+
 		BindingManager bindingManger = getViewContext().getService(
 				IServiceRegistry.SERVICE__BINDING_MANAGER);
+
+		// bind visible
 		bindingManger.bindVisible(yEmbeddable, field);
+	}
+
+	/**
+	 * Creates the bindings for the given elements.
+	 * 
+	 * @param yEmbeddable
+	 * @param field
+	 */
+	protected void createBindings(YField yField, Field<?> field) {
+
+		createBindings((YEmbeddable) yField, field);
+
+		BindingManager bindingManger = getViewContext().getService(
+				IServiceRegistry.SERVICE__BINDING_MANAGER);
+
+		// bind enabled
+		bindingManger.bindEnabled(yField, field);
+
+		// bind readonly
+		if (field instanceof Property.ReadOnlyStatusChangeNotifier) {
+			bindingManger.bindReadonly(yField,
+					(Property.ReadOnlyStatusChangeNotifier) field);
+		}
 	}
 
 }
