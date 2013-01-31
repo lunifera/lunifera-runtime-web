@@ -15,6 +15,7 @@ package org.lunifera.runtime.web.vaadin.standalone.webapp;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lunifera.runtime.web.vaadin.standalone.common.IVaadinWebApplication;
 import org.lunifera.web.vaadin.common.Constants;
 import org.lunifera.web.vaadin.common.OSGiUIProvider;
 import org.osgi.framework.BundleContext;
@@ -28,12 +29,11 @@ import com.vaadin.ui.UI;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class UIProviderTracker extends ServiceTracker {
-
-	private final VaadinWebApplication webApplication;
+	private final IVaadinWebApplication webApplication;
 	private Map<ComponentFactory, OSGiUIProvider> providerMapping = new HashMap<ComponentFactory, OSGiUIProvider>();
 
 	public UIProviderTracker(BundleContext ctx, LogService logService,
-			VaadinWebApplication webApplication) throws InvalidSyntaxException {
+			IVaadinWebApplication webApplication) throws InvalidSyntaxException {
 		super(ctx, ctx.createFilter("(component.factory="
 				+ Constants.OSGI_COMP_FACTORY__VAADIN_UI + "/*)"), null);
 		this.webApplication = webApplication;

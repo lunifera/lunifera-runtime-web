@@ -55,4 +55,18 @@ public interface IVaadinWebApplication {
 	@SuppressWarnings("rawtypes")
 	public void updated(Dictionary properties);
 
+	/**
+	 * Is called to add an ui provider.
+	 * 
+	 * @param uiProvider
+	 */
+	void addOSGiUIProvider(OSGiUIProvider uiProvider);
+
+	/**
+	 * Is called to remove an ui provider.
+	 * 
+	 * @param uiProvider
+	 */
+	void removeOSGiUIProvider(OSGiUIProvider remove);
+
 }

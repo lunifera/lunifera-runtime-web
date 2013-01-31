@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.List;
+import java.util.Map;
 
 import org.lunifera.runtime.web.vaadin.standalone.common.Constants;
 import org.lunifera.runtime.web.vaadin.standalone.common.IVaadinWebApplication;
@@ -23,17 +24,17 @@ import org.lunifera.web.vaadin.common.OSGiUIProvider;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.log.LogService;
 
 import com.vaadin.server.UIProvider;
 
 /**
- *  A vaadin web application that is activated by OSGi DS.
+ * A vaadin web application that is not activated by OSGi DS. It can be
+ * instantiated by the constructor.
  */
-public class VaadinWebApplication implements IVaadinWebApplication {
+public class EmbeddableVaadinWebApplication implements IVaadinWebApplication {
 
-	private BundleContext bundleContext;
+	private final BundleContext bundleContext;
 	private String alias;
 	private String id;
 	private LogService logService;
@@ -43,6 +44,11 @@ public class VaadinWebApplication implements IVaadinWebApplication {
 	private List<OSGiUIProvider> uiProviders = new ArrayList<OSGiUIProvider>();
 	private String widgetsetName;
 
+	public EmbeddableVaadinWebApplication(BundleContext bundleContext) {
+		super();
+		this.bundleContext = bundleContext;
+	}
+
 	protected void bindLogService(BundleContext context) {
 		ServiceReference<LogService> ref = context
 				.getServiceReference(LogService.class);
@@ -50,22 +56,23 @@ public class VaadinWebApplication implements IVaadinWebApplication {
 
 		logService.log(LogService.LOG_DEBUG, "Binded LogService.");
 	}
-	
-	public void activate(final ComponentContext context) {
+
+	/**
+	 * Is called to activate the vaadin application.
+	 * 
+	 * @param properties
+	 */
+	public void activate(Map<String, Object> properties) {
 
 		// remove the / from the alias
-		alias = (String) context.getProperties().get(
-				Constants.PROP_WEBAPP__ALIAS);
+		alias = (String) properties.get(Constants.PROP_WEBAPP__ALIAS);
 		if (alias != null) {
 			alias = alias.replace("/", "");
 		}
 
-		widgetsetName = (String) context.getProperties().get(
-				Constants.PROP_WIDGETSET);
+		widgetsetName = (String) properties.get(Constants.PROP_WIDGETSET);
 
-		id = (String) context.getProperties().get("component.name");
-		// remember bundle for later use
-		bundleContext = context.getBundleContext();
+		id = (String) properties.get(Constants.PROP_COMPONENT);
 
 		bindLogService(bundleContext);
 
@@ -77,14 +84,18 @@ public class VaadinWebApplication implements IVaadinWebApplication {
 		}
 		uiProviderTracker.open();
 
-		tracker = new HttpServiceTracker(context.getBundleContext(), this,
-				logService);
+		tracker = new HttpServiceTracker(bundleContext, this, logService);
 		logService.log(LogService.LOG_DEBUG,
 				"The alias that will be tracked is:\"" + alias);
 		tracker.open();
 	}
 
-	public void deactivate(final ComponentContext context) {
+	/**
+	 * Is called to deactivate the vaadin application.
+	 * 
+	 * @param properties
+	 */
+	public void deactivate(Map<String, Object> properties) {
 		logService.log(LogService.LOG_DEBUG,
 				"Tracker for alias" + tracker.getAlias() + " was removed.");
 		if (uiProviderTracker != null) {

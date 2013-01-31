@@ -22,6 +22,11 @@ public class Constants {
 	public static final String PROP_WEBAPP__ALIAS = "lunifera.web.vaadin.alias";
 	
 	/**
+	 * The OSGi property for specifying the name of a component.
+	 */
+	public static final String PROP_COMPONENT = "lunifera.web.vaadin.component";
+	
+	/**
 	 * OSGi property component.factory for the vaadin UI (tab sheet). The
 	 * vaadin.ui.class name is part of the factory name and putted after the /.
 	 * The class name is required for lazy loading issues.
