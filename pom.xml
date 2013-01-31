@@ -49,7 +49,11 @@
 
 				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
+				<module>org.lunifera.runtime.web.feature.vaadin.databinding</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.standalone</module>
+				
+				<module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin</module>
+				<module>org.lunifera.runtime.web.feature.ecp.uimodel.presentation.vaadin</module>
 			</modules>
 		</profile>
 	</profiles>

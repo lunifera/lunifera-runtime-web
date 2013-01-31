@@ -12,3 +12,4 @@ Export-Package: org.lunifera.web.vaadin.components.converter,
  org.lunifera.web.vaadin.components.fields,
  org.lunifera.web.vaadin.components.validator
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Lunifera.org
