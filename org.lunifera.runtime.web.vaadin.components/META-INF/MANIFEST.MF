@@ -3,13 +3,19 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Components
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components
 Bundle-Version: 0.0.1.qualifier
-Require-Bundle: com.vaadin.server;bundle-version="7.0.0";visibility:=reexport,
- com.vaadin.shared;bundle-version="7.0.0";visibility:=reexport,
- org.json;bundle-version="1.0.0";visibility:=reexport,
- com.vaadin.shared.deps;bundle-version="1.0.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.web.vaadin.components.converter,
  org.lunifera.web.vaadin.components.fields,
  org.lunifera.web.vaadin.components.validator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Lunifera.org
+Import-Package: com.vaadin.data;version="7.0.0",
+ com.vaadin.data.util.converter;version="7.0.0",
+ com.vaadin.data.validator;version="7.0.0",
+ com.vaadin.event;version="7.0.0",
+ com.vaadin.server;version="7.0.0",
+ com.vaadin.shared;version="7.0.0",
+ com.vaadin.shared.communication;version="7.0.1.nightly-faf98c84bd260b2a8315dc1cc62a1f932dfd2f37-366",
+ com.vaadin.shared.ui;version="7.0.0",
+ com.vaadin.ui;version="7.0.0",
+ org.json;version="0.0.20080701"

@@ -1,10 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Shiro
+Bundle-Name: Vaadin wrapper common classes
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.common
 Bundle-Version: 0.0.1.qualifier
 Bundle-ActivationPolicy: lazy
-Import-Package: org.apache.shiro.web.servlet;version="1.2.1",
+Import-Package: com.vaadin.server;version="7.0.0",
+ com.vaadin.shared;version="7.0.0",
+ com.vaadin.shared.ui;version="7.0.0",
+ com.vaadin.ui;version="7.0.0",
+ org.apache.shiro.web.servlet;version="1.2.1",
  org.eclipse.equinox.http.jetty,
  org.eclipse.equinox.http.servlet;version="1.1.0",
  org.json,
@@ -14,12 +18,6 @@ Import-Package: org.apache.shiro.web.servlet;version="1.2.1",
  org.osgi.service.http;version="1.2.1",
  org.osgi.service.log;version="1.3.0",
  org.osgi.util.tracker;version="1.5.1"
-Require-Bundle: javax.servlet;bundle-version="3.0.0";visibility:=reexport,
- com.vaadin.shared;bundle-version="7.0.0";visibility:=reexport,
- com.vaadin.server;bundle-version="7.0.0";visibility:=reexport,
- com.vaadin.client-compiled;bundle-version="7.0.0",
- com.vaadin.themes;bundle-version="7.0.0",
- com.vaadin.shared.deps;bundle-version="1.0.2";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.web.vaadin.common
-Bundle-Vendor: lunifera.org
+Bundle-Vendor: Lunifera.org
