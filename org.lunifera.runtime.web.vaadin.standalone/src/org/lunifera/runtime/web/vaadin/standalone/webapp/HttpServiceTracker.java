@@ -83,12 +83,12 @@ public class HttpServiceTracker extends ServiceTracker {
 		context.registerService(ManagedService.class.getName(), config,
 				properties);
 
-		try {
-			config.updated(null);
-		} catch (ConfigurationException e) {
-			logService.log(LogService.LOG_WARNING,
-					"Initial setup caused exception: !" + e);
-		}
+//		try {
+//			config.updated(null);
+//		} catch (ConfigurationException e) {
+//			logService.log(LogService.LOG_WARNING,
+//					"Initial setup caused exception: !" + e);
+//		}
 
 		return http;
 	}

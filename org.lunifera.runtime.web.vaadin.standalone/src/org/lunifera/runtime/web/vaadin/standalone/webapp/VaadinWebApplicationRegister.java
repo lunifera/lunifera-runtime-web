@@ -71,8 +71,8 @@ public class VaadinWebApplicationRegister implements ManagedService {
 		}
 		if (currentAlias != null) {
 			try {
-				http.unregister(currentAlias);
 				http.unregister(RESOURCE_BASE);
+				http.unregister(String.format("/%s", currentAlias));
 			} catch (java.lang.IllegalArgumentException e) {
 				// ignore in case alias was not found exception
 			}
@@ -106,16 +106,18 @@ public class VaadinWebApplicationRegister implements ManagedService {
 			// vaadin parameter name
 			properties.put("widgetset", webApplication.getWidgetSetName());
 
-			servlet = new VaadinOSGiServlet(webApplication);
-			HttpContext defaultContext = new WebResourcesHttpContext(Activator
-					.getBundleContext().getBundle());
-			http.registerFilter("/", getSecurityFilter(), properties,
-					defaultContext);
-			http.registerResources(RESOURCE_BASE, RESOURCE_BASE, defaultContext);
 			currentAlias = webApplication.getAlias();
-			http.registerServlet(String.format("/%s", currentAlias), servlet,
-					properties, defaultContext);
-
+			if (currentAlias != null) {
+				servlet = new VaadinOSGiServlet(webApplication);
+				HttpContext defaultContext = new WebResourcesHttpContext(
+						Activator.getBundleContext().getBundle());
+				http.registerFilter("/", getSecurityFilter(), properties,
+						defaultContext);
+				http.registerResources(RESOURCE_BASE, RESOURCE_BASE,
+						defaultContext);
+				http.registerServlet(String.format("/%s", currentAlias),
+						servlet, properties, defaultContext);
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
