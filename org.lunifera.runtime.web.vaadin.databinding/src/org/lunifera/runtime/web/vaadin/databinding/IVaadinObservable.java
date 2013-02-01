@@ -17,8 +17,6 @@ package org.lunifera.runtime.web.vaadin.databinding;
 
 import org.eclipse.core.databinding.observable.IObservable;
 
-import com.vaadin.ui.Component;
-
 /**
  * {@link IObservable} observing an vaadin Component.
  * 

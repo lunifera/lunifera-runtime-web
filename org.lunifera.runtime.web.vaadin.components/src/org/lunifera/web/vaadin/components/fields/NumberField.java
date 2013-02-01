@@ -14,7 +14,6 @@ package org.lunifera.web.vaadin.components.fields;
 
 import java.text.DecimalFormatSymbols;
 
-import org.lunifera.web.vaadin.components.converter.DecimalConverter;
 import org.lunifera.web.vaadin.components.converter.NumberConverter;
 
 /**
