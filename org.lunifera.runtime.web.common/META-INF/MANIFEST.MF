@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Vaadin wrapper common classes
+Bundle-SymbolicName: org.lunifera.runtime.web.common
+Bundle-Version: 0.0.1.qualifier
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Lunifera.org
+Import-Package: org.osgi.service.framework;version="1.0.0",
+ org.osgi.service.prefs;version="1.1.1"
+Service-Component: OSGI-INF/contextFactory.xml
