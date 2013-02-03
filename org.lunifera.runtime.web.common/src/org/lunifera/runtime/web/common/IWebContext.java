@@ -8,22 +8,9 @@
  * Contributors:
  *    Florian Pirchner - initial API and implementation
  */
-
-/**
- * Copyright (c) 2012 Committers of lunifera.org.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *    Florian Pirchner - initial API and implementation
- */
 package org.lunifera.runtime.web.common;
 
 import java.util.Locale;
-
-import org.osgi.service.prefs.Preferences;
 
 /**
  * A web context is an object that offers access to features that are related
@@ -32,15 +19,17 @@ import org.osgi.service.prefs.Preferences;
  * the http servlet. For concurrent threads no web context is attached to them.
  * So concurrent threads have to query the web context and use the sync-methods
  * to run a runnable in a web context.
+ * <p>
+ * To dispose a web context call {@link #dispose()}.
  */
 public interface IWebContext extends IDisposable {
 
 	/**
-	 * Returns the preferences associated with that context.
+	 * Returns the unique id of the web context.
 	 * 
 	 * @return
 	 */
-	Preferences getPreferences();
+	String getId();
 
 	/**
 	 * Returns the i18n service configured with the settings of that context.
@@ -57,9 +46,11 @@ public interface IWebContext extends IDisposable {
 	 * @return
 	 */
 	Locale getLocale();
-	
+
 	/**
-	 * Returns the user info this context is assigned to. Never <code>null</code>.
+	 * Returns the user info this context is assigned to. Never
+	 * <code>null</code>.
+	 * 
 	 * @return
 	 */
 	IUserInfo getUserInfo();

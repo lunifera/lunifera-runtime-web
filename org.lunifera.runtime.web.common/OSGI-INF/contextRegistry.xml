@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.lunifera.runtime.web.common.contextregistry">
+   <implementation class="org.lunifera.runtime.web.common.internal.WebContextRegistry"/>
+   <service>
+      <provide interface="org.lunifera.runtime.web.common.IWebContextRegistry"/>
+   </service>
+   <reference bind="setFactory" cardinality="0..1" interface="org.osgi.service.component.ComponentFactory" name="contextFactory" policy="dynamic" target="(component.factory=org.lunifera.runtime.web.common.contextfactory)" unbind="unsetFactory"/>
+</scr:component>

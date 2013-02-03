@@ -4,5 +4,6 @@
    <service>
       <provide interface="org.lunifera.runtime.web.common.IWebContext"/>
    </service>
-   <reference bind="setPreferencesService" cardinality="0..1" interface="org.osgi.service.prefs.PreferencesService" name="preferencesService" policy="dynamic" unbind="unsetPreferencesService"/>
+   <reference bind="setPreferencesService" cardinality="0..1" interface="org.eclipse.core.runtime.preferences.IPreferencesService" name="preferencesService" policy="dynamic" unbind="unsetPreferencesService"/>
+   <reference bind="setUserLocation" cardinality="0..1" interface="org.eclipse.osgi.service.datalocation.Location" name="userLocation" policy="dynamic" target="(type=osgi.user.area)" unbind="unsetUserLocation"/>
 </scr:component>
