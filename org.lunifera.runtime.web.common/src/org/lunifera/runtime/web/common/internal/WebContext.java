@@ -13,23 +13,22 @@ package org.lunifera.runtime.web.common.internal;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
-import org.eclipse.osgi.service.datalocation.Location;
 import org.lunifera.runtime.web.common.AbstractDisposable;
 import org.lunifera.runtime.web.common.IConstants;
 import org.lunifera.runtime.web.common.IUserInfo;
 import org.lunifera.runtime.web.common.IWebContext;
-import org.lunifera.runtime.web.common.internal.preferences.UserScope;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.prefs.Preferences;
+import org.osgi.service.prefs.PreferencesService;
 
 public class WebContext extends AbstractDisposable implements IWebContext {
 
 	private IUserInfo userInfo = null;
 	private String id;
 
-	private IPreferencesService preferencesService;
-	private Location userLocation;
+	private PreferencesService preferencesService;
+	// private Location userLocation;
+	private Map<String, Object> properties;
 
 	/**
 	 * Called by OSGi-DS.
@@ -40,26 +39,26 @@ public class WebContext extends AbstractDisposable implements IWebContext {
 
 	protected void activate(ComponentContext context,
 			Map<String, Object> properties) {
-		id = (String) properties.get(IConstants.OSGI_PROPERTY__ID);
-
+		this.properties = properties;
+		id = (String) properties.get(IConstants.OSGI_PROPERTY__WEB_CONTEXT__ID);
 		// prepare the user info
 		userInfo = new AbstractUserInfo(
-				(String) properties.get(IConstants.OSGI_PROPERTY__USER_ID)) {
+				(String) properties
+						.get(IConstants.OSGI_PROPERTY__WEB_CONTEXT__USER)) {
 			@Override
-			public IEclipsePreferences getPreferences(String qualifier) {
-				if (preferencesService == null || getLocation() == null
-						|| getLocation().equals("") || getId() == null) {
+			public Preferences getPreferences(String qualifier) {
+				if (preferencesService == null || getId() == null) {
 					return null;
 				}
-				return new UserScope(preferencesService, getLocation(), getId())
-						.getNode(qualifier);
+				return preferencesService.getUserPreferences(getId());
 			}
 
-			@Override
-			public String getLocation() {
-				return userLocation != null ? userLocation.toString() : "";
-			}
+			// @Override
+			// public String getLocation() {
+			// return System.getProperty("user.home") + "/" + getId();
+			// }
 		};
+
 	}
 
 	@Override
@@ -84,8 +83,6 @@ public class WebContext extends AbstractDisposable implements IWebContext {
 
 	@Override
 	protected void internalDispose() {
-		// prepare for garbage collection
-		preferencesService = null;
 		userInfo = null;
 	}
 
@@ -116,7 +113,7 @@ public class WebContext extends AbstractDisposable implements IWebContext {
 	 * 
 	 * @param service
 	 */
-	protected void setPreferencesService(IPreferencesService service) {
+	protected void setPreferencesService(PreferencesService service) {
 		this.preferencesService = service;
 	}
 
@@ -125,26 +122,36 @@ public class WebContext extends AbstractDisposable implements IWebContext {
 	 * 
 	 * @param service
 	 */
-	protected void unsetPreferencesService(IPreferencesService service) {
+	protected void unsetPreferencesService(PreferencesService service) {
 		this.preferencesService = null;
 	}
 
-	/**
-	 * Called by OSGi-DS
-	 * 
-	 * @param service
-	 */
-	public void setUserLocation(Location userLocation) {
-		this.userLocation = userLocation;
+	// /**
+	// * Called by OSGi-DS
+	// *
+	// * @param service
+	// */
+	// public void setUserLocation(Location userLocation) {
+	// this.userLocation = userLocation;
+	// }
+	//
+	// /**
+	// * Called by OSGi-DS
+	// *
+	// * @param service
+	// */
+	// public void unsetUserLocation(Location userLocation) {
+	// this.userLocation = null;
+	// }
+
+	@Override
+	public <A> A getUI() {
+		return (A) null;
 	}
 
-	/**
-	 * Called by OSGi-DS
-	 * 
-	 * @param service
-	 */
-	public void unsetUserLocation(Location userLocation) {
-		this.userLocation = null;
+	@Override
+	public Object getProperty(String property) {
+		return properties.get(property);
 	}
 
 }

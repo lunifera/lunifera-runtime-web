@@ -13,13 +13,17 @@ package org.lunifera.runtime.web.common;
 public interface IConstants {
 
 	/**
-	 * OSGi property used to define unique ids.
+	 * OSGi property used to define unique id of web context.
 	 */
-	public static final String OSGI_PROPERTY__ID = "org.lunifera.runtime.web.common.id";
+	public static final String OSGI_PROPERTY__WEB_CONTEXT__ID = "lunifera.web.common.context.id";
 
 	/**
-	 * OSGi property to define user ids.
+	 * OSGi property to define user id of web context.
 	 */
-	public static final String OSGI_PROPERTY__USER_ID = "org.lunifera.runtime.web.common.userid";
+	public static final String OSGI_PROPERTY__WEB_CONTEXT__USER = "lunifera.web.common.context.user";
 
+	/**
+	 * OSGi property to define the vendor of the ui kit.
+	 */
+	public static final String OSGI_PROPERTY__WEB_CONTEXT__VENDOR = "lunifera.web.common.context.vendor";
 }

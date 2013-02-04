@@ -10,7 +10,7 @@
  */
 package org.lunifera.runtime.web.common;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * Provides information about the current user.
@@ -24,13 +24,13 @@ public interface IUserInfo {
 	 */
 	String getId();
 
-	/**
-	 * Returns the location where all user specific settings are stored. If no
-	 * location is available, empty string will be returned.
-	 * 
-	 * @return
-	 */
-	String getLocation();
+//	/**
+//	 * Returns the location where all user specific settings are stored. If no
+//	 * location is available, empty string will be returned.
+//	 * 
+//	 * @return
+//	 */
+//	String getLocation();
 
 	/**
 	 * Returns the user preferences. If no user preferences are available then
@@ -42,6 +42,6 @@ public interface IUserInfo {
 	 * @return The preferences for the given qualifier or <code>null</code> if
 	 *         no proper preferences could be found.
 	 */
-	IEclipsePreferences getPreferences(String qualifier);
+	Preferences getPreferences(String qualifier);
 
 }

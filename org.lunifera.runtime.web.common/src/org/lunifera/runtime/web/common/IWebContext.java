@@ -56,6 +56,22 @@ public interface IWebContext extends IDisposable {
 	IUserInfo getUserInfo();
 
 	/**
+	 * Returns the main UI that is part of that context.
+	 * 
+	 * @return
+	 */
+	<A> A getUI();
+
+	/**
+	 * Returns the value for the given property or <code>null</code> if the
+	 * value is not available.
+	 * 
+	 * @param property
+	 * @return
+	 */
+	Object getProperty(String property);
+
+	/**
 	 * Executes the given runnable in the context of that web context. Therefore
 	 * it will sync with the web environment before executing the runnable.
 	 * 

@@ -10,6 +10,8 @@
  */
 package org.lunifera.runtime.web.common;
 
+import java.util.Map;
+
 /**
  * A registry for web contexts. Web contexts are created by that service. And it
  * also observes the lifecycle of them.
@@ -24,12 +26,14 @@ public interface IWebContextRegistry {
 	int size();
 
 	/**
-	 * Creates a webcontext for the given userId.
+	 * Creates a webcontext for the given user.
 	 * 
-	 * @param userId
+	 * @param user
+	 * @param properties
+	 *            to be used to create the context
 	 * @return
 	 */
-	IWebContext createContext(String userId);
+	IWebContext createContext(String user, Map<String, Object> properties);
 
 	/**
 	 * Returns the webcontext for the given id or <code>null</code> if no

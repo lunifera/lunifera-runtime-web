@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="org.lunifera.runtime.web.common.contextfactory" immediate="false" name="org.lunifera.runtime.web.common.contextfactory">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="org.lunifera.runtime.web.common.contextfactory/vaadin" immediate="false" name="org.lunifera.runtime.web.common.contextfactory">
    <implementation class="org.lunifera.runtime.web.common.internal.WebContext"/>
    <service>
       <provide interface="org.lunifera.runtime.web.common.IWebContext"/>
    </service>
-   <reference bind="setPreferencesService" cardinality="0..1" interface="org.eclipse.core.runtime.preferences.IPreferencesService" name="preferencesService" policy="dynamic" unbind="unsetPreferencesService"/>
+   <reference bind="setPreferencesService" cardinality="0..1" interface="org.osgi.service.prefs.PreferencesService" name="preferencesService" policy="dynamic" unbind="unsetPreferencesService"/>
    <reference bind="setUserLocation" cardinality="0..1" interface="org.eclipse.osgi.service.datalocation.Location" name="userLocation" policy="dynamic" target="(type=osgi.user.area)" unbind="unsetUserLocation"/>
 </scr:component>

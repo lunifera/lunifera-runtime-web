@@ -51,16 +51,28 @@ public class WebContextRegistry implements IDisposable.Listener,
 	}
 
 	@Override
-	public IWebContext createContext(String userId) {
+	public IWebContext createContext(String user,
+			Map<String, Object> inProperties) {
+
+		// prepare the properties
+		//
 		Hashtable<String, Object> properties = new Hashtable<String, Object>();
 		String id = UUID.randomUUID().toString();
-		properties.put(IConstants.OSGI_PROPERTY__ID, id);
-		properties.put(IConstants.OSGI_PROPERTY__USER_ID, userId);
+		properties.put(IConstants.OSGI_PROPERTY__WEB_CONTEXT__ID, id);
+		properties.put(IConstants.OSGI_PROPERTY__WEB_CONTEXT__USER, user);
+		properties.putAll(inProperties);
 
+		// create the instance of the web context
+		//
 		ComponentInstance instance = factory.newInstance(properties);
 		instances.put(id, instance);
-		WebContext context = (WebContext) instance.getInstance();
+
+		// register the registry as a dispose listener to observe the lifecycle
+		// of the context
+		//
+		IWebContext context = (IWebContext) instance.getInstance();
 		context.addDisposeListener(this);
+
 		return context;
 	}
 
@@ -81,7 +93,12 @@ public class WebContextRegistry implements IDisposable.Listener,
 	@Override
 	public void notifyDisposed(IDisposable notifier) {
 
+		// remove this as a dispose listener
+		//
+		notifier.removeDisposeListener(this);
+
 		// look for the context
+		//
 		String disposedId = null;
 		synchronized (instances) {
 			for (Map.Entry<String, ComponentInstance> entry : instances
@@ -94,6 +111,7 @@ public class WebContextRegistry implements IDisposable.Listener,
 		}
 
 		// dispose its instance
+		//
 		if (disposedId != null) {
 			ComponentInstance instance = instances.remove(disposedId);
 			instance.dispose();
