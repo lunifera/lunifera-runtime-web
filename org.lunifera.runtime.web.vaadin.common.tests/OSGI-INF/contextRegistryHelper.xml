@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lunifera.runtime.web.vaadin.common.tests.contextregistryhelper">
+   <implementation class="org.lunifera.runtime.web.vaadin.common.tests.ContextRegistryHelper"/>
+   <reference bind="setRegistry" cardinality="1..1" interface="org.lunifera.runtime.web.common.IWebContextRegistry" name="webContextRegistry" policy="static" target="(lunifera.web.common.context.uikit=vaadin)" unbind="unsetRegistry"/>
+</scr:component>

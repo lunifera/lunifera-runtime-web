@@ -44,6 +44,7 @@
 				<module>org.lunifera.runtime.web.common.tests</module>
 				
 				<module>org.lunifera.runtime.web.vaadin.common</module>
+				<module>org.lunifera.runtime.web.vaadin.common.tests</module>
 				<module>org.lunifera.runtime.web.vaadin.components</module>
 				<module>org.lunifera.runtime.web.vaadin.standalone</module>
 				

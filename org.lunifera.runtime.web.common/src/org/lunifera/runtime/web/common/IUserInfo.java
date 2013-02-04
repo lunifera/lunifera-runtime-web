@@ -24,13 +24,13 @@ public interface IUserInfo {
 	 */
 	String getId();
 
-//	/**
-//	 * Returns the location where all user specific settings are stored. If no
-//	 * location is available, empty string will be returned.
-//	 * 
-//	 * @return
-//	 */
-//	String getLocation();
+	// /**
+	// * Returns the location where all user specific settings are stored. If no
+	// * location is available, empty string will be returned.
+	// *
+	// * @return
+	// */
+	// String getLocation();
 
 	/**
 	 * Returns the user preferences. If no user preferences are available then

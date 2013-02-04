@@ -15,7 +15,7 @@ package org.lunifera.runtime.web.vaadin.standalone.common;
 import java.util.Dictionary;
 import java.util.List;
 
-import org.lunifera.web.vaadin.common.OSGiUIProvider;
+import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 
 public interface IVaadinWebApplication {
 

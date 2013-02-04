@@ -9,7 +9,7 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.standalone.common;
 
-public class Constants extends org.lunifera.web.vaadin.common.Constants {
+public class Constants extends org.lunifera.runtime.web.vaadin.common.Constants {
 
 	/**
 	 * This prefix is used as PID prefix to register the application register as

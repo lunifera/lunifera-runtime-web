@@ -56,13 +56,6 @@ public interface IWebContext extends IDisposable {
 	IUserInfo getUserInfo();
 
 	/**
-	 * Returns the main UI that is part of that context.
-	 * 
-	 * @return
-	 */
-	<A> A getUI();
-
-	/**
 	 * Returns the value for the given property or <code>null</code> if the
 	 * value is not available.
 	 * 

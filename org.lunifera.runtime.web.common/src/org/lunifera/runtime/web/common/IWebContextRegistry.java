@@ -29,8 +29,10 @@ public interface IWebContextRegistry {
 	 * Creates a webcontext for the given user.
 	 * 
 	 * @param user
+	 *            The user id.
 	 * @param properties
-	 *            to be used to create the context
+	 *            Will be passed to the context. Should only contain primitive
+	 *            types, their wrappers and java types.
 	 * @return
 	 */
 	IWebContext createContext(String user, Map<String, Object> properties);

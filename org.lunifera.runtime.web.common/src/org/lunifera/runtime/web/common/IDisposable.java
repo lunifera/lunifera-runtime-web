@@ -19,6 +19,13 @@ package org.lunifera.runtime.web.common;
 public interface IDisposable {
 
 	/**
+	 * Returns true, during the disposal process.
+	 * 
+	 * @return disposing
+	 */
+	boolean isDisposing();
+	
+	/**
 	 * Returns true, if this object was disposed.
 	 * 
 	 * @return disposed

@@ -20,6 +20,7 @@ import java.util.List;
 public abstract class AbstractDisposable implements IDisposable {
 
 	private boolean disposed;
+	private boolean disposing;
 	private List<IDisposable.Listener> disposeListeners;
 
 	/**
@@ -29,6 +30,14 @@ public abstract class AbstractDisposable implements IDisposable {
 	public boolean isDisposed() {
 		return disposed;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isDisposing() {
+		return disposing;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -36,6 +45,8 @@ public abstract class AbstractDisposable implements IDisposable {
 	@Override
 	public void dispose() {
 		try {
+			disposing = true;
+			
 			if (!isDisposed()) {
 				internalDispose();
 			}
@@ -44,6 +55,7 @@ public abstract class AbstractDisposable implements IDisposable {
 			notifyDisposeListeners();
 		} finally {
 			disposed = true;
+			disposing = false;
 		}
 	}
 

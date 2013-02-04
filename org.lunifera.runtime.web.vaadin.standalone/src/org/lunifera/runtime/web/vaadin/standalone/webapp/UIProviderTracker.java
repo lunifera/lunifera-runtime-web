@@ -15,14 +15,13 @@ package org.lunifera.runtime.web.vaadin.standalone.webapp;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lunifera.runtime.web.vaadin.common.Constants;
+import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 import org.lunifera.runtime.web.vaadin.standalone.common.IVaadinWebApplication;
-import org.lunifera.web.vaadin.common.Constants;
-import org.lunifera.web.vaadin.common.OSGiUIProvider;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentFactory;
-import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 
 import com.vaadin.ui.UI;
@@ -30,9 +29,9 @@ import com.vaadin.ui.UI;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class UIProviderTracker extends ServiceTracker {
 	private final IVaadinWebApplication webApplication;
-	private Map<ComponentFactory, OSGiUIProvider> providerMapping = new HashMap<ComponentFactory, OSGiUIProvider>();
+	private final Map<ComponentFactory, OSGiUIProvider> providerMapping = new HashMap<ComponentFactory, OSGiUIProvider>();
 
-	public UIProviderTracker(BundleContext ctx, LogService logService,
+	public UIProviderTracker(BundleContext ctx,
 			IVaadinWebApplication webApplication) throws InvalidSyntaxException {
 		super(ctx, ctx.createFilter("(component.factory="
 				+ Constants.OSGI_COMP_FACTORY__VAADIN_UI + "/*)"), null);

@@ -9,7 +9,6 @@ Bundle-Vendor: Lunifera.org
 Import-Package: org.osgi.service.component;version="1.2.0",
  org.osgi.service.framework;version="1.0.0",
  org.osgi.service.prefs;version="1.1.1"
-Service-Component: OSGI-INF/*.xml
 Export-Package: org.lunifera.runtime.web.common,
- org.lunifera.runtime.web.common.internal;x-internal:=true,
- org.lunifera.runtime.web.common.internal.preferences;x-internal:=true
+ org.lunifera.runtime.web.common.context,
+ org.lunifera.runtime.web.common.context.preferences;x-internal:=true

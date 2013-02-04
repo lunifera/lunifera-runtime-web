@@ -4,9 +4,9 @@ Bundle-Name: Components
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.web.vaadin.components.converter,
- org.lunifera.web.vaadin.components.fields,
- org.lunifera.web.vaadin.components.validator
+Export-Package: org.lunifera.runtime.web.vaadin.components.converter,
+ org.lunifera.runtime.web.vaadin.components.fields,
+ org.lunifera.runtime.web.vaadin.components.validator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Lunifera.org
 Import-Package: com.vaadin.data;version="7.0.0",

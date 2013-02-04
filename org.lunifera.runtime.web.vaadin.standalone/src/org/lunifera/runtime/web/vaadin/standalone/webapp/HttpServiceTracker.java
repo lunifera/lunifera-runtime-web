@@ -26,11 +26,11 @@ import org.lunifera.runtime.web.vaadin.standalone.common.Constants;
 import org.lunifera.runtime.web.vaadin.standalone.common.IVaadinWebApplication;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 import org.osgi.service.component.ComponentFactory;
-import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This tracker takes a {@link ComponentFactory} and then creates a
@@ -44,20 +44,20 @@ import org.osgi.util.tracker.ServiceTracker;
 @SuppressWarnings(value = { "rawtypes", "unchecked" })
 public class HttpServiceTracker extends ServiceTracker {
 
+	private Logger logger = LoggerFactory.getLogger(HttpServiceTracker.class);
+
 	private IVaadinWebApplication webApplication;
 
-	public String getAlias() {
-		return webApplication.getAlias();
-	}
-
-	private final LogService logService;
 	private Map<ExtendedHttpService, VaadinWebApplicationRegister> configs = new IdentityHashMap<ExtendedHttpService, VaadinWebApplicationRegister>();
 
 	public HttpServiceTracker(BundleContext ctx,
-			IVaadinWebApplication webApplication, LogService logService) {
+			IVaadinWebApplication webApplication) {
 		super(ctx, ExtendedHttpService.class.getName(), null);
 		this.webApplication = webApplication;
-		this.logService = logService;
+	}
+
+	public String getAlias() {
+		return webApplication.getAlias();
 	}
 
 	@Override
@@ -69,8 +69,8 @@ public class HttpServiceTracker extends ServiceTracker {
 		VaadinWebApplicationRegister config = new VaadinWebApplicationRegister(
 				http, webApplication);
 
-		logService.log(LogService.LOG_DEBUG, "Application for alias \""
-				+ getAlias() + "\" was created.");
+		logger.debug("Application for alias \"" + getAlias()
+				+ "\" was created.");
 
 		// save it for later
 		configs.put(http, config);
@@ -83,21 +83,14 @@ public class HttpServiceTracker extends ServiceTracker {
 		context.registerService(ManagedService.class.getName(), config,
 				properties);
 
-//		try {
-//			config.updated(null);
-//		} catch (ConfigurationException e) {
-//			logService.log(LogService.LOG_WARNING,
-//					"Initial setup caused exception: !" + e);
-//		}
-
 		return http;
 	}
 
 	@Override
 	public void removedService(ServiceReference reference, Object service) {
 		configs.remove(service).kill();
-		logService.log(LogService.LOG_DEBUG, "Application for alias \""
-				+ getAlias() + "\" was removed.");
+		logger.debug("Application for alias \"" + getAlias()
+				+ "\" was removed.");
 
 		super.removedService(reference, service);
 	}
