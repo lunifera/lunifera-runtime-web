@@ -1,3 +1,15 @@
+/**
+ * Copyright (c) 2012 Committers of lunifera.org.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Based on org.eclipse.gyrex.http.jetty.internal.app.ApplicationHandler (Gunnar Wagenknecht)
+ * 
+ * Contributors:
+ *    Florian Pirchner - initial API and implementation
+ */
 package org.lunifera.runtime.web.http.internal;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -17,7 +29,6 @@ public class ServletContextHandler extends
 		setDisplayName(application.getId() + " - " + application.getName()
 				+ " - " + application.getContextPath());
 	}
-	
 
 	/**
 	 * @return the applicationScopeHandler
@@ -25,8 +36,6 @@ public class ServletContextHandler extends
 	public HttpApplicationScopeHandler getApplicationScopeHandler() {
 		return applicationScopeHandler;
 	}
-
-
 
 	@Override
 	protected void startContext() throws Exception {
