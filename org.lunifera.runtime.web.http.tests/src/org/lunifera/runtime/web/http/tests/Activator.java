@@ -3,6 +3,7 @@ package org.lunifera.runtime.web.http.tests;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.equinox.http.servlet.ExtendedHttpService;
 import org.lunifera.runtime.web.http.IHttpApplicationManager;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -16,7 +17,7 @@ public class Activator implements BundleActivator {
 
 	private IHttpApplicationManager manager;
 	private List<ManagedService> managedServices = new ArrayList<ManagedService>();
-	private List<HttpService> httpServices = new ArrayList<HttpService>();
+	private List<ExtendedHttpService> httpServices = new ArrayList<ExtendedHttpService>();
 
 	/**
 	 * @return the instance
@@ -48,7 +49,7 @@ public class Activator implements BundleActivator {
 	/**
 	 * @return the httpServices
 	 */
-	public List<HttpService> getHttpServices() {
+	public List<ExtendedHttpService> getHttpServices() {
 		return httpServices;
 	}
 
@@ -83,7 +84,7 @@ public class Activator implements BundleActivator {
 		 * 
 		 * @param httpService
 		 */
-		public void addHttpService(HttpService httpService) {
+		public void addHttpService(ExtendedHttpService httpService) {
 			Activator.getInstance().httpServices.add(httpService);
 		}
 
@@ -92,7 +93,7 @@ public class Activator implements BundleActivator {
 		 * 
 		 * @param httpService
 		 */
-		public void removeHttpService(HttpService httpService) {
+		public void removeHttpService(ExtendedHttpService httpService) {
 			Activator.getInstance().httpServices.remove(httpService);
 		}
 

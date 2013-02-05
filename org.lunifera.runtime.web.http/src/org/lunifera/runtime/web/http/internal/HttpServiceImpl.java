@@ -1,22 +1,33 @@
 package org.lunifera.runtime.web.http.internal;
 
 import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.Filter;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
+import org.eclipse.equinox.http.servlet.ExtendedHttpService;
+import org.lunifera.runtime.web.http.HttpApplication;
 import org.osgi.service.http.HttpContext;
-import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
-public class HttpServiceImpl implements HttpService {
+public class HttpServiceImpl implements ExtendedHttpService {
+
+	private HttpApplication httpApplication;
+
+	public HttpServiceImpl(HttpApplication httpApplication) {
+		this.httpApplication = httpApplication;
+	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void registerServlet(String alias, Servlet servlet,
 			Dictionary initparams, HttpContext context)
 			throws ServletException, NamespaceException {
-		
+		httpApplication.registerServlet(alias, servlet, toMap(initparams));
 	}
 
 	@Override
@@ -27,7 +38,20 @@ public class HttpServiceImpl implements HttpService {
 
 	@Override
 	public void unregister(String alias) {
+		httpApplication.unregister(alias);
+	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void registerFilter(String alias, Filter filter,
+			Dictionary initparams, HttpContext context)
+			throws ServletException, NamespaceException {
+		httpApplication.registerFilter(alias, filter, toMap(initparams));
+	}
+
+	@Override
+	public void unregisterFilter(Filter filter) {
+		httpApplication.unregisterFilter(filter);
 	}
 
 	@Override
@@ -36,7 +60,33 @@ public class HttpServiceImpl implements HttpService {
 	}
 
 	public void destroy() {
-		
+
+	}
+
+	/**
+	 * Maps the params to a map.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private Map<String, String> toMap(final Dictionary<?, ?> input) {
+		if (input == null) {
+			return null;
+		}
+
+		final HashMap<String, String> result = new HashMap<String, String>(
+				input.size());
+		final Enumeration<?> keys = input.keys();
+		while (keys.hasMoreElements()) {
+			final Object key = keys.nextElement();
+			try {
+				result.put((String) key, (String) input.get(key));
+			} catch (final ClassCastException e) {
+				throw new IllegalArgumentException("Only strings are allowed",
+						e);
+			}
+		}
+		return result;
 	}
 
 }

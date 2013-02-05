@@ -1,14 +1,27 @@
 package org.lunifera.runtime.web.http.tests.context;
 
+import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
+
 import junit.framework.Assert;
 
+import org.eclipse.equinox.http.servlet.ExtendedHttpService;
+import org.eclipse.jetty.servlet.FilterMapping;
+import org.eclipse.jetty.servlet.ServletMapping;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.http.HttpApplication;
 import org.lunifera.runtime.web.http.IHttpApplication;
+import org.lunifera.runtime.web.http.internal.ServletContextHandler;
 import org.lunifera.runtime.web.http.tests.Activator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -16,7 +29,9 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 import org.osgi.service.http.HttpService;
+import org.osgi.service.http.NamespaceException;
 
+@SuppressWarnings("restriction")
 public class HttpApplicationTest {
 
 	private Activator activator;
@@ -94,6 +109,140 @@ public class HttpApplicationTest {
 		application.stop();
 	}
 
+	@Test
+	public void test_registerServlet() throws ConfigurationException,
+			ServletException, NamespaceException {
+		application.start();
+
+		ServletContextHandler contexthandler = application.getServletContext();
+		ServletMapping[] mappings = contexthandler.getServletHandler()
+				.getServletMappings();
+		Assert.assertNull(mappings);
+
+		HttpService service = activator.getHttpServices().get(0);
+
+		InternalServlet servlet = new InternalServlet();
+		service.registerServlet("/test", servlet, null, null);
+
+		mappings = contexthandler.getServletHandler().getServletMappings();
+		Assert.assertEquals(1, mappings.length);
+		Assert.assertEquals("/test", mappings[0].getPathSpecs()[0]);
+
+		service.unregister("/test");
+		mappings = contexthandler.getServletHandler().getServletMappings();
+		Assert.assertEquals(0, mappings.length);
+
+		application.stop();
+	}
+
+	@Test
+	public void test_registerServlet_twice() throws ConfigurationException,
+			ServletException, NamespaceException {
+		application.start();
+
+		HttpService service = activator.getHttpServices().get(0);
+		InternalServlet servlet = new InternalServlet();
+		service.registerServlet("/test", servlet, null, null);
+		try {
+			service.registerServlet("/test", servlet, null, null);
+			Assert.fail();
+		} catch (NamespaceException e) {
+			// expected
+		}
+
+		application.stop();
+	}
+
+	@Test
+	public void test_unregisterServlet_twice() throws ConfigurationException,
+			ServletException, NamespaceException {
+		application.start();
+
+		HttpService service = activator.getHttpServices().get(0);
+		InternalServlet servlet = new InternalServlet();
+		service.registerServlet("/test", servlet, null, null);
+		try {
+			service.unregister("/test");
+			service.unregister("/test");
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+			// expected
+			Assert.assertEquals("Alias /test was not registered",
+					e.getMessage());
+		}
+
+		application.stop();
+	}
+
+	@Test
+	public void test_registerFilter() throws ConfigurationException,
+			ServletException, NamespaceException {
+		application.start();
+		try {
+			ServletContextHandler contexthandler = application
+					.getServletContext();
+			FilterMapping[] mappings = contexthandler.getServletHandler()
+					.getFilterMappings();
+			Assert.assertNull(mappings);
+
+			ExtendedHttpService service = activator.getHttpServices().get(0);
+
+			InternalFilter filter = new InternalFilter();
+			service.registerFilter("/test", filter, null, null);
+
+			mappings = contexthandler.getServletHandler().getFilterMappings();
+			Assert.assertEquals(1, mappings.length);
+			Assert.assertEquals("/test", mappings[0].getPathSpecs()[0]);
+
+			service.unregisterFilter(filter);
+			mappings = contexthandler.getServletHandler().getFilterMappings();
+			Assert.assertEquals(0, mappings.length);
+		} finally {
+			application.stop();
+		}
+	}
+
+	@Test
+	public void test_registerFilter_twice() throws ConfigurationException,
+			ServletException, NamespaceException {
+
+		try {
+			application.stop();
+			application.start();
+
+			ExtendedHttpService service = activator.getHttpServices().get(0);
+			InternalFilter filter = new InternalFilter();
+			service.registerFilter("/test", filter, null, null);
+			service.registerFilter("/test", filter, null, null);
+
+		} finally {
+			application.stop();
+		}
+	}
+
+	@Test
+	public void test_unregisterFilter_twice() throws ConfigurationException,
+			ServletException, NamespaceException {
+		application.start();
+
+		ExtendedHttpService service = activator.getHttpServices().get(0);
+		InternalFilter filter = new InternalFilter();
+		InternalServlet servlet = new InternalServlet();
+		service.registerServlet("/test", servlet, null, null);
+		service.registerFilter("/test", filter, null, null);
+		try {
+			service.unregisterFilter(filter);
+			service.unregisterFilter(filter);
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+			// expected
+			Assert.assertEquals("Alias /test was not registered",
+					e.getMessage());
+		}
+
+		application.stop();
+	}
+
 	public Dictionary<String, Object> prepareDefaultProps() {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		props.put(IHttpApplication.OSGI__ID, "App1");
@@ -125,6 +274,42 @@ public class HttpApplicationTest {
 		@Override
 		public void setBundleContext(BundleContext context) {
 			super.setBundleContext(context);
+		}
+
+		@Override
+		public ServletContextHandler getServletContext() {
+			return super.getServletContext();
+		}
+
+	}
+
+	private static class InternalServlet extends HttpServlet {
+
+		private boolean initCalled;
+
+		@Override
+		public void init() throws ServletException {
+			initCalled = true;
+			super.init();
+		}
+	}
+
+	private static class InternalFilter implements Filter {
+
+		@Override
+		public void init(FilterConfig filterConfig) throws ServletException {
+
+		}
+
+		@Override
+		public void doFilter(ServletRequest request, ServletResponse response,
+				FilterChain chain) throws IOException, ServletException {
+
+		}
+
+		@Override
+		public void destroy() {
+
 		}
 
 	}
