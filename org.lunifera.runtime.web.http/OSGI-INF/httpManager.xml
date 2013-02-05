@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.lunifera.runtime.web.http">
+   <implementation class="org.lunifera.runtime.web.http.internal.HttpApplicationManager"/>
+   <service>
+      <provide interface="org.lunifera.runtime.web.http.IHttpApplicationManager"/>
+      <provide interface="org.osgi.service.cm.ManagedService"/>
+   </service>
+   <reference bind="addApplication" cardinality="0..n" interface="org.lunifera.runtime.web.http.IHttpApplication" name="IHttpApplication" policy="dynamic" unbind="removeApplication"/>
+   <property name="service.pid" type="String" value="org.lunifera.runtime.web.http.application.manager"/>
+</scr:component>

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Shiro
+Bundle-SymbolicName: org.lunifera.runtime.web.http.tests;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Require-Bundle: 
+ org.junit;bundle-version="4.10.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: lunifera.org
+Service-Component: OSGI-INF/*.xml
+Import-Package: org.lunifera.runtime.web.http,
+ org.lunifera.runtime.web.http.internal,
+ org.osgi.framework;version="1.7.0",
+ org.osgi.service.cm;version="1.4.0",
+ org.osgi.service.component;version="1.2.0",
+ org.osgi.service.http;version="1.2.1"
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.lunifera.runtime.web.http.tests.Activator
