@@ -23,7 +23,7 @@ import org.eclipse.jetty.server.handler.ScopedHandler;
 import org.lunifera.runtime.web.http.IHttpApplication;
 
 public class HttpApplicationScopeHandler extends ScopedHandler {
-	
+
 	private final IHttpApplication httpApplication;
 
 	public HttpApplicationScopeHandler(IHttpApplication httpApplication) {
@@ -37,7 +37,7 @@ public class HttpApplicationScopeHandler extends ScopedHandler {
 			throws IOException, ServletException {
 
 	}
-	
+
 	@Override
 	public void doHandle(String target, Request baseRequest,
 			HttpServletRequest request, HttpServletResponse response)

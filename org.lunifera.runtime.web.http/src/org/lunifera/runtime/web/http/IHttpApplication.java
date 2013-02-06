@@ -56,6 +56,9 @@ public interface IHttpApplication {
 	/**
 	 * Is called to start the application. All resources should be registered
 	 * and the http service is registered.
+	 * <p>
+	 * Will register a managed service to configure the application instance.
+	 * And also will provide a {@link HttpService}.
 	 */
 	void start();
 
@@ -70,6 +73,8 @@ public interface IHttpApplication {
 	/**
 	 * Is called to stop the application. All resources should be unregistered
 	 * and the http service will become disposed.
+	 * <p>
+	 * Will unregister the managed service and the {@link HttpService}.
 	 */
 	void stop();
 }
