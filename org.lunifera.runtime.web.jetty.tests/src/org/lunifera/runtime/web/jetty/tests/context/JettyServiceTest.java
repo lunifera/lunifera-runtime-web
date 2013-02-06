@@ -10,8 +10,11 @@
  */
 package org.lunifera.runtime.web.jetty.tests.context;
 
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
+
+import javax.servlet.ServletException;
 
 import junit.framework.Assert;
 
@@ -26,6 +29,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
+import org.osgi.service.http.NamespaceException;
 
 public class JettyServiceTest {
 
@@ -42,6 +46,40 @@ public class JettyServiceTest {
 	}
 
 	@Test
+	public void test_initialize() throws ConfigurationException {
+		jetty = new InternalJettyService();
+		Assert.assertNull(jetty.getId());
+		Assert.assertNull(jetty.getName());
+		Assert.assertEquals(8080, jetty.getPort());
+
+		Dictionary<String, Object> props = prepareDefaultProps();
+		jetty.initialize(props);
+
+		Assert.assertEquals("App1", jetty.getId());
+		Assert.assertEquals("Application1", jetty.getName());
+		Assert.assertEquals(8081, jetty.getPort());
+	}
+
+	@Test
+	public void test_IdNotNull() throws ConfigurationException,
+			ServletException, NamespaceException, InvalidSyntaxException {
+		jetty = new InternalJettyService();
+		Assert.assertNull(jetty.getId());
+		jetty.updated(null);
+		Assert.assertNotNull(jetty.getId());
+	}
+
+	@Test
+	public void test_IdNotNull_start() throws ConfigurationException,
+			ServletException, NamespaceException, InvalidSyntaxException {
+		jetty = new InternalJettyService();
+		Assert.assertNull(jetty.getId());
+		jetty.start();
+		Assert.assertNotNull(jetty.getId());
+		jetty.stop();
+	}
+
+	@Test
 	public void test_update() throws ConfigurationException {
 		jetty = new InternalJettyService();
 		Assert.assertNull(jetty.getId());
@@ -51,7 +89,7 @@ public class JettyServiceTest {
 		Dictionary<String, Object> props = prepareDefaultProps();
 		jetty.updated(props);
 
-		Assert.assertNull(jetty.getId());
+		Assert.assertNotNull(jetty.getId());
 		Assert.assertEquals("Application1", jetty.getName());
 		Assert.assertEquals(8081, jetty.getPort());
 	}
@@ -83,7 +121,8 @@ public class JettyServiceTest {
 		// was internal started by the manager
 		//
 		ServiceRegistration<IJettyService> registration = context
-				.registerService(IJettyService.class, jetty, null);
+				.registerService(IJettyService.class, jetty,
+						prepareDefaultProps());
 		Assert.assertEquals(1, activator.getJettyServices().size());
 		Assert.assertEquals(1, activator.getManagedServices().size());
 
@@ -102,6 +141,69 @@ public class JettyServiceTest {
 		registration.unregister();
 		Assert.assertEquals(0, activator.getJettyServices().size());
 		Assert.assertEquals(0, activator.getManagedServices().size());
+	}
+
+	@Test
+	public void test_FilterById() throws ConfigurationException,
+			InvalidSyntaxException {
+		// was internal started by the manager
+		//
+		ServiceRegistration<IJettyService> registration = context
+				.registerService(IJettyService.class, jetty,
+						prepareDefaultProps());
+
+		Collection<ServiceReference<IJettyService>> refs = context
+				.getServiceReferences(IJettyService.class,
+						"(lunifera.jetty.id=App1)");
+		try {
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			registration.unregister();
+		}
+	}
+
+	@Test
+	public void test_FilterByName() throws ConfigurationException,
+			InvalidSyntaxException {
+		// was internal started by the manager
+		//
+		ServiceRegistration<IJettyService> registration = context
+				.registerService(IJettyService.class, jetty,
+						prepareDefaultProps());
+
+		Collection<ServiceReference<IJettyService>> refs = context
+				.getServiceReferences(IJettyService.class,
+						"(lunifera.jetty.name=Application1)");
+		try {
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			registration.unregister();
+		}
+	}
+
+	@Test
+	public void test_FilterByPort() throws ConfigurationException,
+			InvalidSyntaxException {
+		// was internal started by the manager
+		//
+		ServiceRegistration<IJettyService> registration = context
+				.registerService(IJettyService.class, jetty,
+						prepareDefaultProps());
+
+		Collection<ServiceReference<IJettyService>> refs = context
+				.getServiceReferences(IJettyService.class,
+						"(lunifera.jetty.port=8081)");
+		try {
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			registration.unregister();
+		}
 	}
 
 	@Test
