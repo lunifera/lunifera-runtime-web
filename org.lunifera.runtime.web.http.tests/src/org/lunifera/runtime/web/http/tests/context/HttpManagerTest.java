@@ -162,5 +162,10 @@ public class HttpManagerTest {
 			count_stop++;
 		}
 
+		@Override
+		public boolean isStarted() {
+			return false;
+		}
+
 	}
 }

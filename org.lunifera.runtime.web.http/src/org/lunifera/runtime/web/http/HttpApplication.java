@@ -21,7 +21,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
@@ -112,6 +111,11 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 		return contextPath;
 	}
 
+	@Override
+	public boolean isStarted() {
+		return started;
+	}
+
 	/**
 	 * Is called to start the application. All resources should be registered
 	 * and the http service is registered.
@@ -123,7 +127,7 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 			return;
 		}
 		try {
-			ensureId();
+			assertId();
 
 			servletContext = new ServletContextHandler(this);
 
@@ -241,7 +245,7 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 		this.bundleContext = context.getBundleContext();
 		initialize(properties);
 	}
-	 
+
 	/**
 	 * Initializes the http application. Can be used to if not instantiated by
 	 * OSGi-DS.
@@ -278,6 +282,9 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 				this.name = (String) properties.get(OSGI__NAME);
 				this.contextPath = getContextPath(properties);
 			} else {
+				if (properties.containsKey(OSGI__ID)) {
+					this.id = (String) properties.get(OSGI__ID);
+				}
 				if (properties.containsKey(OSGI__NAME)) {
 					this.name = (String) properties.get(OSGI__NAME);
 				}
@@ -286,16 +293,16 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 				}
 			}
 		}
-		ensureId();
+		assertId();
 	}
 
 	/**
 	 * Ensures that an id is specified.
 	 */
-	private void ensureId() {
+	private void assertId() {
 		if (this.id == null || this.id.equals("")) {
-			// may happen if service was instantiated manually
-			this.id = UUID.randomUUID().toString();
+			logger.error("Id must not be null! HttpApplication {}", this);
+			throw new IllegalStateException("Id must not be null!");
 		}
 	}
 

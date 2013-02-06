@@ -54,6 +54,13 @@ public interface IHttpApplication {
 	String getContextPath();
 
 	/**
+	 * Returns true, if the application is started.
+	 * 
+	 * @return
+	 */
+	boolean isStarted();
+
+	/**
 	 * Is called to start the application. All resources should be registered
 	 * and the http service is registered.
 	 * <p>
@@ -77,4 +84,5 @@ public interface IHttpApplication {
 	 * Will unregister the managed service and the {@link HttpService}.
 	 */
 	void stop();
+
 }

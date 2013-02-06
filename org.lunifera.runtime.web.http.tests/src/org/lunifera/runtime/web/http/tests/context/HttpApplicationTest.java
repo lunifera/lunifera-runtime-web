@@ -55,7 +55,7 @@ public class HttpApplicationTest {
 		activator = Activator.getInstance();
 		context = Activator.context;
 		application = new InternalHttpApplication("App1");
-		application.updated(prepareDefaultProps());
+		application.initialize(prepareDefaultProps());
 	}
 
 	@Test
@@ -81,11 +81,17 @@ public class HttpApplicationTest {
 		Assert.assertEquals("/", application.getContextPath());
 
 		Dictionary<String, Object> props = prepareDefaultProps();
-		application.updated(props);
+		application.initialize(props);
 
-		Assert.assertNotNull(application.getId());
-		Assert.assertEquals("Application1", application.getName());
-		Assert.assertEquals("/test/app1", application.getContextPath());
+		Dictionary<String, Object> props2 = new Hashtable<String, Object>();
+		props2.put(IHttpApplication.OSGI__ID, "App2");
+		props2.put(IHttpApplication.OSGI__NAME, "Application2");
+		props2.put(IHttpApplication.OSGI__CONTEXT_PATH, "/test/app2");
+		application.updated(props2);
+
+		Assert.assertEquals("App2", application.getId());
+		Assert.assertEquals("Application2", application.getName());
+		Assert.assertEquals("/test/app2", application.getContextPath());
 	}
 
 	@Test
@@ -257,22 +263,31 @@ public class HttpApplicationTest {
 	}
 
 	@Test
-	public void test_IdNotNull() throws ConfigurationException,
-			ServletException, NamespaceException, InvalidSyntaxException {
+	public void test_IdNull() throws ConfigurationException, ServletException,
+			NamespaceException, InvalidSyntaxException {
 		InternalHttpApplication application = new InternalHttpApplication();
 		Assert.assertNull(application.getId());
-		application.updated(null);
-		Assert.assertNotNull(application.getId());
+		try {
+			application.updated(null);
+			Assert.fail();
+		} catch (Exception e) {
+			// expected
+		}
 	}
 
 	@Test
-	public void test_IdNotNull_start() throws ConfigurationException,
+	public void test_IdNull_start() throws ConfigurationException,
 			ServletException, NamespaceException, InvalidSyntaxException {
 		InternalHttpApplication application = new InternalHttpApplication();
 		Assert.assertNull(application.getId());
-		application.start();
-		Assert.assertNotNull(application.getId());
-		application.stop();
+		try {
+			application.start();
+			Assert.fail();
+		} catch (Exception e) {
+			// expected
+		} finally {
+			application.stop();
+		}
 	}
 
 	@Test
