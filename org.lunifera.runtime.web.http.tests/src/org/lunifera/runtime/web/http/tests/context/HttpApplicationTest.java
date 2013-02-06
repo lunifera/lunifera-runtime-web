@@ -11,6 +11,7 @@
 package org.lunifera.runtime.web.http.tests.context;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -36,6 +37,7 @@ import org.lunifera.runtime.web.http.tests.Activator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 import org.osgi.service.http.HttpService;
@@ -57,16 +59,31 @@ public class HttpApplicationTest {
 	}
 
 	@Test
+	public void test_initialize() throws ConfigurationException {
+		application = new InternalHttpApplication();
+		Assert.assertNull(application.getId());
+		Assert.assertNull(application.getName());
+		Assert.assertEquals("/", application.getContextPath());
+
+		Dictionary<String, Object> props = prepareDefaultProps();
+		application.initialize(props);
+
+		Assert.assertEquals("App1", application.getId());
+		Assert.assertEquals("Application1", application.getName());
+		Assert.assertEquals("/test/app1", application.getContextPath());
+	}
+
+	@Test
 	public void test_update() throws ConfigurationException {
 		application = new InternalHttpApplication();
 		Assert.assertNull(application.getId());
 		Assert.assertNull(application.getName());
-		Assert.assertNull(application.getContextPath());
+		Assert.assertEquals("/", application.getContextPath());
 
 		Dictionary<String, Object> props = prepareDefaultProps();
 		application.updated(props);
 
-		Assert.assertNull(application.getId());
+		Assert.assertNotNull(application.getId());
 		Assert.assertEquals("Application1", application.getName());
 		Assert.assertEquals("/test/app1", application.getContextPath());
 	}
@@ -84,6 +101,66 @@ public class HttpApplicationTest {
 		Assert.assertEquals(0, activator.getHttpServices().size());
 		Assert.assertEquals(0, activator.getManagedServices().size());
 
+	}
+
+	@Test
+	public void test_FilterById() throws ConfigurationException,
+			InvalidSyntaxException {
+
+		ServiceRegistration<IHttpApplication> registration = context
+				.registerService(IHttpApplication.class,
+						new InternalHttpApplication(), prepareDefaultProps());
+
+		Collection<ServiceReference<IHttpApplication>> refs = context
+				.getServiceReferences(IHttpApplication.class,
+						"(lunifera.http.id=App1)");
+		try {
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			registration.unregister();
+		}
+	}
+
+	@Test
+	public void test_FilterByName() throws ConfigurationException,
+			InvalidSyntaxException {
+
+		ServiceRegistration<IHttpApplication> registration = context
+				.registerService(IHttpApplication.class,
+						new InternalHttpApplication(), prepareDefaultProps());
+
+		Collection<ServiceReference<IHttpApplication>> refs = context
+				.getServiceReferences(IHttpApplication.class,
+						"(lunifera.http.name=Application1)");
+		try {
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			registration.unregister();
+		}
+	}
+
+	@Test
+	public void test_FilterByContextPath() throws ConfigurationException,
+			InvalidSyntaxException {
+
+		ServiceRegistration<IHttpApplication> registration = context
+				.registerService(IHttpApplication.class,
+						new InternalHttpApplication(), prepareDefaultProps());
+
+		Collection<ServiceReference<IHttpApplication>> refs = context
+				.getServiceReferences(IHttpApplication.class,
+						"(lunifera.http.contextPath=/test/app1)");
+		try {
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			registration.unregister();
+		}
 	}
 
 	@Test
@@ -116,6 +193,85 @@ public class HttpApplicationTest {
 		Assert.assertEquals("Application1", name);
 		Assert.assertEquals("/test/app1", path);
 
+		application.stop();
+	}
+
+	@Test
+	public void test_filterHttpService() throws ConfigurationException,
+			ServletException, NamespaceException, InvalidSyntaxException {
+
+		Collection<ServiceReference<HttpService>> refs = context
+				.getServiceReferences(HttpService.class,
+						"(lunifera.http.contextPath=/app1/test)");
+		Collection<ServiceReference<HttpService>> refs2 = context
+				.getServiceReferences(HttpService.class,
+						"(lunifera.http.contextPath=/app2/example)");
+		Assert.assertEquals(0, refs.size());
+		Assert.assertEquals(0, refs2.size());
+
+		// register service with /app1/test
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(IHttpApplication.OSGI__ID, "1");
+		props.put(IHttpApplication.OSGI__NAME, "Application1");
+		props.put(IHttpApplication.OSGI__CONTEXT_PATH, "/app1/test");
+		InternalHttpApplication application = new InternalHttpApplication();
+		application.initialize(props);
+		ServiceRegistration<IHttpApplication> registration = context
+				.registerService(IHttpApplication.class, application, props);
+
+		// register service with /app2/example
+		Dictionary<String, Object> props2 = new Hashtable<String, Object>();
+		props2.put(IHttpApplication.OSGI__ID, "2");
+		props2.put(IHttpApplication.OSGI__NAME, "Application2");
+		props2.put(IHttpApplication.OSGI__CONTEXT_PATH, "/app2/example");
+		InternalHttpApplication application2 = new InternalHttpApplication();
+		application2.initialize(props2);
+		ServiceRegistration<IHttpApplication> registration2 = context
+				.registerService(IHttpApplication.class, application2, props2);
+
+		refs = context.getServiceReferences(HttpService.class,
+				"(lunifera.http.contextPath=/app1/test)");
+
+		refs2 = context.getServiceReferences(HttpService.class,
+				"(lunifera.http.contextPath=/app2/example)");
+
+		try {
+			Assert.assertEquals(1, refs.size());
+			Assert.assertEquals(1, refs2.size());
+			Assert.assertNotSame(refs.iterator().next(), refs2.iterator()
+					.next());
+		} finally {
+			registration.unregister();
+			registration2.unregister();
+		}
+
+		refs = context.getServiceReferences(HttpService.class,
+				"(lunifera.http.contextPath=/app1/test)");
+		Assert.assertEquals(0, refs.size());
+		Assert.assertEquals(1, refs2.size());
+
+		refs2 = context.getServiceReferences(HttpService.class,
+				"(lunifera.http.contextPath=/app2/example)");
+		Assert.assertEquals(0, refs.size());
+		Assert.assertEquals(0, refs2.size());
+	}
+
+	@Test
+	public void test_IdNotNull() throws ConfigurationException,
+			ServletException, NamespaceException, InvalidSyntaxException {
+		InternalHttpApplication application = new InternalHttpApplication();
+		Assert.assertNull(application.getId());
+		application.updated(null);
+		Assert.assertNotNull(application.getId());
+	}
+
+	@Test
+	public void test_IdNotNull_start() throws ConfigurationException,
+			ServletException, NamespaceException, InvalidSyntaxException {
+		InternalHttpApplication application = new InternalHttpApplication();
+		Assert.assertNull(application.getId());
+		application.start();
+		Assert.assertNotNull(application.getId());
 		application.stop();
 	}
 
