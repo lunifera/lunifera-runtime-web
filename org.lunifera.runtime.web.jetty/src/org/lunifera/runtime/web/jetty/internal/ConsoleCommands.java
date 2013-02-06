@@ -24,7 +24,7 @@ public class ConsoleCommands implements CommandProvider {
 
 	private static final Set<Command> commands = new HashSet<ConsoleCommands.Command>();
 	static {
-		commands.add(new Command("<list>", "", "Lists all active jetty server"));
+		commands.add(new Command("<ls>", "", "Lists all active jetty server"));
 		commands.add(new Command("<properties>", "",
 				"Lists all available service properties"));
 		commands.add(new Command("<start|stop>", "[jetty id]",

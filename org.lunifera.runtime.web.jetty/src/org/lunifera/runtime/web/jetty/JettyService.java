@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -97,7 +96,7 @@ public class JettyService implements IJettyService, ManagedService {
 			return;
 		}
 		try {
-			ensureId();
+			assertId();
 
 			internalStart();
 
@@ -173,7 +172,7 @@ public class JettyService implements IJettyService, ManagedService {
 	}
 
 	/**
-	 * Initializes the http application. Can be used to if not instantiated by
+	 * Initializes the jetty service. Can be used to if not instantiated by
 	 * OSGi-DS.
 	 * 
 	 * @param properties
@@ -209,6 +208,9 @@ public class JettyService implements IJettyService, ManagedService {
 				this.port = getPort(properties);
 			} else {
 				if (properties.containsKey(OSGI__ID)) {
+					this.id = (String) properties.get(OSGI__ID);
+				}
+				if (properties.containsKey(OSGI__NAME)) {
 					this.name = (String) properties.get(OSGI__NAME);
 				}
 				if (properties.containsKey(OSGI__PORT)) {
@@ -217,16 +219,16 @@ public class JettyService implements IJettyService, ManagedService {
 			}
 		}
 
-		ensureId();
+		assertId();
 	}
 
 	/**
 	 * Ensures that an id is specified.
 	 */
-	private void ensureId() {
+	private void assertId() {
 		if (this.id == null || this.id.equals("")) {
-			// may happen if service was instantiated manually
-			this.id = UUID.randomUUID().toString();
+			logger.error("Id must not be null! HttpApplication {}", this);
+			throw new IllegalStateException("Id must not be null!");
 		}
 	}
 

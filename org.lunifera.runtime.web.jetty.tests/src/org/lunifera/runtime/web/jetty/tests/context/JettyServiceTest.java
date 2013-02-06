@@ -42,7 +42,7 @@ public class JettyServiceTest {
 		activator = Activator.getInstance();
 		context = Activator.context;
 		jetty = new InternalJettyService("App1");
-		jetty.updated(prepareDefaultProps());
+		jetty.initialize(prepareDefaultProps());
 	}
 
 	@Test
@@ -61,12 +61,16 @@ public class JettyServiceTest {
 	}
 
 	@Test
-	public void test_IdNotNull() throws ConfigurationException,
-			ServletException, NamespaceException, InvalidSyntaxException {
+	public void test_IdNull() throws ConfigurationException, ServletException,
+			NamespaceException, InvalidSyntaxException {
 		jetty = new InternalJettyService();
 		Assert.assertNull(jetty.getId());
-		jetty.updated(null);
-		Assert.assertNotNull(jetty.getId());
+		try {
+			jetty.updated(null);
+			Assert.fail();
+		} catch (Exception e) {
+			// expected
+		}
 	}
 
 	@Test
@@ -74,9 +78,14 @@ public class JettyServiceTest {
 			ServletException, NamespaceException, InvalidSyntaxException {
 		jetty = new InternalJettyService();
 		Assert.assertNull(jetty.getId());
-		jetty.start();
-		Assert.assertNotNull(jetty.getId());
-		jetty.stop();
+		try {
+			jetty.updated(null);
+			Assert.fail();
+		} catch (Exception e) {
+			// expected
+		} finally {
+			jetty.stop();
+		}
 	}
 
 	@Test
@@ -87,11 +96,17 @@ public class JettyServiceTest {
 		Assert.assertEquals(8080, jetty.getPort());
 
 		Dictionary<String, Object> props = prepareDefaultProps();
-		jetty.updated(props);
+		jetty.initialize(props);
 
-		Assert.assertNotNull(jetty.getId());
-		Assert.assertEquals("Application1", jetty.getName());
-		Assert.assertEquals(8081, jetty.getPort());
+		Dictionary<String, Object> props2 = new Hashtable<String, Object>();
+		props2.put(IJettyService.OSGI__ID, "App2");
+		props2.put(IJettyService.OSGI__NAME, "Application2");
+		props2.put(IJettyService.OSGI__PORT, String.valueOf(8088));
+		jetty.updated(props2);
+
+		Assert.assertEquals("App2", jetty.getId());
+		Assert.assertEquals("Application2", jetty.getName());
+		Assert.assertEquals(8088, jetty.getPort());
 	}
 
 	@Test
