@@ -32,6 +32,10 @@ public interface IHttpApplication {
 	public static final String OSGI__NAME = "lunifera.http.name";
 	public static final String OSGI__CONTEXT_PATH = "lunifera.http.contextPath";
 
+	public static final String DEFAULT_ID = "lunifera.http.application.default";
+	public static final String DEFAULT_NAME = "defaultapplication";
+	public static final String DEFAULT_CONTEXT_PATH = "/";
+
 	/**
 	 * Returns the id for the application.
 	 * 

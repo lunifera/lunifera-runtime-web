@@ -95,17 +95,84 @@ public class HttpApplicationTest {
 	}
 
 	@Test
-	public void test_start_stop() throws ConfigurationException {
-		Assert.assertEquals(0, activator.getHttpServices().size());
-		Assert.assertEquals(0, activator.getManagedServices().size());
+	public void test_defaultHttpService() throws ConfigurationException,
+			ServletException, NamespaceException, InvalidSyntaxException {
 
-		application.start();
+		// access http application
+		//
+		ServiceReference<IHttpApplication> httpserviceRef = context
+				.getServiceReferences(IHttpApplication.class,
+						"(lunifera.http.id=lunifera.http.application.default)")
+				.iterator().next();
+		String id = (String) httpserviceRef
+				.getProperty(IHttpApplication.OSGI__ID);
+		String name = (String) httpserviceRef
+				.getProperty(IHttpApplication.OSGI__NAME);
+		String path = (String) httpserviceRef
+				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
+		Assert.assertEquals(IHttpApplication.DEFAULT_ID, id);
+		Assert.assertEquals(IHttpApplication.DEFAULT_NAME, name);
+		Assert.assertEquals(IHttpApplication.DEFAULT_CONTEXT_PATH, path);
+
+		// access managed service
+		//
+		ServiceReference<ManagedService> managedServiceRef = context
+				.getServiceReferences(
+						ManagedService.class,
+						"(&(service.pid=org.lunifera.runtime.web.http.application)(lunifera.http.id=lunifera.http.application.default))")
+				.iterator().next();
+		id = (String) managedServiceRef.getProperty(IHttpApplication.OSGI__ID);
+		name = (String) managedServiceRef
+				.getProperty(IHttpApplication.OSGI__NAME);
+		path = (String) managedServiceRef
+				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
+		Assert.assertEquals(IHttpApplication.DEFAULT_ID, id);
+		Assert.assertEquals(IHttpApplication.DEFAULT_NAME, name);
+		Assert.assertEquals(IHttpApplication.DEFAULT_CONTEXT_PATH, path);
+
+		// access http service
+		//
+		ServiceReference<HttpService> httpServiceRef = context
+				.getServiceReferences(HttpService.class,
+						"(lunifera.http.id=lunifera.http.application.default)")
+				.iterator().next();
+		id = (String) httpServiceRef.getProperty(IHttpApplication.OSGI__ID);
+		name = (String) httpServiceRef.getProperty(IHttpApplication.OSGI__NAME);
+		path = (String) httpServiceRef
+				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
+		Assert.assertEquals(IHttpApplication.DEFAULT_ID, id);
+		Assert.assertEquals(IHttpApplication.DEFAULT_NAME, name);
+		Assert.assertEquals(IHttpApplication.DEFAULT_CONTEXT_PATH, path);
+
+		// access extended http service
+		//
+		ServiceReference<HttpService> extendedhttpServiceRef = context
+				.getServiceReferences(HttpService.class,
+						"(lunifera.http.id=lunifera.http.application.default)")
+				.iterator().next();
+		id = (String) extendedhttpServiceRef
+				.getProperty(IHttpApplication.OSGI__ID);
+		name = (String) extendedhttpServiceRef
+				.getProperty(IHttpApplication.OSGI__NAME);
+		path = (String) extendedhttpServiceRef
+				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
+		Assert.assertEquals(IHttpApplication.DEFAULT_ID, id);
+		Assert.assertEquals(IHttpApplication.DEFAULT_NAME, name);
+		Assert.assertEquals(IHttpApplication.DEFAULT_CONTEXT_PATH, path);
+	}
+
+	@Test
+	public void test_start_stop() throws ConfigurationException {
 		Assert.assertEquals(1, activator.getHttpServices().size());
 		Assert.assertEquals(1, activator.getManagedServices().size());
 
+		application.start();
+		Assert.assertEquals(2, activator.getHttpServices().size());
+		Assert.assertEquals(2, activator.getManagedServices().size());
+
 		application.stop();
-		Assert.assertEquals(0, activator.getHttpServices().size());
-		Assert.assertEquals(0, activator.getManagedServices().size());
+		Assert.assertEquals(1, activator.getHttpServices().size());
+		Assert.assertEquals(1, activator.getManagedServices().size());
 
 	}
 
@@ -170,13 +237,15 @@ public class HttpApplicationTest {
 	}
 
 	@Test
-	public void test_Properties() throws ConfigurationException {
+	public void test_Properties() throws ConfigurationException,
+			InvalidSyntaxException {
 		application.start();
 
 		try {
 			ServiceReference<ManagedService> ref = context
-					.getServiceReferences(ManagedService.class,
-							"(service.pid=org.lunifera.runtime.web.http.application)")
+					.getServiceReferences(
+							ManagedService.class,
+							"(&(service.pid=org.lunifera.runtime.web.http.application)(lunifera.http.id=App1))")
 					.iterator().next();
 			String id = (String) ref.getProperty(IHttpApplication.OSGI__ID);
 			String name = (String) ref.getProperty(IHttpApplication.OSGI__NAME);
@@ -190,7 +259,8 @@ public class HttpApplicationTest {
 		}
 
 		ServiceReference<HttpService> ref = context
-				.getServiceReference(HttpService.class);
+				.getServiceReferences(HttpService.class,
+						"(lunifera.http.id=App1)").iterator().next();
 		String id = (String) ref.getProperty(IHttpApplication.OSGI__ID);
 		String name = (String) ref.getProperty(IHttpApplication.OSGI__NAME);
 		String path = (String) ref
@@ -300,7 +370,8 @@ public class HttpApplicationTest {
 				.getServletMappings();
 		Assert.assertNull(mappings);
 
-		HttpService service = activator.getHttpServices().get(0);
+		// take the second http service -> first is default service!
+		HttpService service = activator.getHttpServices().get(1);
 
 		InternalServlet servlet = new InternalServlet();
 		service.registerServlet("/test", servlet, null, null);
@@ -321,7 +392,8 @@ public class HttpApplicationTest {
 			ServletException, NamespaceException {
 		application.start();
 
-		HttpService service = activator.getHttpServices().get(0);
+		// take the second http service -> first is default service!
+		HttpService service = activator.getHttpServices().get(1);
 		InternalServlet servlet = new InternalServlet();
 		service.registerServlet("/test", servlet, null, null);
 		try {
@@ -366,7 +438,8 @@ public class HttpApplicationTest {
 					.getFilterMappings();
 			Assert.assertNull(mappings);
 
-			ExtendedHttpService service = activator.getHttpServices().get(0);
+			// take the second http service -> first is default service!
+			ExtendedHttpService service = activator.getHttpServices().get(1);
 
 			InternalFilter filter = new InternalFilter();
 			service.registerFilter("/test", filter, null, null);
@@ -406,7 +479,8 @@ public class HttpApplicationTest {
 			ServletException, NamespaceException {
 		application.start();
 
-		ExtendedHttpService service = activator.getHttpServices().get(0);
+		// take the second http service -> first is default service!
+		ExtendedHttpService service = activator.getHttpServices().get(1);
 		InternalFilter filter = new InternalFilter();
 		InternalServlet servlet = new InternalServlet();
 		service.registerServlet("/test", servlet, null, null);
