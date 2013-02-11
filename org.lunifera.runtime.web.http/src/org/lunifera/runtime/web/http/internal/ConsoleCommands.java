@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
+import org.lunifera.runtime.web.http.Constants;
+import org.lunifera.runtime.web.http.HttpApplication;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -89,9 +91,8 @@ public class ConsoleCommands implements CommandProvider {
 
 	public void printApplication(CommandInterpreter ci, IHttpApplication service) {
 		ci.println(String.format(
-				"\tid: %s \t name: %s \t context path: %s \t started: %s",
-				service.getId(), service.getName(),
-				String.valueOf(service.getContextPath()),
+				"\t name: %s \t context path: %s \t started: %s",
+				service.getName(), String.valueOf(service.getContextPath()),
 				Boolean.toString(service.isStarted())));
 	}
 
@@ -102,10 +103,9 @@ public class ConsoleCommands implements CommandProvider {
 	 */
 	private void printFilterProperties(CommandInterpreter ci) {
 		ci.println("\t---- Available OSGi properties ----");
-		ci.println("\tpid = " + IHttpApplication.OSGI__PID);
-		ci.println("\t" + IHttpApplication.OSGI__ID);
-		ci.println("\t" + IHttpApplication.OSGI__NAME);
-		ci.println("\t" + IHttpApplication.OSGI__CONTEXT_PATH);
+		ci.println("\tpid = " + Constants.SERVICE_PID);
+		ci.println("\t" + Constants.OSGI__APPLICATION_NAME);
+		ci.println("\t" + Constants.OSGI__APPLICATION_CONTEXT_PATH);
 	}
 
 	private void stopApplication(CommandInterpreter ci) {
@@ -115,7 +115,7 @@ public class ConsoleCommands implements CommandProvider {
 			return;
 		}
 
-		IHttpApplication application = findHttpApplication(id);
+		HttpApplication application = (HttpApplication) findHttpApplication(id);
 		if (application == null) {
 			ci.println("\tERROR: Application not found!");
 			return;
@@ -142,7 +142,8 @@ public class ConsoleCommands implements CommandProvider {
 		try {
 			Collection<ServiceReference<IHttpApplication>> refs = bundleContext
 					.getServiceReferences(IHttpApplication.class, String
-							.format("(%s=%s)", IHttpApplication.OSGI__ID, id));
+							.format("(%s=%s)",
+									Constants.OSGI__APPLICATION_NAME, id));
 			if (refs.size() == 1) {
 				application = bundleContext.getService(refs.iterator().next());
 			}
@@ -159,7 +160,7 @@ public class ConsoleCommands implements CommandProvider {
 			return;
 		}
 
-		IHttpApplication application = findHttpApplication(id);
+		HttpApplication application = (HttpApplication) findHttpApplication(id);
 		if (application == null) {
 			ci.println("\tERROR: Application not found!");
 			return;

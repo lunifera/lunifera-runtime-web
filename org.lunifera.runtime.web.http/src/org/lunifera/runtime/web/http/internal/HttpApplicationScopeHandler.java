@@ -20,13 +20,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ScopedHandler;
-import org.lunifera.runtime.web.http.IHttpApplication;
+import org.lunifera.runtime.web.http.HttpApplication;
 
 public class HttpApplicationScopeHandler extends ScopedHandler {
 
-	private final IHttpApplication httpApplication;
+	private final HttpApplication httpApplication;
 
-	public HttpApplicationScopeHandler(IHttpApplication httpApplication) {
+	public HttpApplicationScopeHandler(HttpApplication httpApplication) {
 		super();
 		this.httpApplication = httpApplication;
 	}

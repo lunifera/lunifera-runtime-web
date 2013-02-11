@@ -15,19 +15,19 @@ package org.lunifera.runtime.web.http.internal;
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
-import org.lunifera.runtime.web.http.IHttpApplication;
+import org.lunifera.runtime.web.http.HttpApplication;
 
 public class ServletContextHandler extends
 		org.eclipse.jetty.servlet.ServletContextHandler {
 
-	private final IHttpApplication application;
+	private final HttpApplication application;
 	private HttpApplicationScopeHandler applicationScopeHandler;
 
-	public ServletContextHandler(IHttpApplication application) {
+	public ServletContextHandler(HttpApplication application) {
 		this.application = application;
 		setContextPath(application.getContextPath());
-		setDisplayName(application.getId() + " - " + application.getName()
-				+ " - " + application.getContextPath());
+		setDisplayName(application.getName() + " - "
+				+ application.getContextPath());
 	}
 
 	/**

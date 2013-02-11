@@ -14,19 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
-import org.lunifera.runtime.web.http.IHttpApplicationManager;
+import org.lunifera.runtime.web.http.IHttpApplication;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.cm.ManagedService;
-import org.osgi.service.http.HttpService;
+import org.osgi.service.cm.ConfigurationAdmin;
 
 public class Activator implements BundleActivator {
 
 	private static Activator instance;
 	public static BundleContext context;
 
-	private IHttpApplicationManager manager;
-	private List<ManagedService> managedServices = new ArrayList<ManagedService>();
+	private ConfigurationAdmin cmAdmin;
+	private List<IHttpApplication> httpApplications = new ArrayList<IHttpApplication>();
 	private List<ExtendedHttpService> httpServices = new ArrayList<ExtendedHttpService>();
 
 	/**
@@ -36,24 +35,11 @@ public class Activator implements BundleActivator {
 		return instance;
 	}
 
-	protected void setHttpManager(IHttpApplicationManager manager) {
-		this.manager = manager;
-	}
-
 	/**
-	 * Returns the http manager.
-	 * 
-	 * @return the manager
+	 * @return the applications
 	 */
-	public IHttpApplicationManager getHttpManager() {
-		return manager;
-	}
-
-	/**
-	 * @return the managedServices
-	 */
-	public List<ManagedService> getManagedServices() {
-		return managedServices;
+	public List<IHttpApplication> getHttpApplications() {
+		return httpApplications;
 	}
 
 	/**
@@ -61,6 +47,15 @@ public class Activator implements BundleActivator {
 	 */
 	public List<ExtendedHttpService> getHttpServices() {
 		return httpServices;
+	}
+
+	/**
+	 * Returns the configuration admin service.
+	 * 
+	 * @return
+	 */
+	public ConfigurationAdmin getConfigurationAdmin() {
+		return cmAdmin;
 	}
 
 	@Override
@@ -83,15 +78,6 @@ public class Activator implements BundleActivator {
 		/**
 		 * Called by OSGi-DS
 		 * 
-		 * @param manager
-		 */
-		public void setManager(IHttpApplicationManager manager) {
-			Activator.getInstance().setHttpManager(manager);
-		}
-
-		/**
-		 * Called by OSGi-DS
-		 * 
 		 * @param httpService
 		 */
 		public void addHttpService(ExtendedHttpService httpService) {
@@ -110,19 +96,37 @@ public class Activator implements BundleActivator {
 		/**
 		 * Called by OSGi-DS
 		 * 
-		 * @param service
+		 * @param httpApplication
 		 */
-		public void addManagedService(ManagedService service) {
-			Activator.getInstance().managedServices.add(service);
+		public void addHttpApplication(IHttpApplication httpApplication) {
+			Activator.getInstance().httpApplications.add(httpApplication);
 		}
 
 		/**
 		 * Called by OSGi-DS
 		 * 
-		 * @param service
+		 * @param httpApplication
 		 */
-		public void removeManagedService(ManagedService service) {
-			Activator.getInstance().managedServices.remove(service);
+		public void removeHttpApplication(IHttpApplication httpApplication) {
+			Activator.getInstance().httpApplications.remove(httpApplication);
+		}
+
+		/**
+		 * Called by OSGi-DS
+		 * 
+		 * @param httpApplication
+		 */
+		public void setCMAdmin(ConfigurationAdmin cmAdmin) {
+			Activator.getInstance().cmAdmin = cmAdmin;
+		}
+		
+		/**
+		 * Called by OSGi-DS
+		 * 
+		 * @param httpApplication
+		 */
+		public void unsetCMAdmin(ConfigurationAdmin cmAdmin) {
+			Activator.getInstance().cmAdmin = null;
 		}
 
 	}

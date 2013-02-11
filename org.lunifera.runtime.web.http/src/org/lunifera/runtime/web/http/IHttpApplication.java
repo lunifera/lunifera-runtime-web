@@ -10,9 +10,6 @@
  */
 package org.lunifera.runtime.web.http;
 
-import java.util.Dictionary;
-
-import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.http.HttpService;
 
 /**
@@ -26,18 +23,8 @@ import org.osgi.service.http.HttpService;
  */
 public interface IHttpApplication {
 
-	public static final String OSGI__PID = "org.lunifera.runtime.web.http.application";
-
-	public static final String OSGI__ID = "lunifera.http.id";
-	public static final String OSGI__NAME = "lunifera.http.name";
-	public static final String OSGI__CONTEXT_PATH = "lunifera.http.contextPath";
-
-	public static final String DEFAULT_ID = "lunifera.http.application.default";
-	public static final String DEFAULT_NAME = "defaultapplication";
-	public static final String DEFAULT_CONTEXT_PATH = "/";
-
 	/**
-	 * Returns the id for the application.
+	 * Returns the id of that http application. Can not be changed.
 	 * 
 	 * @return
 	 */
@@ -63,30 +50,5 @@ public interface IHttpApplication {
 	 * @return
 	 */
 	boolean isStarted();
-
-	/**
-	 * Is called to start the application. All resources should be registered
-	 * and the http service is registered.
-	 * <p>
-	 * Will register a managed service to configure the application instance.
-	 * And also will provide a {@link HttpService}.
-	 */
-	void start();
-
-	/**
-	 * Updates the http application with the given properties.
-	 * 
-	 * @param properties
-	 */
-	void updated(Dictionary<String, ?> properties)
-			throws ConfigurationException;
-
-	/**
-	 * Is called to stop the application. All resources should be unregistered
-	 * and the http service will become disposed.
-	 * <p>
-	 * Will unregister the managed service and the {@link HttpService}.
-	 */
-	void stop();
 
 }

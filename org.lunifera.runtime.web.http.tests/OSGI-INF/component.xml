@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lunifera.runtime.web.http.tests">
    <implementation class="org.lunifera.runtime.web.http.tests.Activator$Component"/>
-   <reference bind="setManager" cardinality="1..1" interface="org.lunifera.runtime.web.http.IHttpApplicationManager" name="httpApplicationManager" policy="static"/>
    <reference bind="addHttpService" cardinality="0..n" interface="org.eclipse.equinox.http.servlet.ExtendedHttpService" name="httpServices" policy="dynamic" unbind="removeHttpService"/>
-   <reference bind="addManagedService" cardinality="0..n" interface="org.osgi.service.cm.ManagedService" name="managedService" policy="dynamic" target="(service.pid=org.lunifera.runtime.web.http.application)" unbind="removeManagedService"/>
+   <reference bind="addHttpApplication" cardinality="0..n" interface="org.lunifera.runtime.web.http.IHttpApplication" name="httpApplications" policy="dynamic" unbind="removeHttpApplication"/>
+   <reference bind="setCMAdmin" cardinality="0..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="configurationAdmin" policy="dynamic" unbind="unsetCMAdmin"/>
 </scr:component>

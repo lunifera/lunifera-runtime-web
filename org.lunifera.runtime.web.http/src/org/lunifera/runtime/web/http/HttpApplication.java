@@ -13,8 +13,6 @@
 package org.lunifera.runtime.web.http;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -39,37 +37,40 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
-import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedService;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HttpApplication implements IHttpApplication, ManagedService {
+public class HttpApplication implements IHttpApplication {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(HttpApplication.class);
 
 	private final HttpServiceServiceFactory httpServiceFactory = new HttpServiceServiceFactory();
 
-	private BundleContext bundleContext;
+	private BundleContext context;
 	private ServiceRegistration<?> httpServiceRegistration;
-	private ServiceRegistration<?> managedServiceRegistration;
 	private boolean started;
 
 	private ServletContextHandler servletContext;
 	private Set<String> registeredAlias = new HashSet<String>();
 	private final Map<Object, BundleResourceMonitor> bundleMonitors = new HashMap<Object, BundleResourceMonitor>();
 
-	private String id;
+	private final String id;
 	private String name;
 	private String contextPath = "/";
+
+	public HttpApplication(String id, BundleContext context) {
+		if (id == null) {
+			throw new NullPointerException("Id must not be null!");
+		}
+		this.id = id;
+		this.context = context;
+	}
 
 	/**
 	 * @return the servletContext
@@ -83,35 +84,43 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 		return id;
 	}
 
-	@Override
+	/**
+	 * Returns the name of that http application.
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
-	@Override
+	/**
+	 * Returns the context path this application will register a
+	 * {@link HttpService} at.
+	 * 
+	 * @return
+	 */
 	public String getContextPath() {
 		return contextPath;
 	}
 
 	/**
-	 * Returns the context path for the given properties.
+	 * Sets the name of that application.
 	 * 
-	 * @param properties
-	 * @return
+	 * @param name
 	 */
-	private String getContextPath(Map<String, Object> properties) {
-		String contextPath = (String) properties.get(OSGI__CONTEXT_PATH);
-		if (contextPath == null) {
-			contextPath = "/";
-		} else {
-			if (!contextPath.startsWith("/")) {
-				contextPath = "/" + contextPath;
-			}
-		}
-		return contextPath;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Override
+	/**
+	 * Sets the context path of that application.
+	 * 
+	 * @param contextPath
+	 */
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
+	}
+
 	public boolean isStarted() {
 		return started;
 	}
@@ -120,15 +129,12 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 	 * Is called to start the application. All resources should be registered
 	 * and the http service is registered.
 	 */
-	@Override
 	public void start() {
 		if (started) {
-			logger.debug("HttpApplication {} is already started", getId());
+			logger.debug("HttpApplication {} is already started", getName());
 			return;
 		}
 		try {
-			assertId();
-
 			servletContext = new ServletContextHandler(this);
 
 			internalStart();
@@ -136,31 +142,15 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 			//
 			if (httpServiceRegistration == null) {
 				Hashtable<String, Object> properties = new Hashtable<String, Object>();
-				properties.put(OSGI__ID, getId());
-				if (getName() != null && !getName().equals("")) {
-					properties.put(OSGI__NAME, getName());
-				}
-				properties.put(OSGI__CONTEXT_PATH, getContextPath());
-				httpServiceRegistration = bundleContext.registerService(
+				properties.put(Constants.OSGI__APPLICATION_ID, getId());
+				properties.put(Constants.OSGI__APPLICATION_NAME, getName());
+				properties.put(Constants.OSGI__APPLICATION_CONTEXT_PATH,
+						getContextPath());
+				httpServiceRegistration = context.registerService(
 						new String[] { HttpService.class.getName(),
 								ExtendedHttpService.class.getName() },
 						httpServiceFactory, properties);
 			}
-
-			// register managed service
-			//
-			if (managedServiceRegistration == null) {
-				Hashtable<String, Object> properties = new Hashtable<String, Object>();
-				properties.put(Constants.SERVICE_PID, OSGI__PID);
-				properties.put(OSGI__ID, getId());
-				if (getName() != null && !getName().equals("")) {
-					properties.put(OSGI__NAME, getName());
-				}
-				properties.put(OSGI__CONTEXT_PATH, getContextPath());
-				managedServiceRegistration = bundleContext.registerService(
-						ManagedService.class.getName(), this, properties);
-			}
-
 		} finally {
 			started = true;
 		}
@@ -177,10 +167,9 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 	 * Is called to stop the application. All resources should be unregistered
 	 * and the http service will become disposed.
 	 */
-	@Override
 	public void stop() {
 		if (!started) {
-			logger.debug("HttpApplication {} not started", getId());
+			logger.debug("HttpApplication {} not started", getName());
 			return;
 		}
 		try {
@@ -207,13 +196,6 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 			//
 			registeredAlias.clear();
 
-			// unregister the managed service
-			//
-			if (managedServiceRegistration != null) {
-				managedServiceRegistration.unregister();
-				managedServiceRegistration = null;
-			}
-
 			// unregister http service
 			//
 			if (httpServiceRegistration != null) {
@@ -235,138 +217,12 @@ public class HttpApplication implements IHttpApplication, ManagedService {
 	}
 
 	/**
-	 * Called by OSGi-DS.
-	 * 
-	 * @param context
-	 * @param properties
-	 */
-	protected void activate(ComponentContext context,
-			Map<String, Object> properties) {
-		this.bundleContext = context.getBundleContext();
-		initialize(properties);
-	}
-
-	/**
-	 * Initializes the http application. Can be used to if not instantiated by
-	 * OSGi-DS.
-	 * 
-	 * @param properties
-	 */
-	public void initialize(Dictionary<?, ?> properties) {
-		initialize(toMap(properties));
-	}
-
-	/**
-	 * Initializes the http application. Can be used to if not instantiated by
-	 * OSGi-DS.
-	 * 
-	 * @param properties
-	 */
-	public void initialize(Map<String, Object> properties) {
-		updateFromProperties(true, properties);
-	}
-
-	/**
-	 * Updates the internal values from the properties
-	 * 
-	 * @param force
-	 *            if true, then all values will be updated. Otherwise only
-	 *            values that are contained in the properties. Also the id will
-	 *            be updated!
-	 */
-	private void updateFromProperties(boolean force,
-			Map<String, Object> properties) {
-		if (properties != null) {
-			if (force) {
-				this.id = (String) properties.get(OSGI__ID);
-				this.name = (String) properties.get(OSGI__NAME);
-				this.contextPath = getContextPath(properties);
-			} else {
-				if (properties.containsKey(OSGI__ID)) {
-					this.id = (String) properties.get(OSGI__ID);
-				}
-				if (properties.containsKey(OSGI__NAME)) {
-					this.name = (String) properties.get(OSGI__NAME);
-				}
-				if (properties.containsKey(OSGI__CONTEXT_PATH)) {
-					this.contextPath = getContextPath(properties);
-				}
-			}
-		}
-		assertId();
-	}
-
-	/**
-	 * Ensures that an id is specified.
-	 */
-	private void assertId() {
-		if (this.id == null || this.id.equals("")) {
-			logger.error("Id must not be null! HttpApplication {}", this);
-			throw new IllegalStateException("Id must not be null!");
-		}
-	}
-
-	/**
-	 * Called by OSGi-DS.
-	 * 
-	 * @param context
-	 * @param properties
-	 */
-	protected void deactivate(ComponentContext context,
-			Map<String, Object> properties) {
-		if (started) {
-			stop();
-		}
-	}
-
-	/**
 	 * Only for testing issues!!!
 	 * 
 	 * @param context
 	 */
 	protected void setBundleContext(BundleContext context) {
-		this.bundleContext = context;
-	}
-
-	@Override
-	public void updated(Dictionary<String, ?> properties)
-			throws ConfigurationException {
-		boolean oldStarted = started;
-
-		stop();
-
-		// update the value from the properties
-		updateFromProperties(false, toMap(properties));
-
-		if (oldStarted) {
-			start();
-		}
-	}
-
-	/**
-	 * Maps the params to a map.
-	 * 
-	 * @param input
-	 * @return
-	 */
-	private Map<String, Object> toMap(final Dictionary<?, ?> input) {
-		if (input == null) {
-			return null;
-		}
-
-		final HashMap<String, Object> result = new HashMap<String, Object>(
-				input.size());
-		final Enumeration<?> keys = input.keys();
-		while (keys.hasMoreElements()) {
-			final Object key = keys.nextElement();
-			try {
-				result.put((String) key, (String) input.get(key));
-			} catch (final ClassCastException e) {
-				throw new IllegalArgumentException("Only strings are allowed",
-						e);
-			}
-		}
-		return result;
+		this.context = context;
 	}
 
 	/**

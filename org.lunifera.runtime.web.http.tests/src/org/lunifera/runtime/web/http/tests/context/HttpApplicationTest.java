@@ -30,6 +30,7 @@ import org.eclipse.jetty.servlet.FilterMapping;
 import org.eclipse.jetty.servlet.ServletMapping;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.runtime.web.http.Constants;
 import org.lunifera.runtime.web.http.HttpApplication;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.http.internal.ServletContextHandler;
@@ -39,7 +40,6 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedService;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
@@ -50,396 +50,257 @@ public class HttpApplicationTest {
 	private BundleContext context;
 	private InternalHttpApplication application;
 
+	/**
+	 * Setup of the test.
+	 * 
+	 * @throws ConfigurationException
+	 */
 	@Before
 	public void setup() throws ConfigurationException {
 		activator = Activator.getInstance();
 		context = Activator.context;
 		application = new InternalHttpApplication("App1");
-		application.initialize(prepareDefaultProps());
+		application.setName("Application1");
+		application.setContextPath("/test/app1");
 	}
 
-	@Test
-	public void test_initialize() throws ConfigurationException {
-		application = new InternalHttpApplication();
-		Assert.assertNull(application.getId());
-		Assert.assertNull(application.getName());
-		Assert.assertEquals("/", application.getContextPath());
-
-		Dictionary<String, Object> props = prepareDefaultProps();
-		application.initialize(props);
-
-		Assert.assertEquals("App1", application.getId());
-		Assert.assertEquals("Application1", application.getName());
-		Assert.assertEquals("/test/app1", application.getContextPath());
-	}
-
-	@Test
-	public void test_update() throws ConfigurationException {
-		application = new InternalHttpApplication();
-		Assert.assertNull(application.getId());
-		Assert.assertNull(application.getName());
-		Assert.assertEquals("/", application.getContextPath());
-
-		Dictionary<String, Object> props = prepareDefaultProps();
-		application.initialize(props);
-
-		Dictionary<String, Object> props2 = new Hashtable<String, Object>();
-		props2.put(IHttpApplication.OSGI__ID, "App2");
-		props2.put(IHttpApplication.OSGI__NAME, "Application2");
-		props2.put(IHttpApplication.OSGI__CONTEXT_PATH, "/test/app2");
-		application.updated(props2);
-
-		Assert.assertEquals("App2", application.getId());
-		Assert.assertEquals("Application2", application.getName());
-		Assert.assertEquals("/test/app2", application.getContextPath());
-	}
-
-	@Test
-	public void test_defaultHttpService() throws ConfigurationException,
-			ServletException, NamespaceException, InvalidSyntaxException {
-
-		// access http application
-		//
-		ServiceReference<IHttpApplication> httpserviceRef = context
-				.getServiceReferences(IHttpApplication.class,
-						"(lunifera.http.id=lunifera.http.application.default)")
-				.iterator().next();
-		String id = (String) httpserviceRef
-				.getProperty(IHttpApplication.OSGI__ID);
-		String name = (String) httpserviceRef
-				.getProperty(IHttpApplication.OSGI__NAME);
-		String path = (String) httpserviceRef
-				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
-		Assert.assertEquals(IHttpApplication.DEFAULT_ID, id);
-		Assert.assertEquals(IHttpApplication.DEFAULT_NAME, name);
-		Assert.assertEquals(IHttpApplication.DEFAULT_CONTEXT_PATH, path);
-
-		// access managed service
-		//
-		ServiceReference<ManagedService> managedServiceRef = context
-				.getServiceReferences(
-						ManagedService.class,
-						"(&(service.pid=org.lunifera.runtime.web.http.application)(lunifera.http.id=lunifera.http.application.default))")
-				.iterator().next();
-		id = (String) managedServiceRef.getProperty(IHttpApplication.OSGI__ID);
-		name = (String) managedServiceRef
-				.getProperty(IHttpApplication.OSGI__NAME);
-		path = (String) managedServiceRef
-				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
-		Assert.assertEquals(IHttpApplication.DEFAULT_ID, id);
-		Assert.assertEquals(IHttpApplication.DEFAULT_NAME, name);
-		Assert.assertEquals(IHttpApplication.DEFAULT_CONTEXT_PATH, path);
-
-		// access http service
-		//
-		ServiceReference<HttpService> httpServiceRef = context
-				.getServiceReferences(HttpService.class,
-						"(lunifera.http.id=lunifera.http.application.default)")
-				.iterator().next();
-		id = (String) httpServiceRef.getProperty(IHttpApplication.OSGI__ID);
-		name = (String) httpServiceRef.getProperty(IHttpApplication.OSGI__NAME);
-		path = (String) httpServiceRef
-				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
-		Assert.assertEquals(IHttpApplication.DEFAULT_ID, id);
-		Assert.assertEquals(IHttpApplication.DEFAULT_NAME, name);
-		Assert.assertEquals(IHttpApplication.DEFAULT_CONTEXT_PATH, path);
-
-		// access extended http service
-		//
-		ServiceReference<HttpService> extendedhttpServiceRef = context
-				.getServiceReferences(HttpService.class,
-						"(lunifera.http.id=lunifera.http.application.default)")
-				.iterator().next();
-		id = (String) extendedhttpServiceRef
-				.getProperty(IHttpApplication.OSGI__ID);
-		name = (String) extendedhttpServiceRef
-				.getProperty(IHttpApplication.OSGI__NAME);
-		path = (String) extendedhttpServiceRef
-				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
-		Assert.assertEquals(IHttpApplication.DEFAULT_ID, id);
-		Assert.assertEquals(IHttpApplication.DEFAULT_NAME, name);
-		Assert.assertEquals(IHttpApplication.DEFAULT_CONTEXT_PATH, path);
-	}
-
+	/**
+	 * Tests start and stop of application.
+	 * 
+	 * @throws ConfigurationException
+	 */
 	@Test
 	public void test_start_stop() throws ConfigurationException {
-		Assert.assertEquals(1, activator.getHttpServices().size());
-		Assert.assertEquals(1, activator.getManagedServices().size());
+		Assert.assertEquals(0, activator.getHttpServices().size());
 
 		application.start();
-		Assert.assertEquals(2, activator.getHttpServices().size());
-		Assert.assertEquals(2, activator.getManagedServices().size());
-
-		application.stop();
 		Assert.assertEquals(1, activator.getHttpServices().size());
-		Assert.assertEquals(1, activator.getManagedServices().size());
-
-	}
-
-	@Test
-	public void test_FilterById() throws ConfigurationException,
-			InvalidSyntaxException {
-
-		ServiceRegistration<IHttpApplication> registration = context
-				.registerService(IHttpApplication.class,
-						new InternalHttpApplication(), prepareDefaultProps());
-
-		Collection<ServiceReference<IHttpApplication>> refs = context
-				.getServiceReferences(IHttpApplication.class,
-						"(lunifera.http.id=App1)");
-		try {
-			if (refs.size() != 1) {
-				Assert.fail("Instance not found!");
-			}
-		} finally {
-			registration.unregister();
-		}
-	}
-
-	@Test
-	public void test_FilterByName() throws ConfigurationException,
-			InvalidSyntaxException {
-
-		ServiceRegistration<IHttpApplication> registration = context
-				.registerService(IHttpApplication.class,
-						new InternalHttpApplication(), prepareDefaultProps());
-
-		Collection<ServiceReference<IHttpApplication>> refs = context
-				.getServiceReferences(IHttpApplication.class,
-						"(lunifera.http.name=Application1)");
-		try {
-			if (refs.size() != 1) {
-				Assert.fail("Instance not found!");
-			}
-		} finally {
-			registration.unregister();
-		}
-	}
-
-	@Test
-	public void test_FilterByContextPath() throws ConfigurationException,
-			InvalidSyntaxException {
-
-		ServiceRegistration<IHttpApplication> registration = context
-				.registerService(IHttpApplication.class,
-						new InternalHttpApplication(), prepareDefaultProps());
-
-		Collection<ServiceReference<IHttpApplication>> refs = context
-				.getServiceReferences(IHttpApplication.class,
-						"(lunifera.http.contextPath=/test/app1)");
-		try {
-			if (refs.size() != 1) {
-				Assert.fail("Instance not found!");
-			}
-		} finally {
-			registration.unregister();
-		}
-	}
-
-	@Test
-	public void test_Properties() throws ConfigurationException,
-			InvalidSyntaxException {
-		application.start();
-
-		try {
-			ServiceReference<ManagedService> ref = context
-					.getServiceReferences(
-							ManagedService.class,
-							"(&(service.pid=org.lunifera.runtime.web.http.application)(lunifera.http.id=App1))")
-					.iterator().next();
-			String id = (String) ref.getProperty(IHttpApplication.OSGI__ID);
-			String name = (String) ref.getProperty(IHttpApplication.OSGI__NAME);
-			String path = (String) ref
-					.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
-			Assert.assertEquals("App1", id);
-			Assert.assertEquals("Application1", name);
-			Assert.assertEquals("/test/app1", path);
-		} catch (InvalidSyntaxException e) {
-			Assert.fail(e.toString());
-		}
-
-		ServiceReference<HttpService> ref = context
-				.getServiceReferences(HttpService.class,
-						"(lunifera.http.id=App1)").iterator().next();
-		String id = (String) ref.getProperty(IHttpApplication.OSGI__ID);
-		String name = (String) ref.getProperty(IHttpApplication.OSGI__NAME);
-		String path = (String) ref
-				.getProperty(IHttpApplication.OSGI__CONTEXT_PATH);
-		Assert.assertEquals("App1", id);
-		Assert.assertEquals("Application1", name);
-		Assert.assertEquals("/test/app1", path);
 
 		application.stop();
+		Assert.assertEquals(0, activator.getHttpServices().size());
 	}
 
+	/**
+	 * Tests if a http service is available.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws InvalidSyntaxException
+	 */
 	@Test
-	public void test_filterHttpService() throws ConfigurationException,
-			ServletException, NamespaceException, InvalidSyntaxException {
+	public void test_HttpService_Available() throws ConfigurationException,
+			InvalidSyntaxException {
 
-		Collection<ServiceReference<HttpService>> refs = context
-				.getServiceReferences(HttpService.class,
-						"(lunifera.http.contextPath=/app1/test)");
-		Collection<ServiceReference<HttpService>> refs2 = context
-				.getServiceReferences(HttpService.class,
-						"(lunifera.http.contextPath=/app2/example)");
-		Assert.assertEquals(0, refs.size());
-		Assert.assertEquals(0, refs2.size());
-
-		// register service with /app1/test
-		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(IHttpApplication.OSGI__ID, "1");
-		props.put(IHttpApplication.OSGI__NAME, "Application1");
-		props.put(IHttpApplication.OSGI__CONTEXT_PATH, "/app1/test");
-		InternalHttpApplication application = new InternalHttpApplication();
-		application.initialize(props);
 		ServiceRegistration<IHttpApplication> registration = context
-				.registerService(IHttpApplication.class, application, props);
-
-		// register service with /app2/example
-		Dictionary<String, Object> props2 = new Hashtable<String, Object>();
-		props2.put(IHttpApplication.OSGI__ID, "2");
-		props2.put(IHttpApplication.OSGI__NAME, "Application2");
-		props2.put(IHttpApplication.OSGI__CONTEXT_PATH, "/app2/example");
-		InternalHttpApplication application2 = new InternalHttpApplication();
-		application2.initialize(props2);
-		ServiceRegistration<IHttpApplication> registration2 = context
-				.registerService(IHttpApplication.class, application2, props2);
-
-		refs = context.getServiceReferences(HttpService.class,
-				"(lunifera.http.contextPath=/app1/test)");
-
-		refs2 = context.getServiceReferences(HttpService.class,
-				"(lunifera.http.contextPath=/app2/example)");
-
+				.registerService(IHttpApplication.class, application,
+						prepareDefaultProps());
 		try {
-			Assert.assertEquals(1, refs.size());
-			Assert.assertEquals(1, refs2.size());
-			Assert.assertNotSame(refs.iterator().next(), refs2.iterator()
-					.next());
+			Collection<ServiceReference<HttpService>> refs = context
+					.getServiceReferences(HttpService.class,
+							"(lunifera.http.id=App1)");
+			if (refs.size() != 0) {
+				Assert.fail("Instance must not be available yet!");
+			}
+
+			application.start();
+
+			refs = context.getServiceReferences(HttpService.class,
+					"(lunifera.http.id=App1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+
+			application.stop();
+
+			refs = context.getServiceReferences(HttpService.class,
+					"(lunifera.http.id=App1)");
+
+			if (refs.size() != 0) {
+				Assert.fail("Instance must not be available yet!");
+			}
+
 		} finally {
 			registration.unregister();
-			registration2.unregister();
-		}
-
-		refs = context.getServiceReferences(HttpService.class,
-				"(lunifera.http.contextPath=/app1/test)");
-		Assert.assertEquals(0, refs.size());
-		Assert.assertEquals(1, refs2.size());
-
-		refs2 = context.getServiceReferences(HttpService.class,
-				"(lunifera.http.contextPath=/app2/example)");
-		Assert.assertEquals(0, refs.size());
-		Assert.assertEquals(0, refs2.size());
-	}
-
-	@Test
-	public void test_IdNull() throws ConfigurationException, ServletException,
-			NamespaceException, InvalidSyntaxException {
-		InternalHttpApplication application = new InternalHttpApplication();
-		Assert.assertNull(application.getId());
-		try {
-			application.updated(null);
-			Assert.fail();
-		} catch (Exception e) {
-			// expected
 		}
 	}
 
+	/**
+	 * Filters the http service by its id.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws InvalidSyntaxException
+	 */
 	@Test
-	public void test_IdNull_start() throws ConfigurationException,
-			ServletException, NamespaceException, InvalidSyntaxException {
-		InternalHttpApplication application = new InternalHttpApplication();
-		Assert.assertNull(application.getId());
+	public void test_FilterHttpServiceById() throws ConfigurationException,
+			InvalidSyntaxException {
 		try {
 			application.start();
-			Assert.fail();
-		} catch (Exception e) {
-			// expected
+			Collection<ServiceReference<HttpService>> refs = context
+					.getServiceReferences(HttpService.class,
+							"(lunifera.http.id=App1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
 		} finally {
 			application.stop();
 		}
 	}
 
 	@Test
-	public void test_registerServlet() throws ConfigurationException,
-			ServletException, NamespaceException {
-		application.start();
-
-		ServletContextHandler contexthandler = application.getServletContext();
-		ServletMapping[] mappings = contexthandler.getServletHandler()
-				.getServletMappings();
-		Assert.assertNull(mappings);
-
-		// take the second http service -> first is default service!
-		HttpService service = activator.getHttpServices().get(1);
-
-		InternalServlet servlet = new InternalServlet();
-		service.registerServlet("/test", servlet, null, null);
-
-		mappings = contexthandler.getServletHandler().getServletMappings();
-		Assert.assertEquals(1, mappings.length);
-		Assert.assertEquals("/test", mappings[0].getPathSpecs()[0]);
-
-		service.unregister("/test");
-		mappings = contexthandler.getServletHandler().getServletMappings();
-		Assert.assertEquals(0, mappings.length);
-
-		application.stop();
+	public void test_FilterHttpServiceByName() throws ConfigurationException,
+			InvalidSyntaxException {
+		try {
+			application.start();
+			Collection<ServiceReference<HttpService>> refs = context
+					.getServiceReferences(HttpService.class,
+							"(lunifera.http.name=Application1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			application.stop();
+		}
 	}
 
+	/**
+	 * Filters the http service by its context path.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws InvalidSyntaxException
+	 */
+	@Test
+	public void test_FilterHttpServiceByContextPath()
+			throws ConfigurationException, InvalidSyntaxException {
+
+		try {
+			application.start();
+			Collection<ServiceReference<HttpService>> refs = context
+					.getServiceReferences(HttpService.class,
+							"(lunifera.http.contextPath=/test/app1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			application.stop();
+		}
+	}
+
+	/**
+	 * Tests the registration of servlets.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
+	@Test
+	public void test_registerServlet() throws ConfigurationException,
+			ServletException, NamespaceException {
+
+		try {
+			application.start();
+
+			ServletContextHandler contexthandler = application
+					.getServletContext();
+			ServletMapping[] mappings = contexthandler.getServletHandler()
+					.getServletMappings();
+			Assert.assertNull(mappings);
+
+			HttpService service = activator.getHttpServices().get(0);
+
+			InternalServlet servlet = new InternalServlet();
+			service.registerServlet("/test", servlet, null, null);
+
+			mappings = contexthandler.getServletHandler().getServletMappings();
+			Assert.assertEquals(1, mappings.length);
+			Assert.assertEquals("/test", mappings[0].getPathSpecs()[0]);
+
+			service.unregister("/test");
+			mappings = contexthandler.getServletHandler().getServletMappings();
+			Assert.assertEquals(0, mappings.length);
+		} finally {
+			application.stop();
+		}
+
+	}
+
+	/**
+	 * Tests what happens if servlet are registered twice.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
 	@Test
 	public void test_registerServlet_twice() throws ConfigurationException,
 			ServletException, NamespaceException {
-		application.start();
-
-		// take the second http service -> first is default service!
-		HttpService service = activator.getHttpServices().get(1);
-		InternalServlet servlet = new InternalServlet();
-		service.registerServlet("/test", servlet, null, null);
 		try {
+			application.start();
+
+			HttpService service = activator.getHttpServices().get(0);
+			InternalServlet servlet = new InternalServlet();
 			service.registerServlet("/test", servlet, null, null);
-			Assert.fail();
-		} catch (NamespaceException e) {
-			// expected
+			try {
+				service.registerServlet("/test", servlet, null, null);
+				Assert.fail();
+			} catch (NamespaceException e) {
+				// expected
+			}
+
+		} finally {
+			application.stop();
 		}
 
-		application.stop();
 	}
 
+	/**
+	 * Tests what happens if servlets are unregistered twice.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
 	@Test
 	public void test_unregisterServlet_twice() throws ConfigurationException,
 			ServletException, NamespaceException {
-		application.start();
-
-		HttpService service = activator.getHttpServices().get(0);
-		InternalServlet servlet = new InternalServlet();
-		service.registerServlet("/test", servlet, null, null);
 		try {
-			service.unregister("/test");
-			service.unregister("/test");
-			Assert.fail();
-		} catch (IllegalArgumentException e) {
-			// expected
-			Assert.assertEquals("Alias /test was not registered",
-					e.getMessage());
-		}
+			application.start();
 
-		application.stop();
+			HttpService service = activator.getHttpServices().get(0);
+			InternalServlet servlet = new InternalServlet();
+			service.registerServlet("/test", servlet, null, null);
+			try {
+				service.unregister("/test");
+				service.unregister("/test");
+				Assert.fail();
+			} catch (IllegalArgumentException e) {
+				// expected
+				Assert.assertEquals("Alias /test was not registered",
+						e.getMessage());
+			}
+
+		} finally {
+			application.stop();
+		}
 	}
 
+	/**
+	 * Test the registration of filters.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
 	@Test
 	public void test_registerFilter() throws ConfigurationException,
 			ServletException, NamespaceException {
-		application.start();
 		try {
+			application.start();
 			ServletContextHandler contexthandler = application
 					.getServletContext();
 			FilterMapping[] mappings = contexthandler.getServletHandler()
 					.getFilterMappings();
 			Assert.assertNull(mappings);
 
-			// take the second http service -> first is default service!
-			ExtendedHttpService service = activator.getHttpServices().get(1);
+			ExtendedHttpService service = activator.getHttpServices().get(0);
 
 			InternalFilter filter = new InternalFilter();
 			service.registerFilter("/test", filter, null, null);
@@ -456,12 +317,18 @@ public class HttpApplicationTest {
 		}
 	}
 
+	/**
+	 * Tests what happens if a filter becomes registered twice.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
 	@Test
 	public void test_registerFilter_twice() throws ConfigurationException,
 			ServletException, NamespaceException {
 
 		try {
-			application.stop();
 			application.start();
 
 			ExtendedHttpService service = activator.getHttpServices().get(0);
@@ -474,72 +341,72 @@ public class HttpApplicationTest {
 		}
 	}
 
+	/**
+	 * Tests what happens if a filter becomes unregistered twice.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
 	@Test
 	public void test_unregisterFilter_twice() throws ConfigurationException,
 			ServletException, NamespaceException {
-		application.start();
-
-		// take the second http service -> first is default service!
-		ExtendedHttpService service = activator.getHttpServices().get(1);
-		InternalFilter filter = new InternalFilter();
-		InternalServlet servlet = new InternalServlet();
-		service.registerServlet("/test", servlet, null, null);
-		service.registerFilter("/test", filter, null, null);
 		try {
-			service.unregisterFilter(filter);
-			service.unregisterFilter(filter);
-			Assert.fail();
-		} catch (IllegalArgumentException e) {
-			// expected
-			Assert.assertEquals("Alias /test was not registered",
-					e.getMessage());
-		}
+			application.start();
 
-		application.stop();
+			ExtendedHttpService service = activator.getHttpServices().get(0);
+			InternalFilter filter = new InternalFilter();
+			InternalServlet servlet = new InternalServlet();
+			service.registerServlet("/test", servlet, null, null);
+			service.registerFilter("/test", filter, null, null);
+			try {
+				service.unregisterFilter(filter);
+				service.unregisterFilter(filter);
+				Assert.fail();
+			} catch (IllegalArgumentException e) {
+				// expected
+				Assert.assertEquals("Alias /test was not registered",
+						e.getMessage());
+			}
+		} finally {
+			application.stop();
+		}
 	}
 
+	/**
+	 * Creates default properties for the tests.
+	 * 
+	 * @return
+	 */
 	public Dictionary<String, Object> prepareDefaultProps() {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(IHttpApplication.OSGI__ID, "App1");
-		props.put(IHttpApplication.OSGI__NAME, "Application1");
-		props.put(IHttpApplication.OSGI__CONTEXT_PATH, "/test/app1");
+		props.put(Constants.OSGI__APPLICATION_NAME, "Application1");
+		props.put(Constants.OSGI__APPLICATION_CONTEXT_PATH, "/test/app1");
 		return props;
 	}
 
+	/**
+	 * An internal helper application.
+	 */
 	public static class InternalHttpApplication extends HttpApplication {
 
-		private String id;
-
 		public InternalHttpApplication() {
-			setBundleContext(Activator.context);
+			this("App1");
 		}
 
 		public InternalHttpApplication(String id) {
-			setBundleContext(Activator.context);
-			this.id = id;
-		}
-
-		/**
-		 * @return the id
-		 */
-		public String getId() {
-			return id != null ? id : super.getId();
-		}
-
-		@Override
-		public void setBundleContext(BundleContext context) {
-			super.setBundleContext(context);
-		}
-
-		@Override
-		public ServletContextHandler getServletContext() {
-			return super.getServletContext();
+			super(id, Activator.context);
 		}
 
 	}
 
+	/**
+	 * An internal helper servlet.
+	 */
+	@SuppressWarnings("serial")
 	private static class InternalServlet extends HttpServlet {
 
+		@SuppressWarnings("unused")
 		private boolean initCalled;
 
 		@Override
@@ -549,6 +416,9 @@ public class HttpApplicationTest {
 		}
 	}
 
+	/**
+	 * An internal helper filter.
+	 */
 	private static class InternalFilter implements Filter {
 
 		@Override
@@ -566,6 +436,5 @@ public class HttpApplicationTest {
 		public void destroy() {
 
 		}
-
 	}
 }
