@@ -12,10 +12,12 @@ package org.lunifera.runtime.web.jetty;
 
 import java.util.Dictionary;
 
+import org.lunifera.runtime.web.jetty.internal.JettyService;
 import org.osgi.service.cm.ConfigurationException;
 
 /**
- * An abstraction of a jetty server instance.
+ * <s abstraction of a jetty server service that handles a jetty server
+ * internally.
  * <p>
  * 
  * @noimplement Should not be implemented by sub classes! Use
@@ -59,7 +61,7 @@ public interface IJettyService {
 
 	/**
 	 * Is called to start the jetty server. Will register a managed service to
-	 * configure the jetty instance.
+	 * configure the jetty instance. And will also register a {@link IJetty}.
 	 */
 	void start();
 
@@ -73,7 +75,8 @@ public interface IJettyService {
 
 	/**
 	 * Is called to stop the jetty server. Will deregister a managed service to
-	 * configure the jetty instance.
+	 * configure the jetty instance. And will also deregister the {@link IJetty}
+	 * .
 	 */
 	void stop();
 }

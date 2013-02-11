@@ -111,11 +111,11 @@ public class VaadinWebApplicationRegister implements ManagedService {
 				servlet = new VaadinOSGiServlet(webApplication);
 				HttpContext defaultContext = new WebResourcesHttpContext(
 						Activator.getBundleContext().getBundle());
-				http.registerFilter("/", getSecurityFilter(), properties,
+				http.registerFilter("/test", getSecurityFilter(), properties,
 						defaultContext);
-				http.registerResources(RESOURCE_BASE, RESOURCE_BASE,
+				http.registerResources("/test"+ RESOURCE_BASE, RESOURCE_BASE,
 						defaultContext);
-				http.registerServlet(String.format("/%s", currentAlias),
+				http.registerServlet(String.format("/test/%s", currentAlias),
 						servlet, properties, defaultContext);
 			}
 		} catch (Exception e) {

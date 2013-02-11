@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.Dictionary;
 import java.util.List;
 
-import org.lunifera.runtime.web.common.IWebContextRegistry;
 import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 import org.lunifera.runtime.web.vaadin.standalone.common.Constants;
 import org.lunifera.runtime.web.vaadin.standalone.common.IVaadinWebApplication;
@@ -37,6 +36,7 @@ public class VaadinWebApplication implements IVaadinWebApplication {
 	private Logger logger = LoggerFactory.getLogger(VaadinWebApplication.class);
 
 	private BundleContext bundleContext;
+	private String prefix;
 	private String alias;
 	private String id;
 	private String widgetsetName;
@@ -46,6 +46,9 @@ public class VaadinWebApplication implements IVaadinWebApplication {
 	private List<OSGiUIProvider> uiProviders = new ArrayList<OSGiUIProvider>();
 
 	public void activate(final ComponentContext context) {
+
+		prefix = (String) context.getProperties().get(
+				Constants.PROP_WEBAPP__PREFIX);
 
 		// remove the / from the alias
 		alias = (String) context.getProperties().get(
@@ -88,6 +91,11 @@ public class VaadinWebApplication implements IVaadinWebApplication {
 	}
 
 	@Override
+	public String getPrefix() {
+		return prefix;
+	}
+
+	@Override
 	public String getAlias() {
 		return alias;
 	}
@@ -104,6 +112,9 @@ public class VaadinWebApplication implements IVaadinWebApplication {
 
 	@SuppressWarnings("rawtypes")
 	public void updated(Dictionary properties) {
+		if (properties.get(Constants.PROP_WEBAPP__PREFIX) != null) {
+			prefix = (String) properties.get(Constants.PROP_WEBAPP__PREFIX);
+		}
 		if (properties.get(Constants.PROP_WIDGETSET) != null) {
 			widgetsetName = (String) properties.get(Constants.PROP_WIDGETSET);
 		}

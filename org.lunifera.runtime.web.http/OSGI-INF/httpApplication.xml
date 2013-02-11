@@ -7,4 +7,5 @@
    <service>
       <provide interface="org.lunifera.runtime.web.http.IHttpApplication"/>
    </service>
+   <reference bind="setJetty" cardinality="0..1" interface="org.lunifera.runtime.web.jetty.IJettyService" name="jettyService" policy="dynamic" unbind="unsetJetty"/>
 </scr:component>

@@ -10,7 +10,7 @@
  * Contributors:
  *    Florian Pirchner - initial API and implementation
  */
-package org.lunifera.runtime.web.jetty;
+package org.lunifera.runtime.web.jetty.internal;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -20,6 +20,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
+import org.lunifera.runtime.web.jetty.IJetty;
+import org.lunifera.runtime.web.jetty.IJettyService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
@@ -37,7 +39,7 @@ public class JettyService implements IJettyService, ManagedService {
 			.getLogger(JettyService.class);
 
 	private BundleContext bundleContext;
-	private ServiceRegistration<?> httpServiceRegistration;
+	private ServiceRegistration<?> jettyRegistration;
 	private ServiceRegistration<?> managedServiceRegistration;
 	private boolean started;
 
@@ -100,6 +102,20 @@ public class JettyService implements IJettyService, ManagedService {
 
 			internalStart();
 
+			// register jetty server
+			//
+			if (jettyRegistration == null) {
+				Hashtable<String, Object> properties = new Hashtable<String, Object>();
+				properties.put(Constants.SERVICE_PID, OSGI__PID);
+				properties.put(OSGI__ID, getId());
+				if (getName() != null && !getName().equals("")) {
+					properties.put(OSGI__NAME, getName());
+				}
+				properties.put(OSGI__PORT, String.valueOf(getPort()));
+				jettyRegistration = bundleContext.registerService(
+						IJetty.class.getName(), new Jetty(), properties);
+			}
+
 			// register managed service
 			//
 			if (managedServiceRegistration == null) {
@@ -142,11 +158,11 @@ public class JettyService implements IJettyService, ManagedService {
 				managedServiceRegistration = null;
 			}
 
-			// unregister http service
+			// unregister jetty
 			//
-			if (httpServiceRegistration != null) {
-				httpServiceRegistration.unregister();
-				httpServiceRegistration = null;
+			if (jettyRegistration != null) {
+				jettyRegistration.unregister();
+				jettyRegistration = null;
 			}
 
 			internalStop();

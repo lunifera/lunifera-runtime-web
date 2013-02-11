@@ -33,8 +33,9 @@ public class VaadinWebContextRegistry extends AbstractWebContextRegistry {
 			properties.putAll(inProperties);
 		}
 		properties.put(IConstants.OSGI_PROPERTY__WEB_CONTEXT__ID, id);
-		properties.put(IConstants.OSGI_PROPERTY__WEB_CONTEXT__USER, user);
-
+		if (user != null) {
+			properties.put(IConstants.OSGI_PROPERTY__WEB_CONTEXT__USER, user);
+		}
 		// create the instance of the web context
 		//
 		ComponentInstance instance = factory.newInstance(properties);

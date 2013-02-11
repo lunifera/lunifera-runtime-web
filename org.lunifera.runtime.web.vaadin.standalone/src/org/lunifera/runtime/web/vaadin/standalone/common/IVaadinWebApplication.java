@@ -20,6 +20,20 @@ import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 public interface IVaadinWebApplication {
 
 	/**
+	 * Returns the prefix of the web application. Will be used as a prefix for
+	 * all register to servlets. It can also be called the web application
+	 * prefix.
+	 * <p>
+	 * For instance:<br>
+	 * prefix = example1<br>
+	 * VAADIN-alias = example1/VAADIN<br>
+	 * main-alias = example1/main
+	 * 
+	 * @return
+	 */
+	String getPrefix();
+
+	/**
 	 * Returns the alias path, the application is registered at.
 	 * 
 	 * @return

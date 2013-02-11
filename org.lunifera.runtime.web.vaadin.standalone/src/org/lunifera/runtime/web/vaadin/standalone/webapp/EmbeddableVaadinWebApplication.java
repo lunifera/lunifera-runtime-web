@@ -18,7 +18,6 @@ import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 
-import org.lunifera.runtime.web.common.IWebContextRegistry;
 import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 import org.lunifera.runtime.web.vaadin.standalone.common.Constants;
 import org.lunifera.runtime.web.vaadin.standalone.common.IVaadinWebApplication;
@@ -38,6 +37,7 @@ public class EmbeddableVaadinWebApplication implements IVaadinWebApplication {
 	private Logger logger = LoggerFactory.getLogger(VaadinWebApplication.class);
 
 	private final BundleContext bundleContext;
+	private String prefix;
 	private String alias;
 	private String id;
 	private String widgetsetName;
@@ -57,6 +57,8 @@ public class EmbeddableVaadinWebApplication implements IVaadinWebApplication {
 	 * @param properties
 	 */
 	public void activate(Map<String, Object> properties) {
+
+		prefix = (String) properties.get(Constants.PROP_WEBAPP__PREFIX);
 
 		// remove the / from the alias
 		alias = (String) properties.get(Constants.PROP_WEBAPP__ALIAS);
@@ -97,6 +99,11 @@ public class EmbeddableVaadinWebApplication implements IVaadinWebApplication {
 		}
 
 		uiProviders = null;
+	}
+
+	@Override
+	public String getPrefix() {
+		return prefix;
 	}
 
 	@Override

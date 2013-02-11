@@ -21,7 +21,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.jetty.IJettyService;
-import org.lunifera.runtime.web.jetty.JettyService;
+import org.lunifera.runtime.web.jetty.internal.JettyService;
 import org.lunifera.runtime.web.jetty.tests.Activator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
