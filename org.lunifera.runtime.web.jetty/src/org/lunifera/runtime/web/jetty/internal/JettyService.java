@@ -12,14 +12,22 @@ package org.lunifera.runtime.web.jetty.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
+import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.lunifera.runtime.web.jetty.IJetty;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +36,12 @@ public class JettyService implements IJetty {
 	private static final Logger logger = LoggerFactory
 			.getLogger(JettyService.class);
 
+	private HandlerCollection handlerCollection;
+	private Map<IHandlerProvider, Handler> handlerMap = new HashMap<IHandlerProvider, Handler>();
+
 	private boolean started;
 	private final String id;
-	private String name;
+	private String name = "";
 
 	private boolean useNio;
 	private boolean useHttp = true;
@@ -52,11 +63,16 @@ public class JettyService implements IJetty {
 
 	private Server server;
 
+	private BundleContext context;
+
+	private HandlerTracker serviceTracker;
+
 	public JettyService(String id, BundleContext context) {
 		if (id == null) {
 			throw new NullPointerException("Id must not be null!");
 		}
 		this.id = id;
+		this.context = context;
 	}
 
 	@Override
@@ -271,6 +287,13 @@ public class JettyService implements IJetty {
 		this.httpsPort = httpsPort;
 	}
 
+	/**
+	 * @return the handlerCollection
+	 */
+	protected HandlerCollection getHandlerCollection() {
+		return handlerCollection;
+	}
+
 	public boolean isStarted() {
 		return started;
 	}
@@ -290,7 +313,25 @@ public class JettyService implements IJetty {
 		}
 
 		try {
+			// start the tracker to observe handler
+			try {
+				serviceTracker = new HandlerTracker(context, getName());
+				serviceTracker.open();
+			} catch (InvalidSyntaxException e) {
+				logger.error("{}", e);
+				throw new IllegalStateException(e);
+			}
+
 			server = new Server();
+			handlerCollection = new HandlerCollection();
+			handlerCollection.setServer(server);
+			server.setHandler(handlerCollection);
+
+			// add all yet existing handler from the tracker
+			for (IHandlerProvider provider : serviceTracker
+					.getServices(new IHandlerProvider[serviceTracker.size()])) {
+				addHandlerProvider(provider);
+			}
 
 			// use http?
 			if (isUseHttp()) {
@@ -330,11 +371,18 @@ public class JettyService implements IJetty {
 		}
 
 		try {
+
+			if (serviceTracker != null) {
+				serviceTracker.close();
+				serviceTracker = null;
+			}
+
 			if (server != null) {
 				try {
 					server.stop();
 					server.destroy();
 					server = null;
+					handlerCollection = null;
 				} catch (Exception e) {
 					logger.debug("{}", e);
 				}
@@ -342,6 +390,91 @@ public class JettyService implements IJetty {
 
 		} finally {
 			started = false;
+		}
+	}
+
+	/**
+	 * Called by the handler tracker if a new provider was added.
+	 * 
+	 * @param service
+	 */
+	protected void handlerAdded(IHandlerProvider service) {
+		if (!isStarted()) {
+			return;
+		}
+
+		if (handlerMap.containsKey(service)) {
+			logger.warn("Service already added!");
+			return;
+		}
+
+		try {
+			// stop the server
+			try {
+				logger.info("Stopping server to add new handler!");
+				server.stop();
+			} catch (Exception e) {
+				logger.error("{}", e);
+			}
+
+			// add the handler
+			//
+			addHandlerProvider(service);
+
+		} finally {
+			try {
+				logger.info("Starting server after adding new handler!");
+				server.start();
+			} catch (Exception e) {
+				logger.error("{}", e);
+			}
+		}
+	}
+
+	/**
+	 * Adds a handler.
+	 * 
+	 * @param service
+	 */
+	private void addHandlerProvider(IHandlerProvider service) {
+		Handler handler = service.getHandler();
+		handlerMap.put(service, handler);
+		handlerCollection.addHandler(handler);
+	}
+
+	/**
+	 * Called by the handler tracker if a provider was removed.
+	 * 
+	 * @param service
+	 */
+	protected void handlerRemoved(IHandlerProvider service) {
+		if (!isStarted()) {
+			return;
+		}
+
+		try {
+			// stop the server
+			try {
+				logger.info("Stopping server to add new handler!");
+				server.stop();
+			} catch (Exception e) {
+				logger.error("{}", e);
+			}
+
+			// remove the handler
+			//
+			Handler handler = handlerMap.remove(service);
+			if (handler != null) {
+				handlerCollection.removeHandler(handler);
+			}
+
+		} finally {
+			try {
+				logger.info("Starting server after adding new handler!");
+				server.start();
+			} catch (Exception e) {
+				logger.error("{}", e);
+			}
 		}
 	}
 
@@ -428,4 +561,65 @@ public class JettyService implements IJetty {
 		return value != null && !value.equals("");
 	}
 
+	/**
+	 * Creates a filter string.
+	 * 
+	 * @param jettyName
+	 * @return
+	 */
+	private static String createHandlerFilterString(String jettyName) {
+		String filterString = String
+				.format("(&(objectClass=org.lunifera.runtime.web.jetty.IHandlerProvider)(lunifera.jetty.handler.target=%s))",
+						jettyName);
+		return filterString;
+	}
+
+	/**
+	 * A service tracker that tracks HandlerProvider that targets this instance
+	 * of jetty server.
+	 */
+	private class HandlerTracker extends
+			ServiceTracker<IHandlerProvider, IHandlerProvider> {
+
+		private HandlerTracker(BundleContext context, String jettyName)
+				throws InvalidSyntaxException {
+			super(context, context
+					.createFilter(createHandlerFilterString(jettyName)), null);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.osgi.util.tracker.ServiceTracker#addingService(org.osgi.framework
+		 * .ServiceReference)
+		 */
+		@Override
+		public IHandlerProvider addingService(
+				ServiceReference<IHandlerProvider> reference) {
+			IHandlerProvider service = super.addingService(reference);
+
+			JettyService.this.handlerAdded(service);
+
+			return service;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.osgi.util.tracker.ServiceTracker#removedService(org.osgi.framework
+		 * .ServiceReference, java.lang.Object)
+		 */
+		@Override
+		public void removedService(
+				ServiceReference<IHandlerProvider> reference,
+				IHandlerProvider service) {
+
+			JettyService.this.handlerRemoved(service);
+
+			super.removedService(reference, service);
+		}
+
+	}
 }

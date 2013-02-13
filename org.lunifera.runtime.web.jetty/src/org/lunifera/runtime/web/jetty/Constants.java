@@ -26,6 +26,13 @@ public interface Constants extends org.osgi.framework.Constants {
 	public static final String OSGI__SERVER_NAME = "lunifera.jetty.name";
 
 	/**
+	 * Used to assign {@link IHandlerProvider} to jetty servers. <br>
+	 * The name of the jetty server instance that should be the target of the
+	 * handler provider.
+	 */
+	public static final String HANDLER_TARGET_NAME = "lunifera.jetty.handler.target";
+
+	/**
 	 * name="http.enabled" type="Boolean" (default: true)
 	 */
 	public static final String HTTP_ENABLED = "lunifera.jetty.http.enabled"; //$NON-NLS-1$

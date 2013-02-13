@@ -22,12 +22,17 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.jetty.Constants;
+import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.lunifera.runtime.web.jetty.internal.JettyService;
 import org.lunifera.runtime.web.jetty.tests.Activator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 
 @SuppressWarnings("restriction")
@@ -36,7 +41,7 @@ public class JettyServiceTest {
 	private Activator activator;
 	@SuppressWarnings("unused")
 	private BundleContext context;
-	private InternalJettyService application;
+	private InternalJettyService server;
 
 	/**
 	 * Setup of the test.
@@ -47,9 +52,9 @@ public class JettyServiceTest {
 	public void setup() throws ConfigurationException {
 		activator = Activator.getInstance();
 		context = Activator.context;
-		application = new InternalJettyService("S1");
-		application.setName("Server1");
-		application.setHttpPort(8099);
+		server = new InternalJettyService("S1");
+		server.setName("Server1");
+		server.setHttpPort(8099);
 	}
 
 	/**
@@ -71,12 +76,12 @@ public class JettyServiceTest {
 		} catch (HttpHostConnectException e) {
 		}
 
-		application.start();
+		server.start();
 		client = new DefaultHttpClient();
 		resp = client.execute(get);
 		Assert.assertEquals(404, resp.getStatusLine().getStatusCode());
 
-		application.stop();
+		server.stop();
 		try {
 			client = new DefaultHttpClient();
 			resp = client.execute(get);
@@ -114,7 +119,7 @@ public class JettyServiceTest {
 
 		// start for port 8099
 		//
-		application.start();
+		server.start();
 		client = new DefaultHttpClient();
 		resp = client.execute(get8099);
 		Assert.assertEquals(404, resp.getStatusLine().getStatusCode());
@@ -127,7 +132,7 @@ public class JettyServiceTest {
 
 		// stop for port 8099
 		//
-		application.stop();
+		server.stop();
 		try {
 			resp = client.execute(get8099);
 			Assert.fail();
@@ -143,7 +148,7 @@ public class JettyServiceTest {
 
 		// change port to 8091
 		//
-		application.setHttpPort(8091);
+		server.setHttpPort(8091);
 		try {
 			resp = client.execute(get8099);
 			Assert.fail();
@@ -159,7 +164,7 @@ public class JettyServiceTest {
 
 		// start for port 8091
 		//
-		application.start();
+		server.start();
 		client = new DefaultHttpClient();
 		resp = client.execute(get8091);
 		Assert.assertEquals(404, resp.getStatusLine().getStatusCode());
@@ -172,7 +177,7 @@ public class JettyServiceTest {
 
 		// start port 8091
 		//
-		application.stop();
+		server.stop();
 		try {
 			client = new DefaultHttpClient();
 			resp = client.execute(get8099);
@@ -248,6 +253,189 @@ public class JettyServiceTest {
 	// }
 
 	/**
+	 * Tests add / remove handler.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	@Test
+	public void test_add_remove_handler() throws ConfigurationException,
+			ClientProtocolException, IOException {
+		server.setName("Server1");
+		server.setHttpPort(8099);
+
+		// reg0 - Server1
+		//
+		Hashtable<String, String> dict0 = new Hashtable<String, String>();
+		dict0.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		ServiceRegistration<IHandlerProvider> reg0 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict0);
+
+		server.start();
+
+		Assert.assertEquals(1,
+				server.getHandlerCollection().getHandlers().length);
+
+		// reg1 - Server1
+		//
+		Hashtable<String, String> dict1 = new Hashtable<String, String>();
+		dict1.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		ServiceRegistration<IHandlerProvider> reg1 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict1);
+		Assert.assertEquals(2,
+				server.getHandlerCollection().getHandlers().length);
+
+		// reg2 - Server2
+		//
+		Hashtable<String, String> dict2 = new Hashtable<String, String>();
+		dict2.put(Constants.HANDLER_TARGET_NAME, "Server2");
+		ServiceRegistration<IHandlerProvider> reg2 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict2);
+		Assert.assertEquals(2,
+				server.getHandlerCollection().getHandlers().length);
+
+		// reg3 - Server1
+		//
+		Hashtable<String, String> dict3 = new Hashtable<String, String>();
+		dict3.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		ServiceRegistration<IHandlerProvider> reg3 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict3);
+		Assert.assertEquals(3,
+				server.getHandlerCollection().getHandlers().length);
+
+		reg1.unregister();
+		Assert.assertEquals(2,
+				server.getHandlerCollection().getHandlers().length);
+		reg2.unregister();
+		Assert.assertEquals(2,
+				server.getHandlerCollection().getHandlers().length);
+		reg3.unregister();
+		Assert.assertEquals(1,
+				server.getHandlerCollection().getHandlers().length);
+		reg0.unregister();
+		Assert.assertEquals(0,
+				server.getHandlerCollection().getHandlers().length);
+		server.stop();
+	}
+
+	/**
+	 * Tests add / remove handler.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	@Test
+	public void test_add_remove_handler__start_with_handlers()
+			throws ConfigurationException, ClientProtocolException, IOException {
+		server.setName("Server1");
+		server.setHttpPort(8099);
+
+		// reg1 - Server1
+		//
+		Hashtable<String, String> dict1 = new Hashtable<String, String>();
+		dict1.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		ServiceRegistration<IHandlerProvider> reg1 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict1);
+
+		// reg2 - Server2
+		//
+		Hashtable<String, String> dict2 = new Hashtable<String, String>();
+		dict2.put(Constants.HANDLER_TARGET_NAME, "Server2");
+		ServiceRegistration<IHandlerProvider> reg2 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict2);
+
+		// reg3 - Server1
+		//
+		Hashtable<String, String> dict3 = new Hashtable<String, String>();
+		dict3.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		ServiceRegistration<IHandlerProvider> reg3 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict3);
+
+		Assert.assertNull(server.getHandlerCollection());
+		server.start();
+		Assert.assertEquals(2,
+				server.getHandlerCollection().getHandlers().length);
+
+		reg1.unregister();
+		Assert.assertEquals(1,
+				server.getHandlerCollection().getHandlers().length);
+		reg2.unregister();
+		Assert.assertEquals(1,
+				server.getHandlerCollection().getHandlers().length);
+		reg3.unregister();
+		Assert.assertEquals(0,
+				server.getHandlerCollection().getHandlers().length);
+
+		server.stop();
+	}
+
+	/**
+	 * Tests add / remove handler.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	@Test
+	public void test_move_handler_between_jetties()
+			throws ConfigurationException, ClientProtocolException, IOException {
+		InternalJettyService server1 = new InternalJettyService("S2");
+		server1.setName("Server1");
+		server1.setHttpPort(8091);
+		server1.start();
+
+		InternalJettyService server2 = new InternalJettyService("S2");
+		server2.setName("Server2");
+		server2.setHttpPort(8092);
+		server2.start();
+
+		// reg1 - Server1
+		//
+		Hashtable<String, String> dict1 = new Hashtable<String, String>();
+		dict1.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		ServiceRegistration<IHandlerProvider> reg1 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict1);
+
+		// reg2 - Server2
+		//
+		Hashtable<String, String> dict2 = new Hashtable<String, String>();
+		dict2.put(Constants.HANDLER_TARGET_NAME, "Server2");
+		ServiceRegistration<IHandlerProvider> reg2 = context.registerService(
+				IHandlerProvider.class, new HandlerProvider(
+						new DefaultHandler()), dict2);
+
+		Assert.assertEquals(1,
+				server1.getHandlerCollection().getHandlers().length);
+		Assert.assertEquals(1,
+				server2.getHandlerCollection().getHandlers().length);
+
+		// update the properties of handler1 to "Server2"
+		//
+		reg1.setProperties(dict2);
+		Assert.assertEquals(0,
+				server1.getHandlerCollection().getHandlers().length);
+		Assert.assertEquals(2,
+				server2.getHandlerCollection().getHandlers().length);
+
+		// unregister
+		reg1.unregister();
+		reg2.unregister();
+
+		server1.stop();
+		server2.stop();
+	}
+
+	/**
 	 * Creates default properties for the tests.
 	 * 
 	 * @return
@@ -272,5 +460,24 @@ public class JettyServiceTest {
 			super(id, Activator.context);
 		}
 
+		@Override
+		public HandlerCollection getHandlerCollection() {
+			return super.getHandlerCollection();
+		}
+	}
+
+	private static class HandlerProvider implements IHandlerProvider {
+
+		private final Handler handler;
+
+		public HandlerProvider(Handler handler) {
+			super();
+			this.handler = handler;
+		}
+
+		@Override
+		public Handler getHandler() {
+			return handler;
+		}
 	}
 }
