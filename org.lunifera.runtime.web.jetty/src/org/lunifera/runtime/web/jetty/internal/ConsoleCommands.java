@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2012 Committers of lunifera.org.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *    Florian Pirchner - initial API and implementation
+ */
 package org.lunifera.runtime.web.jetty.internal;
 
 import java.util.Collection;
@@ -6,7 +16,8 @@ import java.util.Set;
 
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
-import org.lunifera.runtime.web.jetty.IJettyService;
+import org.lunifera.runtime.web.jetty.Constants;
+import org.lunifera.runtime.web.jetty.IJetty;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -76,9 +87,9 @@ public class ConsoleCommands implements CommandProvider {
 	private void printJetty(CommandInterpreter ci) {
 		try {
 			ci.println("\t---- Available jetty instances ----");
-			for (ServiceReference<IJettyService> reference : bundleContext
-					.getServiceReferences(IJettyService.class, null)) {
-				IJettyService service = bundleContext.getService(reference);
+			for (ServiceReference<IJetty> reference : bundleContext
+					.getServiceReferences(IJetty.class, null)) {
+				IJetty service = bundleContext.getService(reference);
 				printJetty(ci, service);
 			}
 		} catch (InvalidSyntaxException e) {
@@ -86,11 +97,11 @@ public class ConsoleCommands implements CommandProvider {
 		}
 	}
 
-	public void printJetty(CommandInterpreter ci, IJettyService service) {
+	public void printJetty(CommandInterpreter ci, IJetty service) {
 		ci.println(String.format(
 				"\tid: %s \t name: %s \t port: %s \t started: %s",
 				service.getId(), service.getName(),
-				String.valueOf(service.getPort()),
+				String.valueOf(service.getHttpPort()),
 				Boolean.toString(service.isStarted())));
 	}
 
@@ -101,10 +112,10 @@ public class ConsoleCommands implements CommandProvider {
 	 */
 	private void printFilterProperties(CommandInterpreter ci) {
 		ci.println("\t---- Available OSGi properties ----");
-		ci.println("\t pid =" + IJettyService.OSGI__PID);
-		ci.println("\t" + IJettyService.OSGI__ID);
-		ci.println("\t" + IJettyService.OSGI__NAME);
-		ci.println("\t" + IJettyService.OSGI__PORT);
+		ci.println("\t" + Constants.OSGI__SERVER_ID);
+		ci.println("\t" + Constants.OSGI__SERVER_NAME);
+		ci.println("\t" + Constants.HTTP_PORT);
+		ci.println("\t" + Constants.HTTP_HOST);
 	}
 
 	private void stopJetty(CommandInterpreter ci) {
@@ -114,7 +125,7 @@ public class ConsoleCommands implements CommandProvider {
 			return;
 		}
 
-		IJettyService jetty = findJetty(id);
+		IJetty jetty = findJetty(id);
 		if (jetty == null) {
 			ci.println("\tERROR: Jetty not found!");
 			return;
@@ -136,12 +147,12 @@ public class ConsoleCommands implements CommandProvider {
 	 * @param id
 	 * @return
 	 */
-	public IJettyService findJetty(String id) {
-		IJettyService jetty = null;
+	public IJetty findJetty(String id) {
+		IJetty jetty = null;
 		try {
-			Collection<ServiceReference<IJettyService>> refs = bundleContext
-					.getServiceReferences(IJettyService.class, String.format(
-							"(%s=%s)", IJettyService.OSGI__ID, id));
+			Collection<ServiceReference<IJetty>> refs = bundleContext
+					.getServiceReferences(IJetty.class, String.format(
+							"(%s=%s)", Constants.OSGI__SERVER_ID, id));
 			if (refs.size() == 1) {
 				jetty = bundleContext.getService(refs.iterator().next());
 			}
@@ -158,7 +169,7 @@ public class ConsoleCommands implements CommandProvider {
 			return;
 		}
 
-		IJettyService jetty = findJetty(id);
+		IJetty jetty = findJetty(id);
 		if (jetty == null) {
 			ci.println("\tERROR: Jetty not found!");
 			return;

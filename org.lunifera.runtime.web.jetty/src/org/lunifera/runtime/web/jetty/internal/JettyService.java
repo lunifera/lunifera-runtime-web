@@ -5,49 +5,59 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Based on org.eclipse.gyrex.http.jetty.internal.app.ApplicationContext (Gunnar Wagenknecht)
- * 
  * Contributors:
  *    Florian Pirchner - initial API and implementation
  */
 package org.lunifera.runtime.web.jetty.internal;
 
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
 
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.lunifera.runtime.web.jetty.IJetty;
-import org.lunifera.runtime.web.jetty.IJettyService;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedService;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JettyService implements IJettyService, ManagedService {
-
-	private static final int DEFAULT_PORT = 8080;
+public class JettyService implements IJetty {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(JettyService.class);
 
-	private BundleContext bundleContext;
-	private ServiceRegistration<?> jettyRegistration;
-	private ServiceRegistration<?> managedServiceRegistration;
 	private boolean started;
-
-	private Set<String> registeredAlias = new HashSet<String>();
-
-	private String id;
+	private final String id;
 	private String name;
-	private int port = DEFAULT_PORT;
+
+	private boolean useNio;
+	private boolean useHttp = true;
+	private String host;
+	private int httpPort;
+
+	private File workDir;
+
+	private boolean useHttps;
+	private String httpsHost;
+	private int httpsPort;
+	private String sslProtocol;
+	private String sslPassword;
+	private boolean sslNeedsClientAuth;
+	private boolean sslWantsClientAuth;
+	private String sslKeystore;
+	private String sslKeystoreType;
+	private String sslKeyPassword;
+
+	private Server server;
+
+	public JettyService(String id, BundleContext context) {
+		if (id == null) {
+			throw new NullPointerException("Id must not be null!");
+		}
+		this.id = id;
+	}
 
 	@Override
 	public String getId() {
@@ -55,79 +65,253 @@ public class JettyService implements IJettyService, ManagedService {
 	}
 
 	@Override
-	public int getPort() {
-		return port;
-	}
-
-	/**
-	 * Returns the prot for the given properties.
-	 * 
-	 * @param properties
-	 * @return
-	 */
-	private int getPort(Map<String, Object> properties) {
-		int port = DEFAULT_PORT;
-		String portString = (String) properties.get(OSGI__PORT);
-		if (portString == null) {
-			logger.warn("Using default port {} for {}", DEFAULT_PORT, getId());
-		} else {
-			try {
-				port = Integer.valueOf(portString);
-			} catch (NumberFormatException e) {
-				logger.warn("Using default port {} for {}", DEFAULT_PORT,
-						getId());
-			}
-		}
-		return port;
-	}
-
-	@Override
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name of that server.
+	 * 
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
+	public int getHttpPort() {
+		return httpPort;
+	}
+
+	/**
+	 * Sets the http port of that server.
+	 * 
+	 * @param httpPort
+	 */
+	public void setHttpPort(int httpPort) {
+		this.httpPort = httpPort;
+	}
+
+	@Override
+	public boolean isUseHttp() {
+		return useHttp;
+	}
+
+	/**
+	 * @param useHttp
+	 *            the useHttp to set
+	 */
+	public void setUseHttp(boolean useHttp) {
+		this.useHttp = useHttp;
+	}
+
+	public boolean isUseNio() {
+		return useNio;
+	}
+
+	/**
+	 * @param useNio
+	 *            the useNio to set
+	 */
+	public void setUseNio(boolean useNio) {
+		this.useNio = useNio;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * @param host
+	 *            the host to set
+	 */
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public String getHttpsHost() {
+		return httpsHost;
+	}
+
+	/**
+	 * @param httpsHost
+	 *            the httpsHost to set
+	 */
+	public void setHttpsHost(String httpsHost) {
+		this.httpsHost = httpsHost;
+	}
+
+	@Override
+	public boolean isUseHttps() {
+		return useHttps;
+	}
+
+	/**
+	 * @param useHttps
+	 *            the useHttps to set
+	 */
+	public void setUseHttps(boolean useHttps) {
+		this.useHttps = useHttps;
+	}
+
+	@Override
+	public String getSSLKeystore() {
+		return sslKeystore;
+	}
+
+	/**
+	 * @param sslKeystore
+	 *            the sslKeystore to set
+	 */
+	public void setSslKeystore(String sslKeystore) {
+		this.sslKeystore = sslKeystore;
+	}
+
+	@Override
+	public String getSSLKeystoreType() {
+		return sslKeystoreType;
+	}
+
+	/**
+	 * @param sslKeystoreType
+	 *            the sslKeystoreType to set
+	 */
+	public void setSslKeystoreType(String sslKeystoreType) {
+		this.sslKeystoreType = sslKeystoreType;
+	}
+
+	@Override
+	public String getSSLPassword() {
+		return sslPassword;
+	}
+
+	/**
+	 * @param sslPassword
+	 *            the sslPassword to set
+	 */
+	public void setSslPassword(String sslPassword) {
+		this.sslPassword = sslPassword;
+	}
+
+	@Override
+	public String getSSLKeyPassword() {
+		return sslKeyPassword;
+	}
+
+	/**
+	 * @param sslKeyPassword
+	 *            the sslKeyPassword to set
+	 */
+	public void setSslKeyPassword(String sslKeyPassword) {
+		this.sslKeyPassword = sslKeyPassword;
+	}
+
+	@Override
+	public boolean isSSLNeedClientAuthentication() {
+		return sslNeedsClientAuth;
+	}
+
+	/**
+	 * @param sslNeedsClientAuth
+	 *            the sslNeedsClientAuth to set
+	 */
+	public void setSslNeedsClientAuth(boolean sslNeedsClientAuth) {
+		this.sslNeedsClientAuth = sslNeedsClientAuth;
+	}
+
+	@Override
+	public boolean isSSLWantsClientAuthentication() {
+		return sslWantsClientAuth;
+	}
+
+	/**
+	 * @param sslWantsClientAuth
+	 *            the sslWantsClientAuth to set
+	 */
+	public void setSslWantsClientAuth(boolean sslWantsClientAuth) {
+		this.sslWantsClientAuth = sslWantsClientAuth;
+	}
+
+	@Override
+	public String getSSLProtocol() {
+		return sslProtocol;
+	}
+
+	/**
+	 * @param sslProtocol
+	 *            the sslProtocol to set
+	 */
+	public void setSslProtocol(String sslProtocol) {
+		this.sslProtocol = sslProtocol;
+	}
+
+	public File getWorkDir() {
+		return workDir;
+	}
+
+	/**
+	 * @param workDir
+	 *            the workDir to set
+	 */
+	public void setWorkDir(File workDir) {
+		this.workDir = workDir;
+	}
+
+	@Override
+	public int getHttpsPort() {
+		return httpsPort;
+	}
+
+	/**
+	 * Sets the httpsPort of that server.
+	 * 
+	 * @param httpsPort
+	 */
+	public void setHttpsPort(int httpsPort) {
+		this.httpsPort = httpsPort;
+	}
+
 	public boolean isStarted() {
 		return started;
 	}
 
-	@Override
+	/**
+	 * Is called to start the server. All resources should be registered and the
+	 * service is registered.
+	 */
 	public void start() {
 		if (started) {
-			logger.debug("JettyServer {} is already started", getId());
+			logger.debug("Httpserver {} is already started", getName());
 			return;
 		}
+		if (server != null) {
+			logger.error("Server already exists!");
+			throw new IllegalStateException("Server already exists!");
+		}
+
 		try {
-			assertId();
+			server = new Server();
 
-			internalStart();
-
-			// register jetty server
-			//
-			if (jettyRegistration == null) {
-				Hashtable<String, Object> properties = new Hashtable<String, Object>();
-				properties.put(Constants.SERVICE_PID, OSGI__PID);
-				properties.put(OSGI__ID, getId());
-				if (getName() != null && !getName().equals("")) {
-					properties.put(OSGI__NAME, getName());
+			// use http?
+			if (isUseHttp()) {
+				Connector httpConnector = createHttpConnector();
+				if (httpConnector != null) {
+					server.addConnector(httpConnector);
 				}
-				properties.put(OSGI__PORT, String.valueOf(getPort()));
-				jettyRegistration = bundleContext.registerService(
-						IJetty.class.getName(), new Jetty(), properties);
 			}
 
-			// register managed service
-			//
-			if (managedServiceRegistration == null) {
-				Hashtable<String, Object> properties = new Hashtable<String, Object>();
-				properties.put(Constants.SERVICE_PID, OSGI__PID);
-				properties.put(OSGI__ID, getId());
-				if (getName() != null && !getName().equals("")) {
-					properties.put(OSGI__NAME, getName());
+			// use https?
+			if (isUseHttps()) {
+				Connector httpsConnector = createHttpsConnector();
+				if (httpsConnector != null) {
+					server.addConnector(httpsConnector);
 				}
-				properties.put(OSGI__PORT, String.valueOf(getPort()));
-				managedServiceRegistration = bundleContext.registerService(
-						ManagedService.class.getName(), this, properties);
+			}
+
+			try {
+				server.start();
+			} catch (Exception e) {
+				logger.error("{}", e);
 			}
 
 		} finally {
@@ -135,185 +319,113 @@ public class JettyService implements IJettyService, ManagedService {
 		}
 	}
 
-	protected void internalStart() {
-
-	}
-
-	@Override
+	/**
+	 * Is called to stop the server. All resources should be unregistered and
+	 * the service will become disposed.
+	 */
 	public void stop() {
 		if (!started) {
-			logger.debug("JettyServer {} not started", getId());
+			logger.debug("Httpserver {} not started", getName());
 			return;
 		}
+
 		try {
-
-			// clear aliases
-			//
-			registeredAlias.clear();
-
-			// unregister the managed service
-			//
-			if (managedServiceRegistration != null) {
-				managedServiceRegistration.unregister();
-				managedServiceRegistration = null;
+			if (server != null) {
+				try {
+					server.stop();
+					server.destroy();
+					server = null;
+				} catch (Exception e) {
+					logger.debug("{}", e);
+				}
 			}
 
-			// unregister jetty
-			//
-			if (jettyRegistration != null) {
-				jettyRegistration.unregister();
-				jettyRegistration = null;
-			}
-
-			internalStop();
 		} finally {
 			started = false;
 		}
 	}
 
-	protected void internalStop() {
-
-	}
-
 	/**
-	 * Called by OSGi-DS.
+	 * Creates the http connector.
 	 * 
-	 * @param context
-	 * @param properties
-	 */
-	protected void activate(ComponentContext context,
-			Map<String, Object> properties) {
-		this.bundleContext = context.getBundleContext();
-		initialize(properties);
-	}
-
-	/**
-	 * Initializes the jetty service. Can be used to if not instantiated by
-	 * OSGi-DS.
-	 * 
-	 * @param properties
-	 */
-	public void initialize(Dictionary<?, ?> properties) {
-		initialize(toMap(properties));
-	}
-
-	/**
-	 * Initializes the jetty service. Can be used to if not instantiated by
-	 * OSGi-DS.
-	 * 
-	 * @param properties
-	 */
-	public void initialize(Map<String, Object> properties) {
-		updateFromProperties(true, properties);
-	}
-
-	/**
-	 * Updates the internal values from the properties
-	 * 
-	 * @param force
-	 *            if true, then all values will be updated. Otherwise only
-	 *            values that are contained in the properties. Also the ID will
-	 *            be updated.
-	 */
-	private void updateFromProperties(boolean force,
-			Map<String, Object> properties) {
-		if (properties != null) {
-			if (force) {
-				this.id = (String) properties.get(OSGI__ID);
-				this.name = (String) properties.get(OSGI__NAME);
-				this.port = getPort(properties);
-			} else {
-				if (properties.containsKey(OSGI__ID)) {
-					this.id = (String) properties.get(OSGI__ID);
-				}
-				if (properties.containsKey(OSGI__NAME)) {
-					this.name = (String) properties.get(OSGI__NAME);
-				}
-				if (properties.containsKey(OSGI__PORT)) {
-					this.port = getPort(properties);
-				}
-			}
-		}
-
-		assertId();
-	}
-
-	/**
-	 * Ensures that an id is specified.
-	 */
-	private void assertId() {
-		if (this.id == null || this.id.equals("")) {
-			logger.error("Id must not be null! HttpApplication {}", this);
-			throw new IllegalStateException("Id must not be null!");
-		}
-	}
-
-	/**
-	 * Called by OSGi-DS.
-	 * 
-	 * @param context
-	 * @param properties
-	 */
-	protected void deactivate(ComponentContext context,
-			Map<String, Object> properties) {
-		try {
-			if (started) {
-				stop();
-			}
-		} finally {
-			context = null;
-			bundleContext = null;
-		}
-	}
-
-	/**
-	 * Only for testing issues!!!
-	 * 
-	 * @param context
-	 */
-	protected void setBundleContext(BundleContext context) {
-		this.bundleContext = context;
-	}
-
-	@Override
-	public void updated(Dictionary<String, ?> properties)
-			throws ConfigurationException {
-		boolean oldStarted = started;
-
-		stop();
-
-		// update the value from the properties
-		updateFromProperties(false, toMap(properties));
-
-		if (oldStarted) {
-			start();
-		}
-	}
-
-	/**
-	 * Maps the params to a map.
-	 * 
-	 * @param input
 	 * @return
 	 */
-	private Map<String, Object> toMap(final Dictionary<?, ?> input) {
-		if (input == null) {
+	private Connector createHttpConnector() {
+		Connector connector;
+		if (isUseNio()) {
+			connector = new SelectChannelConnector();
+		} else {
+			connector = new SocketConnector();
+		}
+
+		connector.setPort(getHttpPort());
+
+		if (isValid(getHost())) {
+			connector.setHost(getHost());
+		}
+
+		if (connector.getPort() == 0) {
+			try {
+				connector.open();
+			} catch (IOException e) {
+				// this would be unexpected since we're opening the next
+				// available port
+				logger.error("{}", e);
+			}
+		}
+		return connector;
+	}
+
+	@SuppressWarnings("deprecation")
+	private Connector createHttpsConnector() {
+		if (!isUseHttps()) {
 			return null;
 		}
 
-		final HashMap<String, Object> result = new HashMap<String, Object>(
-				input.size());
-		final Enumeration<?> keys = input.keys();
-		while (keys.hasMoreElements()) {
-			final Object key = keys.nextElement();
+		SslSocketConnector sslConnector = new SslSocketConnector();
+		sslConnector.setPort(getHttpsPort());
+
+		if (isValid(getHttpsHost())) {
+			sslConnector.setHost(getHttpsHost());
+		}
+
+		if (isValid(getSSLKeystore())) {
+			sslConnector.setKeystore(getSSLKeystore());
+		}
+
+		if (isValid(getSSLPassword())) {
+			sslConnector.setPassword(getSSLPassword());
+		}
+
+		if (isValid(getSSLKeyPassword())) {
+			sslConnector.setKeyPassword(getSSLKeyPassword());
+		}
+
+		sslConnector.setNeedClientAuth(isSSLNeedClientAuthentication());
+		sslConnector.setWantClientAuth(isSSLWantsClientAuthentication());
+
+		if (isValid(getSSLProtocol())) {
+			sslConnector.setProtocol(getSSLProtocol());
+		}
+
+		if (isValid(getSSLKeystoreType())) {
+			sslConnector.setKeystoreType(getSSLKeystoreType());
+		}
+
+		if (sslConnector.getPort() == 0) {
 			try {
-				result.put((String) key, (String) input.get(key));
-			} catch (final ClassCastException e) {
-				throw new IllegalArgumentException("Only strings are allowed",
-						e);
+				sslConnector.open();
+			} catch (IOException e) {
+				// this would be unexpected since we're opening the next
+				// available port
+				e.printStackTrace();
 			}
 		}
-		return result;
+		return sslConnector;
+	}
+
+	private boolean isValid(String value) {
+		return value != null && !value.equals("");
 	}
 
 }

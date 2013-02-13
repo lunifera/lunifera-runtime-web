@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.lunifera.runtime.web.jetty">
-   <implementation class="org.lunifera.runtime.web.jetty.internal.JettyServiceManager"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.lunifera.runtime.web.jetty.factory">
+   <implementation class="org.lunifera.runtime.web.jetty.internal.JettyFactory"/>
    <service>
-      <provide interface="org.lunifera.runtime.web.jetty.IJettyServiceManager"/>
-      <provide interface="org.osgi.service.cm.ManagedService"/>
+      <provide interface="org.osgi.service.cm.ManagedServiceFactory"/>
    </service>
-   <reference bind="addJetty" cardinality="0..n" interface="org.lunifera.runtime.web.jetty.IJettyService" name="jettyServices" policy="dynamic" unbind="removeJetty"/>
-   <property name="service.pid" type="String" value="org.lunifera.runtime.web.jetty.service.manager"/>
+   <property name="service.pid" type="String" value="org.lunifera.runtime.web.jetty.server.factory"/>
 </scr:component>

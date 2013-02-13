@@ -13,20 +13,18 @@ package org.lunifera.runtime.web.jetty.tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lunifera.runtime.web.jetty.IJettyService;
-import org.lunifera.runtime.web.jetty.IJettyServiceManager;
+import org.lunifera.runtime.web.jetty.IJetty;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.cm.ManagedService;
+import org.osgi.service.cm.ConfigurationAdmin;
 
 public class Activator implements BundleActivator {
 
 	private static Activator instance;
 	public static BundleContext context;
 
-	private IJettyServiceManager manager;
-	private List<ManagedService> managedServices = new ArrayList<ManagedService>();
-	private List<IJettyService> jettyServices = new ArrayList<IJettyService>();
+	private ConfigurationAdmin cmAdmin;
+	private List<IJetty> jettys = new ArrayList<IJetty>();
 
 	/**
 	 * @return the instance
@@ -36,26 +34,19 @@ public class Activator implements BundleActivator {
 	}
 
 	/**
-	 * Returns the jetty manager.
+	 * @return the applications
+	 */
+	public List<IJetty> getJettys() {
+		return jettys;
+	}
+
+	/**
+	 * Returns the configuration admin service.
 	 * 
-	 * @return the manager
+	 * @return
 	 */
-	public IJettyServiceManager getJettyManager() {
-		return manager;
-	}
-
-	/**
-	 * @return the managedServices
-	 */
-	public List<ManagedService> getManagedServices() {
-		return managedServices;
-	}
-
-	/**
-	 * @return the JettyServices
-	 */
-	public List<IJettyService> getJettyServices() {
-		return jettyServices;
+	public ConfigurationAdmin getConfigurationAdmin() {
+		return cmAdmin;
 	}
 
 	@Override
@@ -78,46 +69,37 @@ public class Activator implements BundleActivator {
 		/**
 		 * Called by OSGi-DS
 		 * 
-		 * @param manager
+		 * @param jetty
 		 */
-		public void setManager(IJettyServiceManager manager) {
-			Activator.getInstance().manager = manager;
+		public void addJetty(IJetty jetty) {
+			Activator.getInstance().jettys.add(jetty);
 		}
 
 		/**
 		 * Called by OSGi-DS
 		 * 
-		 * @param JettyService
+		 * @param jetty
 		 */
-		public void addJettyService(IJettyService JettyService) {
-			Activator.getInstance().jettyServices.add(JettyService);
+		public void removeJetty(IJetty jetty) {
+			Activator.getInstance().jettys.remove(jetty);
 		}
 
 		/**
 		 * Called by OSGi-DS
 		 * 
-		 * @param JettyService
+		 * @param jetty
 		 */
-		public void removeJettyService(IJettyService JettyService) {
-			Activator.getInstance().jettyServices.remove(JettyService);
+		public void setCMAdmin(ConfigurationAdmin cmAdmin) {
+			Activator.getInstance().cmAdmin = cmAdmin;
 		}
 
 		/**
 		 * Called by OSGi-DS
 		 * 
-		 * @param service
+		 * @param jetty
 		 */
-		public void addManagedService(ManagedService service) {
-			Activator.getInstance().managedServices.add(service);
-		}
-
-		/**
-		 * Called by OSGi-DS
-		 * 
-		 * @param service
-		 */
-		public void removeManagedService(ManagedService service) {
-			Activator.getInstance().managedServices.remove(service);
+		public void unsetCMAdmin(ConfigurationAdmin cmAdmin) {
+			Activator.getInstance().cmAdmin = null;
 		}
 
 	}

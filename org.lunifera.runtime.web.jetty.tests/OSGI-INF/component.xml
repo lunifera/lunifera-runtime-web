@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lunifera.runtime.web.jetty.tests">
    <implementation class="org.lunifera.runtime.web.jetty.tests.Activator$Component"/>
-   <reference bind="setManager" cardinality="1..1" interface="org.lunifera.runtime.web.jetty.IJettyServiceManager" name="jettyManager" policy="static"/>
-   <reference bind="addJettyService" cardinality="0..n" interface="org.lunifera.runtime.web.jetty.IJettyService" name="jettyServices" policy="dynamic" unbind="removeJettyService"/>
-   <reference bind="addManagedService" cardinality="0..n" interface="org.osgi.service.cm.ManagedService" name="managedService" policy="dynamic" target="(service.pid=org.lunifera.runtime.web.jetty.service)" unbind="removeManagedService"/>
+   <reference bind="addJetty" cardinality="0..n" interface="org.lunifera.runtime.web.jetty.IJetty" name="jetty" policy="dynamic" unbind="removeJetty"/>
+   <reference bind="setCMAdmin" cardinality="0..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="configurationAdmin" policy="dynamic" unbind="unsetCMAdmin"/>
 </scr:component>

@@ -7,7 +7,6 @@ import java.util.Calendar;
 import javax.naming.Context;
 import javax.sql.DataSource;
 
-import org.eclipse.jetty.http.HttpException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.After;
