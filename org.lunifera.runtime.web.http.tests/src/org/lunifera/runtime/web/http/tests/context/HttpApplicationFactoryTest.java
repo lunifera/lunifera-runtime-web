@@ -18,9 +18,10 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.runtime.web.http.Constants;
+import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.http.tests.Activator;
+import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
@@ -63,40 +64,46 @@ public class HttpApplicationFactoryTest {
 	public void test_startWebApplication() throws IOException {
 		Assert.assertEquals(0, activator.getHttpApplications().size());
 		Assert.assertEquals(0, activator.getHttpServices().size());
+		Assert.assertEquals(0, activator.getHandlerProvider().size());
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				HttpConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		waitCM();
 		Assert.assertEquals(1, activator.getHttpApplications().size());
 		Assert.assertEquals(1, activator.getHttpServices().size());
+		Assert.assertEquals(1, activator.getHandlerProvider().size());
 
 		// update instance
 		config.update(prepareDefaultProps());
 		waitCM();
 		Assert.assertEquals(1, activator.getHttpApplications().size());
 		Assert.assertEquals(1, activator.getHttpServices().size());
+		Assert.assertEquals(1, activator.getHandlerProvider().size());
 
 		// create new instance
 		Configuration config2 = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				HttpConstants.OSGI__FACTORY_PID, null);
 		config2.update(prepareDefaultProps());
 		waitCM();
 		Assert.assertEquals(2, activator.getHttpApplications().size());
 		Assert.assertEquals(2, activator.getHttpServices().size());
+		Assert.assertEquals(2, activator.getHandlerProvider().size());
 
 		// remove instance 1
 		config.delete();
 		waitCM();
 		Assert.assertEquals(1, activator.getHttpApplications().size());
 		Assert.assertEquals(1, activator.getHttpServices().size());
+		Assert.assertEquals(1, activator.getHandlerProvider().size());
 
 		// remove instance 2
 		config2.delete();
 		waitCM();
 		Assert.assertEquals(0, activator.getHttpApplications().size());
 		Assert.assertEquals(0, activator.getHttpServices().size());
+		Assert.assertEquals(0, activator.getHandlerProvider().size());
 	}
 
 	/**
@@ -123,11 +130,19 @@ public class HttpApplicationFactoryTest {
 		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
 		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server2)").size());
 
 		// HttpService
 		Assert.assertEquals(
@@ -141,18 +156,53 @@ public class HttpApplicationFactoryTest {
 		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
 		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server2)").size());
+
+		// HandlerProvider
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server2)").size());
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				HttpConstants.OSGI__FACTORY_PID, null);
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__APPLICATION_NAME, "Application1");
-		props.put(Constants.OSGI__APPLICATION_CONTEXT_PATH, "/test/app1");
+		props.put(HttpConstants.APPLICATION_NAME, "Application1");
+		props.put(HttpConstants.CONTEXT_PATH, "/test/app1");
+		props.put(HttpConstants.JETTY_SERVER_NAME, "Server1");
 		config.update(props);
 		waitCM();
 
@@ -165,6 +215,10 @@ public class HttpApplicationFactoryTest {
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server1)").size());
 
 		// HttpService
 		Assert.assertEquals(
@@ -175,13 +229,32 @@ public class HttpApplicationFactoryTest {
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server1)").size());
+
+		// HandlerProvider
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application1)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app1)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server1)").size());
 
 		// create new instance
 		Configuration config2 = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				HttpConstants.OSGI__FACTORY_PID, null);
 		Dictionary<String, Object> props2 = new Hashtable<String, Object>();
-		props2.put(Constants.OSGI__APPLICATION_NAME, "Application2");
-		props2.put(Constants.OSGI__APPLICATION_CONTEXT_PATH, "/test/app2");
+		props2.put(HttpConstants.APPLICATION_NAME, "Application2");
+		props2.put(HttpConstants.CONTEXT_PATH, "/test/app2");
+		props2.put(HttpConstants.JETTY_SERVER_NAME, "Server2");
 		config2.update(props2);
 		waitCM();
 
@@ -194,6 +267,10 @@ public class HttpApplicationFactoryTest {
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server2)").size());
 
 		// HttpService
 		Assert.assertEquals(
@@ -204,6 +281,24 @@ public class HttpApplicationFactoryTest {
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server2)").size());
+
+		// HandlerProvider
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application2)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server2)").size());
 
 		config.delete();
 		config2.delete();
@@ -221,11 +316,19 @@ public class HttpApplicationFactoryTest {
 		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
 		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server2)").size());
 
 		// HttpService
 		Assert.assertEquals(
@@ -239,11 +342,45 @@ public class HttpApplicationFactoryTest {
 		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
 		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server2)").size());
+
+		// HandlerProvider
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server2)").size());
 	}
 
 	/**
@@ -261,10 +398,11 @@ public class HttpApplicationFactoryTest {
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				HttpConstants.OSGI__FACTORY_PID, null);
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__APPLICATION_NAME, "Application1");
-		props.put(Constants.OSGI__APPLICATION_CONTEXT_PATH, "/test/app1");
+		props.put(HttpConstants.APPLICATION_NAME, "Application1");
+		props.put(HttpConstants.CONTEXT_PATH, "/test/app1");
+		props.put(HttpConstants.JETTY_SERVER_NAME, "Server1");
 		config.update(props);
 		waitCM();
 
@@ -278,6 +416,10 @@ public class HttpApplicationFactoryTest {
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
 		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
@@ -285,6 +427,10 @@ public class HttpApplicationFactoryTest {
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server2)").size());
 		// HttpServices
 		Assert.assertEquals(
 				1,
@@ -295,6 +441,10 @@ public class HttpApplicationFactoryTest {
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
 		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
@@ -302,10 +452,41 @@ public class HttpApplicationFactoryTest {
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server2)").size());
+
+		// HandlerProvider
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application1)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app1)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server2)").size());
 
 		props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__APPLICATION_NAME, "Application2");
-		props.put(Constants.OSGI__APPLICATION_CONTEXT_PATH, "/test/app2");
+		props.put(HttpConstants.APPLICATION_NAME, "Application2");
+		props.put(HttpConstants.CONTEXT_PATH, "/test/app2");
+		props.put(HttpConstants.JETTY_SERVER_NAME, "Server2");
 		config.update(props);
 		waitCM();
 
@@ -319,6 +500,10 @@ public class HttpApplicationFactoryTest {
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
 		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
@@ -326,6 +511,10 @@ public class HttpApplicationFactoryTest {
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHttpApplication.class,
+						"(lunifera.jetty.name=Server2)").size());
 
 		// HttpService
 		Assert.assertEquals(
@@ -337,6 +526,10 @@ public class HttpApplicationFactoryTest {
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
 		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
@@ -344,7 +537,36 @@ public class HttpApplicationFactoryTest {
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(HttpService.class,
+						"(lunifera.jetty.name=Server2)").size());
 
+		// HandlerProvider
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app1)").size());
+		Assert.assertEquals(
+				0,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server1)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.name=Application2)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.http.contextPath=/test/app2)").size());
+		Assert.assertEquals(
+				1,
+				Activator.context.getServiceReferences(IHandlerProvider.class,
+						"(lunifera.jetty.name=Server2)").size());
 		config.delete();
 
 	}
@@ -360,14 +582,14 @@ public class HttpApplicationFactoryTest {
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				HttpConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		// create new instance
 		Configuration config2 = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				HttpConstants.OSGI__FACTORY_PID, null);
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__APPLICATION_NAME, "Application2");
-		props.put(Constants.OSGI__APPLICATION_CONTEXT_PATH, "/test/app2");
+		props.put(HttpConstants.APPLICATION_NAME, "Application2");
+		props.put(HttpConstants.CONTEXT_PATH, "/test/app2");
 		config2.update(props);
 		waitCM();
 
@@ -397,8 +619,8 @@ public class HttpApplicationFactoryTest {
 	 */
 	public Dictionary<String, Object> prepareDefaultProps() {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__APPLICATION_NAME, "Application1");
-		props.put(Constants.OSGI__APPLICATION_CONTEXT_PATH, "/test/app1");
+		props.put(HttpConstants.APPLICATION_NAME, "Application1");
+		props.put(HttpConstants.CONTEXT_PATH, "/test/app1");
 		return props;
 	}
 

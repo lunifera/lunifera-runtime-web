@@ -15,7 +15,6 @@ package org.lunifera.runtime.web.http.internal;
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
-import org.lunifera.runtime.web.http.HttpApplication;
 
 public class ServletContextHandler extends
 		org.eclipse.jetty.servlet.ServletContextHandler {

@@ -10,27 +10,20 @@
  */
 package org.lunifera.runtime.web.jetty;
 
-public interface Constants extends org.osgi.framework.Constants {
+public interface JettyConstants extends org.osgi.framework.Constants {
 
 	public static final String OSGI__FACTORY_PID = "org.lunifera.runtime.web.jetty.server.factory";
 
 	/**
 	 * The automatic given jetty server id. Can not be specified using cm.
 	 */
-	public static final String OSGI__SERVER_ID = "lunifera.jetty.id";
+	public static final String SERVER_ID = "lunifera.jetty.id";
 
 	/**
 	 * The name of the jetty server instance that should be created. Default
 	 * value is {@link #DEFAULT_SERVER_NAME}
 	 */
-	public static final String OSGI__SERVER_NAME = "lunifera.jetty.name";
-
-	/**
-	 * Used to assign {@link IHandlerProvider} to jetty servers. <br>
-	 * The name of the jetty server instance that should be the target of the
-	 * handler provider.
-	 */
-	public static final String HANDLER_TARGET_NAME = "lunifera.jetty.handler.target";
+	public static final String JETTY_SERVER_NAME = "lunifera.jetty.name";
 
 	/**
 	 * name="http.enabled" type="Boolean" (default: true)

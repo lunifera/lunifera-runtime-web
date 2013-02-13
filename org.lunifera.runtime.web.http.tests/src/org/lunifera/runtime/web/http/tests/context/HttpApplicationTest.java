@@ -30,11 +30,12 @@ import org.eclipse.jetty.servlet.FilterMapping;
 import org.eclipse.jetty.servlet.ServletMapping;
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.runtime.web.http.Constants;
-import org.lunifera.runtime.web.http.HttpApplication;
+import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.IHttpApplication;
+import org.lunifera.runtime.web.http.internal.HttpApplication;
 import org.lunifera.runtime.web.http.internal.ServletContextHandler;
 import org.lunifera.runtime.web.http.tests.Activator;
+import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -62,6 +63,7 @@ public class HttpApplicationTest {
 		application = new InternalHttpApplication("App1");
 		application.setName("Application1");
 		application.setContextPath("/test/app1");
+		application.setJettyServer("Server1");
 	}
 
 	/**
@@ -124,6 +126,49 @@ public class HttpApplicationTest {
 	}
 
 	/**
+	 * Tests if a http service is available.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws InvalidSyntaxException
+	 */
+	@Test
+	public void test_HandlerProvider_Available() throws ConfigurationException,
+			InvalidSyntaxException {
+
+		ServiceRegistration<IHttpApplication> registration = context
+				.registerService(IHttpApplication.class, application,
+						prepareDefaultProps());
+		try {
+			Collection<ServiceReference<IHandlerProvider>> refs = context
+					.getServiceReferences(IHandlerProvider.class,
+							"(lunifera.http.id=App1)");
+			if (refs.size() != 0) {
+				Assert.fail("Instance must not be available yet!");
+			}
+
+			application.start();
+
+			refs = context.getServiceReferences(IHandlerProvider.class,
+					"(lunifera.http.id=App1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+
+			application.stop();
+
+			refs = context.getServiceReferences(IHandlerProvider.class,
+					"(lunifera.http.id=App1)");
+
+			if (refs.size() != 0) {
+				Assert.fail("Instance must not be available yet!");
+			}
+
+		} finally {
+			registration.unregister();
+		}
+	}
+
+	/**
 	 * Filters the http service by its id.
 	 * 
 	 * @throws ConfigurationException
@@ -161,6 +206,22 @@ public class HttpApplicationTest {
 		}
 	}
 
+	@Test
+	public void test_FilterHttpServiceByJettyServer()
+			throws ConfigurationException, InvalidSyntaxException {
+		try {
+			application.start();
+			Collection<ServiceReference<HttpService>> refs = context
+					.getServiceReferences(HttpService.class,
+							"(lunifera.jetty.name=Server1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			application.stop();
+		}
+	}
+
 	/**
 	 * Filters the http service by its context path.
 	 * 
@@ -175,6 +236,83 @@ public class HttpApplicationTest {
 			application.start();
 			Collection<ServiceReference<HttpService>> refs = context
 					.getServiceReferences(HttpService.class,
+							"(lunifera.http.contextPath=/test/app1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			application.stop();
+		}
+	}
+
+	/**
+	 * Filters the http service by its id.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws InvalidSyntaxException
+	 */
+	@Test
+	public void test_FilterHandlerProviderById() throws ConfigurationException,
+			InvalidSyntaxException {
+		try {
+			application.start();
+			Collection<ServiceReference<IHandlerProvider>> refs = context
+					.getServiceReferences(IHandlerProvider.class,
+							"(lunifera.http.id=App1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			application.stop();
+		}
+	}
+
+	@Test
+	public void test_FilterHandlerProviderByName()
+			throws ConfigurationException, InvalidSyntaxException {
+		try {
+			application.start();
+			Collection<ServiceReference<IHandlerProvider>> refs = context
+					.getServiceReferences(IHandlerProvider.class,
+							"(lunifera.http.name=Application1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			application.stop();
+		}
+	}
+
+	@Test
+	public void test_FilterHandlerProviderByJettyServer()
+			throws ConfigurationException, InvalidSyntaxException {
+		try {
+			application.start();
+			Collection<ServiceReference<IHandlerProvider>> refs = context
+					.getServiceReferences(IHandlerProvider.class,
+							"(lunifera.jetty.name=Server1)");
+			if (refs.size() != 1) {
+				Assert.fail("Instance not found!");
+			}
+		} finally {
+			application.stop();
+		}
+	}
+
+	/**
+	 * Filters the http service by its context path.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws InvalidSyntaxException
+	 */
+	@Test
+	public void test_FilterHandlerProviderByContextPath()
+			throws ConfigurationException, InvalidSyntaxException {
+
+		try {
+			application.start();
+			Collection<ServiceReference<IHandlerProvider>> refs = context
+					.getServiceReferences(IHandlerProvider.class,
 							"(lunifera.http.contextPath=/test/app1)");
 			if (refs.size() != 1) {
 				Assert.fail("Instance not found!");
@@ -380,8 +518,8 @@ public class HttpApplicationTest {
 	 */
 	public Dictionary<String, Object> prepareDefaultProps() {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__APPLICATION_NAME, "Application1");
-		props.put(Constants.OSGI__APPLICATION_CONTEXT_PATH, "/test/app1");
+		props.put(HttpConstants.APPLICATION_NAME, "Application1");
+		props.put(HttpConstants.CONTEXT_PATH, "/test/app1");
 		return props;
 	}
 

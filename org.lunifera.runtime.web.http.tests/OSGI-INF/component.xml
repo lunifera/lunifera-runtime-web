@@ -4,4 +4,5 @@
    <reference bind="addHttpService" cardinality="0..n" interface="org.eclipse.equinox.http.servlet.ExtendedHttpService" name="httpServices" policy="dynamic" unbind="removeHttpService"/>
    <reference bind="addHttpApplication" cardinality="0..n" interface="org.lunifera.runtime.web.http.IHttpApplication" name="httpApplications" policy="dynamic" unbind="removeHttpApplication"/>
    <reference bind="setCMAdmin" cardinality="0..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="configurationAdmin" policy="dynamic" unbind="unsetCMAdmin"/>
+   <reference bind="addHandlerProvider" cardinality="0..n" interface="org.lunifera.runtime.web.jetty.IHandlerProvider" name="handlerProviders" policy="dynamic" unbind="removeHandlerProvider"/>
 </scr:component>

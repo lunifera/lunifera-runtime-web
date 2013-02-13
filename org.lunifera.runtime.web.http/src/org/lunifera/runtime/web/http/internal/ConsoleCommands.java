@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2012 Committers of lunifera.org.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *    Florian Pirchner - initial API and implementation
+ */
 package org.lunifera.runtime.web.http.internal;
 
 import java.util.Collection;
@@ -6,8 +16,7 @@ import java.util.Set;
 
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
-import org.lunifera.runtime.web.http.Constants;
-import org.lunifera.runtime.web.http.HttpApplication;
+import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -103,9 +112,9 @@ public class ConsoleCommands implements CommandProvider {
 	 */
 	private void printFilterProperties(CommandInterpreter ci) {
 		ci.println("\t---- Available OSGi properties ----");
-		ci.println("\tpid = " + Constants.SERVICE_PID);
-		ci.println("\t" + Constants.OSGI__APPLICATION_NAME);
-		ci.println("\t" + Constants.OSGI__APPLICATION_CONTEXT_PATH);
+		ci.println("\tpid = " + HttpConstants.SERVICE_PID);
+		ci.println("\t" + HttpConstants.APPLICATION_NAME);
+		ci.println("\t" + HttpConstants.CONTEXT_PATH);
 	}
 
 	private void stopApplication(CommandInterpreter ci) {
@@ -143,7 +152,7 @@ public class ConsoleCommands implements CommandProvider {
 			Collection<ServiceReference<IHttpApplication>> refs = bundleContext
 					.getServiceReferences(IHttpApplication.class, String
 							.format("(%s=%s)",
-									Constants.OSGI__APPLICATION_NAME, id));
+									HttpConstants.APPLICATION_NAME, id));
 			if (refs.size() == 1) {
 				application = bundleContext.getService(refs.iterator().next());
 			}

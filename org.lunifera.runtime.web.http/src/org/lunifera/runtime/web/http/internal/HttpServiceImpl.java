@@ -20,7 +20,6 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
-import org.lunifera.runtime.web.http.HttpApplication;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
 

@@ -19,8 +19,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.lunifera.runtime.web.http.Constants;
-import org.lunifera.runtime.web.http.HttpApplication;
+import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -94,15 +93,23 @@ public class HttpApplicationFactory implements ManagedServiceFactory {
 			application.stop();
 		}
 
-		String name = Constants.DEFAULT_APPLICATION_NAME;
-		if (properties.get(Constants.OSGI__APPLICATION_NAME) != null) {
-			name = (String) properties.get(Constants.OSGI__APPLICATION_NAME);
+		String name = HttpConstants.DEFAULT_APPLICATION_NAME;
+		if (properties.get(HttpConstants.APPLICATION_NAME) != null) {
+			name = (String) properties.get(HttpConstants.APPLICATION_NAME);
 		}
+
+		String serverName = null;
+		if (properties.get(HttpConstants.JETTY_SERVER_NAME) != null) {
+			serverName = (String) properties
+					.get(HttpConstants.JETTY_SERVER_NAME);
+		}
+
 		application.setName(name);
 		application.setContextPath(getContextPath(properties));
+		application.setJettyServer(serverName);
 
 		Dictionary<String, Object> copyProps = copy(properties);
-		copyProps.put(Constants.OSGI__APPLICATION_ID, application.getId());
+		copyProps.put(HttpConstants.APPLICATION_ID, application.getId());
 
 		// Register application as service and add to cache
 		//
@@ -182,7 +189,7 @@ public class HttpApplicationFactory implements ManagedServiceFactory {
 	 */
 	private String getContextPath(Dictionary<String, ?> properties) {
 		String contextPath = (String) properties
-				.get(Constants.OSGI__APPLICATION_CONTEXT_PATH);
+				.get(HttpConstants.CONTEXT_PATH);
 		if (contextPath == null) {
 			contextPath = "/";
 		} else {

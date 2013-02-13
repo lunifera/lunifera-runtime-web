@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.http;
 
+import org.lunifera.runtime.web.http.internal.HttpApplication;
 import org.osgi.service.http.HttpService;
 
 /**
@@ -43,6 +44,14 @@ public interface IHttpApplication {
 	 * @return
 	 */
 	String getContextPath();
+
+	/**
+	 * Returns the name of the jetty server this http application should be
+	 * installed at.
+	 * 
+	 * @return
+	 */
+	String getJettyServer();
 
 	/**
 	 * Returns true, if the application is started.

@@ -10,7 +10,7 @@
  * Contributors:
  *    Florian Pirchner - initial API and implementation
  */
-package org.lunifera.runtime.web.http;
+package org.lunifera.runtime.web.http.internal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,9 +30,9 @@ import org.eclipse.jetty.servlet.FilterMapping;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
-import org.eclipse.jetty.util.ArrayUtil;
-import org.lunifera.runtime.web.http.internal.HttpServiceImpl;
-import org.lunifera.runtime.web.http.internal.ServletContextHandler;
+import org.lunifera.runtime.web.http.HttpConstants;
+import org.lunifera.runtime.web.http.IHttpApplication;
+import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -63,6 +63,10 @@ public class HttpApplication implements IHttpApplication {
 	private final String id;
 	private String name;
 	private String contextPath = "/";
+
+	private ServiceRegistration<IHandlerProvider> jettyHandlerProviderRegistration;
+
+	private String jettyServer;
 
 	public HttpApplication(String id, BundleContext context) {
 		if (id == null) {
@@ -103,6 +107,11 @@ public class HttpApplication implements IHttpApplication {
 		return contextPath;
 	}
 
+	@Override
+	public String getJettyServer() {
+		return jettyServer;
+	}
+
 	/**
 	 * Sets the name of that application.
 	 * 
@@ -119,6 +128,17 @@ public class HttpApplication implements IHttpApplication {
 	 */
 	public void setContextPath(String contextPath) {
 		this.contextPath = contextPath;
+	}
+
+	/**
+	 * Sets the name of the jetty server this web application should be
+	 * installed at.
+	 * 
+	 * @param jettyServer
+	 *            the jettyServer to set
+	 */
+	public void setJettyServer(String jettyServer) {
+		this.jettyServer = jettyServer;
 	}
 
 	public boolean isStarted() {
@@ -138,14 +158,34 @@ public class HttpApplication implements IHttpApplication {
 			servletContext = new ServletContextHandler(this);
 
 			internalStart();
+
+			// register jetty handler
+			//
+			if (jettyHandlerProviderRegistration == null) {
+				Hashtable<String, Object> properties = new Hashtable<String, Object>();
+				properties.put(HttpConstants.APPLICATION_ID, getId());
+				properties.put(HttpConstants.APPLICATION_NAME, getName());
+				properties.put(HttpConstants.CONTEXT_PATH, getContextPath());
+				if (getJettyServer() != null) {
+					properties.put(HttpConstants.JETTY_SERVER_NAME,
+							getJettyServer());
+				}
+				jettyHandlerProviderRegistration = context.registerService(
+						IHandlerProvider.class, new JettyHandlerProvider(
+								servletContext), properties);
+			}
+
 			// register http service
 			//
 			if (httpServiceRegistration == null) {
 				Hashtable<String, Object> properties = new Hashtable<String, Object>();
-				properties.put(Constants.OSGI__APPLICATION_ID, getId());
-				properties.put(Constants.OSGI__APPLICATION_NAME, getName());
-				properties.put(Constants.OSGI__APPLICATION_CONTEXT_PATH,
-						getContextPath());
+				properties.put(HttpConstants.APPLICATION_ID, getId());
+				properties.put(HttpConstants.APPLICATION_NAME, getName());
+				properties.put(HttpConstants.CONTEXT_PATH, getContextPath());
+				if (getJettyServer() != null) {
+					properties.put(HttpConstants.JETTY_SERVER_NAME,
+							getJettyServer());
+				}
 				httpServiceRegistration = context.registerService(
 						new String[] { HttpService.class.getName(),
 								ExtendedHttpService.class.getName() },
@@ -201,6 +241,13 @@ public class HttpApplication implements IHttpApplication {
 			if (httpServiceRegistration != null) {
 				httpServiceRegistration.unregister();
 				httpServiceRegistration = null;
+			}
+
+			// unregister jetty handler
+			//
+			if (jettyHandlerProviderRegistration != null) {
+				jettyHandlerProviderRegistration.unregister();
+				jettyHandlerProviderRegistration = null;
 			}
 
 			internalStop();

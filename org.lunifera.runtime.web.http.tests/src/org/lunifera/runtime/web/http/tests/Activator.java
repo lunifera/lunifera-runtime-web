@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
 import org.lunifera.runtime.web.http.IHttpApplication;
+import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -27,6 +28,7 @@ public class Activator implements BundleActivator {
 	private ConfigurationAdmin cmAdmin;
 	private List<IHttpApplication> httpApplications = new ArrayList<IHttpApplication>();
 	private List<ExtendedHttpService> httpServices = new ArrayList<ExtendedHttpService>();
+	private List<IHandlerProvider> handlerProviders = new ArrayList<IHandlerProvider>();
 
 	/**
 	 * @return the instance
@@ -47,6 +49,13 @@ public class Activator implements BundleActivator {
 	 */
 	public List<ExtendedHttpService> getHttpServices() {
 		return httpServices;
+	}
+
+	/**
+	 * @return the httpServices
+	 */
+	public List<IHandlerProvider> getHandlerProvider() {
+		return handlerProviders;
 	}
 
 	/**
@@ -96,6 +105,24 @@ public class Activator implements BundleActivator {
 		/**
 		 * Called by OSGi-DS
 		 * 
+		 * @param provider
+		 */
+		public void addHandlerProvider(IHandlerProvider provider) {
+			Activator.getInstance().handlerProviders.add(provider);
+		}
+
+		/**
+		 * Called by OSGi-DS
+		 * 
+		 * @param provider
+		 */
+		public void removeHandlerProvider(IHandlerProvider provider) {
+			Activator.getInstance().handlerProviders.remove(provider);
+		}
+
+		/**
+		 * Called by OSGi-DS
+		 * 
 		 * @param httpApplication
 		 */
 		public void addHttpApplication(IHttpApplication httpApplication) {
@@ -119,7 +146,7 @@ public class Activator implements BundleActivator {
 		public void setCMAdmin(ConfigurationAdmin cmAdmin) {
 			Activator.getInstance().cmAdmin = cmAdmin;
 		}
-		
+
 		/**
 		 * Called by OSGi-DS
 		 * 
