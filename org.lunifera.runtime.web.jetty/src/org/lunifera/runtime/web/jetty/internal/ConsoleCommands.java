@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
-import org.lunifera.runtime.web.jetty.Constants;
+import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.IJetty;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -112,10 +112,10 @@ public class ConsoleCommands implements CommandProvider {
 	 */
 	private void printFilterProperties(CommandInterpreter ci) {
 		ci.println("\t---- Available OSGi properties ----");
-		ci.println("\t" + Constants.OSGI__SERVER_ID);
-		ci.println("\t" + Constants.OSGI__SERVER_NAME);
-		ci.println("\t" + Constants.HTTP_PORT);
-		ci.println("\t" + Constants.HTTP_HOST);
+		ci.println("\t" + JettyConstants.SERVER_ID);
+		ci.println("\t" + JettyConstants.JETTY_SERVER_NAME);
+		ci.println("\t" + JettyConstants.HTTP_PORT);
+		ci.println("\t" + JettyConstants.HTTP_HOST);
 	}
 
 	private void stopJetty(CommandInterpreter ci) {
@@ -152,7 +152,7 @@ public class ConsoleCommands implements CommandProvider {
 		try {
 			Collection<ServiceReference<IJetty>> refs = bundleContext
 					.getServiceReferences(IJetty.class, String.format(
-							"(%s=%s)", Constants.OSGI__SERVER_ID, id));
+							"(%s=%s)", JettyConstants.SERVER_ID, id));
 			if (refs.size() == 1) {
 				jetty = bundleContext.getService(refs.iterator().next());
 			}

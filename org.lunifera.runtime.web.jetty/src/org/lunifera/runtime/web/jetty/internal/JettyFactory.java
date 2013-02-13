@@ -21,7 +21,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
-import org.lunifera.runtime.web.jetty.Constants;
+import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.IJetty;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -35,21 +35,21 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <h3>properties</h3>
  * <ul>
- * <li>{@link Constants#OSGI__SERVER_NAME} - Name of the jetty server.</li>
- * <li>{@link Constants#HTTP_ENABLED}</li>
- * <li>{@link Constants#HTTP_PORT}</li>
- * <li>{@link Constants#HTTP_HOST}</li>
- * <li>{@link Constants#HTTP_NIO}</li>
- * <li>{@link Constants#HTTPS_ENABLED}</li>
- * <li>{@link Constants#HTTPS_HOST}</li>
- * <li>{@link Constants#HTTPS_PORT}</li>
- * <li>{@link Constants#SSL_KEYSTORE}</li>
- * <li>{@link Constants#SSL_PASSWORD}</li>
- * <li>{@link Constants#SSL_KEYPASSWORD}</li>
- * <li>{@link Constants#SSL_NEEDCLIENTAUTH}</li>
- * <li>{@link Constants#SSL_WANTCLIENTAUTH}</li>
- * <li>{@link Constants#SSL_PROTOCOL}</li>
- * <li>{@link Constants#SSL_KEYSTORETYPE}</li>
+ * <li>{@link JettyConstants#JETTY_SERVER_NAME} - Name of the jetty server.</li>
+ * <li>{@link JettyConstants#HTTP_ENABLED}</li>
+ * <li>{@link JettyConstants#HTTP_PORT}</li>
+ * <li>{@link JettyConstants#HTTP_HOST}</li>
+ * <li>{@link JettyConstants#HTTP_NIO}</li>
+ * <li>{@link JettyConstants#HTTPS_ENABLED}</li>
+ * <li>{@link JettyConstants#HTTPS_HOST}</li>
+ * <li>{@link JettyConstants#HTTPS_PORT}</li>
+ * <li>{@link JettyConstants#SSL_KEYSTORE}</li>
+ * <li>{@link JettyConstants#SSL_PASSWORD}</li>
+ * <li>{@link JettyConstants#SSL_KEYPASSWORD}</li>
+ * <li>{@link JettyConstants#SSL_NEEDCLIENTAUTH}</li>
+ * <li>{@link JettyConstants#SSL_WANTCLIENTAUTH}</li>
+ * <li>{@link JettyConstants#SSL_PROTOCOL}</li>
+ * <li>{@link JettyConstants#SSL_KEYSTORETYPE}</li>
  * </ul>
  */
 public class JettyFactory implements ManagedServiceFactory {
@@ -125,9 +125,9 @@ public class JettyFactory implements ManagedServiceFactory {
 			jetty.stop();
 		}
 
-		String name = Constants.DEFAULT_SERVER_NAME;
-		if (properties.get(Constants.OSGI__SERVER_NAME) != null) {
-			name = (String) properties.get(Constants.OSGI__SERVER_NAME);
+		String name = JettyConstants.DEFAULT_SERVER_NAME;
+		if (properties.get(JettyConstants.JETTY_SERVER_NAME) != null) {
+			name = (String) properties.get(JettyConstants.JETTY_SERVER_NAME);
 		}
 		jetty.setName(name);
 
@@ -159,7 +159,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		// Register jetty as service and add to cache
 		//
 		Dictionary<String, Object> copyProps = copy(properties);
-		copyProps.put(Constants.OSGI__SERVER_ID, jetty.getId());
+		copyProps.put(JettyConstants.SERVER_ID, jetty.getId());
 		if (!jetties.containsKey(pid)) {
 			jetties.put(pid, jetty);
 
@@ -251,7 +251,7 @@ public class JettyFactory implements ManagedServiceFactory {
 	private void handleHttp(JettyService jetty,
 			@SuppressWarnings("rawtypes") Dictionary dictionary) {
 		Boolean httpEnabled = null;
-		Object httpEnabledObj = dictionary.get(Constants.HTTP_ENABLED);
+		Object httpEnabledObj = dictionary.get(JettyConstants.HTTP_ENABLED);
 		if (httpEnabledObj instanceof Boolean) {
 			httpEnabled = (Boolean) httpEnabledObj;
 		} else if (httpEnabledObj instanceof String) {
@@ -263,7 +263,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		}
 
 		Integer httpPort = null;
-		Object httpPortObj = dictionary.get(Constants.HTTP_PORT);
+		Object httpPortObj = dictionary.get(JettyConstants.HTTP_PORT);
 		if (httpPortObj instanceof Integer) {
 			httpPort = (Integer) httpPortObj;
 		} else if (httpPortObj instanceof String) {
@@ -274,7 +274,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		}
 
 		Boolean nioEnabled = null;
-		Object nioEnabledObj = dictionary.get(Constants.HTTP_NIO);
+		Object nioEnabledObj = dictionary.get(JettyConstants.HTTP_NIO);
 		if (nioEnabledObj instanceof Boolean) {
 			nioEnabled = (Boolean) nioEnabledObj;
 		} else if (nioEnabledObj instanceof String) {
@@ -286,7 +286,7 @@ public class JettyFactory implements ManagedServiceFactory {
 
 		jetty.setUseNio(nioEnabled);
 
-		jetty.setHost((String) dictionary.get(Constants.HTTP_HOST));
+		jetty.setHost((String) dictionary.get(JettyConstants.HTTP_HOST));
 
 	}
 
@@ -320,7 +320,7 @@ public class JettyFactory implements ManagedServiceFactory {
 	private void handleHttps(JettyService jetty,
 			@SuppressWarnings("rawtypes") Dictionary dictionary) {
 		Boolean httpsEnabled = null;
-		Object httpsEnabledObj = dictionary.get(Constants.HTTPS_ENABLED);
+		Object httpsEnabledObj = dictionary.get(JettyConstants.HTTPS_ENABLED);
 		if (httpsEnabledObj instanceof Boolean) {
 			httpsEnabled = (Boolean) httpsEnabledObj;
 		} else if (httpsEnabledObj instanceof String) {
@@ -333,7 +333,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		}
 
 		Integer httpsPort = null;
-		Object httpsPortObj = dictionary.get(Constants.HTTPS_PORT);
+		Object httpsPortObj = dictionary.get(JettyConstants.HTTPS_PORT);
 		if (httpsPortObj instanceof Integer) {
 			httpsPort = (Integer) httpsPortObj;
 		} else if (httpsPortObj instanceof String) {
@@ -343,13 +343,13 @@ public class JettyFactory implements ManagedServiceFactory {
 			jetty.setHttpsPort(httpsPort);
 		}
 
-		jetty.setHttpsHost((String) dictionary.get(Constants.HTTPS_HOST));
-		jetty.setSslKeystore((String) dictionary.get(Constants.SSL_KEYSTORE));
-		jetty.setSslKeystore((String) dictionary.get(Constants.SSL_PASSWORD));
-		jetty.setSslKeystore((String) dictionary.get(Constants.SSL_KEYPASSWORD));
+		jetty.setHttpsHost((String) dictionary.get(JettyConstants.HTTPS_HOST));
+		jetty.setSslKeystore((String) dictionary.get(JettyConstants.SSL_KEYSTORE));
+		jetty.setSslKeystore((String) dictionary.get(JettyConstants.SSL_PASSWORD));
+		jetty.setSslKeystore((String) dictionary.get(JettyConstants.SSL_KEYPASSWORD));
 
 		jetty.setSslNeedsClientAuth(false);
-		Object needClientAuth = dictionary.get(Constants.SSL_NEEDCLIENTAUTH);
+		Object needClientAuth = dictionary.get(JettyConstants.SSL_NEEDCLIENTAUTH);
 		if (needClientAuth != null) {
 			if (needClientAuth instanceof String)
 				needClientAuth = Boolean.valueOf((String) needClientAuth);
@@ -357,7 +357,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		}
 
 		jetty.setSslWantsClientAuth(false);
-		Object wantClientAuth = dictionary.get(Constants.SSL_WANTCLIENTAUTH);
+		Object wantClientAuth = dictionary.get(JettyConstants.SSL_WANTCLIENTAUTH);
 		if (wantClientAuth != null) {
 			if (wantClientAuth instanceof String) {
 				wantClientAuth = Boolean.valueOf((String) wantClientAuth);
@@ -365,10 +365,10 @@ public class JettyFactory implements ManagedServiceFactory {
 			jetty.setSslWantsClientAuth((Boolean) wantClientAuth);
 		}
 
-		jetty.setSslKeystore((String) dictionary.get(Constants.SSL_PROTOCOL));
+		jetty.setSslKeystore((String) dictionary.get(JettyConstants.SSL_PROTOCOL));
 
 		jetty.setSslKeystore((String) dictionary
-				.get(Constants.SSL_KEYSTORETYPE));
+				.get(JettyConstants.SSL_KEYSTORETYPE));
 
 	}
 }

@@ -569,7 +569,7 @@ public class JettyService implements IJetty {
 	 */
 	private static String createHandlerFilterString(String jettyName) {
 		String filterString = String
-				.format("(&(objectClass=org.lunifera.runtime.web.jetty.IHandlerProvider)(lunifera.jetty.handler.target=%s))",
+				.format("(&(objectClass=org.lunifera.runtime.web.jetty.IHandlerProvider)(lunifera.jetty.name=%s))",
 						jettyName);
 		return filterString;
 	}

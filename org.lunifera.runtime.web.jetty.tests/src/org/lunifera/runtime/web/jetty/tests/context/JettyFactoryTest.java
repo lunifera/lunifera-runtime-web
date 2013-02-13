@@ -18,7 +18,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.runtime.web.jetty.Constants;
+import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.IJetty;
 import org.lunifera.runtime.web.jetty.tests.Activator;
 import org.osgi.framework.Bundle;
@@ -64,7 +64,7 @@ public class JettyFactoryTest {
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				JettyConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		waitCM();
 		Assert.assertEquals(1, activator.getJettys().size());
@@ -76,7 +76,7 @@ public class JettyFactoryTest {
 
 		// create new instance
 		Configuration config2 = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				JettyConstants.OSGI__FACTORY_PID, null);
 		config2.update(prepareDefaultProps());
 		waitCM();
 		Assert.assertEquals(2, activator.getJettys().size());
@@ -123,10 +123,10 @@ public class JettyFactoryTest {
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				JettyConstants.OSGI__FACTORY_PID, null);
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__SERVER_NAME, "Server1");
-		props.put(Constants.HTTP_PORT, "8081");
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
+		props.put(JettyConstants.HTTP_PORT, "8081");
 		config.update(props);
 		waitCM();
 
@@ -141,10 +141,10 @@ public class JettyFactoryTest {
 
 		// create new instance
 		Configuration config2 = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				JettyConstants.OSGI__FACTORY_PID, null);
 		Dictionary<String, Object> props2 = new Hashtable<String, Object>();
-		props2.put(Constants.OSGI__SERVER_NAME, "Server2");
-		props2.put(Constants.HTTP_PORT, "8082");
+		props2.put(JettyConstants.JETTY_SERVER_NAME, "Server2");
+		props2.put(JettyConstants.HTTP_PORT, "8082");
 		config2.update(props2);
 		waitCM();
 
@@ -194,10 +194,10 @@ public class JettyFactoryTest {
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				JettyConstants.OSGI__FACTORY_PID, null);
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__SERVER_NAME, "Server1");
-		props.put(Constants.HTTP_PORT, "8081");
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
+		props.put(JettyConstants.HTTP_PORT, "8081");
 		config.update(props);
 		waitCM();
 
@@ -219,8 +219,8 @@ public class JettyFactoryTest {
 						"(lunifera.jetty.http.port=8082)").size());
 
 		props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__SERVER_NAME, "Server2");
-		props.put(Constants.HTTP_PORT, "8082");
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server2");
+		props.put(JettyConstants.HTTP_PORT, "8082");
 		config.update(props);
 		waitCM();
 
@@ -256,14 +256,14 @@ public class JettyFactoryTest {
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				JettyConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		// create new instance
 		Configuration config2 = cm.createFactoryConfiguration(
-				Constants.OSGI__FACTORY_PID, null);
+				JettyConstants.OSGI__FACTORY_PID, null);
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__SERVER_NAME, "Server2");
-		props.put(Constants.HTTP_PORT, "8082");
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server2");
+		props.put(JettyConstants.HTTP_PORT, "8082");
 		config2.update(props);
 		waitCM();
 
@@ -293,8 +293,8 @@ public class JettyFactoryTest {
 	 */
 	public Dictionary<String, Object> prepareDefaultProps() {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__SERVER_NAME, "Server1");
-		props.put(Constants.HTTP_PORT, "8081");
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
+		props.put(JettyConstants.HTTP_PORT, "8081");
 		return props;
 	}
 

@@ -27,7 +27,7 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.runtime.web.jetty.Constants;
+import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.lunifera.runtime.web.jetty.internal.JettyService;
 import org.lunifera.runtime.web.jetty.tests.Activator;
@@ -268,7 +268,7 @@ public class JettyServiceTest {
 		// reg0 - Server1
 		//
 		Hashtable<String, String> dict0 = new Hashtable<String, String>();
-		dict0.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		dict0.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
 		ServiceRegistration<IHandlerProvider> reg0 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict0);
@@ -281,7 +281,7 @@ public class JettyServiceTest {
 		// reg1 - Server1
 		//
 		Hashtable<String, String> dict1 = new Hashtable<String, String>();
-		dict1.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		dict1.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
 		ServiceRegistration<IHandlerProvider> reg1 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict1);
@@ -291,7 +291,7 @@ public class JettyServiceTest {
 		// reg2 - Server2
 		//
 		Hashtable<String, String> dict2 = new Hashtable<String, String>();
-		dict2.put(Constants.HANDLER_TARGET_NAME, "Server2");
+		dict2.put(JettyConstants.JETTY_SERVER_NAME, "Server2");
 		ServiceRegistration<IHandlerProvider> reg2 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict2);
@@ -301,7 +301,7 @@ public class JettyServiceTest {
 		// reg3 - Server1
 		//
 		Hashtable<String, String> dict3 = new Hashtable<String, String>();
-		dict3.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		dict3.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
 		ServiceRegistration<IHandlerProvider> reg3 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict3);
@@ -339,7 +339,7 @@ public class JettyServiceTest {
 		// reg1 - Server1
 		//
 		Hashtable<String, String> dict1 = new Hashtable<String, String>();
-		dict1.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		dict1.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
 		ServiceRegistration<IHandlerProvider> reg1 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict1);
@@ -347,7 +347,7 @@ public class JettyServiceTest {
 		// reg2 - Server2
 		//
 		Hashtable<String, String> dict2 = new Hashtable<String, String>();
-		dict2.put(Constants.HANDLER_TARGET_NAME, "Server2");
+		dict2.put(JettyConstants.JETTY_SERVER_NAME, "Server2");
 		ServiceRegistration<IHandlerProvider> reg2 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict2);
@@ -355,7 +355,7 @@ public class JettyServiceTest {
 		// reg3 - Server1
 		//
 		Hashtable<String, String> dict3 = new Hashtable<String, String>();
-		dict3.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		dict3.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
 		ServiceRegistration<IHandlerProvider> reg3 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict3);
@@ -401,7 +401,7 @@ public class JettyServiceTest {
 		// reg1 - Server1
 		//
 		Hashtable<String, String> dict1 = new Hashtable<String, String>();
-		dict1.put(Constants.HANDLER_TARGET_NAME, "Server1");
+		dict1.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
 		ServiceRegistration<IHandlerProvider> reg1 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict1);
@@ -409,7 +409,7 @@ public class JettyServiceTest {
 		// reg2 - Server2
 		//
 		Hashtable<String, String> dict2 = new Hashtable<String, String>();
-		dict2.put(Constants.HANDLER_TARGET_NAME, "Server2");
+		dict2.put(JettyConstants.JETTY_SERVER_NAME, "Server2");
 		ServiceRegistration<IHandlerProvider> reg2 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict2);
@@ -442,8 +442,8 @@ public class JettyServiceTest {
 	 */
 	public Dictionary<String, Object> prepareDefaultProps() {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put(Constants.OSGI__SERVER_NAME, "Server1");
-		props.put(Constants.HTTP_PORT, "8081");
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
+		props.put(JettyConstants.HTTP_PORT, "8081");
 		return props;
 	}
 
