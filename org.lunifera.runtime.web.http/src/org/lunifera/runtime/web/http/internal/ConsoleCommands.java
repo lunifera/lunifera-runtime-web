@@ -19,6 +19,7 @@ import org.eclipse.osgi.framework.console.CommandProvider;
 import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
@@ -102,10 +103,12 @@ public class ConsoleCommands implements CommandProvider {
 	}
 
 	public void printApplication(CommandInterpreter ci, IHttpApplication service) {
-		ci.println(String.format(
-				"\t name: %s \t context path: %s \t started: %s",
-				service.getName(), String.valueOf(service.getContextPath()),
-				Boolean.toString(service.isStarted())));
+		ci.println(String
+				.format("\t id: %s \t name: %s \t context path: %s \t jetty server: %s \t started: %s \t pid: %s",
+						service.getId(), service.getName(),
+						service.getContextPath(), service.getJettyServer(),
+						Boolean.toString(service.isStarted()),
+						findHttpApplicationPID(service.getId())));
 	}
 
 	/**
@@ -115,7 +118,7 @@ public class ConsoleCommands implements CommandProvider {
 	 */
 	private void printFilterProperties(CommandInterpreter ci) {
 		ci.println("\t---- Available OSGi properties ----");
-		ci.println("\tpid = " + HttpConstants.SERVICE_PID);
+		ci.println("\t" + HttpConstants.APPLICATION_ID);
 		ci.println("\t" + HttpConstants.APPLICATION_NAME);
 		ci.println("\t" + HttpConstants.CONTEXT_PATH);
 	}
@@ -153,9 +156,9 @@ public class ConsoleCommands implements CommandProvider {
 		IHttpApplication application = null;
 		try {
 			Collection<ServiceReference<IHttpApplication>> refs = bundleContext
-					.getServiceReferences(IHttpApplication.class, String
-							.format("(%s=%s)", HttpConstants.APPLICATION_NAME,
-									id));
+					.getServiceReferences(IHttpApplication.class,
+							String.format("(%s=%s)",
+									HttpConstants.APPLICATION_ID, id));
 			if (refs.size() == 1) {
 				application = bundleContext.getService(refs.iterator().next());
 			}
@@ -163,6 +166,29 @@ public class ConsoleCommands implements CommandProvider {
 			logger.error("{}", e);
 		}
 		return application;
+	}
+
+	/**
+	 * Looks for the application pid with the given id.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public String findHttpApplicationPID(String id) {
+		String pid = null;
+		try {
+			Collection<ServiceReference<IHttpApplication>> refs = bundleContext
+					.getServiceReferences(IHttpApplication.class,
+							String.format("(%s=%s)",
+									HttpConstants.APPLICATION_ID, id));
+			if (refs.size() == 1) {
+				pid = (String) refs.iterator().next()
+						.getProperty(Constants.SERVICE_PID);
+			}
+		} catch (InvalidSyntaxException e) {
+			logger.error("{}", e);
+		}
+		return pid;
 	}
 
 	private void startApplication(CommandInterpreter ci) {

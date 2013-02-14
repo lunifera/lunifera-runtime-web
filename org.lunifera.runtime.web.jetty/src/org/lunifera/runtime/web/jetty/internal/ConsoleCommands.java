@@ -19,6 +19,7 @@ import org.eclipse.osgi.framework.console.CommandProvider;
 import org.lunifera.runtime.web.jetty.IJetty;
 import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
@@ -102,10 +103,11 @@ public class ConsoleCommands implements CommandProvider {
 
 	public void printJetty(CommandInterpreter ci, IJetty service) {
 		ci.println(String.format(
-				"\tid: %s \t name: %s \t port: %s \t started: %s",
+				"\tid: %s \t name: %s \t port: %s \t started: %s \t pid: %s",
 				service.getId(), service.getName(),
 				String.valueOf(service.getHttpPort()),
-				Boolean.toString(service.isStarted())));
+				Boolean.toString(service.isStarted()),
+				findJettyPID(service.getId())));
 	}
 
 	/**
@@ -163,6 +165,28 @@ public class ConsoleCommands implements CommandProvider {
 			logger.error("{}", e);
 		}
 		return jetty;
+	}
+
+	/**
+	 * Looks for the jetty pid with the given id.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public String findJettyPID(String id) {
+		String pid = null;
+		try {
+			Collection<ServiceReference<IJetty>> refs = bundleContext
+					.getServiceReferences(IJetty.class, String.format(
+							"(%s=%s)", JettyConstants.SERVER_ID, id));
+			if (refs.size() == 1) {
+				pid = (String) refs.iterator().next()
+						.getProperty(Constants.SERVICE_PID);
+			}
+		} catch (InvalidSyntaxException e) {
+			logger.error("{}", e);
+		}
+		return pid;
 	}
 
 	private void startJetty(CommandInterpreter ci) {
