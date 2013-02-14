@@ -17,6 +17,9 @@ import java.net.URL;
 
 import javax.servlet.ServletContext;
 
+/**
+ * Resource provider is used to provide resources for a given path.
+ */
 public interface IResourceProvider {
 
 	/**

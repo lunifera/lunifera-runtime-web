@@ -20,11 +20,17 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
+import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.http.internal.resource.DefaultResourceProvider;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
 
+/**
+ * An implementation of {@link ExtendedHttpService} that delegates calls to it
+ * to the {@link IHttpApplication} that was responsible for creating an instance
+ * of that http service.
+ */
 public class HttpServiceImpl implements ExtendedHttpService {
 
 	private HttpApplication httpApplication;

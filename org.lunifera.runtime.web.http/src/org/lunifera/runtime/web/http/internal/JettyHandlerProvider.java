@@ -12,12 +12,17 @@ package org.lunifera.runtime.web.http.internal;
 
 import org.eclipse.jetty.server.Handler;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
+import org.lunifera.runtime.web.jetty.IJetty;
 
+/**
+ * Provides the {@link HttpApplicationServletContextHandler} as a
+ * ServletContextHandler to the assigned {@link IJetty jetty server}.
+ */
 public class JettyHandlerProvider implements IHandlerProvider {
 
-	private final Handler handler;
+	private final HttpApplicationServletContextHandler handler;
 
-	public JettyHandlerProvider(Handler handler) {
+	public JettyHandlerProvider(HttpApplicationServletContextHandler handler) {
 		this.handler = handler;
 	}
 

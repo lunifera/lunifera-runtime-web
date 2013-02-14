@@ -12,6 +12,12 @@ package org.lunifera.runtime.web.jetty;
 
 import java.io.File;
 
+/**
+ * An abstraction of a jetty server. It can be used to configure the jetty. To
+ * start and to stop it.
+ * 
+ * @noimplement Should not be implemented by clients!
+ */
 public interface IJetty {
 
 	/**

@@ -56,6 +56,9 @@ import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Default implementation of i {@link IHttpApplication}.
+ */
 public class HttpApplication implements IHttpApplication {
 
 	private static final Logger logger = LoggerFactory

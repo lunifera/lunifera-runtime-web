@@ -16,8 +16,8 @@ import java.util.Set;
 
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
-import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.IJetty;
+import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -25,6 +25,9 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Console commands for the jetty server.
+ */
 public class ConsoleCommands implements CommandProvider {
 
 	private final static String TAB = "\t"; //$NON-NLS-1$

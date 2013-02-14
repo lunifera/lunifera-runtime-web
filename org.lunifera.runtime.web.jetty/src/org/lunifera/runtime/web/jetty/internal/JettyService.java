@@ -31,6 +31,9 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Default implementation of {@link IJetty}.
+ */
 public class JettyService implements IJetty {
 
 	private static final Logger logger = LoggerFactory

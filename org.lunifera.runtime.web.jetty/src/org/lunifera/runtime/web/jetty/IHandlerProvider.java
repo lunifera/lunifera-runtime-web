@@ -13,12 +13,14 @@ package org.lunifera.runtime.web.jetty;
 import org.eclipse.jetty.server.Handler;
 
 /**
- * Provides {@link Handler} that will become attached to a given jetty.
+ * Provides a {@link Handler jetty handler} that will become added to a given
+ * jetty.
  */
 public interface IHandlerProvider {
 
 	/**
-	 * Returns a jetty handler.
+	 * Returns a jetty handler that will be added to the root handler collection
+	 * of the assigned jetty server.
 	 * 
 	 * @return
 	 */

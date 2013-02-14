@@ -10,8 +10,16 @@
  */
 package org.lunifera.runtime.web.jetty;
 
+import org.osgi.service.cm.ManagedServiceFactory;
+
+/**
+ * Constants for that bundle.
+ */
 public interface JettyConstants extends org.osgi.framework.Constants {
 
+	/**
+	 * The persistence ID for the {@link ManagedServiceFactory}.
+	 */
 	public static final String OSGI__FACTORY_PID = "org.lunifera.runtime.web.jetty.server.factory";
 
 	/**

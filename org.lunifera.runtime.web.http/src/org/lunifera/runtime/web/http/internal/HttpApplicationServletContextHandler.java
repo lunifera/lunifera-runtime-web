@@ -16,17 +16,39 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jetty.http.PathMap;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.util.URIUtil;
 import org.eclipse.jetty.util.resource.Resource;
+import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.http.IResourceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Represents the {@link ServletContext} of the {@link IHttpApplication}.
+ * <p>
+ * On {@link #startContext()} the handler chain is setup.<br>
+ * Chain: {@link SessionHandler} -> {@link HttpApplicationScopeHandler} ->
+ * {@link ServletHandler}.<br>
+ * The intersting part in that chain is, that the
+ * {@link HttpApplicationScopeHandler} will delegate the call to the
+ * {@link IHttpApplication http application} which will handle security,... and
+ * will invoke
+ * {@link HttpApplicationScopeHandler#handleHttpApplicationCallback(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+ * HttpApplicationScopeHandler#handleHttpApplicationCallback} which will
+ * continue the chain with {@link ServletHandler}.
+ * <p>
+ * {@link IResourceProvider} are added to that context. These objects are
+ * responsible to create the resource URI for {@link #getResource(String)}
+ * calls.
+ */
 public class HttpApplicationServletContextHandler extends
 		org.eclipse.jetty.servlet.ServletContextHandler {
 
@@ -115,6 +137,9 @@ public class HttpApplicationServletContextHandler extends
 		return resourcesMap.size();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Resource getResource(String path) throws MalformedURLException {
 		// data structure which maps a request to a resource provider;

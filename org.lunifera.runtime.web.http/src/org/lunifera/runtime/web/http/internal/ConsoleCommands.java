@@ -25,6 +25,9 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Console commands for the http bundle.
+ */
 public class ConsoleCommands implements CommandProvider {
 
 	private final static String TAB = "\t"; //$NON-NLS-1$
@@ -151,8 +154,8 @@ public class ConsoleCommands implements CommandProvider {
 		try {
 			Collection<ServiceReference<IHttpApplication>> refs = bundleContext
 					.getServiceReferences(IHttpApplication.class, String
-							.format("(%s=%s)",
-									HttpConstants.APPLICATION_NAME, id));
+							.format("(%s=%s)", HttpConstants.APPLICATION_NAME,
+									id));
 			if (refs.size() == 1) {
 				application = bundleContext.getService(refs.iterator().next());
 			}

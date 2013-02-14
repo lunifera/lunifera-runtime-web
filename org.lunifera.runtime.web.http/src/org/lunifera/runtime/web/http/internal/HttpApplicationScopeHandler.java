@@ -23,10 +23,24 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ScopedHandler;
 import org.eclipse.jetty.util.URIUtil;
+import org.lunifera.runtime.web.http.IHttpApplication;
 import org.omg.CORBA.portable.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This scope handler will delegate calls to
+ * {@link #doScope(String, Request, HttpServletRequest, HttpServletResponse)
+ * doScope} to the {@link IHttpApplication http application} this handler is
+ * assigned to. So the http application can itself manipulate the request, do
+ * security stuff,...<br>
+ * The {@link IHttpApplication http application} will invoke
+ * {@link #handleHttpApplicationCallback(HttpServletRequest, HttpServletResponse)
+ * handleHttpApplicationCallback} at this handler instance. And this handler
+ * will forward the request to the
+ * {@link #nextScope(String, Request, HttpServletRequest, HttpServletResponse)
+ * nextScope}.
+ */
 public class HttpApplicationScopeHandler extends ScopedHandler {
 
 	private static final Logger logger = LoggerFactory
