@@ -28,12 +28,13 @@ import junit.framework.Assert;
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
 import org.eclipse.jetty.servlet.FilterMapping;
 import org.eclipse.jetty.servlet.ServletMapping;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.http.internal.HttpApplication;
-import org.lunifera.runtime.web.http.internal.ServletContextHandler;
+import org.lunifera.runtime.web.http.internal.HttpApplicationServletContextHandler;
 import org.lunifera.runtime.web.http.tests.Activator;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.osgi.framework.BundleContext;
@@ -66,6 +67,13 @@ public class HttpApplicationTest {
 		application.setJettyServer("Server1");
 	}
 
+	@After
+	public void tearDown() {
+		if (application.isStarted()) {
+			application.destroy();
+		}
+	}
+
 	/**
 	 * Tests start and stop of application.
 	 * 
@@ -80,6 +88,53 @@ public class HttpApplicationTest {
 
 		application.stop();
 		Assert.assertEquals(0, activator.getHttpServices().size());
+
+		application.destroy();
+	}
+
+	/**
+	 * Tests start and stop of application.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws InvalidSyntaxException
+	 * @throws NamespaceException
+	 * @throws ServletException
+	 */
+	@Test
+	public void test_start_stop_destroy() throws ConfigurationException,
+			InvalidSyntaxException, ServletException, NamespaceException {
+
+		// no servlet context available
+		Assert.assertNull(application.getServletContext());
+		application.start();
+		Assert.assertNull(application.getServletContext().getServletHandler()
+				.getServletMappings());
+
+		// add 2 servlets
+		application.registerServlet("/test1", new InternalServlet(), null);
+		application.registerServlet("/test2", new InternalServlet(), null);
+		Assert.assertEquals(2, application.getServletContext()
+				.getServletHandler().getServletMappings().length);
+
+		// stop application -> Will remove servlet context
+		// but will cache the registered servlet and filter mappings
+		application.stop();
+		Assert.assertNull(application.getServletContext());
+
+		// start the application again. Will reactivate the servlets and filters
+		// again
+		application.start();
+		Assert.assertEquals(2, application.getServletContext()
+				.getServletHandler().getServletMappings().length);
+
+		// destroy the application -> Will clear the internal mapping cache
+		application.destroy();
+		Assert.assertNull(application.getServletContext());
+
+		// start the application again -> No servlet are reactivated!
+		application.start();
+		Assert.assertNull(application.getServletContext().getServletHandler()
+				.getServletMappings());
 	}
 
 	/**
@@ -111,7 +166,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 
-			application.stop();
+			application.destroy();
 
 			refs = context.getServiceReferences(HttpService.class,
 					"(lunifera.http.id=App1)");
@@ -154,7 +209,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 
-			application.stop();
+			application.destroy();
 
 			refs = context.getServiceReferences(IHandlerProvider.class,
 					"(lunifera.http.id=App1)");
@@ -186,7 +241,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -202,7 +257,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -218,7 +273,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -241,7 +296,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -263,7 +318,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -279,7 +334,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -295,7 +350,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -318,7 +373,7 @@ public class HttpApplicationTest {
 				Assert.fail("Instance not found!");
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -336,7 +391,7 @@ public class HttpApplicationTest {
 		try {
 			application.start();
 
-			ServletContextHandler contexthandler = application
+			HttpApplicationServletContextHandler contexthandler = application
 					.getServletContext();
 			ServletMapping[] mappings = contexthandler.getServletHandler()
 					.getServletMappings();
@@ -355,7 +410,7 @@ public class HttpApplicationTest {
 			mappings = contexthandler.getServletHandler().getServletMappings();
 			Assert.assertEquals(0, mappings.length);
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 
 	}
@@ -384,7 +439,7 @@ public class HttpApplicationTest {
 			}
 
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 
 	}
@@ -416,7 +471,7 @@ public class HttpApplicationTest {
 			}
 
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -432,7 +487,7 @@ public class HttpApplicationTest {
 			ServletException, NamespaceException {
 		try {
 			application.start();
-			ServletContextHandler contexthandler = application
+			HttpApplicationServletContextHandler contexthandler = application
 					.getServletContext();
 			FilterMapping[] mappings = contexthandler.getServletHandler()
 					.getFilterMappings();
@@ -451,7 +506,7 @@ public class HttpApplicationTest {
 			mappings = contexthandler.getServletHandler().getFilterMappings();
 			Assert.assertEquals(0, mappings.length);
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -475,7 +530,7 @@ public class HttpApplicationTest {
 			service.registerFilter("/test", filter, null, null);
 
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 
@@ -507,7 +562,7 @@ public class HttpApplicationTest {
 						e.getMessage());
 			}
 		} finally {
-			application.stop();
+			application.destroy();
 		}
 	}
 

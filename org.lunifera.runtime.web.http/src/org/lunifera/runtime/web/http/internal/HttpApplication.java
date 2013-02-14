@@ -12,7 +12,9 @@
  */
 package org.lunifera.runtime.web.http.internal;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -23,6 +25,8 @@ import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -56,8 +60,10 @@ public class HttpApplication implements IHttpApplication {
 	private ServiceRegistration<?> httpServiceRegistration;
 	private boolean started;
 
-	private ServletContextHandler servletContext;
+	private HttpApplicationServletContextHandler servletContext;
 	private Set<String> registeredAlias = new HashSet<String>();
+	private List<Registration> registeredResources = Collections
+			.synchronizedList(new ArrayList<HttpApplication.Registration>());
 	private final Map<Object, BundleResourceMonitor> bundleMonitors = new HashMap<Object, BundleResourceMonitor>();
 
 	private final String id;
@@ -79,7 +85,7 @@ public class HttpApplication implements IHttpApplication {
 	/**
 	 * @return the servletContext
 	 */
-	public ServletContextHandler getServletContext() {
+	public HttpApplicationServletContextHandler getServletContext() {
 		return servletContext;
 	}
 
@@ -141,6 +147,45 @@ public class HttpApplication implements IHttpApplication {
 		this.jettyServer = jettyServer;
 	}
 
+	/**
+	 * A callback method that allows the application to handle the request too.
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void handleRequest(final HttpServletRequest request,
+			final HttpServletResponse response) throws IOException,
+			ServletException {
+
+		// check security
+		if (!handleSecurity(request, response)) {
+			return;
+		}
+
+		// let the application context handle the request
+		if (servletContext.getApplicationScopeHandler()
+				.handleHttpApplicationCallback(request, response)) {
+			return;
+		}
+
+		// return 404, no resource registered
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+
+	/**
+	 * Handles the security.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	protected boolean handleSecurity(HttpServletRequest request,
+			HttpServletResponse response) {
+		return true;
+	}
+
 	public boolean isStarted() {
 		return started;
 	}
@@ -155,7 +200,23 @@ public class HttpApplication implements IHttpApplication {
 			return;
 		}
 		try {
-			servletContext = new ServletContextHandler(this);
+			servletContext = new HttpApplicationServletContextHandler(this);
+			try {
+				for (Registration reg : registeredResources
+						.toArray(new Registration[registeredResources.size()])) {
+					if (reg.isServlet()) {
+						registerServlet(reg.alias, (Servlet) reg.context,
+								reg.params);
+					} else if (reg.isFilter()) {
+						registerFilter(reg.alias, (Filter) reg.context,
+								reg.params);
+					}
+				}
+			} catch (ServletException e) {
+				logger.error("{}", e);
+			} catch (NamespaceException e) {
+				logger.error("{}", e);
+			}
 
 			internalStart();
 
@@ -221,11 +282,12 @@ public class HttpApplication implements IHttpApplication {
 			}
 			bundleMonitors.clear();
 
-			// reset servlet context
+			// destroy the servlet context
 			//
 			if (servletContext != null) {
 				try {
 					servletContext.stop();
+					servletContext.destroy();
 				} catch (Exception e) {
 					logger.error("{}", e);
 				}
@@ -253,6 +315,19 @@ public class HttpApplication implements IHttpApplication {
 			internalStop();
 		} finally {
 			started = false;
+		}
+	}
+
+	/**
+	 * Destroys the http application.
+	 */
+	public void destroy() {
+		if (isStarted()) {
+			stop();
+		}
+
+		if (registeredResources != null) {
+			registeredResources.clear();
 		}
 	}
 
@@ -285,6 +360,7 @@ public class HttpApplication implements IHttpApplication {
 			Map<String, String> initparams) throws ServletException,
 			NamespaceException {
 		registerAlias(alias);
+		registeredResources.add(new Registration(alias, servlet, initparams));
 
 		// track bundle de-activation
 		addBundleResourceMonitor(alias, servlet.getClass());
@@ -294,7 +370,6 @@ public class HttpApplication implements IHttpApplication {
 			holder.setInitParameters(initparams);
 		}
 		servletContext.getServletHandler().addServletWithMapping(holder, alias);
-
 		// start the servlet if it is necessary
 		initializeServletIfNecessary(alias, holder);
 	}
@@ -306,6 +381,9 @@ public class HttpApplication implements IHttpApplication {
 	 */
 	public void unregister(String alias) {
 		unregisterAlias(alias);
+
+		// remove the servlet from internal registration
+		removeServletFromRegistration(alias);
 
 		// remove bundle monitor
 		removeBundleResourceMonitor(alias);
@@ -369,6 +447,34 @@ public class HttpApplication implements IHttpApplication {
 	}
 
 	/**
+	 * Removes the servlet from the internal registration.
+	 * 
+	 * @param alias
+	 */
+	private void removeServletFromRegistration(String alias) {
+		for (Registration reg : registeredResources
+				.toArray(new Registration[registeredResources.size()])) {
+			if (reg.isServlet() && reg.getAlias().endsWith(alias)) {
+				registeredResources.remove(reg);
+			}
+		}
+	}
+
+	/**
+	 * Removes the filter from the internal registration.
+	 * 
+	 * @param alias
+	 */
+	private void removeFilterFromRegistration(Filter filter) {
+		for (Registration reg : registeredResources
+				.toArray(new Registration[registeredResources.size()])) {
+			if (reg.isFilter() && reg.getContext() == filter) {
+				registeredResources.remove(reg);
+			}
+		}
+	}
+
+	/**
 	 * Registers the given filter under the alias.
 	 * 
 	 * @param alias
@@ -399,6 +505,10 @@ public class HttpApplication implements IHttpApplication {
 	 * @param filter
 	 */
 	public void unregisterFilter(Filter filter) {
+
+		// removes the filter from internal registration
+		removeFilterFromRegistration(filter);
+
 		// collect list of remaining filters and filters to remove
 		final ServletHandler servletHandler = servletContext
 				.getServletHandler();
@@ -626,5 +736,60 @@ public class HttpApplication implements IHttpApplication {
 			}
 			bundleContext = null;
 		}
+	}
+
+	private static class Registration {
+		private final String alias;
+		private final Object context;
+		private final Map<String, String> params;
+
+		public Registration(String alias, Object context,
+				Map<String, String> params) {
+			super();
+			this.alias = alias;
+			this.context = context;
+			this.params = params != null ? new HashMap<String, String>(params)
+					: null;
+		}
+
+		/**
+		 * Returns true if context is servlet.
+		 * 
+		 * @return
+		 */
+		public boolean isServlet() {
+			return context instanceof Servlet;
+		}
+
+		/**
+		 * Returns true if context is filter.
+		 * 
+		 * @return
+		 */
+		public boolean isFilter() {
+			return context instanceof Filter;
+		}
+
+		/**
+		 * @return the alias
+		 */
+		public String getAlias() {
+			return alias;
+		}
+
+		/**
+		 * @return the context
+		 */
+		public Object getContext() {
+			return context;
+		}
+
+		/**
+		 * @return the params
+		 */
+		public Map<String, String> getParams() {
+			return params;
+		}
+
 	}
 }

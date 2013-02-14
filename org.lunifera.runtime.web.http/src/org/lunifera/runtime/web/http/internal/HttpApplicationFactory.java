@@ -164,7 +164,7 @@ public class HttpApplicationFactory implements ManagedServiceFactory {
 	public void deleted(String pid) {
 		HttpApplication application = applications.remove(pid);
 		if (application != null) {
-			application.stop();
+			application.destroy();
 
 			logger.debug("HttpApplication {} stopped on context path {}",
 					application.getName(), application.getContextPath());
