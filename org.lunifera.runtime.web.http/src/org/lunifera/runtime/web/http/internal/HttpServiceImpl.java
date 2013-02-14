@@ -20,14 +20,19 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
+import org.lunifera.runtime.web.http.internal.resource.DefaultResourceProvider;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
 
 public class HttpServiceImpl implements ExtendedHttpService {
 
 	private HttpApplication httpApplication;
+	private BundleContext bundleContext;
 
-	public HttpServiceImpl(HttpApplication httpApplication) {
+	public HttpServiceImpl(BundleContext bundleContext,
+			HttpApplication httpApplication) {
+		this.bundleContext = bundleContext;
 		this.httpApplication = httpApplication;
 	}
 
@@ -42,7 +47,9 @@ public class HttpServiceImpl implements ExtendedHttpService {
 	@Override
 	public void registerResources(String alias, String name, HttpContext context)
 			throws NamespaceException {
-
+		httpApplication
+				.registerResource(alias, name, new DefaultResourceProvider(
+						bundleContext.getBundle(), context));
 	}
 
 	@Override

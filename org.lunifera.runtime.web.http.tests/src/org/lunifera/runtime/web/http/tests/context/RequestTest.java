@@ -13,6 +13,7 @@ package org.lunifera.runtime.web.http.tests.context;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -40,12 +41,14 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
 public class RequestTest {
 
 	private ConfigurationAdmin cm;
+	@SuppressWarnings("unused")
 	private Activator activator;
 
 	/**
@@ -77,8 +80,8 @@ public class RequestTest {
 	 * @throws ServletException
 	 */
 	@Test
-	public void test_Request() throws IOException, InvalidSyntaxException,
-			ServletException, NamespaceException {
+	public void test_Servlet_Request() throws IOException,
+			InvalidSyntaxException, ServletException, NamespaceException {
 
 		// create new applications
 		Configuration httpApp1Config = startHttpApp1("Server1");
@@ -119,7 +122,7 @@ public class RequestTest {
 	 * @throws ServletException
 	 */
 	@Test
-	public void test_Request_on_different_server() throws IOException,
+	public void test_Servlet_Request_on_different_server() throws IOException,
 			InvalidSyntaxException, ServletException, NamespaceException {
 
 		// create new applications
@@ -132,7 +135,7 @@ public class RequestTest {
 		Configuration jetty2Config = startJetty2();
 		waitCM();
 		waitCM();
-		
+
 		// register servlets
 		HttpService httpService = getHttpServiceByContextpath("/app1/test");
 		httpService.registerServlet("/value1", new Value1Servlet(), null, null);
@@ -168,7 +171,7 @@ public class RequestTest {
 	 * @throws ServletException
 	 */
 	@Test
-	public void test_Request_switch_server() throws IOException,
+	public void test_Servlet_Request_switch_server() throws IOException,
 			InvalidSyntaxException, ServletException, NamespaceException {
 
 		// create new applications
@@ -181,7 +184,7 @@ public class RequestTest {
 		Configuration jetty2Config = startJetty2();
 		waitCM();
 		waitCM();
-		
+
 		// register servlets
 		HttpService httpService = getHttpServiceByContextpath("/app1/test");
 		httpService.registerServlet("/value1", new Value1Servlet(), null, null);
@@ -222,6 +225,185 @@ public class RequestTest {
 		httpApp7Config.delete();
 	}
 
+	/**
+	 * Tests that requests are processed properly by the servlets.
+	 * 
+	 * @throws IOException
+	 * @throws InvalidSyntaxException
+	 * @throws NamespaceException
+	 * @throws ServletException
+	 */
+	@Test
+	public void test_Resource_Request() throws IOException,
+			InvalidSyntaxException, ServletException, NamespaceException {
+
+		// create new applications
+		Configuration httpApp1Config = startHttpApp1("Server1");
+		Configuration httpApp7Config = startHttpApp7("Server1");
+		waitCM();
+
+		// start a new jetty server
+		Configuration jettyConfig = startJetty1();
+		waitCM();
+		waitCM();
+
+		// register resources
+		HttpService httpService = getHttpServiceByContextpath("/app1/test");
+		httpService.registerResources("/resource", null,
+				new DefaultHttpContext(Activator.context.getBundle()));
+
+		HttpService httpService7 = getHttpServiceByContextpath("/app7/test");
+		httpService7.registerResources("/resource", "/files2",
+				new DefaultHttpContext(Activator.context.getBundle()));
+
+		// test resource 1
+		Assert.assertEquals(
+				"Was files1/info.txt",
+				httpGETFirstLine("http://localhost:8091/app1/test/resource/files1/info.txt"));
+
+		// test resource 1
+		Assert.assertEquals(
+				"Was files2/info.txt",
+				httpGETFirstLine("http://localhost:8091/app7/test/resource/files2/info.txt"));
+
+		// stop the services again
+		jettyConfig.delete();
+		httpApp1Config.delete();
+		httpApp7Config.delete();
+	}
+
+	/**
+	 * Tests that requests are processed properly for the resources.
+	 * 
+	 * @throws IOException
+	 * @throws InvalidSyntaxException
+	 * @throws NamespaceException
+	 * @throws ServletException
+	 */
+	@Test
+	public void test_Resource_Request_on_different_server() throws IOException,
+			InvalidSyntaxException, ServletException, NamespaceException {
+
+		// create new applications
+		Configuration httpApp1Config = startHttpApp1("Server1");
+		Configuration httpApp7Config = startHttpApp7("Server2");
+		waitCM();
+
+		// start a new jetty server
+		Configuration jetty1Config = startJetty1();
+		Configuration jetty2Config = startJetty2();
+		waitCM();
+		waitCM();
+
+		// register resources
+		HttpService httpService = getHttpServiceByContextpath("/app1/test");
+		httpService.registerResources("/resource", null,
+				new DefaultHttpContext(Activator.context.getBundle()));
+
+		HttpService httpService7 = getHttpServiceByContextpath("/app7/test");
+		httpService7.registerResources("/resource", "/files2",
+				new DefaultHttpContext(Activator.context.getBundle()));
+
+		// test servlet 1
+		Assert.assertEquals(
+				"Was files1/info.txt",
+				httpGETFirstLine("http://localhost:8091/app1/test/resource/files1/info.txt"));
+
+		// test servlet 7 - Server 2
+		Assert.assertEquals(
+				404,
+				httpGET(
+						"http://localhost:8091/app7/test/resource/files1/info.txt")
+						.getStatusLine().getStatusCode());
+		Assert.assertEquals(
+				"Was files2/info.txt",
+				httpGETFirstLine("http://localhost:8099/app7/test/resource/files2/info.txt"));
+
+		// stop the services again
+		jetty1Config.delete();
+		jetty2Config.delete();
+		httpApp1Config.delete();
+		httpApp7Config.delete();
+	}
+
+	/**
+	 * Tests that requests are processed properly for the resources.
+	 * 
+	 * @throws IOException
+	 * @throws InvalidSyntaxException
+	 * @throws NamespaceException
+	 * @throws ServletException
+	 */
+	@Test
+	public void test_Resource_Request_switch_server() throws IOException,
+			InvalidSyntaxException, ServletException, NamespaceException {
+
+		// create new applications
+		Configuration httpApp1Config = startHttpApp1("Server1");
+		Configuration httpApp7Config = startHttpApp7("Server2");
+		waitCM();
+
+		// start a new jetty server
+		Configuration jetty1Config = startJetty1();
+		Configuration jetty2Config = startJetty2();
+		waitCM();
+		waitCM();
+
+		// register servlets
+		HttpService httpService = getHttpServiceByContextpath("/app1/test");
+		httpService.registerResources("/resource", null,
+				new DefaultHttpContext(Activator.context.getBundle()));
+
+		HttpService httpService7 = getHttpServiceByContextpath("/app7/test");
+		httpService7.registerResources("/resource", "/files2",
+				new DefaultHttpContext(Activator.context.getBundle()));
+
+		// test servlet 1
+		Assert.assertEquals(
+				"Was files1/info.txt",
+				httpGETFirstLine("http://localhost:8091/app1/test/resource/files1/info.txt"));
+		// test servlet 7 - Server 2
+		Assert.assertEquals(
+				"Was files2/info.txt",
+				httpGETFirstLine("http://localhost:8099/app7/test/resource/files2/info.txt"));
+
+		// update the httpApplication 1 to run on server 2
+		//
+		Dictionary<String, Object> props1 = httpApp1Config.getProperties();
+		props1.put(HttpConstants.JETTY_SERVER_NAME, "Server2");
+		httpApp1Config.update(props1);
+		waitCM(); // server restart
+		waitCM(); // server restart
+		waitCM(); // server restart
+
+		Assert.assertEquals(
+				404,
+				httpGET(
+						"http://localhost:8091/app1/test/resource/files1/info.txt")
+						.getStatusLine().getStatusCode());
+		Assert.assertEquals(
+				"Was files1/info.txt",
+				httpGETFirstLine("http://localhost:8099/app1/test/resource/files1/info.txt"));
+		// test servlet 7 - Server 2
+		Assert.assertEquals(
+				"Was files2/info.txt",
+				httpGETFirstLine("http://localhost:8099/app7/test/resource/files2/info.txt"));
+
+		// stop the services again
+		jetty1Config.delete();
+		jetty2Config.delete();
+		httpApp1Config.delete();
+		httpApp7Config.delete();
+	}
+
+	/**
+	 * Returns the first line of the http GET content.
+	 * 
+	 * @param url
+	 * @return
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
 	private String httpGETFirstLine(String url) throws IOException,
 			ClientProtocolException {
 		HttpResponse resp = httpGET(url);
@@ -339,6 +521,7 @@ public class RequestTest {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private static class Value1Servlet extends HttpServlet {
 		protected void doGet(HttpServletRequest request,
 				HttpServletResponse response) throws ServletException,
@@ -347,6 +530,7 @@ public class RequestTest {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private static class Value7Servlet extends HttpServlet {
 		protected void doGet(HttpServletRequest request,
 				HttpServletResponse response) throws ServletException,
@@ -355,4 +539,25 @@ public class RequestTest {
 		}
 	}
 
+	public static class DefaultHttpContext implements HttpContext {
+
+		private Bundle bundle;
+
+		public DefaultHttpContext(Bundle bundle) {
+			this.bundle = bundle;
+		}
+
+		public boolean handleSecurity(HttpServletRequest request,
+				HttpServletResponse response) throws IOException {
+			return true;
+		}
+
+		public URL getResource(String name) {
+			return bundle.getResource(name);
+		}
+
+		public String getMimeType(String name) {
+			return null;
+		}
+	}
 }

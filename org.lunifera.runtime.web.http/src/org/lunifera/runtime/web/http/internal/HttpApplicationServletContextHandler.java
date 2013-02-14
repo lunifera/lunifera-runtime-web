@@ -13,21 +13,28 @@
 package org.lunifera.runtime.web.http.internal;
 
 import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.commons.lang.math.NumberUtils;
-import org.eclipse.jetty.server.Request;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.jetty.http.PathMap;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.URIUtil;
+import org.eclipse.jetty.util.resource.Resource;
+import org.lunifera.runtime.web.http.IResourceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpApplicationServletContextHandler extends
 		org.eclipse.jetty.servlet.ServletContextHandler {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(HttpApplicationServletContextHandler.class);
+
 	private final HttpApplication application;
+	private final PathMap resourcesMap = new PathMap();
 	private HttpApplicationScopeHandler applicationScopeHandler;
 	private SessionHandler sessionHandler;
 
@@ -59,34 +66,6 @@ public class HttpApplicationServletContextHandler extends
 		super.startContext();
 	}
 
-	public boolean handleApplicationRequest(final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-		if (!(request instanceof Request))
-			throw new IllegalArgumentException(
-					"Please ensure that this method is called within the request thread with the original Jetty request and response objects!");
-		final Request baseRequest = (Request) request;
-
-		try {
-			// calculate target based on current path info
-			final String target = baseRequest.getPathInfo();
-			// also make sure the path absolute is absolute (required by
-			// ServletHandler down the road)
-			if ((null == target) || !target.startsWith(URIUtil.SLASH))
-				// if not it might indicate a problem higher up the stack, thus,
-				// make sure to fail
-				// otherwise we might unveil unwanted resources (eg. display
-				// directory for wrong folder)
-				throw new IllegalArgumentException(
-						String.format(
-								"Unable to handle request. It seems the specified request is invalid (path info '%s'). At least an absolute path info is necessary in order to determine the request target within the registered application servlets and resources.",
-								target != null ? target : ""));
-			nextScope(target, baseRequest, baseRequest, response);
-		} catch (final ServletException e) {
-			throw new RuntimeException(e);
-		}
-		return baseRequest.isHandled();
-	}
-
 	private SessionHandler createSessionHandler() {
 		// make sure the set a proper session inactive interval
 		// otherwise Jetty will keep sessions open forever
@@ -106,6 +85,67 @@ public class HttpApplicationServletContextHandler extends
 		sessionManager.setMaxInactiveInterval(NumberUtils.toInt(
 				getInitParameter("session.maxInactiveInterval"), 1800));
 		return new SessionHandler(sessionManager);
+	}
+
+	/**
+	 * Adds a new resource to the servlet context.
+	 * 
+	 * @param alias
+	 * @param provider
+	 */
+	public void addResource(String alias, IResourceProvider provider) {
+		resourcesMap.put(alias, provider);
+	}
+
+	/**
+	 * Removes the resource with the given alias from the servlet context.
+	 * 
+	 * @param alias
+	 */
+	public void removeResource(String alias) {
+		resourcesMap.remove(alias);
+	}
+
+	/**
+	 * Returns the count of the resources contained.
+	 * 
+	 * @return
+	 */
+	public int getResourceCount() {
+		return resourcesMap.size();
+	}
+
+	@Override
+	public Resource getResource(String path) throws MalformedURLException {
+		// data structure which maps a request to a resource provider;
+		// first-best match wins
+		// { path => resource provider }
+		if (resourcesMap.isEmpty() || (null == path)
+				|| !path.startsWith(URIUtil.SLASH)) {
+			return null;
+		}
+
+		path = URIUtil.canonicalPath(path);
+		final PathMap.Entry entry = resourcesMap.getMatch(path);
+		if (null == entry)
+			return null;
+		final IResourceProvider provider = (IResourceProvider) entry.getValue();
+		if (null == provider)
+			return null;
+
+		final String pathSpec = (String) entry.getKey();
+		final String pathInfo = PathMap.pathInfo(pathSpec, path);
+		final URL resourceUrl = provider.getResource(pathInfo);
+		if (null == resourceUrl)
+			return null;
+		try {
+			final URL fileURL = FileLocator.toFileURL(resourceUrl);
+			return Resource.newResource(fileURL);
+		} catch (final IOException e) {
+			logger.warn("Error resolving url {} to file based resource. {}",
+					resourceUrl.toExternalForm(), e.getMessage());
+			return null;
+		}
 	}
 
 }

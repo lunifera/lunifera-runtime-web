@@ -21,6 +21,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
@@ -29,13 +31,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
+import org.eclipse.jetty.http.PathMap;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.FilterMapping;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
+import org.eclipse.jetty.util.StringUtil;
+import org.eclipse.jetty.util.URIUtil;
 import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.IHttpApplication;
+import org.lunifera.runtime.web.http.IResourceProvider;
+import org.lunifera.runtime.web.http.internal.resource.HttpApplicationResourceServlet;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -54,25 +61,28 @@ public class HttpApplication implements IHttpApplication {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HttpApplication.class);
 
-	private final HttpServiceServiceFactory httpServiceFactory = new HttpServiceServiceFactory();
-
+	// OSGi
 	private BundleContext context;
 	private ServiceRegistration<?> httpServiceRegistration;
-	private boolean started;
+	private ServiceRegistration<IHandlerProvider> jettyHandlerProviderRegistration;
+	private final HttpServiceServiceFactory httpServiceFactory = new HttpServiceServiceFactory();
 
-	private HttpApplicationServletContextHandler servletContext;
-	private Set<String> registeredAlias = new HashSet<String>();
-	private List<Registration> registeredResources = Collections
-			.synchronizedList(new ArrayList<HttpApplication.Registration>());
-	private final Map<Object, BundleResourceMonitor> bundleMonitors = new HashMap<Object, BundleResourceMonitor>();
-
+	// properties
 	private final String id;
 	private String name;
 	private String contextPath = "/";
-
-	private ServiceRegistration<IHandlerProvider> jettyHandlerProviderRegistration;
-
 	private String jettyServer;
+
+	// lifecycle
+	private boolean started;
+	private final Lock accessLock = new ReentrantLock();
+
+	// servlet artifacts
+	private HttpApplicationServletContextHandler servletContext;
+	private Set<String> registeredAlias = new HashSet<String>();
+	private List<Registration> registeredArtifacts = Collections
+			.synchronizedList(new ArrayList<HttpApplication.Registration>());
+	private final Map<Object, BundleResourceMonitor> bundleMonitors = new HashMap<Object, BundleResourceMonitor>();
 
 	public HttpApplication(String id, BundleContext context) {
 		if (id == null) {
@@ -199,26 +209,37 @@ public class HttpApplication implements IHttpApplication {
 			logger.debug("HttpApplication {} is already started", getName());
 			return;
 		}
+
+		// ensure that only one threas manipulates the contents
+		accessLock.lock();
 		try {
 			servletContext = new HttpApplicationServletContextHandler(this);
+
+			// activate current registrations
+			//
 			try {
-				for (Registration reg : registeredResources
-						.toArray(new Registration[registeredResources.size()])) {
+				List<Registration> tempRegistrations = new ArrayList<Registration>(
+						registeredArtifacts);
+				registeredArtifacts.clear();
+				for (Registration reg : tempRegistrations) {
 					if (reg.isServlet()) {
 						registerServlet(reg.alias, (Servlet) reg.context,
 								reg.params);
 					} else if (reg.isFilter()) {
 						registerFilter(reg.alias, (Filter) reg.context,
 								reg.params);
+					} else if (reg.isResource()) {
+						registerResource(reg.alias, reg.name,
+								(IResourceProvider) reg.context);
 					}
 				}
 			} catch (ServletException e) {
 				logger.error("{}", e);
+				throw new RuntimeException(e);
 			} catch (NamespaceException e) {
 				logger.error("{}", e);
+				throw new RuntimeException(e);
 			}
-
-			internalStart();
 
 			// register jetty handler
 			//
@@ -253,15 +274,9 @@ public class HttpApplication implements IHttpApplication {
 						httpServiceFactory, properties);
 			}
 		} finally {
+			accessLock.unlock();
 			started = true;
 		}
-	}
-
-	/**
-	 * Should be overridden by sub classes to start the http application.
-	 */
-	protected void internalStart() {
-
 	}
 
 	/**
@@ -273,8 +288,10 @@ public class HttpApplication implements IHttpApplication {
 			logger.debug("HttpApplication {} not started", getName());
 			return;
 		}
-		try {
 
+		// ensure that only one threas manipulates the contents
+		accessLock.lock();
+		try {
 			// reset bundle listener
 			//
 			for (BundleResourceMonitor monitor : bundleMonitors.values()) {
@@ -311,9 +328,8 @@ public class HttpApplication implements IHttpApplication {
 				jettyHandlerProviderRegistration.unregister();
 				jettyHandlerProviderRegistration = null;
 			}
-
-			internalStop();
 		} finally {
+			accessLock.unlock();
 			started = false;
 		}
 	}
@@ -322,20 +338,18 @@ public class HttpApplication implements IHttpApplication {
 	 * Destroys the http application.
 	 */
 	public void destroy() {
-		if (isStarted()) {
-			stop();
+		try {
+			accessLock.lock();
+			if (isStarted()) {
+				stop();
+			}
+
+			if (registeredArtifacts != null) {
+				registeredArtifacts.clear();
+			}
+		} finally {
+			accessLock.unlock();
 		}
-
-		if (registeredResources != null) {
-			registeredResources.clear();
-		}
-	}
-
-	/**
-	 * Should be overridden by sub classes to stop the http application.
-	 */
-	protected void internalStop() {
-
 	}
 
 	/**
@@ -359,19 +373,79 @@ public class HttpApplication implements IHttpApplication {
 	public void registerServlet(String alias, Servlet servlet,
 			Map<String, String> initparams) throws ServletException,
 			NamespaceException {
-		registerAlias(alias);
-		registeredResources.add(new Registration(alias, servlet, initparams));
 
-		// track bundle de-activation
-		addBundleResourceMonitor(alias, servlet.getClass());
+		final String pathSpec = normalizeAliasToPathSpec(alias);
 
-		ServletHolder holder = new ServletHolder(servlet);
-		if (initparams != null) {
-			holder.setInitParameters(initparams);
+		// ensure that only one threas manipulates the contents
+		accessLock.lock();
+		try {
+			registerAlias(alias);
+			registeredArtifacts
+					.add(new Registration(alias, servlet, initparams));
+
+			// track bundle de-activation
+			addBundleResourceMonitor(alias, servlet.getClass());
+
+			ServletHolder holder = new ServletHolder(servlet);
+			if (initparams != null) {
+				holder.setInitParameters(initparams);
+			}
+			servletContext.getServletHandler().addServletWithMapping(holder,
+					pathSpec);
+			// start the servlet if it is necessary
+			initializeServletIfNecessary(alias, holder);
+		} finally {
+			accessLock.unlock();
 		}
-		servletContext.getServletHandler().addServletWithMapping(holder, alias);
-		// start the servlet if it is necessary
-		initializeServletIfNecessary(alias, holder);
+	}
+
+	/**
+	 * Registers the resource provider at the application.
+	 * 
+	 * @param alias
+	 * @param name
+	 * @param provider
+	 * @throws NamespaceException
+	 */
+	public void registerResource(String alias, String name,
+			IResourceProvider provider) throws NamespaceException {
+
+		final String pathSpec = normalizeAliasToPathSpec(alias);
+
+		// ensure that only one threas manipulates the contents
+		accessLock.lock();
+		try {
+			registerAlias(alias);
+			registeredArtifacts.add(new Registration(alias, provider, name));
+
+			// track bundle de-activation
+			addBundleResourceMonitor(alias, provider.getClass());
+
+			servletContext.addResource(pathSpec, provider);
+
+			// register a resource servlet to make the resources accessible
+			final ServletHolder holder = new ServletHolder(
+					new HttpApplicationResourceServlet(servletContext));
+			// based on gyrex settings
+			holder.setInitParameter("dirAllowed", "false");
+			holder.setInitParameter("maxCacheSize", "2000000");
+			holder.setInitParameter("maxCachedFileSize", "254000");
+			holder.setInitParameter("maxCachedFiles", "1000");
+			holder.setInitParameter("useFileMappedBuffer", "true");
+			servletContext.getServletHandler().addServletWithMapping(holder,
+					pathSpec);
+
+			// initialize resource servlet if application already started
+			try {
+				initializeServletIfNecessary(alias, holder);
+			} catch (final ServletException e) {
+				throw new IllegalStateException(String.format(
+						"Unhandled error registering resources. %s",
+						e.getMessage()), e);
+			}
+		} finally {
+			accessLock.unlock();
+		}
 	}
 
 	/**
@@ -380,26 +454,29 @@ public class HttpApplication implements IHttpApplication {
 	 * @param alias
 	 */
 	public void unregister(String alias) {
+		final String pathSpec = normalizeAliasToPathSpec(alias);
+
 		unregisterAlias(alias);
-
-		// remove the servlet from internal registration
-		removeServletFromRegistration(alias);
-
 		// remove bundle monitor
 		removeBundleResourceMonitor(alias);
+
+		servletContext.removeResource(pathSpec);
 
 		// collect list of new mappings and remaining servlets
 		final ServletHandler servletHandler = servletContext
 				.getServletHandler();
 		boolean removedSomething = false;
 		final ServletMapping[] mappings = servletHandler.getServletMappings();
+		if (mappings == null) {
+			return;
+		}
 		final List<ServletMapping> newMappings = new ArrayList<ServletMapping>(
 				mappings.length);
 		final Set<String> mappedServlets = new HashSet<String>(mappings.length);
 		for (final ServletMapping mapping : mappings) {
 			final String[] pathSpecs = mapping.getPathSpecs();
 			for (final String spec : pathSpecs) {
-				if (alias.equals(spec)) {
+				if (pathSpec.equals(spec)) {
 					mapping.setPathSpecs(ArrayUtil.removeFromArray(
 							mapping.getPathSpecs(), spec));
 					removedSomething = true;
@@ -447,15 +524,15 @@ public class HttpApplication implements IHttpApplication {
 	}
 
 	/**
-	 * Removes the servlet from the internal registration.
+	 * Removes the alias from the internal registration.
 	 * 
 	 * @param alias
 	 */
-	private void removeServletFromRegistration(String alias) {
-		for (Registration reg : registeredResources
-				.toArray(new Registration[registeredResources.size()])) {
-			if (reg.isServlet() && reg.getAlias().endsWith(alias)) {
-				registeredResources.remove(reg);
+	private void removeAliasFromRegistration(String alias) {
+		for (Registration reg : registeredArtifacts
+				.toArray(new Registration[registeredArtifacts.size()])) {
+			if (reg.isServlet() && reg.getAlias().equals(alias)) {
+				registeredArtifacts.remove(reg);
 			}
 		}
 	}
@@ -466,10 +543,10 @@ public class HttpApplication implements IHttpApplication {
 	 * @param alias
 	 */
 	private void removeFilterFromRegistration(Filter filter) {
-		for (Registration reg : registeredResources
-				.toArray(new Registration[registeredResources.size()])) {
+		for (Registration reg : registeredArtifacts
+				.toArray(new Registration[registeredArtifacts.size()])) {
 			if (reg.isFilter() && reg.getContext() == filter) {
-				registeredResources.remove(reg);
+				registeredArtifacts.remove(reg);
 			}
 		}
 	}
@@ -485,18 +562,25 @@ public class HttpApplication implements IHttpApplication {
 	public void registerFilter(String alias, Filter filter,
 			Map<String, String> initparams) throws NamespaceException {
 
-		addBundleResourceMonitor(filter);
+		final String pathSpec = normalizeAliasToPathSpec(alias);
 
-		// create holder
-		final FilterHolder holder = new FilterHolder(filter);
-		if (initparams != null) {
-			holder.setInitParameters(initparams);
+		// ensure that only one threas manipulates the contents
+		accessLock.lock();
+		try {
+			addBundleResourceMonitor(filter);
+
+			// create holder
+			final FilterHolder holder = new FilterHolder(filter);
+			if (initparams != null) {
+				holder.setInitParameters(initparams);
+			}
+
+			// register filter
+			servletContext.getServletHandler().addFilterWithMapping(holder,
+					pathSpec, null);
+		} finally {
+			accessLock.unlock();
 		}
-
-		// register filter
-		servletContext.getServletHandler().addFilterWithMapping(holder, alias,
-				null);
-
 	}
 
 	/**
@@ -567,6 +651,11 @@ public class HttpApplication implements IHttpApplication {
 		registeredAlias.add(alias);
 	}
 
+	/**
+	 * Unregister all artifacts associated with the given alias.
+	 * 
+	 * @param alias
+	 */
 	private void unregisterAlias(final String alias) {
 		if (!registeredAlias.contains(alias)) {
 			logger.error("Alias {} was not registered!", alias);
@@ -574,6 +663,9 @@ public class HttpApplication implements IHttpApplication {
 					"Alias %s was not registered", alias));
 		}
 		registeredAlias.remove(alias);
+
+		// remove the artifact for the alias from the internal registration
+		removeAliasFromRegistration(alias);
 	}
 
 	/**
@@ -601,6 +693,40 @@ public class HttpApplication implements IHttpApplication {
 						"Error starting servlet. %s", e.getMessage()), e);
 			}
 		}
+	}
+
+	/**
+	 * Checks and normalizes an OSGi alias to the path spec (as used by Jetty's
+	 * {@link PathMap}).
+	 * 
+	 * @param alias
+	 *            the alias
+	 * @return the path spec
+	 * @throws IllegalArgumentException
+	 *             if the alias is invalid
+	 */
+	private String normalizeAliasToPathSpec(final String alias)
+			throws IllegalArgumentException {
+		// sanity check alias
+		if (null == alias)
+			throw new IllegalArgumentException("alias must not be null");
+		if (!alias.startsWith(URIUtil.SLASH) && !alias.startsWith("*."))
+			throw new IllegalArgumentException(
+					"alias must start with '/' or '*.'");
+		if (alias.endsWith("/*"))
+			throw new IllegalArgumentException("alias must not end with '/*'");
+		if (!URIUtil.SLASH.equals(alias)
+				&& StringUtil.endsWithIgnoreCase(alias, URIUtil.SLASH))
+			throw new IllegalArgumentException("alias must not end with '/'");
+
+		// use extension alias as is
+		if (alias.startsWith("*."))
+			return alias;
+
+		// make all other aliases implicit to simulate OSGi prefix matching
+		// note, '/' must also be made implicit so that internally it matches as
+		// '/*'
+		return URIUtil.SLASH.equals(alias) ? "/*" : alias.concat("/*");
 	}
 
 	/**
@@ -665,7 +791,8 @@ public class HttpApplication implements IHttpApplication {
 		@Override
 		public ExtendedHttpService getService(Bundle bundle,
 				ServiceRegistration<ExtendedHttpService> registration) {
-			return new HttpServiceImpl(HttpApplication.this);
+			return new HttpServiceImpl(HttpApplication.this.context,
+					HttpApplication.this);
 		}
 
 		@Override
@@ -741,6 +868,7 @@ public class HttpApplication implements IHttpApplication {
 	private static class Registration {
 		private final String alias;
 		private final Object context;
+		private final String name;
 		private final Map<String, String> params;
 
 		public Registration(String alias, Object context,
@@ -750,6 +878,15 @@ public class HttpApplication implements IHttpApplication {
 			this.context = context;
 			this.params = params != null ? new HashMap<String, String>(params)
 					: null;
+			this.name = null;
+		}
+
+		public Registration(String alias, Object context, String name) {
+			super();
+			this.alias = alias;
+			this.context = context;
+			this.name = name;
+			this.params = null;
 		}
 
 		/**
@@ -771,6 +908,15 @@ public class HttpApplication implements IHttpApplication {
 		}
 
 		/**
+		 * Returns true if context is a resource provider.
+		 * 
+		 * @return
+		 */
+		public boolean isResource() {
+			return context instanceof IResourceProvider;
+		}
+
+		/**
 		 * @return the alias
 		 */
 		public String getAlias() {
@@ -783,13 +929,5 @@ public class HttpApplication implements IHttpApplication {
 		public Object getContext() {
 			return context;
 		}
-
-		/**
-		 * @return the params
-		 */
-		public Map<String, String> getParams() {
-			return params;
-		}
-
 	}
 }

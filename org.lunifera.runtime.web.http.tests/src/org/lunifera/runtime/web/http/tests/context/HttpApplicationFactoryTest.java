@@ -63,7 +63,8 @@ public class HttpApplicationFactoryTest {
 	@Test
 	public void test_startWebApplication() throws IOException {
 		waitCM();
-		
+		waitCM();
+
 		Assert.assertEquals(0, activator.getHttpApplications().size());
 		Assert.assertEquals(0, activator.getHttpServices().size());
 		Assert.assertEquals(0, activator.getHandlerProvider().size());
@@ -116,8 +117,12 @@ public class HttpApplicationFactoryTest {
 	 */
 	@Test
 	public void test_properties() throws IOException, InvalidSyntaxException {
+
+		// wait 600ms for CM
 		waitCM();
-		
+		waitCM();
+		waitCM();
+
 		Assert.assertEquals(0, activator.getHttpApplications().size());
 
 		// HttpApplications
@@ -609,7 +614,7 @@ public class HttpApplicationFactoryTest {
 
 	private void waitCM() {
 		try {
-			Thread.sleep(500);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 		}
 	}

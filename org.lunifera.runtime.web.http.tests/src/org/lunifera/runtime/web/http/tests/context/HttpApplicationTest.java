@@ -11,6 +11,7 @@
 package org.lunifera.runtime.web.http.tests.context;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -22,6 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.Assert;
 
@@ -37,11 +40,13 @@ import org.lunifera.runtime.web.http.internal.HttpApplication;
 import org.lunifera.runtime.web.http.internal.HttpApplicationServletContextHandler;
 import org.lunifera.runtime.web.http.tests.Activator;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
@@ -404,7 +409,7 @@ public class HttpApplicationTest {
 
 			mappings = contexthandler.getServletHandler().getServletMappings();
 			Assert.assertEquals(1, mappings.length);
-			Assert.assertEquals("/test", mappings[0].getPathSpecs()[0]);
+			Assert.assertEquals("/test/*", mappings[0].getPathSpecs()[0]);
 
 			service.unregister("/test");
 			mappings = contexthandler.getServletHandler().getServletMappings();
@@ -500,7 +505,7 @@ public class HttpApplicationTest {
 
 			mappings = contexthandler.getServletHandler().getFilterMappings();
 			Assert.assertEquals(1, mappings.length);
-			Assert.assertEquals("/test", mappings[0].getPathSpecs()[0]);
+			Assert.assertEquals("/test/*", mappings[0].getPathSpecs()[0]);
 
 			service.unregisterFilter(filter);
 			mappings = contexthandler.getServletHandler().getFilterMappings();
@@ -561,6 +566,103 @@ public class HttpApplicationTest {
 				Assert.assertEquals("Alias /test was not registered",
 						e.getMessage());
 			}
+		} finally {
+			application.destroy();
+		}
+	}
+
+	/**
+	 * Tests the registration of servlets.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
+	@Test
+	public void test_registerResource() throws ConfigurationException,
+			ServletException, NamespaceException {
+
+		try {
+			application.start();
+
+			HttpApplicationServletContextHandler contexthandler = application
+					.getServletContext();
+			Assert.assertEquals(0, contexthandler.getResourceCount());
+
+			HttpService service = activator.getHttpServices().get(0);
+			service.registerResources("/resource", "/files",
+					new DefaultHttpContext(Activator.context.getBundle()));
+
+			Assert.assertEquals(1, contexthandler.getResourceCount());
+
+			service.unregister("/resource");
+			Assert.assertEquals(0, contexthandler.getResourceCount());
+		} finally {
+			application.destroy();
+		}
+
+	}
+
+	/**
+	 * Tests what happens if servlet are registered twice.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
+	@Test
+	public void test_registerResource_twice() throws ConfigurationException,
+			ServletException, NamespaceException {
+		try {
+			application.start();
+
+			HttpApplicationServletContextHandler contexthandler = application
+					.getServletContext();
+			Assert.assertEquals(0, contexthandler.getResourceCount());
+
+			HttpService service = activator.getHttpServices().get(0);
+			service.registerResources("/resource", "/files",
+					new DefaultHttpContext(Activator.context.getBundle()));
+			try {
+				service.registerResources("/resource", "/files",
+						new DefaultHttpContext(Activator.context.getBundle()));
+				Assert.fail();
+			} catch (NamespaceException e) {
+				// expected
+			}
+
+		} finally {
+			application.destroy();
+		}
+
+	}
+
+	/**
+	 * Tests what happens if servlets are unregistered twice.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws ServletException
+	 * @throws NamespaceException
+	 */
+	@Test
+	public void test_unregisterResource_twice() throws ConfigurationException,
+			ServletException, NamespaceException {
+		try {
+			application.start();
+
+			HttpService service = activator.getHttpServices().get(0);
+			InternalServlet servlet = new InternalServlet();
+			service.registerServlet("/test", servlet, null, null);
+			try {
+				service.unregister("/test");
+				service.unregister("/test");
+				Assert.fail();
+			} catch (IllegalArgumentException e) {
+				// expected
+				Assert.assertEquals("Alias /test was not registered",
+						e.getMessage());
+			}
+
 		} finally {
 			application.destroy();
 		}
@@ -630,4 +732,27 @@ public class HttpApplicationTest {
 
 		}
 	}
+
+	public static class DefaultHttpContext implements HttpContext {
+
+		private Bundle bundle;
+
+		public DefaultHttpContext(Bundle bundle) {
+			this.bundle = bundle;
+		}
+
+		public boolean handleSecurity(HttpServletRequest request,
+				HttpServletResponse response) throws IOException {
+			return true;
+		}
+
+		public URL getResource(String name) {
+			return bundle.getResource(name);
+		}
+
+		public String getMimeType(String name) {
+			return null;
+		}
+	}
+
 }
