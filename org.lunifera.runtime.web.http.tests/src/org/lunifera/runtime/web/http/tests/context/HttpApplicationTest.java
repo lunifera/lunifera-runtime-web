@@ -561,10 +561,9 @@ public class HttpApplicationTest {
 				service.unregisterFilter(filter);
 				service.unregisterFilter(filter);
 				Assert.fail();
-			} catch (IllegalArgumentException e) {
+			} catch (IllegalStateException e) {
 				// expected
-				Assert.assertEquals("Alias /test was not registered",
-						e.getMessage());
+				Assert.assertEquals("filter '" + filter + "' not found", e.getMessage());
 			}
 		} finally {
 			application.destroy();

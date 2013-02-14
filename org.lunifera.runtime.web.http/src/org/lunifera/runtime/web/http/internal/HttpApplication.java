@@ -622,7 +622,7 @@ public class HttpApplication implements IHttpApplication {
 				mappings.length);
 		for (final FilterMapping mapping : mappings) {
 			final String filterName = mapping.getFilterName();
-			if (!toRemove.contains(filterName)) {
+			if (!toRemoveNames.contains(filterName)) {
 				newMappings.add(mapping);
 			}
 		}
