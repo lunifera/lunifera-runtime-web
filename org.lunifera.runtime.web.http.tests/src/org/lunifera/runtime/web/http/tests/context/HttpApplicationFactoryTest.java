@@ -45,11 +45,12 @@ public class HttpApplicationFactoryTest {
 		cm = Activator.getInstance().getConfigurationAdmin();
 		activator = Activator.getInstance();
 
-		Bundle bundle = Activator.context
-				.getBundle("org.eclipse.equinox.http.jetty");
+		Bundle bundle = Activator.findBundle("org.eclipse.equinox.http.jetty");
 		if (bundle != null) {
 			try {
-				bundle.stop();
+				if (bundle.getState() == Bundle.ACTIVE) {
+					bundle.stop();
+				}
 			} catch (BundleException e) {
 			}
 		}
