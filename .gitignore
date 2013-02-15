@@ -17,3 +17,4 @@ xtend-gen/
 plugin.xml_gen
 .project
 /build.runtime-web.kepler.latest.log.properties
+**/log
