@@ -12,6 +12,12 @@
    <feature id="org.lunifera.runtime.web.feature.vaadin.databinding" version="0.0.0">
       <category name="lunifera-web-features"/>
    </feature>
+   <feature id="org.lunifera.runtime.web.feature.http" version="0.0.0">
+      <category name="lunifera-web-features"/>
+   </feature>
+   <feature id="org.lunifera.runtime.web.feature.jetty" version="0.0.0">
+      <category name="lunifera-web-features"/>
+   </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.common.source" version="0.0.0">
       <category name="lunifera-web-features"/>
    </feature>
@@ -24,5 +30,11 @@
    <feature id="org.lunifera.runtime.web.feature.vaadin.databinding.source" version="0.0.0">
       <category name="lunifera-web-features"/>
    </feature>
+   <feature id="org.lunifera.runtime.web.feature.http.source" version="0.0.0">
+      <category name="lunifera-web-features"/>
+   </feature>
+   <feature id="org.lunifera.runtime.web.feature.jetty.source" version="0.0.0">
+      <category name="lunifera-web-features"/>
+   </feature>   
    <category-def name="lunifera-web-features" label="Lunifera Web Features"/>
 </site>
