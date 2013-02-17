@@ -12,6 +12,9 @@ package org.lunifera.runtime.web.common;
 
 import java.util.Locale;
 
+import org.lunifera.runtime.common.dispose.IDisposable;
+import org.lunifera.runtime.common.user.IUserInfo;
+
 /**
  * A web context is an object that offers access to features that are related
  * with a browser tab. One http sessoin may have many web contexts. The web

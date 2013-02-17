@@ -10,7 +10,8 @@
  */
 package org.lunifera.runtime.web.common.context;
 
-import org.lunifera.runtime.web.common.IUserInfo;
+import org.lunifera.runtime.common.user.IUserInfo;
+
 
 public abstract class AbstractUserInfo implements IUserInfo {
 

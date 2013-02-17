@@ -10,7 +10,8 @@
  */
 package org.lunifera.runtime.web.common.context.preferences;
 
-import org.lunifera.runtime.web.common.IUserInfo;
+import org.lunifera.runtime.common.user.IUserInfo;
+
 
 /**
  * Object representing the project scope in the Eclipse preferences hierarchy.

@@ -13,9 +13,9 @@ package org.lunifera.runtime.web.common.context;
 import java.util.Locale;
 import java.util.Map;
 
-import org.lunifera.runtime.web.common.AbstractDisposable;
+import org.lunifera.runtime.common.dispose.AbstractDisposable;
+import org.lunifera.runtime.common.user.IUserInfo;
 import org.lunifera.runtime.web.common.IConstants;
-import org.lunifera.runtime.web.common.IUserInfo;
 import org.lunifera.runtime.web.common.IWebContext;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.ComponentInstance;
@@ -101,7 +101,7 @@ public abstract class AbstractWebContext extends AbstractDisposable implements
 	 */
 	protected void deactivate() {
 		instance = null;
-		if (!isDisposing() && !isDisposed()) {
+		if (canDispose()) {
 			// should not happen for normal. But if the context was deactivated
 			// by ComponentInstance.dispose() we ensure that WebContext.dispose
 			// is called too.

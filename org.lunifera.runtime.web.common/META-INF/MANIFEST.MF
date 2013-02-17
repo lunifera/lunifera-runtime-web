@@ -6,7 +6,9 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Lunifera.org
-Import-Package: org.osgi.service.component;version="1.2.0",
+Import-Package: org.lunifera.runtime.common.dispose,
+ org.lunifera.runtime.common.user,
+ org.osgi.service.component;version="1.2.0",
  org.osgi.service.framework;version="1.0.0",
  org.osgi.service.prefs;version="1.1.1"
 Export-Package: org.lunifera.runtime.web.common,

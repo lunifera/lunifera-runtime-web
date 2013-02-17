@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lunifera.runtime.web.common.IDisposable;
+import org.lunifera.runtime.common.dispose.IDisposable;
 import org.lunifera.runtime.web.common.IWebContext;
 import org.lunifera.runtime.web.common.IWebContextRegistry;
 import org.osgi.service.component.ComponentFactory;
