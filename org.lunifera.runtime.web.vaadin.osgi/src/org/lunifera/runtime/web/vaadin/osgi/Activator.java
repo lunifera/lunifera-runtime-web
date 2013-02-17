@@ -21,13 +21,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.equinox.http.jetty.JettyConstants;
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
 import org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
@@ -140,12 +138,12 @@ public class Activator implements BundleActivator {
 
 	private void startJetty(BundleContext context) {
 
-		jettyBundle = FrameworkUtil.getBundle(JettyConstants.class);
-		if (jettyBundle == null) {
-			getLogService()
-					.log(LogService.LOG_ERROR,
-							"Bundle org.eclipse.equinox.http.jetty is not in target platform");
-		}
+		// jettyBundle = FrameworkUtil.getBundle(JettyConstants.class);
+		// if (jettyBundle == null) {
+		// getLogService()
+		// .log(LogService.LOG_ERROR,
+		// "Bundle org.eclipse.equinox.http.jetty is not in target platform");
+		// }
 
 	}
 

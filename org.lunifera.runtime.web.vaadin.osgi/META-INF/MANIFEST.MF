@@ -10,8 +10,8 @@ Import-Package: com.vaadin.server;version="7.0.0",
  javax.servlet;version="2.6.0",
  javax.servlet.http;version="2.6.0",
  org.apache.shiro.web.servlet;version="1.2.0",
- org.eclipse.equinox.http.jetty,
  org.eclipse.equinox.http.servlet;version="1.1.0",
+ org.eclipse.osgi.framework.console;version="1.1.0",
  org.icepush.servlet;version="0.5.4",
  org.json,
  org.lunifera.runtime.web.common,
@@ -31,5 +31,5 @@ Export-Package: org.lunifera.runtime.web.vaadin.osgi,
  org.lunifera.runtime.web.vaadin.osgi.common,
  org.lunifera.runtime.web.vaadin.osgi.servlet,
  org.lunifera.runtime.web.vaadin.osgi.webapp
-Service-Component: OSGI-INF/applicationFactory.xml
+Service-Component: OSGI-INF/*.xml
 Require-Bundle: org.eclipse.equinox.common;bundle-version="3.6.100"
