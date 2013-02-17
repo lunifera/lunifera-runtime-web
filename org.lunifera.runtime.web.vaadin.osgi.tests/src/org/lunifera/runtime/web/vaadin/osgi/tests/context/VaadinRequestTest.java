@@ -324,7 +324,6 @@ public class VaadinRequestTest {
 	}
 
 	/**
-	 * Tests that requests are processed properly by the servlets.
 	 * 
 	 * @throws IOException
 	 * @throws InvalidSyntaxException
@@ -377,6 +376,70 @@ public class VaadinRequestTest {
 				status.getCode());
 		Assert.assertEquals(IStatus.ERROR, status.getSeverity());
 		assertStatusOK("Application2");
+
+		// stop the services again
+		jettyConfig.delete();
+		jetty2Config.delete();
+		httpApp1Config.delete();
+		httpApp7Config.delete();
+		vaadinApp1Config.delete();
+		vaadinApp7Config.delete();
+	}
+
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws InvalidSyntaxException
+	 * @throws NamespaceException
+	 * @throws ServletException
+	 */
+	@Test
+	public void test_StoppedOnError() throws IOException,
+			InvalidSyntaxException, ServletException, NamespaceException {
+
+		// create new applications
+		Configuration httpApp1Config = startHttpApp1("Server1");
+		Configuration httpApp7Config = startHttpApp7("Server2");
+		waitCM();
+
+		// start a new jetty server
+		Configuration jettyConfig = startJetty1();
+		Configuration jetty2Config = startJetty2();
+
+		// create vaadin applications
+		Configuration vaadinApp1Config = startVaadin1("HttpApp1");
+		Configuration vaadinApp7Config = startVaadin2("HttpApp7");
+		waitCM(); // restarting servers
+		waitCM(); // restarting servers
+		waitCM(); // restarting servers
+		waitCM(); // restarting servers
+
+		assertStatusOK("Application1");
+		assertStatusOK("Application2");
+
+		// test vaadin application 1
+		Assert.assertEquals(500,
+				httpGET("http://localhost:8091/app1/test/alias1/")
+						.getStatusLine().getStatusCode());
+		// test vaadin application 2
+		Assert.assertEquals(500,
+				httpGET("http://localhost:8099/app7/test/alias2")
+						.getStatusLine().getStatusCode());
+
+		// update the httpApplication 1 to run on already used webApp7
+		//
+		Dictionary<String, Object> props1 = vaadinApp1Config.getProperties();
+		props1.put(VaadinConstants.HTTP_APPLICATION_NAME, "HttpApp7");
+		vaadinApp1Config.update(props1);
+		waitCM(); // remounting servlets
+		waitCM(); // remounting servlets
+		waitCM(); // remounting servlets
+
+		// test that the application is stopped!
+		IVaadinApplication app1 = getVaadinApplication("Application1");
+		Assert.assertFalse(app1.isStarted());
+		IVaadinApplication app2 = getVaadinApplication("Application2");
+		Assert.assertTrue(app2.isStarted());
 
 		// stop the services again
 		jettyConfig.delete();

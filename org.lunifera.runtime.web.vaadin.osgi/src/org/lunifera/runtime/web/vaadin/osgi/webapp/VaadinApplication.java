@@ -29,8 +29,8 @@ import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 import org.lunifera.runtime.web.vaadin.osgi.Activator;
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
-import org.lunifera.runtime.web.vaadin.osgi.common.VaadinStatusCodes;
 import org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants;
+import org.lunifera.runtime.web.vaadin.osgi.common.VaadinStatusCodes;
 import org.lunifera.runtime.web.vaadin.osgi.servlet.VaadinOSGiServlet;
 import org.lunifera.runtime.web.vaadin.osgi.servlet.WebResourcesHttpContext;
 import org.osgi.framework.BundleContext;
@@ -198,7 +198,7 @@ public class VaadinApplication implements IVaadinApplication {
 				setStatus(VaadinStatusCodes.createHttpServiceTracker(e));
 
 				// stop the application
-				stop();
+				stop(true);
 				return;
 			}
 
@@ -214,14 +214,14 @@ public class VaadinApplication implements IVaadinApplication {
 					setStatus(VaadinStatusCodes.createSettingHttpService(e));
 
 					// stop the application
-					stop();
+					stop(true);
 					return;
 				}
 			}
 
+			started = true;
 		} finally {
 			accessLock.unlock();
-			started = true;
 		}
 
 		setStatus(VaadinStatusCodes.OK_STATUS);
@@ -314,9 +314,11 @@ public class VaadinApplication implements IVaadinApplication {
 		filter = new IniShiroFilter();
 		try {
 			try {
-				httpService.registerFilter("/", filter, properties, defaultContext);
+				httpService.registerFilter("/", filter, properties,
+						defaultContext);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("{}", e);
+				throw new AppException(e);
 			}
 			httpService.registerResources(RESOURCE_BASE, RESOURCE_BASE,
 					defaultContext);
@@ -324,6 +326,7 @@ public class VaadinApplication implements IVaadinApplication {
 					defaultContext);
 		} catch (ServletException e) {
 			logger.error("{}", e);
+			throw new AppException(e);
 		} catch (NamespaceException e) {
 			logger.error("{}", e);
 			throw new AppException(e);
@@ -337,6 +340,11 @@ public class VaadinApplication implements IVaadinApplication {
 	 */
 	private void setStatus(IStatus status) {
 		this.status = status;
+
+		if (status != null && status != VaadinStatusCodes.OK_STATUS) {
+			logger.warn("Status was set to vaadin application {}: {}",
+					getName(), status);
+		}
 	}
 
 	/**
@@ -399,7 +407,17 @@ public class VaadinApplication implements IVaadinApplication {
 	 * and the http service will become disposed.
 	 */
 	public void stop() {
-		if (!started) {
+		stop(false);
+	}
+
+	/**
+	 * Stops the application. If true, then the started state will no be
+	 * checked.
+	 * 
+	 * @param force
+	 */
+	protected void stop(boolean force) {
+		if (!force && !started) {
 			logger.debug("HttpApplication {} not started", getName());
 			return;
 		}
