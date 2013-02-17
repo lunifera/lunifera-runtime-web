@@ -15,7 +15,7 @@ package org.lunifera.runtime.web.vaadin.common;
 import java.security.Principal;
 import java.util.Hashtable;
 
-import org.lunifera.runtime.web.common.IDisposable;
+import org.lunifera.runtime.common.dispose.IDisposable;
 import org.lunifera.runtime.web.common.IWebContextRegistry;
 import org.lunifera.runtime.web.vaadin.common.internal.VaadinWebContext;
 import org.osgi.service.component.ComponentInstance;

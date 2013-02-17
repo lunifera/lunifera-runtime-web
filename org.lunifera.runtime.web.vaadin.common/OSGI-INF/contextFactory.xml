@@ -7,4 +7,3 @@
    </service>
    <reference bind="setPreferencesService" cardinality="0..1" interface="org.osgi.service.prefs.PreferencesService" name="preferencesService" policy="dynamic" unbind="unsetPreferencesService"/>
 </scr:component>
- 
