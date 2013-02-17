@@ -29,11 +29,14 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.eclipse.core.runtime.IStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.jetty.JettyConstants;
+import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
 import org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants;
+import org.lunifera.runtime.web.vaadin.osgi.common.VaadinStatusCodes;
 import org.lunifera.runtime.web.vaadin.osgi.tests.Activator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
@@ -93,6 +96,9 @@ public class VaadinRequestTest {
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 
+		assertStatusOK("Application1");
+		assertStatusOK("Application2");
+
 		// test vaadin application 1
 		HttpResponse response = httpGET("http://localhost:8091/app1/test/alias1/");
 		Assert.assertEquals(500, response.getStatusLine().getStatusCode());
@@ -110,6 +116,9 @@ public class VaadinRequestTest {
 		Assert.assertEquals(
 				"No UIProvider has been added and there is no \"UI\" init parameter.",
 				response3.getStatusLine().getReasonPhrase());
+
+		assertStatusOK("Application1");
+		assertStatusOK("Application2");
 
 		// stop the services again
 		jettyConfig.delete();
@@ -148,6 +157,9 @@ public class VaadinRequestTest {
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 
+		assertStatusOK("Application1");
+		assertStatusOK("Application2");
+
 		// test vaadin application 1
 		HttpResponse response = httpGET("http://localhost:8091/app1/test/alias1/");
 		Assert.assertEquals(500, response.getStatusLine().getStatusCode());
@@ -167,6 +179,9 @@ public class VaadinRequestTest {
 		Assert.assertEquals(404,
 				httpGET("http://localhost:8099/app1/test/alias1/")
 						.getStatusLine().getStatusCode());
+
+		assertStatusOK("Application1");
+		assertStatusOK("Application2");
 
 		// stop the services again
 		jettyConfig.delete();
@@ -205,6 +220,8 @@ public class VaadinRequestTest {
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 
+		assertStatusOK("Application1");
+
 		// test vaadin application 1
 		Assert.assertEquals(500,
 				httpGET("http://localhost:8091/app1/test/alias1/")
@@ -221,6 +238,8 @@ public class VaadinRequestTest {
 		waitCM(); // server restart
 		waitCM(); // server restart
 		waitCM(); // server restart
+
+		assertStatusOK("Application1");
 
 		// test vaadin application 1
 		Assert.assertEquals(404,
@@ -267,6 +286,8 @@ public class VaadinRequestTest {
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 
+		assertStatusOK("Application1");
+
 		// test vaadin application 1
 		Assert.assertEquals(500,
 				httpGET("http://localhost:8091/app1/test/alias1/")
@@ -283,6 +304,8 @@ public class VaadinRequestTest {
 		vaadinApp1Config.update(props1);
 		waitCM(); // remounting servlets
 
+		assertStatusOK("Application1");
+
 		// test vaadin application 1
 		Assert.assertEquals(404,
 				httpGET("http://localhost:8091/app1/test/alias1/")
@@ -298,6 +321,89 @@ public class VaadinRequestTest {
 		httpApp1Config.delete();
 		httpApp7Config.delete();
 		vaadinApp1Config.delete();
+	}
+
+	/**
+	 * Tests that requests are processed properly by the servlets.
+	 * 
+	 * @throws IOException
+	 * @throws InvalidSyntaxException
+	 * @throws NamespaceException
+	 * @throws ServletException
+	 */
+	@Test
+	public void test_Servlet_Request_switch_usedWebApp() throws IOException,
+			InvalidSyntaxException, ServletException, NamespaceException {
+
+		// create new applications
+		Configuration httpApp1Config = startHttpApp1("Server1");
+		Configuration httpApp7Config = startHttpApp7("Server2");
+		waitCM();
+
+		// start a new jetty server
+		Configuration jettyConfig = startJetty1();
+		Configuration jetty2Config = startJetty2();
+
+		// create vaadin applications
+		Configuration vaadinApp1Config = startVaadin1("HttpApp1");
+		Configuration vaadinApp7Config = startVaadin2("HttpApp7");
+		waitCM(); // restarting servers
+		waitCM(); // restarting servers
+		waitCM(); // restarting servers
+		waitCM(); // restarting servers
+
+		assertStatusOK("Application1");
+		assertStatusOK("Application2");
+
+		// test vaadin application 1
+		Assert.assertEquals(500,
+				httpGET("http://localhost:8091/app1/test/alias1/")
+						.getStatusLine().getStatusCode());
+		// test vaadin application 2
+		Assert.assertEquals(500,
+				httpGET("http://localhost:8099/app7/test/alias2")
+						.getStatusLine().getStatusCode());
+
+		// update the httpApplication 1 to run on already used webApp7
+		//
+		Dictionary<String, Object> props1 = vaadinApp1Config.getProperties();
+		props1.put(VaadinConstants.HTTP_APPLICATION_NAME, "HttpApp7");
+		vaadinApp1Config.update(props1);
+		waitCM(); // remounting servlets
+
+		IVaadinApplication app = getVaadinApplication("Application1");
+		IStatus status = app.getStatus();
+		Assert.assertEquals(VaadinStatusCodes.SETTING_HTTP_SERVICE,
+				status.getCode());
+		Assert.assertEquals(IStatus.ERROR, status.getSeverity());
+		assertStatusOK("Application2");
+
+		// stop the services again
+		jettyConfig.delete();
+		jetty2Config.delete();
+		httpApp1Config.delete();
+		httpApp7Config.delete();
+		vaadinApp1Config.delete();
+		vaadinApp7Config.delete();
+	}
+
+	/**
+	 * Asserts that the status of the application is OK.
+	 * 
+	 * @param vaadinApp
+	 */
+	protected void assertStatusOK(String vaadinApp) {
+		Assert.assertSame(VaadinStatusCodes.OK_STATUS,
+				getVaadinApplication(vaadinApp).getStatus());
+	}
+
+	private IVaadinApplication getVaadinApplication(String name) {
+		for (IVaadinApplication app : activator.getVaadinApplications()) {
+			if (app.getName().equals(name)) {
+				return app;
+			}
+		}
+		return null;
 	}
 
 	/**

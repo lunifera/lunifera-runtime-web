@@ -20,7 +20,7 @@ import org.lunifera.runtime.web.vaadin.osgi.Activator;
  * A class that contains all status codes of that bundle and helper methods to
  * create the status objects.
  */
-public class StatusCodes {
+public class VaadinStatusCodes {
 
 	public static final int OK = IStatus.OK;
 

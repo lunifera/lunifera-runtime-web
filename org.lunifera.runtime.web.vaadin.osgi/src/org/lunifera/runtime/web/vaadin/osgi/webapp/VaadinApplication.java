@@ -29,7 +29,7 @@ import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 import org.lunifera.runtime.web.vaadin.osgi.Activator;
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
-import org.lunifera.runtime.web.vaadin.osgi.common.StatusCodes;
+import org.lunifera.runtime.web.vaadin.osgi.common.VaadinStatusCodes;
 import org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants;
 import org.lunifera.runtime.web.vaadin.osgi.servlet.VaadinOSGiServlet;
 import org.lunifera.runtime.web.vaadin.osgi.servlet.WebResourcesHttpContext;
@@ -195,7 +195,7 @@ public class VaadinApplication implements IVaadinApplication {
 				serviceTracker.open();
 			} catch (InvalidSyntaxException e) {
 				logger.error("{}", e);
-				setStatus(StatusCodes.createHttpServiceTracker(e));
+				setStatus(VaadinStatusCodes.createHttpServiceTracker(e));
 
 				// stop the application
 				stop();
@@ -211,7 +211,7 @@ public class VaadinApplication implements IVaadinApplication {
 					logger.error(String
 							.format("Stopping vaadin application %s since setting http service caused a problem.",
 									getName()));
-					setStatus(StatusCodes.createSettingHttpService(e));
+					setStatus(VaadinStatusCodes.createSettingHttpService(e));
 
 					// stop the application
 					stop();
@@ -224,7 +224,7 @@ public class VaadinApplication implements IVaadinApplication {
 			started = true;
 		}
 
-		setStatus(StatusCodes.OK_STATUS);
+		setStatus(VaadinStatusCodes.OK_STATUS);
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class VaadinApplication implements IVaadinApplication {
 			logger.error(String
 					.format("Stopping vaadin application %s since setting http service caused a problem.",
 							getName()));
-			setStatus(StatusCodes.createSettingHttpService(e));
+			setStatus(VaadinStatusCodes.createSettingHttpService(e));
 
 			// stop the application
 			stop();
@@ -255,7 +255,7 @@ public class VaadinApplication implements IVaadinApplication {
 			accessLock.unlock();
 		}
 
-		setStatus(StatusCodes.OK_STATUS);
+		setStatus(VaadinStatusCodes.OK_STATUS);
 	}
 
 	/**
