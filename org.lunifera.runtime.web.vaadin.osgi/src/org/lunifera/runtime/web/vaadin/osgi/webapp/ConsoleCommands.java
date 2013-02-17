@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Console commands for the http bundle.
+ * Console commands for the vaadin bundle.
  */
 public class ConsoleCommands implements CommandProvider {
 
@@ -40,11 +40,11 @@ public class ConsoleCommands implements CommandProvider {
 	private static final Set<Command> commands = new HashSet<ConsoleCommands.Command>();
 	static {
 		commands.add(new Command("<ls>", "",
-				"Lists all registered http applications"));
+				"Lists all registered vaadin applications"));
 		commands.add(new Command("<properties>", "",
 				"Lists all available service properties"));
 		commands.add(new Command("<start|stop>", "[application id]",
-				"Starts or stops the http application with the given id"));
+				"Starts or stops the vaadin application with the given id"));
 	}
 
 	private BundleContext bundleContext;
@@ -91,7 +91,7 @@ public class ConsoleCommands implements CommandProvider {
 	 */
 	private void printApplication(CommandInterpreter ci) {
 		try {
-			ci.println("\t---- Available http application instances ----");
+			ci.println("\t---- Available vaadin application instances ----");
 			for (ServiceReference<IVaadinApplication> reference : bundleContext
 					.getServiceReferences(IVaadinApplication.class, null)) {
 				IVaadinApplication service = bundleContext
@@ -106,7 +106,7 @@ public class ConsoleCommands implements CommandProvider {
 	public void printApplication(CommandInterpreter ci,
 			IVaadinApplication service) {
 		ci.println(String
-				.format("\t id: %s \t name: %s \t http application: %s \t ui alias: %s \t widgetset: %s \t started: %s \t pid: %s",
+				.format("\t id: %s \t name: %s \t vaadin application: %s \t ui alias: %s \t widgetset: %s \t started: %s \t pid: %s",
 						service.getId(), service.getName(),
 						service.getHttpApplication(), service.getUIAlias(),
 						service.getWidgetSetName(),
@@ -220,7 +220,7 @@ public class ConsoleCommands implements CommandProvider {
 	@Override
 	public String getHelp() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("---- Lunifera http application commands ----");
+		builder.append("---- Lunifera vaadin application commands ----");
 		builder.append(NEW_LINE);
 
 		builder.append(TAB);
