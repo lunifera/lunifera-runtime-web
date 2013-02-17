@@ -10,6 +10,8 @@
  */
 package org.lunifera.runtime.web.http.tests.context;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -22,7 +24,6 @@ import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.http.tests.Activator;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
@@ -39,21 +40,13 @@ public class HttpApplicationFactoryTest {
 	 * Setup tests.
 	 * 
 	 * @throws ConfigurationException
+	 * @throws BundleException 
 	 */
 	@Before
-	public void setup() throws ConfigurationException {
+	public void setup() throws ConfigurationException, BundleException {
+		BundleHelper.ensureSetup();
 		cm = Activator.getInstance().getConfigurationAdmin();
 		activator = Activator.getInstance();
-
-		Bundle bundle = Activator.findBundle("org.eclipse.equinox.http.jetty");
-		if (bundle != null) {
-			try {
-				if (bundle.getState() == Bundle.ACTIVE) {
-					bundle.stop();
-				}
-			} catch (BundleException e) {
-			}
-		}
 	}
 
 	/**
@@ -66,48 +59,48 @@ public class HttpApplicationFactoryTest {
 		waitCM();
 		waitCM();
 
-		Assert.assertEquals(0, activator.getHttpApplications().size());
-		Assert.assertEquals(0, activator.getHttpServices().size());
-		Assert.assertEquals(0, activator.getHandlerProvider().size());
+		assertEquals(0, activator.getHttpApplications().size());
+		assertEquals(0, activator.getHttpServices().size());
+		assertEquals(0, activator.getHandlerProvider().size());
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
 				HttpConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		waitCM();
-		Assert.assertEquals(1, activator.getHttpApplications().size());
-		Assert.assertEquals(1, activator.getHttpServices().size());
-		Assert.assertEquals(1, activator.getHandlerProvider().size());
+		assertEquals(1, activator.getHttpApplications().size());
+		assertEquals(1, activator.getHttpServices().size());
+		assertEquals(1, activator.getHandlerProvider().size());
 
 		// update instance
 		config.update(prepareDefaultProps());
 		waitCM();
-		Assert.assertEquals(1, activator.getHttpApplications().size());
-		Assert.assertEquals(1, activator.getHttpServices().size());
-		Assert.assertEquals(1, activator.getHandlerProvider().size());
+		assertEquals(1, activator.getHttpApplications().size());
+		assertEquals(1, activator.getHttpServices().size());
+		assertEquals(1, activator.getHandlerProvider().size());
 
 		// create new instance
 		Configuration config2 = cm.createFactoryConfiguration(
 				HttpConstants.OSGI__FACTORY_PID, null);
 		config2.update(prepareDefaultProps());
 		waitCM();
-		Assert.assertEquals(2, activator.getHttpApplications().size());
-		Assert.assertEquals(2, activator.getHttpServices().size());
-		Assert.assertEquals(2, activator.getHandlerProvider().size());
+		assertEquals(2, activator.getHttpApplications().size());
+		assertEquals(2, activator.getHttpServices().size());
+		assertEquals(2, activator.getHandlerProvider().size());
 
 		// remove instance 1
 		config.delete();
 		waitCM();
-		Assert.assertEquals(1, activator.getHttpApplications().size());
-		Assert.assertEquals(1, activator.getHttpServices().size());
-		Assert.assertEquals(1, activator.getHandlerProvider().size());
+		assertEquals(1, activator.getHttpApplications().size());
+		assertEquals(1, activator.getHttpServices().size());
+		assertEquals(1, activator.getHandlerProvider().size());
 
 		// remove instance 2
 		config2.delete();
 		waitCM();
-		Assert.assertEquals(0, activator.getHttpApplications().size());
-		Assert.assertEquals(0, activator.getHttpServices().size());
-		Assert.assertEquals(0, activator.getHandlerProvider().size());
+		assertEquals(0, activator.getHttpApplications().size());
+		assertEquals(0, activator.getHttpServices().size());
+		assertEquals(0, activator.getHandlerProvider().size());
 	}
 
 	/**
@@ -124,82 +117,82 @@ public class HttpApplicationFactoryTest {
 		waitCM();
 		waitCM();
 
-		Assert.assertEquals(0, activator.getHttpApplications().size());
+		assertEquals(0, activator.getHttpApplications().size());
 
 		// HttpApplications
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HttpService
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HandlerProvider
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server2)").size());
@@ -215,43 +208,43 @@ public class HttpApplicationFactoryTest {
 		waitCM();
 
 		// HttpApplication
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server1)").size());
 
 		// HttpService
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server1)").size());
 
 		// HandlerProvider
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server1)").size());
@@ -267,43 +260,43 @@ public class HttpApplicationFactoryTest {
 		waitCM();
 
 		// HttpApplication
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HttpService
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HandlerProvider
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server2)").size());
@@ -313,79 +306,79 @@ public class HttpApplicationFactoryTest {
 		waitCM();
 
 		// HttpApplication
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HttpService
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HandlerProvider
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server2)").size());
@@ -402,7 +395,7 @@ public class HttpApplicationFactoryTest {
 			InvalidSyntaxException {
 		waitCM();
 
-		Assert.assertEquals(0, activator.getHttpApplications().size());
+		assertEquals(0, activator.getHttpApplications().size());
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
@@ -415,78 +408,78 @@ public class HttpApplicationFactoryTest {
 		waitCM();
 
 		// HttpApplication
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server2)").size());
 		// HttpServices
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HandlerProvider
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server2)").size());
@@ -499,79 +492,79 @@ public class HttpApplicationFactoryTest {
 		waitCM();
 
 		// HttpApplication
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHttpApplication.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HttpService
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(HttpService.class,
 						"(lunifera.jetty.name=Server2)").size());
 
 		// HandlerProvider
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.name=Application2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.http.contextPath=/test/app2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IHandlerProvider.class,
 						"(lunifera.jetty.name=Server2)").size());

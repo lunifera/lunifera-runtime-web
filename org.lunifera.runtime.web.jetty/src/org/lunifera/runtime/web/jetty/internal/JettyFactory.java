@@ -21,8 +21,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
-import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.IJetty;
+import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedServiceFactory;
@@ -117,7 +117,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		if (jetty == null) {
 			jetty = new JettyService(Integer.toString(++lastServiceId),
 					context.getBundleContext());
-			
+
 			File contextWorkDir = new File(jettyWorkDir, DIR_PREFIX
 					+ pid.hashCode());
 			jetty.setWorkDir(contextWorkDir);
@@ -202,8 +202,10 @@ public class JettyFactory implements ManagedServiceFactory {
 
 	@Override
 	public void deleted(String pid) {
+		String jettyName = "";
 		IJetty jetty = jetties.remove(pid);
 		if (jetty != null) {
+			jettyName = jetty.getName();
 			jetty.stop();
 			logger.debug("IJetty {} deleted from configuration {}",
 					jetty.getName(), jetty.getHttpPort());
@@ -217,7 +219,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		ServiceRegistration<IJetty> registration = registrations.remove(pid);
 		if (registration != null) {
 			registration.unregister();
-			logger.debug("IJetty {} removed as a service!", jetty.getName());
+			logger.debug("IJetty {} removed as a service!", jettyName);
 		}
 
 	}
@@ -344,12 +346,16 @@ public class JettyFactory implements ManagedServiceFactory {
 		}
 
 		jetty.setHttpsHost((String) dictionary.get(JettyConstants.HTTPS_HOST));
-		jetty.setSslKeystore((String) dictionary.get(JettyConstants.SSL_KEYSTORE));
-		jetty.setSslKeystore((String) dictionary.get(JettyConstants.SSL_PASSWORD));
-		jetty.setSslKeystore((String) dictionary.get(JettyConstants.SSL_KEYPASSWORD));
+		jetty.setSslKeystore((String) dictionary
+				.get(JettyConstants.SSL_KEYSTORE));
+		jetty.setSslKeystore((String) dictionary
+				.get(JettyConstants.SSL_PASSWORD));
+		jetty.setSslKeystore((String) dictionary
+				.get(JettyConstants.SSL_KEYPASSWORD));
 
 		jetty.setSslNeedsClientAuth(false);
-		Object needClientAuth = dictionary.get(JettyConstants.SSL_NEEDCLIENTAUTH);
+		Object needClientAuth = dictionary
+				.get(JettyConstants.SSL_NEEDCLIENTAUTH);
 		if (needClientAuth != null) {
 			if (needClientAuth instanceof String)
 				needClientAuth = Boolean.valueOf((String) needClientAuth);
@@ -357,7 +363,8 @@ public class JettyFactory implements ManagedServiceFactory {
 		}
 
 		jetty.setSslWantsClientAuth(false);
-		Object wantClientAuth = dictionary.get(JettyConstants.SSL_WANTCLIENTAUTH);
+		Object wantClientAuth = dictionary
+				.get(JettyConstants.SSL_WANTCLIENTAUTH);
 		if (wantClientAuth != null) {
 			if (wantClientAuth instanceof String) {
 				wantClientAuth = Boolean.valueOf((String) wantClientAuth);
@@ -365,7 +372,8 @@ public class JettyFactory implements ManagedServiceFactory {
 			jetty.setSslWantsClientAuth((Boolean) wantClientAuth);
 		}
 
-		jetty.setSslKeystore((String) dictionary.get(JettyConstants.SSL_PROTOCOL));
+		jetty.setSslKeystore((String) dictionary
+				.get(JettyConstants.SSL_PROTOCOL));
 
 		jetty.setSslKeystore((String) dictionary
 				.get(JettyConstants.SSL_KEYSTORETYPE));

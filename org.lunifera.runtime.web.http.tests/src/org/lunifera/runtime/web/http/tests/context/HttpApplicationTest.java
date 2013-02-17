@@ -10,6 +10,8 @@
  */
 package org.lunifera.runtime.web.http.tests.context;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -42,6 +44,7 @@ import org.lunifera.runtime.web.http.tests.Activator;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
@@ -61,9 +64,12 @@ public class HttpApplicationTest {
 	 * Setup of the test.
 	 * 
 	 * @throws ConfigurationException
+	 * @throws BundleException 
 	 */
 	@Before
-	public void setup() throws ConfigurationException {
+	public void setup() throws ConfigurationException, BundleException {
+		BundleHelper.ensureSetup();
+		
 		activator = Activator.getInstance();
 		context = Activator.context;
 		application = new InternalHttpApplication("App1");
@@ -86,13 +92,13 @@ public class HttpApplicationTest {
 	 */
 	@Test
 	public void test_start_stop() throws ConfigurationException {
-		Assert.assertEquals(0, activator.getHttpServices().size());
+		assertEquals(0, activator.getHttpServices().size());
 
 		application.start();
-		Assert.assertEquals(1, activator.getHttpServices().size());
+		assertEquals(1, activator.getHttpServices().size());
 
 		application.stop();
-		Assert.assertEquals(0, activator.getHttpServices().size());
+		assertEquals(0, activator.getHttpServices().size());
 
 		application.destroy();
 	}
@@ -118,7 +124,7 @@ public class HttpApplicationTest {
 		// add 2 servlets
 		application.registerServlet("/test1", new InternalServlet(), null);
 		application.registerServlet("/test2", new InternalServlet(), null);
-		Assert.assertEquals(2, application.getServletContext()
+		assertEquals(2, application.getServletContext()
 				.getServletHandler().getServletMappings().length);
 
 		// stop application -> Will remove servlet context
@@ -129,7 +135,7 @@ public class HttpApplicationTest {
 		// start the application again. Will reactivate the servlets and filters
 		// again
 		application.start();
-		Assert.assertEquals(2, application.getServletContext()
+		assertEquals(2, application.getServletContext()
 				.getServletHandler().getServletMappings().length);
 
 		// destroy the application -> Will clear the internal mapping cache
@@ -408,12 +414,12 @@ public class HttpApplicationTest {
 			service.registerServlet("/test", servlet, null, null);
 
 			mappings = contexthandler.getServletHandler().getServletMappings();
-			Assert.assertEquals(1, mappings.length);
-			Assert.assertEquals("/test/*", mappings[0].getPathSpecs()[0]);
+			assertEquals(1, mappings.length);
+			assertEquals("/test/*", mappings[0].getPathSpecs()[0]);
 
 			service.unregister("/test");
 			mappings = contexthandler.getServletHandler().getServletMappings();
-			Assert.assertEquals(0, mappings.length);
+			assertEquals(0, mappings.length);
 		} finally {
 			application.destroy();
 		}
@@ -471,7 +477,7 @@ public class HttpApplicationTest {
 				Assert.fail();
 			} catch (IllegalArgumentException e) {
 				// expected
-				Assert.assertEquals("Alias /test was not registered",
+				assertEquals("Alias /test was not registered",
 						e.getMessage());
 			}
 
@@ -504,12 +510,12 @@ public class HttpApplicationTest {
 			service.registerFilter("/test", filter, null, null);
 
 			mappings = contexthandler.getServletHandler().getFilterMappings();
-			Assert.assertEquals(1, mappings.length);
-			Assert.assertEquals("/test/*", mappings[0].getPathSpecs()[0]);
+			assertEquals(1, mappings.length);
+			assertEquals("/test/*", mappings[0].getPathSpecs()[0]);
 
 			service.unregisterFilter(filter);
 			mappings = contexthandler.getServletHandler().getFilterMappings();
-			Assert.assertEquals(0, mappings.length);
+			assertEquals(0, mappings.length);
 		} finally {
 			application.destroy();
 		}
@@ -563,7 +569,7 @@ public class HttpApplicationTest {
 				Assert.fail();
 			} catch (IllegalStateException e) {
 				// expected
-				Assert.assertEquals("filter '" + filter + "' not found", e.getMessage());
+				assertEquals("filter '" + filter + "' not found", e.getMessage());
 			}
 		} finally {
 			application.destroy();
@@ -586,16 +592,16 @@ public class HttpApplicationTest {
 
 			HttpApplicationServletContextHandler contexthandler = application
 					.getServletContext();
-			Assert.assertEquals(0, contexthandler.getResourceCount());
+			assertEquals(0, contexthandler.getResourceCount());
 
 			HttpService service = activator.getHttpServices().get(0);
 			service.registerResources("/resource", "/files",
 					new DefaultHttpContext(Activator.context.getBundle()));
 
-			Assert.assertEquals(1, contexthandler.getResourceCount());
+			assertEquals(1, contexthandler.getResourceCount());
 
 			service.unregister("/resource");
-			Assert.assertEquals(0, contexthandler.getResourceCount());
+			assertEquals(0, contexthandler.getResourceCount());
 		} finally {
 			application.destroy();
 		}
@@ -617,7 +623,7 @@ public class HttpApplicationTest {
 
 			HttpApplicationServletContextHandler contexthandler = application
 					.getServletContext();
-			Assert.assertEquals(0, contexthandler.getResourceCount());
+			assertEquals(0, contexthandler.getResourceCount());
 
 			HttpService service = activator.getHttpServices().get(0);
 			service.registerResources("/resource", "/files",
@@ -658,7 +664,7 @@ public class HttpApplicationTest {
 				Assert.fail();
 			} catch (IllegalArgumentException e) {
 				// expected
-				Assert.assertEquals("Alias /test was not registered",
+				assertEquals("Alias /test was not registered",
 						e.getMessage());
 			}
 

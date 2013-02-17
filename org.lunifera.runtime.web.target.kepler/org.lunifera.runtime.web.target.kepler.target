@@ -3,11 +3,11 @@
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.1"/>
-<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="3.9.0.201302041718"/>
-<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.0.0.201302041718"/>
-<unit id="org.lunifera.dependencies.feature.weld.feature.group" version="1.2.0.201302041718"/>
-<unit id="org.lunifera.dependencies.feature.xtext.headless.feature.group" version="2.4.0.201302041718"/>
-<unit id="org.lunifera.dependencies.feature.equinox.testing.feature.group" version="3.9.0.201302041718"/>
+<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="3.9.0.201302082045"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.0.0.201302082045"/>
+<unit id="org.lunifera.dependencies.feature.weld.feature.group" version="1.2.0.201302082045"/>
+<unit id="org.lunifera.dependencies.feature.xtext.headless.feature.group" version="2.4.0.201302082045"/>
+<unit id="org.lunifera.dependencies.feature.equinox.testing.feature.group" version="3.9.0.201302082045"/>
 <unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.5.5"/>
 <repository location="http://lunifera.github.com/p2/kepler/latest"/>
 </location>

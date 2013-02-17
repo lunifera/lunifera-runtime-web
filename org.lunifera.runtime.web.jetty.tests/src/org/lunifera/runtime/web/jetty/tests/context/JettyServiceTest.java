@@ -10,6 +10,8 @@
  */
 package org.lunifera.runtime.web.jetty.tests.context;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -27,19 +29,18 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
+import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.internal.JettyService;
 import org.lunifera.runtime.web.jetty.tests.Activator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 
 @SuppressWarnings("restriction")
 public class JettyServiceTest {
 
-	private Activator activator;
-	@SuppressWarnings("unused")
 	private BundleContext context;
 	private InternalJettyService server;
 
@@ -49,8 +50,8 @@ public class JettyServiceTest {
 	 * @throws ConfigurationException
 	 */
 	@Before
-	public void setup() throws ConfigurationException {
-		activator = Activator.getInstance();
+	public void setup() throws ConfigurationException, BundleException {
+		BundleHelper.ensureSetup();
 		context = Activator.context;
 		server = new InternalJettyService("S1");
 		server.setName("Server1");
@@ -79,7 +80,7 @@ public class JettyServiceTest {
 		server.start();
 		client = new DefaultHttpClient();
 		resp = client.execute(get);
-		Assert.assertEquals(404, resp.getStatusLine().getStatusCode());
+		assertEquals(404, resp.getStatusLine().getStatusCode());
 
 		server.stop();
 		try {
@@ -122,7 +123,7 @@ public class JettyServiceTest {
 		server.start();
 		client = new DefaultHttpClient();
 		resp = client.execute(get8099);
-		Assert.assertEquals(404, resp.getStatusLine().getStatusCode());
+		assertEquals(404, resp.getStatusLine().getStatusCode());
 		try {
 			client = new DefaultHttpClient();
 			resp = client.execute(get8091);
@@ -167,7 +168,7 @@ public class JettyServiceTest {
 		server.start();
 		client = new DefaultHttpClient();
 		resp = client.execute(get8091);
-		Assert.assertEquals(404, resp.getStatusLine().getStatusCode());
+		assertEquals(404, resp.getStatusLine().getStatusCode());
 		try {
 			client = new DefaultHttpClient();
 			resp = client.execute(get8099);
@@ -229,7 +230,7 @@ public class JettyServiceTest {
 	// application.start();
 	// client = new DefaultHttpClient();
 	// resp = client.execute(getHttps8099);
-	// Assert.assertEquals(404, resp.getStatusLine().getStatusCode());
+	// assertEquals(404, resp.getStatusLine().getStatusCode());
 	// try {
 	// client = new DefaultHttpClient();
 	// resp = client.execute(getHttp8099);
@@ -275,8 +276,7 @@ public class JettyServiceTest {
 
 		server.start();
 
-		Assert.assertEquals(1,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(1, server.getHandlerCollection().getHandlers().length);
 
 		// reg1 - Server1
 		//
@@ -285,8 +285,7 @@ public class JettyServiceTest {
 		ServiceRegistration<IHandlerProvider> reg1 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict1);
-		Assert.assertEquals(2,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(2, server.getHandlerCollection().getHandlers().length);
 
 		// reg2 - Server2
 		//
@@ -295,8 +294,7 @@ public class JettyServiceTest {
 		ServiceRegistration<IHandlerProvider> reg2 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict2);
-		Assert.assertEquals(2,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(2, server.getHandlerCollection().getHandlers().length);
 
 		// reg3 - Server1
 		//
@@ -305,21 +303,16 @@ public class JettyServiceTest {
 		ServiceRegistration<IHandlerProvider> reg3 = context.registerService(
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict3);
-		Assert.assertEquals(3,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(3, server.getHandlerCollection().getHandlers().length);
 
 		reg1.unregister();
-		Assert.assertEquals(2,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(2, server.getHandlerCollection().getHandlers().length);
 		reg2.unregister();
-		Assert.assertEquals(2,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(2, server.getHandlerCollection().getHandlers().length);
 		reg3.unregister();
-		Assert.assertEquals(1,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(1, server.getHandlerCollection().getHandlers().length);
 		reg0.unregister();
-		Assert.assertEquals(0,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(0, server.getHandlerCollection().getHandlers().length);
 		server.stop();
 	}
 
@@ -362,18 +355,14 @@ public class JettyServiceTest {
 
 		Assert.assertNull(server.getHandlerCollection());
 		server.start();
-		Assert.assertEquals(2,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(2, server.getHandlerCollection().getHandlers().length);
 
 		reg1.unregister();
-		Assert.assertEquals(1,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(1, server.getHandlerCollection().getHandlers().length);
 		reg2.unregister();
-		Assert.assertEquals(1,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(1, server.getHandlerCollection().getHandlers().length);
 		reg3.unregister();
-		Assert.assertEquals(0,
-				server.getHandlerCollection().getHandlers().length);
+		assertEquals(0, server.getHandlerCollection().getHandlers().length);
 
 		server.stop();
 	}
@@ -414,18 +403,14 @@ public class JettyServiceTest {
 				IHandlerProvider.class, new HandlerProvider(
 						new DefaultHandler()), dict2);
 
-		Assert.assertEquals(1,
-				server1.getHandlerCollection().getHandlers().length);
-		Assert.assertEquals(1,
-				server2.getHandlerCollection().getHandlers().length);
+		assertEquals(1, server1.getHandlerCollection().getHandlers().length);
+		assertEquals(1, server2.getHandlerCollection().getHandlers().length);
 
 		// update the properties of handler1 to "Server2"
 		//
 		reg1.setProperties(dict2);
-		Assert.assertEquals(0,
-				server1.getHandlerCollection().getHandlers().length);
-		Assert.assertEquals(2,
-				server2.getHandlerCollection().getHandlers().length);
+		assertEquals(0, server1.getHandlerCollection().getHandlers().length);
+		assertEquals(2, server2.getHandlerCollection().getHandlers().length);
 
 		// unregister
 		reg1.unregister();

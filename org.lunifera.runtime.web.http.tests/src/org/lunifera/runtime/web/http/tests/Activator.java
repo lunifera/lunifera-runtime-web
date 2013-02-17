@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
+import org.knowhowlab.osgi.testing.assertions.BundleAssert;
+import org.knowhowlab.osgi.testing.assertions.ServiceAssert;
 import org.lunifera.runtime.web.http.IHttpApplication;
 import org.lunifera.runtime.web.jetty.IHandlerProvider;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,71 +79,8 @@ public class Activator implements BundleActivator {
 		Activator.context = context;
 		instance = this;
 
-		startup();
-	}
-
-	/**
-	 * Configure the required bundles.
-	 * 
-	 * @throws BundleException
-	 */
-	private void startup() throws BundleException {
-		// stop http.servlet
-		// Bundle httpServlet = findBundle("org.eclipse.equinox.http.servlet");
-		// if (httpServlet != null) {
-		// httpServlet.stop();
-		// }
-
-		// stop jetty
-		Bundle jetty = findBundle("org.eclipse.equinox.http.jetty");
-		if (jetty != null) {
-			jetty.stop();
-		}
-
-		// start ds
-		Bundle ds = findBundle("org.eclipse.equinox.ds");
-		if (ds == null) {
-			logger.error("Bundle org.eclipse.equinox.ds is missing!");
-			throw new IllegalStateException(
-					"Bundle org.eclipse.equinox.ds is missing!");
-		}
-		if (ds.getState() != Bundle.STARTING && ds.getState() != Bundle.ACTIVE) {
-			ds.start();
-		}
-
-		// start util
-		Bundle util = findBundle("org.eclipse.equinox.util");
-		if (util == null) {
-			logger.error("Bundle org.eclipse.equinox.util is missing!");
-			throw new IllegalStateException(
-					"Bundle org.eclipse.equinox.util is missing!");
-		}
-
-		// start cm
-		Bundle cm = findBundle("org.eclipse.equinox.cm");
-		if (cm == null) {
-			logger.error("Bundle org.eclipse.equinox.cm is missing!");
-			throw new IllegalStateException(
-					"Bundle org.eclipse.equinox.cm is missing!");
-		}
-		if (cm.getState() != Bundle.STARTING && cm.getState() != Bundle.ACTIVE) {
-			cm.start();
-		}
-	}
-
-	/**
-	 * Returns the bundle with the given id.
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public static Bundle findBundle(String id) {
-		for (Bundle bundle : context.getBundles()) {
-			if (bundle.getSymbolicName().equals(id)) {
-				return bundle;
-			}
-		}
-		return null;
+		BundleAssert.setDefaultBundleContext(context);
+		ServiceAssert.setDefaultBundleContext(context);
 	}
 
 	@Override

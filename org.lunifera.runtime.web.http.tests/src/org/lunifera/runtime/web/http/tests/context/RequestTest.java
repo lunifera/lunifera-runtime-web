@@ -10,6 +10,8 @@
  */
 package org.lunifera.runtime.web.http.tests.context;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,8 +24,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.Assert;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -31,13 +31,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Before;
 import org.junit.Test;
+import org.knowhowlab.osgi.testing.utils.ServiceUtils;
 import org.lunifera.runtime.web.http.HttpConstants;
 import org.lunifera.runtime.web.http.tests.Activator;
 import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationException;
@@ -55,20 +55,14 @@ public class RequestTest {
 	 * Setup tests.
 	 * 
 	 * @throws ConfigurationException
+	 * @throws BundleException
 	 */
 	@Before
-	public void setup() throws ConfigurationException {
+	public void setup() throws ConfigurationException, BundleException {
+		BundleHelper.ensureSetup();
+
 		cm = Activator.getInstance().getConfigurationAdmin();
 		activator = Activator.getInstance();
-
-		Bundle bundle = Activator.context
-				.getBundle("org.eclipse.equinox.http.jetty");
-		if (bundle != null) {
-			try {
-				bundle.stop();
-			} catch (BundleException e) {
-			}
-		}
 	}
 
 	/**
@@ -90,6 +84,9 @@ public class RequestTest {
 
 		// start a new jetty server
 		Configuration jettyConfig = startJetty1();
+		waitCM(); // start takes some time
+		waitCM(); // start takes some time
+		waitCM(); // start takes some time
 
 		// register servlets
 		HttpService httpService = getHttpServiceByContextpath("/app1/test");
@@ -100,11 +97,11 @@ public class RequestTest {
 				null);
 
 		// test servlet 1
-		Assert.assertEquals("Servlet1 accessed!",
+		assertEquals("Servlet1 accessed!",
 				httpGETFirstLine("http://localhost:8091/app1/test/value1"));
 
 		// test servlet 7
-		Assert.assertEquals("Servlet7 accessed!",
+		assertEquals("Servlet7 accessed!",
 				httpGETFirstLine("http://localhost:8091/app7/test/value77"));
 
 		// stop the services again
@@ -145,14 +142,13 @@ public class RequestTest {
 				null);
 
 		// test servlet 1
-		Assert.assertEquals("Servlet1 accessed!",
+		assertEquals("Servlet1 accessed!",
 				httpGETFirstLine("http://localhost:8091/app1/test/value1"));
 
 		// test servlet 7 - Server 2
-		Assert.assertEquals(404,
-				httpGET("http://localhost:8091/app7/test/value77")
-						.getStatusLine().getStatusCode());
-		Assert.assertEquals("Servlet7 accessed!",
+		assertEquals(404, httpGET("http://localhost:8091/app7/test/value77")
+				.getStatusLine().getStatusCode());
+		assertEquals("Servlet7 accessed!",
 				httpGETFirstLine("http://localhost:8099/app7/test/value77"));
 
 		// stop the services again
@@ -194,10 +190,10 @@ public class RequestTest {
 				null);
 
 		// test servlet 1
-		Assert.assertEquals("Servlet1 accessed!",
+		assertEquals("Servlet1 accessed!",
 				httpGETFirstLine("http://localhost:8091/app1/test/value1"));
 		// test servlet 7 - Server 2
-		Assert.assertEquals("Servlet7 accessed!",
+		assertEquals("Servlet7 accessed!",
 				httpGETFirstLine("http://localhost:8099/app7/test/value77"));
 
 		// update the httpApplication 1 to run on server 2
@@ -209,13 +205,12 @@ public class RequestTest {
 		waitCM(); // server restart
 		waitCM(); // server restart
 
-		Assert.assertEquals(404,
-				httpGET("http://localhost:8091/app1/test/value1")
-						.getStatusLine().getStatusCode());
-		Assert.assertEquals("Servlet1 accessed!",
+		assertEquals(404, httpGET("http://localhost:8091/app1/test/value1")
+				.getStatusLine().getStatusCode());
+		assertEquals("Servlet1 accessed!",
 				httpGETFirstLine("http://localhost:8099/app1/test/value1"));
 		// test servlet 7 - Server 2
-		Assert.assertEquals("Servlet7 accessed!",
+		assertEquals("Servlet7 accessed!",
 				httpGETFirstLine("http://localhost:8099/app7/test/value77"));
 
 		// stop the services again
@@ -257,12 +252,12 @@ public class RequestTest {
 				new DefaultHttpContext(Activator.context.getBundle()));
 
 		// test resource 1
-		Assert.assertEquals(
+		assertEquals(
 				"Was files1/info.txt",
 				httpGETFirstLine("http://localhost:8091/app1/test/resource/files1/info.txt"));
 
 		// test resource 1
-		Assert.assertEquals(
+		assertEquals(
 				"Was files2/info.txt",
 				httpGETFirstLine("http://localhost:8091/app7/test/resource/files2/info.txt"));
 
@@ -305,17 +300,17 @@ public class RequestTest {
 				new DefaultHttpContext(Activator.context.getBundle()));
 
 		// test servlet 1
-		Assert.assertEquals(
+		assertEquals(
 				"Was files1/info.txt",
 				httpGETFirstLine("http://localhost:8091/app1/test/resource/files1/info.txt"));
 
 		// test servlet 7 - Server 2
-		Assert.assertEquals(
+		assertEquals(
 				404,
 				httpGET(
 						"http://localhost:8091/app7/test/resource/files1/info.txt")
 						.getStatusLine().getStatusCode());
-		Assert.assertEquals(
+		assertEquals(
 				"Was files2/info.txt",
 				httpGETFirstLine("http://localhost:8099/app7/test/resource/files2/info.txt"));
 
@@ -359,11 +354,11 @@ public class RequestTest {
 				new DefaultHttpContext(Activator.context.getBundle()));
 
 		// test servlet 1
-		Assert.assertEquals(
+		assertEquals(
 				"Was files1/info.txt",
 				httpGETFirstLine("http://localhost:8091/app1/test/resource/files1/info.txt"));
 		// test servlet 7 - Server 2
-		Assert.assertEquals(
+		assertEquals(
 				"Was files2/info.txt",
 				httpGETFirstLine("http://localhost:8099/app7/test/resource/files2/info.txt"));
 
@@ -376,16 +371,16 @@ public class RequestTest {
 		waitCM(); // server restart
 		waitCM(); // server restart
 
-		Assert.assertEquals(
+		assertEquals(
 				404,
 				httpGET(
 						"http://localhost:8091/app1/test/resource/files1/info.txt")
 						.getStatusLine().getStatusCode());
-		Assert.assertEquals(
+		assertEquals(
 				"Was files1/info.txt",
 				httpGETFirstLine("http://localhost:8099/app1/test/resource/files1/info.txt"));
 		// test servlet 7 - Server 2
-		Assert.assertEquals(
+		assertEquals(
 				"Was files2/info.txt",
 				httpGETFirstLine("http://localhost:8099/app7/test/resource/files2/info.txt"));
 
@@ -505,13 +500,8 @@ public class RequestTest {
 	 */
 	public HttpService getHttpServiceByContextpath(String contextPath)
 			throws InvalidSyntaxException {
-		ServiceReference<HttpService> reference = Activator.context
-				.getServiceReferences(
-						HttpService.class,
-						String.format("(lunifera.http.contextPath=%s)",
-								contextPath)).iterator().next();
-		HttpService httpService = Activator.context.getService(reference);
-		return httpService;
+		return ServiceUtils.getService(Activator.context, HttpService.class,
+				String.format("(lunifera.http.contextPath=%s)", contextPath));
 	}
 
 	private void waitCM() {

@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -42,17 +44,23 @@ public class JettyService implements IJetty {
 	private HandlerCollection handlerCollection;
 	private Map<IHandlerProvider, Handler> handlerMap = new HashMap<IHandlerProvider, Handler>();
 
+	// OSGi
+	private BundleContext context;
+	private HandlerTracker serviceTracker;
+
+	// lifecycle
+	private final Lock accessLock = new ReentrantLock();
 	private boolean started;
+	private Server server;
+
+	// properties
 	private final String id;
 	private String name = "";
-
 	private boolean useNio;
 	private boolean useHttp = true;
 	private String host;
 	private int httpPort;
-
 	private File workDir;
-
 	private boolean useHttps;
 	private String httpsHost;
 	private int httpsPort;
@@ -63,12 +71,6 @@ public class JettyService implements IJetty {
 	private String sslKeystore;
 	private String sslKeystoreType;
 	private String sslKeyPassword;
-
-	private Server server;
-
-	private BundleContext context;
-
-	private HandlerTracker serviceTracker;
 
 	public JettyService(String id, BundleContext context) {
 		if (id == null) {
@@ -316,6 +318,8 @@ public class JettyService implements IJetty {
 		}
 
 		try {
+			// ensure that only one threas manipulates the contents
+			accessLock.lock();
 			// start the tracker to observe handler
 			try {
 				serviceTracker = new HandlerTracker(context, getName());
@@ -359,6 +363,7 @@ public class JettyService implements IJetty {
 			}
 
 		} finally {
+			accessLock.unlock();
 			started = true;
 		}
 	}
@@ -374,6 +379,8 @@ public class JettyService implements IJetty {
 		}
 
 		try {
+			// ensure that only one threas manipulates the contents
+			accessLock.lock();
 
 			if (serviceTracker != null) {
 				serviceTracker.close();
@@ -392,6 +399,7 @@ public class JettyService implements IJetty {
 			}
 
 		} finally {
+			accessLock.unlock();
 			started = false;
 		}
 	}
@@ -412,6 +420,9 @@ public class JettyService implements IJetty {
 		}
 
 		try {
+			// ensure that only one threas manipulates the contents
+			accessLock.lock();
+
 			// stop the server
 			try {
 				logger.info("Stopping server to add new handler!");
@@ -431,6 +442,7 @@ public class JettyService implements IJetty {
 			} catch (Exception e) {
 				logger.error("{}", e);
 			}
+			accessLock.unlock();
 		}
 	}
 
@@ -456,6 +468,9 @@ public class JettyService implements IJetty {
 		}
 
 		try {
+			// ensure that only one threas manipulates the contents
+			accessLock.lock();
+
 			// stop the server
 			try {
 				logger.info("Stopping server to add new handler!");
@@ -478,6 +493,7 @@ public class JettyService implements IJetty {
 			} catch (Exception e) {
 				logger.error("{}", e);
 			}
+			accessLock.unlock();
 		}
 	}
 

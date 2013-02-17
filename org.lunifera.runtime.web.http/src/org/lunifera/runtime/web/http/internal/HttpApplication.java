@@ -302,6 +302,20 @@ public class HttpApplication implements IHttpApplication {
 			}
 			bundleMonitors.clear();
 
+			// unregister http service
+			//
+			if (httpServiceRegistration != null) {
+				httpServiceRegistration.unregister();
+				httpServiceRegistration = null;
+			}
+
+			// unregister jetty handler
+			//
+			if (jettyHandlerProviderRegistration != null) {
+				jettyHandlerProviderRegistration.unregister();
+				jettyHandlerProviderRegistration = null;
+			}
+
 			// destroy the servlet context
 			//
 			if (servletContext != null) {
@@ -317,20 +331,6 @@ public class HttpApplication implements IHttpApplication {
 			// clear aliases
 			//
 			registeredAlias.clear();
-
-			// unregister http service
-			//
-			if (httpServiceRegistration != null) {
-				httpServiceRegistration.unregister();
-				httpServiceRegistration = null;
-			}
-
-			// unregister jetty handler
-			//
-			if (jettyHandlerProviderRegistration != null) {
-				jettyHandlerProviderRegistration.unregister();
-				jettyHandlerProviderRegistration = null;
-			}
 		} finally {
 			accessLock.unlock();
 			started = false;
@@ -534,7 +534,8 @@ public class HttpApplication implements IHttpApplication {
 	private void removeAliasFromRegistration(String alias) {
 		for (Registration reg : registeredArtifacts
 				.toArray(new Registration[registeredArtifacts.size()])) {
-			if (reg.isServlet() && reg.getAlias().equals(alias)) {
+			if ((reg.isServlet() || reg.isResource())
+					&& reg.getAlias().equals(alias)) {
 				registeredArtifacts.remove(reg);
 			}
 		}

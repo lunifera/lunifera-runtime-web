@@ -10,6 +10,8 @@
  */
 package org.lunifera.runtime.web.jetty.tests.context;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -18,8 +20,8 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.IJetty;
+import org.lunifera.runtime.web.jetty.JettyConstants;
 import org.lunifera.runtime.web.jetty.tests.Activator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
@@ -37,9 +39,11 @@ public class JettyFactoryTest {
 	 * Setup tests.
 	 * 
 	 * @throws ConfigurationException
+	 * @throws BundleException
 	 */
 	@Before
-	public void setup() throws ConfigurationException {
+	public void setup() throws ConfigurationException, BundleException {
+		BundleHelper.ensureSetup();
 		cm = Activator.getInstance().getConfigurationAdmin();
 		activator = Activator.getInstance();
 
@@ -60,36 +64,36 @@ public class JettyFactoryTest {
 	 */
 	@Test
 	public void test_startWebApplication() throws IOException {
-		Assert.assertEquals(0, activator.getJettys().size());
+		assertEquals(0, activator.getJettys().size());
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
 				JettyConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		waitCM();
-		Assert.assertEquals(1, activator.getJettys().size());
+		assertEquals(1, activator.getJettys().size());
 
 		// update instance
 		config.update(prepareDefaultProps());
 		waitCM();
-		Assert.assertEquals(1, activator.getJettys().size());
+		assertEquals(1, activator.getJettys().size());
 
 		// create new instance
 		Configuration config2 = cm.createFactoryConfiguration(
 				JettyConstants.OSGI__FACTORY_PID, null);
 		config2.update(prepareDefaultProps());
 		waitCM();
-		Assert.assertEquals(2, activator.getJettys().size());
+		assertEquals(2, activator.getJettys().size());
 
 		// remove instance 1
 		config.delete();
 		waitCM();
-		Assert.assertEquals(1, activator.getJettys().size());
+		assertEquals(1, activator.getJettys().size());
 
 		// remove instance 2
 		config2.delete();
 		waitCM();
-		Assert.assertEquals(0, activator.getJettys().size());
+		assertEquals(0, activator.getJettys().size());
 	}
 
 	/**
@@ -102,21 +106,21 @@ public class JettyFactoryTest {
 	public void test_properties() throws IOException, InvalidSyntaxException {
 		waitCM();
 
-		Assert.assertEquals(0, activator.getJettys().size());
+		assertEquals(0, activator.getJettys().size());
 
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8081)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8082)").size());
@@ -130,11 +134,11 @@ public class JettyFactoryTest {
 		config.update(props);
 		waitCM();
 
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8081)").size());
@@ -148,11 +152,11 @@ public class JettyFactoryTest {
 		config2.update(props2);
 		waitCM();
 
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8082)").size());
@@ -161,19 +165,19 @@ public class JettyFactoryTest {
 		config2.delete();
 		waitCM();
 
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8081)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8082)").size());
@@ -190,7 +194,7 @@ public class JettyFactoryTest {
 			InvalidSyntaxException {
 		waitCM();
 
-		Assert.assertEquals(0, activator.getJettys().size());
+		assertEquals(0, activator.getJettys().size());
 
 		// create new instance
 		Configuration config = cm.createFactoryConfiguration(
@@ -201,19 +205,19 @@ public class JettyFactoryTest {
 		config.update(props);
 		waitCM();
 
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8081)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8082)").size());
@@ -224,19 +228,19 @@ public class JettyFactoryTest {
 		config.update(props);
 		waitCM();
 
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server1)").size());
-		Assert.assertEquals(
+		assertEquals(
 				0,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8081)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.name=Server2)").size());
-		Assert.assertEquals(
+		assertEquals(
 				1,
 				Activator.context.getServiceReferences(IJetty.class,
 						"(lunifera.jetty.http.port=8082)").size());
