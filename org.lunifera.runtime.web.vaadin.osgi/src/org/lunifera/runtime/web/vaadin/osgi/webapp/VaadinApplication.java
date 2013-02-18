@@ -466,7 +466,9 @@ public class VaadinApplication implements IVaadinApplication {
 	 * @param provider
 	 */
 	public void addOSGiUIProvider(OSGiUIProvider provider) {
-		uiProviders.add(provider);
+		if (!uiProviders.contains(provider)) {
+			uiProviders.add(provider);
+		}
 	}
 
 	/**

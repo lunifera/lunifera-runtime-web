@@ -134,6 +134,11 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 			application.setHttpApplication(httpApplicationName);
 			application.setUIAlias(uialias);
 
+			// add the UI provider
+			for (OSGiUIProvider provider : providerMapping.values()) {
+				application.addOSGiUIProvider(provider);
+			}
+
 			Dictionary<String, Object> copyProps = copy(properties);
 			copyProps.put(VaadinConstants.APPLICATION_ID, application.getId());
 
@@ -221,8 +226,8 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void addUIFactory(ServiceReference<ComponentFactory> reference) {
-		ComponentFactory factory = reference.getBundle().getBundleContext().getService(
-				reference);
+		ComponentFactory factory = reference.getBundle().getBundleContext()
+				.getService(reference);
 		String name = (String) reference.getProperty("component.factory");
 		String[] tokens = name.split("/");
 		if (tokens.length != 2) {

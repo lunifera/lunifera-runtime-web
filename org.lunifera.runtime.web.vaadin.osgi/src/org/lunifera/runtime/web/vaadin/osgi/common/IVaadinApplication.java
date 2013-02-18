@@ -70,7 +70,8 @@ public interface IVaadinApplication {
 	List<OSGiUIProvider> getUiProviders();
 
 	/**
-	 * Is called to add an ui provider.
+	 * Is called to add an UI provider. Can be called twice with the same
+	 * instance. Handle that issue internal.
 	 * 
 	 * @param uiProvider
 	 */
