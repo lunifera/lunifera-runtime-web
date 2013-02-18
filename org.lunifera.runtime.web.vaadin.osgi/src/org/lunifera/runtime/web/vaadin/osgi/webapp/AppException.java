@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.vaadin.osgi.webapp;
 
+@SuppressWarnings("serial")
 public class AppException extends Exception{
 
 	public AppException() {

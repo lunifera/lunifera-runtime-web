@@ -6,6 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.lunifera.runtime.web.vaadin.osgi.Activator
 Bundle-ActivationPolicy: lazy
 Import-Package: com.vaadin.server;version="7.0.0",
+ com.vaadin.shared;version="7.0.1.nightly-faf98c84bd260b2a8315dc1cc62a1f932dfd2f37-366",
  com.vaadin.ui;version="7.0.0",
  javax.servlet;version="2.6.0",
  javax.servlet.http;version="2.6.0",
@@ -14,9 +15,7 @@ Import-Package: com.vaadin.server;version="7.0.0",
  org.eclipse.osgi.framework.console;version="1.1.0",
  org.icepush.servlet;version="0.5.4",
  org.json,
- org.lunifera.runtime.web.common,
- org.lunifera.runtime.web.http,
- org.lunifera.runtime.web.vaadin.common,
+ org.lunifera.runtime.common.dispose,
  org.osgi.framework;version="1.7.0",
  org.osgi.framework.wiring;version="1.1.0",
  org.osgi.service.cm;version="1.4.0",

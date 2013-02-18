@@ -9,8 +9,6 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.osgi.common;
 
-import org.lunifera.runtime.web.http.HttpConstants;
-import org.lunifera.runtime.web.http.IHttpApplication;
 import org.osgi.service.cm.ManagedServiceFactory;
 
 /**
@@ -52,10 +50,12 @@ public class VaadinConstants {
 	public static final String WIDGETSET = "lunifera.web.vaadin.widgetset";
 
 	/**
-	 * Property for the name of the {@link IHttpApplication} the
+	 * Property for the name of the IHttpApplication the
 	 * {@link IVaadinApplication} should be deployed at.
+	 * <p>
+	 * See <code>org.lunifera.runtime.web.http.HttpConstants</code>.
 	 */
-	public static final String HTTP_APPLICATION_NAME = HttpConstants.APPLICATION_NAME;
+	public static final String HTTP_APPLICATION_NAME = "lunifera.http.name";
 
 	/**
 	 * The default name of the vaadin application.
@@ -66,4 +66,26 @@ public class VaadinConstants {
 	 * The default name of the UIAlias.
 	 */
 	public static final String DEFAULT_UI_ALIAS = "lunifera";
+
+	/**
+	 * OSGi property component.factory for the vaadin UI (tab sheet). The
+	 * vaadin.ui.class name is part of the factory name and putted after the /.
+	 * The class name is required for lazy loading issues.
+	 * <p>
+	 * Example:
+	 * 
+	 * factory=
+	 * "org.lunifera.web.vaadin.UI/org.lunifera.web.vaadin.example.Vaadin7DemoUI"
+	 */
+	public static final String OSGI_COMP_FACTORY__VAADIN_UI = "org.lunifera.web.vaadin.UI";
+
+	/**
+	 * The prefix of the factory component name before the UI class name starts. <br>
+	 * UI-Class name: org.lunifera.web.vaadin.example.Vaadin7DemoUI<br>
+	 * Factory name: org.lunifera.web.vaadin.UI/org.lunifera.web.vaadin.example.
+	 * Vaadin7DemoUI
+	 */
+	public static final String PREFIX__UI_CLASS = OSGI_COMP_FACTORY__VAADIN_UI
+			+ "/";
+
 }

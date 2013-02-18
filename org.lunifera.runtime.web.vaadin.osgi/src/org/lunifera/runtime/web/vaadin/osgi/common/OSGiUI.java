@@ -10,29 +10,21 @@
  *    Florian Pirchner - initial API and implementation
  *    
  *******************************************************************************/
-package org.lunifera.runtime.web.vaadin.common;
-
-import java.security.Principal;
-import java.util.Hashtable;
+package org.lunifera.runtime.web.vaadin.osgi.common;
 
 import org.lunifera.runtime.common.dispose.IDisposable;
-import org.lunifera.runtime.web.common.IWebContextRegistry;
-import org.lunifera.runtime.web.vaadin.common.internal.VaadinWebContext;
 import org.osgi.service.component.ComponentInstance;
 
 import com.vaadin.server.SessionDestroyEvent;
 import com.vaadin.server.SessionDestroyListener;
-import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
-
+ 
 @SuppressWarnings("serial")
 public abstract class OSGiUI extends UI implements SessionDestroyListener,
-		IDisposable.Listener, IVaadinWebContext.Provider {
+		IDisposable.Listener {
 
 	private ComponentInstance instance;
-	private IWebContextRegistry registry;
-	private IVaadinWebContext webContext;
 
 	/**
 	 * Sets the component instance that can be used to dispose the instance of
@@ -51,24 +43,6 @@ public abstract class OSGiUI extends UI implements SessionDestroyListener,
 	@Override
 	public void setSession(VaadinSession session) {
 		super.setSession(session);
-
-		initContext();
-	}
-
-	/**
-	 * Initializes the web context.
-	 */
-	protected void initContext() {
-		if (registry != null) {
-			Principal user = VaadinService.getCurrentRequest()
-					.getUserPrincipal();
-			Hashtable<String, Object> properties = new Hashtable<String, Object>();
-			webContext = (IVaadinWebContext) registry.createContext(
-					user != null ? user.getName() : null, properties);
-			webContext.addDisposeListener(this);
-
-			((VaadinWebContext) webContext).setUi(this);
-		}
 	}
 
 	@Override
@@ -104,35 +78,9 @@ public abstract class OSGiUI extends UI implements SessionDestroyListener,
 	 * OSGi runtime.
 	 */
 	protected void dispose() {
-		if (webContext != null) {
-			webContext.removeDisposeListener(this);
-			webContext.dispose();
-			webContext = null;
-		}
-
 		if (instance != null) {
 			instance.dispose();
 			instance = null;
 		}
 	}
-
-	/**
-	 * Called by OSGi-DS
-	 * 
-	 * @param registry
-	 */
-	protected void setWebContextRegistry(IWebContextRegistry registry) {
-		this.registry = registry;
-	}
-
-	/**
-	 * Returns the web context. May return <code>null</code> if no context was
-	 * prepared.
-	 * 
-	 * @return the webContext
-	 */
-	public IVaadinWebContext getWebContext() {
-		return webContext;
-	}
-
 }

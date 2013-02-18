@@ -25,8 +25,6 @@ import org.apache.shiro.web.servlet.IniShiroFilter;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.http.servlet.ExtendedHttpService;
-import org.lunifera.runtime.web.http.IHttpApplication;
-import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 import org.lunifera.runtime.web.vaadin.osgi.Activator;
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
 import org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants;

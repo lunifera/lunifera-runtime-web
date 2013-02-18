@@ -19,8 +19,8 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.runtime.web.common.IDisposable;
-import org.lunifera.runtime.web.common.IUserInfo;
+import org.lunifera.runtime.common.dispose.IDisposable;
+import org.lunifera.runtime.common.user.IUserInfo;
 import org.lunifera.runtime.web.common.IWebContext;
 import org.lunifera.runtime.web.common.IWebContextRegistry;
 import org.osgi.service.prefs.BackingStoreException;
@@ -122,7 +122,7 @@ public class VaadinWebContextTest {
 		IUserInfo info = context.getUserInfo();
 
 		Assert.assertEquals("user1", info.getId());
-//		Assert.assertNotNull(info.getLocation());
+		// Assert.assertNotNull(info.getLocation());
 
 		Preferences preferences = info.getPreferences("tests");
 		Assert.assertNotNull(preferences);
@@ -140,7 +140,7 @@ public class VaadinWebContextTest {
 		IUserInfo info1_1 = context1_1.getUserInfo();
 
 		Assert.assertEquals("user1", info1_1.getId());
-//		Assert.assertNotNull(info1_1.getLocation());
+		// Assert.assertNotNull(info1_1.getLocation());
 
 		Preferences preferences1_1 = info1_1.getPreferences("tests");
 		preferences1_1.put("test1", "user_1__test1");

@@ -47,15 +47,23 @@ public class WebResourcesHttpContext implements HttpContext, BundleListener {
 	}
 
 	@Override
-	public URL getResource(final String name) {
+	public URL getResource(String name) {
 		URL resource = null;
 		// iterate the server bundle, client bundle and fragments
 		for (Bundle bundle : resourceBundles) {
-			String uri = name.startsWith("/") ? name : "/" + name;
-			String root = (String) bundle.getHeaders().get("Vaadin-Resources");
-			if (root != null && !root.equals("") && !".".equals(root)) {
-				uri = "/" + root + uri;
+			String uri = "";
+			if (isServerBundle(bundle) || isClientBundle(bundle)
+					|| isThemesBundle(bundle)) {
+				uri = name.startsWith("/") ? name : "/" + name;
+			} else {
+				uri = name.startsWith("/") ? name : "/" + name;
+				String root = (String) bundle.getHeaders().get(
+						"Vaadin-Resources");
+				if (root != null && !root.equals("") && !".".equals(root)) {
+					uri = "/" + root + uri;
+				}
 			}
+
 			if (null != (resource = bundle.getResource(uri))) {
 				break;
 			}

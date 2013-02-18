@@ -158,9 +158,9 @@ public class HttpApplicationServletContextHandler extends
 		if (null == provider)
 			return null;
 
-		final String pathSpec = (String) entry.getKey();
-		final String pathInfo = PathMap.pathInfo(pathSpec, path);
-		final URL resourceUrl = provider.getResource(pathInfo);
+//		final String pathSpec = (String) entry.getKey();
+//		final String pathInfo = PathMap.pathInfo(pathSpec, path);
+		final URL resourceUrl = provider.getResource(path);
 		if (null == resourceUrl)
 			return null;
 		try {

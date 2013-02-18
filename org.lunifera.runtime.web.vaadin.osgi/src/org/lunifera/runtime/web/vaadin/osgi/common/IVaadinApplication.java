@@ -15,7 +15,7 @@ package org.lunifera.runtime.web.vaadin.osgi.common;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
+import org.lunifera.runtime.web.vaadin.osgi.webapp.OSGiUIProvider;
 
 public interface IVaadinApplication {
 

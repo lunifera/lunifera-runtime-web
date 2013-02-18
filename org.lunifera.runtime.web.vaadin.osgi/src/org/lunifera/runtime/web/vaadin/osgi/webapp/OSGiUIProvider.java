@@ -10,11 +10,12 @@
  *    Florian Pirchner - initial API and implementation
  *    
  *******************************************************************************/
-package org.lunifera.runtime.web.vaadin.common;
+package org.lunifera.runtime.web.vaadin.osgi.webapp;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import org.lunifera.runtime.web.vaadin.osgi.common.OSGiUI;
 import org.osgi.service.component.ComponentFactory;
 import org.osgi.service.component.ComponentInstance;
 
@@ -28,11 +29,25 @@ public class OSGiUIProvider extends UIProvider {
 
 	private final ComponentFactory factory;
 	private final Class<? extends UI> uiClass;
+	private final String vaadinApplication;
 
-	public OSGiUIProvider(ComponentFactory factory, Class<? extends UI> uiClass) {
+	public OSGiUIProvider(ComponentFactory factory,
+			Class<? extends UI> uiClass, String vaadinApplication) {
 		super();
 		this.factory = factory;
 		this.uiClass = uiClass;
+		this.vaadinApplication = vaadinApplication;
+	}
+
+	/**
+	 * Returns the vaadin application this UI provider belongs to. If
+	 * <code>null</code> then this UI provider can be used for each vaadin
+	 * application.
+	 * 
+	 * @return the vaadinApplication
+	 */
+	protected String getVaadinApplication() {
+		return vaadinApplication;
 	}
 
 	@Override
@@ -50,4 +65,20 @@ public class OSGiUIProvider extends UIProvider {
 
 		return ui;
 	}
+
+	// /**
+	// * Initializes the web context.
+	// */
+	// protected void initContext() {
+	// if (registry != null) {
+	// Principal user = VaadinService.getCurrentRequest()
+	// .getUserPrincipal();
+	// Hashtable<String, Object> properties = new Hashtable<String, Object>();
+	// webContext = (IVaadinWebContext) registry.createContext(
+	// user != null ? user.getName() : null, properties);
+	// webContext.addDisposeListener(this);
+	//
+	// ((VaadinWebContext) webContext).setUi(this);
+	// }
+	// }
 }

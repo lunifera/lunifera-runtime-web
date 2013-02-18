@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.icepush.servlet.MainServlet;
-import org.lunifera.runtime.web.vaadin.common.OSGiUIProvider;
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
+import org.lunifera.runtime.web.vaadin.osgi.webapp.OSGiUIProvider;
 import org.vaadin.artur.icepush.ICEPush;
 import org.vaadin.artur.icepush.JavascriptProvider;
 
