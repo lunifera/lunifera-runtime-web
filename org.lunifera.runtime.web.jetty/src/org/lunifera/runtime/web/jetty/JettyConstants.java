@@ -20,7 +20,7 @@ public interface JettyConstants extends org.osgi.framework.Constants {
 	/**
 	 * The persistence ID for the {@link ManagedServiceFactory}.
 	 */
-	public static final String OSGI__FACTORY_PID = "org.lunifera.runtime.web.jetty.server.factory";
+	public static final String OSGI__FACTORY_PID = "lunifera.jetty.server.factory";
 
 	/**
 	 * The automatic given jetty server id. Can not be specified using cm.

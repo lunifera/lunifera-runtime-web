@@ -24,7 +24,6 @@ public class BundleHelper {
 	public static void ensureNeededBundlesAvailable() throws BundleException {
 
 		// check bundles available
-		assertBundleAvailable("org.lunifera.runtime.web.http");
 		assertBundleAvailable("org.lunifera.runtime.web.jetty");
 		assertBundleAvailable("org.eclipse.equinox.ds");
 		assertBundleAvailable("org.eclipse.equinox.util");

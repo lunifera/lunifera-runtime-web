@@ -13,6 +13,7 @@ package org.lunifera.runtime.web.jetty.tests.context;
 import static junit.framework.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -26,6 +27,7 @@ import org.lunifera.runtime.web.jetty.tests.Activator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationException;
@@ -281,6 +283,40 @@ public class JettyFactoryTest {
 
 		config.delete();
 		config2.delete();
+	}
+
+	/**
+	 * Tests the access of the PID.
+	 * 
+	 * @throws IOException
+	 * @throws InvalidSyntaxException
+	 */
+	@Test
+	public void test_getPID() throws IOException, InvalidSyntaxException {
+		waitCM();
+		assertEquals(
+				0,
+				Activator.context.getServiceReferences(IJetty.class,
+						"(lunifera.jetty.http.port=8082)").size());
+
+		// create new instance
+		Configuration config = cm.createFactoryConfiguration(
+				JettyConstants.OSGI__FACTORY_PID, null);
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
+		props.put(JettyConstants.HTTP_PORT, "8082");
+		config.update(props);
+		waitCM();
+
+		Collection<ServiceReference<IJetty>> references = Activator.context
+				.getServiceReferences(IJetty.class,
+						"(lunifera.jetty.http.port=8082)");
+		if (references.iterator().hasNext()) {
+			ServiceReference<IJetty> reference = references.iterator().next();
+			String pid = (String) reference
+					.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+			Assert.assertEquals(config.getPid(), pid);
+		}
 	}
 
 	private void waitCM() {
