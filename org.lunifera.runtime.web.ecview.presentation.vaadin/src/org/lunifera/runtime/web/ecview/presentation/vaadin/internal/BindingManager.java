@@ -42,15 +42,25 @@ public class BindingManager implements IBindingManager {
 		super();
 		this.viewContext = viewContext;
 		this.validationRealm = validationRealm;
-		dbc = new DataBindingContext();
+		dbc = new DataBindingContext(validationRealm);
 	}
 
+	/**
+	 * Returns the validation realm for the binding manager.
+	 * 
+	 * @return
+	 */
 	public Realm getValidationRealm() {
 		return validationRealm;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager#bindVisible(org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable, com.vaadin.ui.Field)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager
+	 * #bindVisible(org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable,
+	 * com.vaadin.ui.Field)
 	 */
 	@Override
 	public void bindVisible(YVisibleable yVisibleAble, Field<?> field) {
@@ -62,8 +72,13 @@ public class BindingManager implements IBindingManager {
 		dbc.bindValue(uiObservable, modelObservable);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager#bindEnabled(org.eclipse.emf.ecp.ecview.common.model.core.YEnable, com.vaadin.ui.Field)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager
+	 * #bindEnabled(org.eclipse.emf.ecp.ecview.common.model.core.YEnable,
+	 * com.vaadin.ui.Field)
 	 */
 	@Override
 	public void bindEnabled(YEnable yEnable, Field<?> field) {
@@ -74,8 +89,13 @@ public class BindingManager implements IBindingManager {
 		dbc.bindValue(uiObservable, modelObservable);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager#bindReadonly(org.eclipse.emf.ecp.ecview.common.model.core.YEditable, com.vaadin.data.Property.ReadOnlyStatusChangeNotifier)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager
+	 * #bindReadonly(org.eclipse.emf.ecp.ecview.common.model.core.YEditable,
+	 * com.vaadin.data.Property.ReadOnlyStatusChangeNotifier)
 	 */
 	@Override
 	public void bindReadonly(YEditable yEditable,

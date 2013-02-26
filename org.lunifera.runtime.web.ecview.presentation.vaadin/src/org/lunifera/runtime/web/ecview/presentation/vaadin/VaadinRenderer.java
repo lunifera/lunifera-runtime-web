@@ -91,7 +91,6 @@ public class VaadinRenderer implements IRenderer {
 	 * 
 	 * @param viewContext
 	 */
-	// TODO add JUnit-Test!!!!
 	protected void initializeService(IViewContext viewContext, ComponentContainer componentContainer) {
 		viewContext.registerService(IServiceRegistry.SERVICE__BINDING_MANAGER, new BindingManager(viewContext, VaadinObservables.getRealm(UI.getCurrent())));
 	}

@@ -122,10 +122,12 @@ public abstract class AbstractComponentValueProperty extends
 
 	public IVaadinComponentObservableValue observe(Component widget) {
 		return (IVaadinComponentObservableValue) observe(
-				VaadinObservables.getRealm(widget.getUI()), widget);
+				VaadinObservables.getRealm(VaadinObservables.getUI(widget)),
+				widget);
 	}
 
-	public IVaadinComponentObservableValue observeDelayed(int delay, Component widget) {
+	public IVaadinComponentObservableValue observeDelayed(int delay,
+			Component widget) {
 		throw new UnsupportedOperationException("Delayed not allowed");
 	}
 }

@@ -99,6 +99,17 @@ public class VaadinObservables {
 	}
 
 	/**
+	 * Returns the UI of the widget or the current UI.
+	 * 
+	 * @param widget
+	 * @return
+	 */
+	public static UI getUI(Component widget) {
+		UI ui = widget.getUI();
+		return ui != null ? ui : UI.getCurrent();
+	}
+
+	/**
 	 * Returns the property type of the given field.
 	 * 
 	 * @param field
