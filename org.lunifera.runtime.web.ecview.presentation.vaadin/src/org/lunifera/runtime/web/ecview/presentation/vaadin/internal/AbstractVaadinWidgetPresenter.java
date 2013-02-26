@@ -81,7 +81,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		//
 		CoreModelUtil.initTransientValues(yEmbeddable);
 
-		BindingManager bindingManger = getViewContext().getService(
+		IBindingManager bindingManger = getViewContext().getService(
 				IServiceRegistry.SERVICE__BINDING_MANAGER);
 
 		// bind visible
@@ -98,7 +98,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 
 		createBindings((YEmbeddable) yField, field);
 
-		BindingManager bindingManger = getViewContext().getService(
+		IBindingManager bindingManger = getViewContext().getService(
 				IServiceRegistry.SERVICE__BINDING_MANAGER);
 
 		// bind enabled

@@ -13,6 +13,7 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
@@ -30,24 +31,28 @@ import com.vaadin.ui.Field;
 /**
  * Is used to bind values.
  */
-public class BindingManager {
+public class BindingManager implements IBindingManager {
 
 	@SuppressWarnings("unused")
 	private final IViewContext viewContext;
-	private DataBindingContext dbc = new DataBindingContext();
+	private final Realm validationRealm;
+	private DataBindingContext dbc;
 
-	public BindingManager(IViewContext viewContext) {
+	public BindingManager(IViewContext viewContext, Realm validationRealm) {
 		super();
 		this.viewContext = viewContext;
+		this.validationRealm = validationRealm;
+		dbc = new DataBindingContext();
 	}
 
-	/**
-	 * Binds the visible option.
-	 * 
-	 * @param viewContext
-	 * @param yVisibleAble
-	 * @param field
+	public Realm getValidationRealm() {
+		return validationRealm;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager#bindVisible(org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable, com.vaadin.ui.Field)
 	 */
+	@Override
 	public void bindVisible(YVisibleable yVisibleAble, Field<?> field) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
 				.observeVisible(field);
@@ -57,13 +62,10 @@ public class BindingManager {
 		dbc.bindValue(uiObservable, modelObservable);
 	}
 
-	/**
-	 * Binds the visible option.
-	 * 
-	 * @param viewContext
-	 * @param yEnable
-	 * @param field
+	/* (non-Javadoc)
+	 * @see org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager#bindEnabled(org.eclipse.emf.ecp.ecview.common.model.core.YEnable, com.vaadin.ui.Field)
 	 */
+	@Override
 	public void bindEnabled(YEnable yEnable, Field<?> field) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
 				.observeEnabled(field);
@@ -72,13 +74,10 @@ public class BindingManager {
 		dbc.bindValue(uiObservable, modelObservable);
 	}
 
-	/**
-	 * Binds the visible option.
-	 * 
-	 * @param viewContext
-	 * @param yEditable
-	 * @param field
+	/* (non-Javadoc)
+	 * @see org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager#bindReadonly(org.eclipse.emf.ecp.ecview.common.model.core.YEditable, com.vaadin.data.Property.ReadOnlyStatusChangeNotifier)
 	 */
+	@Override
 	public void bindReadonly(YEditable yEditable,
 			Property.ReadOnlyStatusChangeNotifier field) {
 		IVaadinModelObservableValue uiObservable = VaadinObservables
