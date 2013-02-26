@@ -4,6 +4,6 @@
    <service>
       <provide interface="org.osgi.service.cm.ManagedServiceFactory"/>
    </service>
-   <property name="service.pid" type="String" value="org.lunifera.runtime.web.vaddin.application.factory"/>
+   <property name="service.pid" type="String" value="lunifera.vaadin.application.factory"/>
    <reference bind="addUIFactory" cardinality="0..n" interface="org.osgi.service.component.ComponentFactory" name="ComponentFactory" policy="dynamic" target="(component.factory=org.lunifera.web.vaadin.UI/*)" unbind="removeUIFactory"/>
 </scr:component>

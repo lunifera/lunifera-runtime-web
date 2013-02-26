@@ -4,5 +4,5 @@
    <service>
       <provide interface="org.osgi.service.cm.ManagedServiceFactory"/>
    </service>
-   <property name="service.pid" type="String" value="org.lunifera.runtime.web.http.application.factory"/>
+   <property name="service.pid" type="String" value="lunifera.http.application.factory"/>
 </scr:component>

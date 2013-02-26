@@ -19,7 +19,7 @@ public class VaadinConstants {
 	/**
 	 * The persistence ID used for {@link ManagedServiceFactory}
 	 */
-	public static final String OSGI__FACTORY_PID = "org.lunifera.runtime.web.vaddin.application.factory";
+	public static final String OSGI__FACTORY_PID = "lunifera.vaadin.application.factory";
 
 	/**
 	 * Property for the id of the http application.
