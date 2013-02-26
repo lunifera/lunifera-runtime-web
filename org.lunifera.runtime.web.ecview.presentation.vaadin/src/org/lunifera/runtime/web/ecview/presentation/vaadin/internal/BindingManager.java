@@ -10,7 +10,6 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -21,6 +20,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.vaadin.databinding.IVaadinComponentObservableValue;
 import org.lunifera.runtime.web.vaadin.databinding.IVaadinModelObservableValue;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -31,37 +31,14 @@ import com.vaadin.ui.Field;
 /**
  * Is used to bind values.
  */
-public class BindingManager implements IBindingManager {
-
-	@SuppressWarnings("unused")
-	private final IViewContext viewContext;
-	private final Realm validationRealm;
-	private DataBindingContext dbc;
+public class BindingManager extends
+		org.eclipse.emf.ecp.ecview.common.binding.AbstractBindingManager
+		implements IBindingManager {
 
 	public BindingManager(IViewContext viewContext, Realm validationRealm) {
-		super();
-		this.viewContext = viewContext;
-		this.validationRealm = validationRealm;
-		dbc = new DataBindingContext(validationRealm);
+		super(viewContext, validationRealm);
 	}
 
-	/**
-	 * Returns the validation realm for the binding manager.
-	 * 
-	 * @return
-	 */
-	public Realm getValidationRealm() {
-		return validationRealm;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager
-	 * #bindVisible(org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable,
-	 * com.vaadin.ui.Field)
-	 */
 	@Override
 	public void bindVisible(YVisibleable yVisibleAble, Field<?> field) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
@@ -69,34 +46,18 @@ public class BindingManager implements IBindingManager {
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				yVisibleAble,
 				CoreModelPackage.eINSTANCE.getYVisibleable_Visible());
-		dbc.bindValue(uiObservable, modelObservable);
+		getDatabindingContext().bindValue(uiObservable, modelObservable);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager
-	 * #bindEnabled(org.eclipse.emf.ecp.ecview.common.model.core.YEnable,
-	 * com.vaadin.ui.Field)
-	 */
 	@Override
 	public void bindEnabled(YEnable yEnable, Field<?> field) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
 				.observeEnabled(field);
 		IObservableValue modelObservable = EMFObservables.observeValue(yEnable,
 				CoreModelPackage.eINSTANCE.getYEnable_Enabled());
-		dbc.bindValue(uiObservable, modelObservable);
+		getDatabindingContext().bindValue(uiObservable, modelObservable);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.lunifera.runtime.web.ecview.presentation.vaadin.internal.IBindingManager
-	 * #bindReadonly(org.eclipse.emf.ecp.ecview.common.model.core.YEditable,
-	 * com.vaadin.data.Property.ReadOnlyStatusChangeNotifier)
-	 */
 	@Override
 	public void bindReadonly(YEditable yEditable,
 			Property.ReadOnlyStatusChangeNotifier field) {
@@ -104,11 +65,13 @@ public class BindingManager implements IBindingManager {
 				.observeReadonly(field);
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				yEditable, CoreModelPackage.eINSTANCE.getYEditable_Editable());
-		dbc.bindValue(uiObservable, modelObservable, new UpdateValueStrategy(
-				UpdateValueStrategy.POLICY_UPDATE)
-				.setConverter(new BoolNegator()), new UpdateValueStrategy(
-				UpdateValueStrategy.POLICY_UPDATE)
-				.setConverter(new BoolNegator()));
+		getDatabindingContext().bindValue(
+				uiObservable,
+				modelObservable,
+				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
+						.setConverter(new BoolNegator()),
+				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
+						.setConverter(new BoolNegator()));
 	}
 
 	/**
