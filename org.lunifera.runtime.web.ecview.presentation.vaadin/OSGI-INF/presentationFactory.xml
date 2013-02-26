@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lunifera.runtime.web.ecview.presentation.vaadin.factory">
    <implementation class="org.lunifera.runtime.web.ecview.presentation.vaadin.internal.PresenterFactory"/>
    <service>
-      <provide interface="org.eclipse.emf.ecp.ecview.ui.core.editparts.presentation.IPresentationFactory"/>
+      <provide interface="org.eclipse.emf.ecp.ecview.common.presentation.IPresentationFactory"/>
    </service>
-</scr:component>
+</scr:component>  
