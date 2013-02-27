@@ -19,12 +19,8 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IRenderer;
-import org.eclipse.emf.ecp.ecview.common.services.IServiceRegistry;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.BindingManager;
-import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.UI;
 
 /**
  * A special implementation for ECP that offers convenience methods.
@@ -82,17 +78,7 @@ public class VaadinRenderer implements IRenderer {
 	@Override
 	public void render(IViewContext viewContext, Object componentContainer,
 			Map<String, Object> options) throws ContextException {
-		initializeService(viewContext, (ComponentContainer) componentContainer);
 		viewContext.render(UI_KIT_URI, componentContainer, options);
-	}
-
-	/**
-	 * Initializes all the needed vaadin specific services
-	 * 
-	 * @param viewContext
-	 */
-	protected void initializeService(IViewContext viewContext, ComponentContainer componentContainer) {
-		viewContext.registerService(IServiceRegistry.SERVICE__BINDING_MANAGER, new BindingManager(viewContext, VaadinObservables.getRealm(UI.getCurrent())));
 	}
 
 }
