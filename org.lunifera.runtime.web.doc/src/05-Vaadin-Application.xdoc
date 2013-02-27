@@ -1,16 +1,326 @@
 chapter:VaadinApplication[Vaadin Application]
 
-The bundle code[org.lunifera.runtime.web.jetty] was introduced to provide 
-the capability in starting / stopping and controlling different instances of jetty servers.
-Each of this instances should be independent from each other.
+The bundle code[org.lunifera.runtime.web.vaadin.osgi] was introduced to integrate vaadin into
+OSGi environments properly. It only support vaadin 7 and can not be used for vaadin 6.
 
- ul[
-item[The main issue was to use CM (OSGi Configuration manager) to handle all the settings
-required to setup an instance of jetty properly.]
-item[Another important issue was to capability of providing Jetty-Handlers from other bundles to an configured
-instance by OSGi services.]
+The implementation tries to minimize the required client code to startup a vaadin application. To run
+a vaadin application one OSGi-ComponentFactory definition is required.
+It has to provide instances of codeRef[org.lunifera.runtime.web.vaadin.osgi.common.OSGiUI][OSGiUI] that are the root UI-instances for
+each browser tab. And it has to address the target Vaadin-Application-Instance the UI-definition belongs
+to.
+
+A standalone example can be found in the bundle code[org.lunifera.examples.runtime.web.vaadin.standalone].
+
+section:_Overview[Overview]
+
+img[../images/VaadinApplication.png][Image 1: Overview][img-small][]
+
+To ensure a maximum of flexibility the codeRef[org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication][IVaadinApplication] is implemented using link[http://wiki.osgi.org/wiki/Configuration_Admin][OSGi-CM].
+Configurations can be created by the codeRef[org.osgi.service.cm.ConfigurationAdmin][ConfigurationAdmin]
+passing a service factory PID (persistence id) and properties. 
+
+The configuration admin...
+  ol[
+	item[stores/updates the config in the persistence store]
+	item[forwards the config to the codeRef[org.osgi.service.cm.ManagedServiceFactory][ManagedServiceFactory]
+		named codeRef[org.lunifera.runtime.web.vaadin.osgi.webapp.VaadinApplicationFactory][VaadinApplicationFactory]]
+	item[the codeRef[org.lunifera.runtime.web.vaadin.osgi.webapp.VaadinApplicationFactory][VaadinApplicationFactory]... 
+		ul[
+		item[... creates a new instance of IVaadinApplication if no service is available for the given PID (not factory PID!).
+		Each IVaadinApplication accesses a ref:_HttpService[HttpService] and registers its servlets,
+		filters and resources on it.]
+		item[... stops the IVaadinApplication instance, updates its values and starts it again, if a service is available for the
+			PID. (The servlet context will also become removed from the jetty server)]
+		item[... stops the IVaadinApplication and deletes the config if delete was called on the config.]
+		]
+	]
+  ] 
+
+section2[Intro example]
+
+The following code will create a new Vaadin-Application which uses the HttpService provided by the name
+"Http1" to register its servlets, filters and resources.
+
+The URI to access the Vaadin-Application is built by the
+  ol[
+	item[Jetty-Server-Instance the Http-Application is deployed at]
+	item[The context patch of the HttpService that was provided by the Http-Application]
+	item[The uiAlias specified for the Vaadin-Application]
+  ] 
+  
+See example picture above and lets assume that Http1 is deployed at a JettyServer on port 8089. Then
+the URI to access the vaadin UI would be code[http://localhost:8089/demo/carstore/main].
+
+code[Java][
+		// Create new servletContext
+		//
+		
+		// create properties and add values to it
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(VaadinConstants.APPLICATION_NAME, "Carstore-Web");
+		props.put(VaadinConstants.UI_ALIAS, "main");
+		props.put(VaadinConstants.WIDGETSET, "org.lunifera.examples.runtime.web.vaadin.standalone.widgetset.Widgetset");
+		props.put(VaadinConstants.HTTP_APPLICATION_NAME, "Http1");
+		
+		// create new config by config admin
+		// using the Factory-PID
+		Configuration config = admin.createFactoryConfiguration(
+				VaadinConstants.OSGI__FACTORY_PID, null);
+		
+		// create the configuration 
+		// and forward to the VaadinApplicationFactory
+		config.update(props);
 ]
 
-section[Test]
+section:_Properties[Properties]
+
+All properties that can be used are contained in codeRef[org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants][VaadinConstants]
+and the value type is String.
+
+table[
+tr[td[ID] td[Name] td[Description] td[Default] td[Filterable]]
+tr[td[code[lunifera.vaadin.application.factory]] td[Factory PID] td[Create a new config using the config admin]
+ td[] td[true]]
+tr[td[code[lunifera.web.vaadin.id]] td[Vaadin-Application Id]  td[The unique application id] td[] td[true]]
+tr[td[code[lunifera.web.vaadin.name]] td[Vaadin-Application Name]   td[The name of the application] td[vaadindefault]  td[true]]
+tr[td[code[lunifera.web.vaadin.uialias]] td[UI alias] td[The alias to access the main UI] td[lunifera] td[true]]
+tr[td[code[lunifera.web.vaadin.widgetset]] td[Widgetset Name] td[The name of the widgetset that should
+be used] td[] td[true]]
+tr[td[code[lunifera.http.name]] td[Http-Application name] td[The name of the Http-Application. The HttpService
+will be filtered by that name] td[] td[true]]
+]
 
 
+
+section:_CodeSamples[Code sampels]
+
+section2[HttpService selection]
+
+The vaadin application will internal use an ExtendedHttpService to register the servlets, filter and resources.
+To find the assigned HttpService, the property VaadinConstants.HTTP_APPLICATION_NAME is used by the vaadin application to select the assgined HttpService.
+
+code[Java][
+		// Find proper http service
+		//
+		Collection<ServiceReference<ExtendedHttpService>> references = bundleContext
+			.getServiceReferences(ExtendedHttpService.class, "(&(objectClass=org.eclipse.equinox.http.servlet.ExtendedHttpService)(lunifera.http.name=Http1))");
+		....
+]
+
+
+section2[Create new Vaadin-Application-Instance]
+
+Creating a new vaadin application instance is very simple. You just have to create a new config by the configAdmin
+and the factory PID. On calling update with the properties the VaadinApplicationFactory will create a new instance
+of vaadin application. 
+
+code[Java][
+		// Create new servletContext
+		//
+		
+		// create properties and add values to it
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(VaadinConstants.APPLICATION_NAME, "Carstore-Web");
+		props.put(VaadinConstants.UI_ALIAS, "main");
+		props.put(VaadinConstants.WIDGETSET, "org.lunifera.examples.runtime.web.vaadin.standalone.widgetset.Widgetset");
+		props.put(VaadinConstants.HTTP_APPLICATION_NAME, "Http1");
+		
+		// create new config by config admin
+		// using the Factory-PID
+		Configuration config = admin.createFactoryConfiguration(
+				VaadinConstants.OSGI__FACTORY_PID, null);
+		
+		// create the configuration 
+		// and forward to the VaadinApplicationFactory
+		config.update(props);
+]
+
+section2[Update existing Vaadin-Application-Instance]
+
+To update an existing vaadin application instance, you have to know its PID. Not the "factory PID" but the
+unique PID of the http application instance. How to access the PID of a Vaadin-Application-Instance will be described
+later.
+
+Following code will force the vaadin application to use HttpService with name Http2.
+
+code[Java][
+		// update existing configuration
+		//
+		
+		// access the pid for vaadin application 1 from example above
+		String pid = getPIDForVaadinApplication("Carstore-Web");
+		
+		// get the config
+		Configuration config = admin.getConfiguration(pid);
+		
+		// update the config with new properties
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(VaadinConstants.HTTP_APPLICATION_NAME, "Http2");
+		
+		config.update(props);
+]
+
+What happens:
+ol[
+item[Vaadin application with name "Carstore-Web" was stopped]
+item[Vaadin-Application unregistered servlets,... from HttpService with name Http1]
+item[code[lunifera.http.name]-property was set to "Http2"]
+item[Vaadin application was started again]
+item[Vaadin-Application accesses HttpService with name Http2]
+item[Vaadin-Application registers servlets,... at new HttpService]
+]
+
+section2[Delete existing Vaadin-Application-Instance]
+
+To delete an existing vaadin application instance, you have to know its PID. Not the "factory PID" but the
+unique PID of the vaadin application instance. How to access the PID of a Vaadin-Application-Instance will be described
+later.
+
+The following code will delete the vaadin application from example above.
+
+code[Java][
+		// delete existing configuration
+		//
+		
+		// access the pid for vaadin application
+		String pid = getPIDForVaadinApplication("Carstore-Web");
+		
+		// get the config
+		Configuration config = admin.getConfiguration(pid);
+		// delete it
+		config.delete();
+]
+
+What happens:
+ol[
+item[Vaadin application with name "Carstore-Web" was stopped]
+item[Vaadin-Application unregistered all servlets,...]
+]
+
+section:_consoleCommands[Console commands]
+
+The vaadin application feature provides OSGi console commands:
+
+code[ 
+osgi>lvaadin
+---- Lunifera vaadin application commands ----
+     lvaadin <cmd> \[args\]
+        <start|stop> \[application id\] - Starts or stops the vaadin application with the given id
+        <ls>  - Lists all registered vaadin applications
+        <properties>  - Lists all available service properties
+]
+
+For instance code[ljetty ls] list all active http applications.
+code[
+osgi>lvaadin ls
+	---- Available vaadin application instances ----
+	 id: 1 	 name: ECViewApplication 	 vaadin application: ECViewApplication 	 ui alias: demo 	 widgetset: org.lunifera.examples.runtime.web.ecp.uimodel.presentation.vaadin.widgetset.Widgetset 
+]
+
+section:_QueryHttp[Query Vaadin-Applications]
+
+This sections demonstrates how vaadin applications can be filtered. Therefore OSGi service filters are used.
+Section ref:_Properties[Properties] shows all properties that can be used to query a http application.
+
+That are
+ul[
+item[code[lunifera.vaadin.application.factory]]
+item[code[lunifera.web.vaadin.id]]
+item[code[lunifera.web.vaadin.name]]
+item[code[lunifera.web.vaadin.uialias]]
+item[code[lunifera.web.vaadin.widgetset]]
+item[code[lunifera.http.name]]
+]
+
+section2[Find pid by name]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IVaadinApplication>> references = bundleContext
+			.getServiceReferences(IVaadinApplication.class, "(lunifera.web.vaadin.name=Carstore-Web)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IVaadinApplication> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+section2[Find pid by Widgetset]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IVaadinApplication>> references = bundleContext
+			.getServiceReferences(IVaadinApplication.class, "(lunifera.web.vaadin.widgetset=org.lunifera.examples.runtime.web.vaadin.standalone.widgetset.Widgetset)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IVaadinApplication> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+section:_IVaadinApplication[Vaadin-Appplication-service]
+
+The codeRef[org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication][Vaadin-Application-Service] can be used to get information about the application,
+to control its lifecycle and to added UI-Providers. It is not possible to change the values of its properties. Therefore OSGi-CM must be used.
+
+section2:_UIProvider[UI-Provider]
+
+As described above the service allows to add UI-Providers. For normal UI-Providers are provided by the
+core implementation of the Vaadin-Application. They are used to create instances of code[com.vaadin.ui.UI]
+which are the root UI-elements of each browser tab. In vaadin 7 each browser window or tab is based on
+an UI-instance.
+
+The most common way providing an UI-class for a vaadin application is the use of link[http://wiki.osgi.org/wiki/Declarative_Services][OSGi-DS] component factories.
+ComponentFactories are able to create many instances of the same service and gain control over their
+lifecycle.
+To prepare a component definition for a Vaadin-Application-UI a UI-implementation has to be created first.
+
+It is a good idea to follow the example in code[org.lunifera.examples.runtime.web.vaadin.standalone].
+code[Java][ 
+package org.lunifera.examples.runtime.web.vaadin.standalone;
+
+@Theme(Reindeer.THEME_NAME)
+public class Vaadin7StandaloneDemoUI extends OSGiUI {
+
+	@Override
+	public void init(VaadinRequest request) {
+	....
+]
+
+As a second step, the OSGi-DS component factory has to be defined and registered at MANIFEST.MF.
+
+code[ 
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" 
+      factory="org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@VaadinDemo-VaadinApplication" 
+                                immediate="false" name="org.lunifera.examples.runtime.web.vaadin.standalone.ui">
+   <implementation class="org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI"/>
+</scr:component>
+]
+
+The most important setting of the xml-definition is the factory property. It follows a strict pattern.
+
+code[org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@VaadinDemo-VaadinApplication]
+
+code[org.lunifera.web.vaadin.UI]:
+Common factory name. Has to be called that way since it is used by core to filter all UI-Provider-Factories.
+
+code[/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI]:
+The full qualified name of the UI-Class. Same as specified in property "implementation class".
+
+code[@VaadinDemo-VaadinApplication]:
+The name of the vaadin application that UI-Provider belongs to. If that fragment does not exist, the
+UI belongs to all Vaadin-Applications.
+
+
+A possible Carstore-Web definition could look something like:
+code[ 
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" 
+      factory="org.lunifera.web.vaadin.UI/org.lunifera.example.carstore.ui.UI@Carstore-Web" 
+                                immediate="false" name="org.lunifera.example.carstore.ui">
+   <implementation class="org.lunifera.example.carstore.ui.UI"/>
+</scr:component>
+]

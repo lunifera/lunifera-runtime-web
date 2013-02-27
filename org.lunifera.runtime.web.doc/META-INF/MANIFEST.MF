@@ -13,4 +13,5 @@ Import-Package: javax.servlet;version="2.6.0",
  org.lunifera.runtime.web.http.internal,
  org.lunifera.runtime.web.jetty,
  org.lunifera.runtime.web.jetty.internal,
+ org.lunifera.runtime.web.vaadin.osgi.common,
  org.osgi.service.cm;version="1.4.0"
