@@ -333,7 +333,7 @@ code[Java][
 		if (references.iterator().hasNext()) {
 			ServiceReference<IHandlerProvider> reference = references.iterator().next();
 			// access PID by properties
-			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID); 
 		}
 ]
 
