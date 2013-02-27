@@ -1,0 +1,33 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" >
+<title>Vaadin Application</title>
+
+<link href="book.css" rel="stylesheet" type="text/css">
+<link href="code.css" rel="stylesheet" type="text/css">
+<link rel="home" href="xtext.html" title="">
+</head>
+<body>
+<a name="VaadinApplication"></a>
+<h1>Vaadin Application</h1>
+<p>
+The bundle <span class="inlinecode">org.lunifera.runtime.web.jetty</span> was introduced to provide 
+the capability in starting / stopping and controlling different instances of jetty servers.
+Each of this instances should be independent from each other.
+</p>
+<p>
+ <ul>
+	<li>
+		The main issue was to use CM (OSGi Configuration manager) to handle all the settings
+		required to setup an instance of jetty properly.
+	</li>
+	<li>
+		Another important issue was to capability of providing Jetty-Handlers from other bundles to an configured
+		instance by OSGi services.
+	</li>
+</ul>
+</p>
+<a name="VaadinApplication_3"></a>
+<h2>Test</h2>
+</body>
+</html>

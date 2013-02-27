@@ -1,0 +1,16 @@
+chapter:VaadinApplication[Vaadin Application]
+
+The bundle code[org.lunifera.runtime.web.jetty] was introduced to provide 
+the capability in starting / stopping and controlling different instances of jetty servers.
+Each of this instances should be independent from each other.
+
+ ul[
+item[The main issue was to use CM (OSGi Configuration manager) to handle all the settings
+required to setup an instance of jetty properly.]
+item[Another important issue was to capability of providing Jetty-Handlers from other bundles to an configured
+instance by OSGi services.]
+]
+
+section[Test]
+
+

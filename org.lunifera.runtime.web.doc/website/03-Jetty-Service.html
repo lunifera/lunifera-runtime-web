@@ -1,0 +1,512 @@
+<br style="clear:both;height:1em;">
+	<div id="leftcol">
+		<div class="nav-logo">
+			<a href="index.php"><img src="logo.png" style="margin-left:10px; width:155px"/></a>
+		</div>
+		<ul id="leftnav">
+		<li class="separator"><div class="separator">
+		<img src="triangle.gif" style="height:12px; margin-right: 2px; "  /><img src="triangle-90.gif" style="display:none; margin-right: 2px" height="12px" />
+		<a href="01-Introduction.php">Overview</a></div>
+		<ul style="display: none;" id="subToc_01-Introduction.html">
+		<li id="01-Introduction.html#_Content.html" ><a href="01-Introduction.php#_Content.php" >Content</a></li>
+		</ul>
+		</li>
+		<li class="separator"><div class="separator">
+		<img src="triangle.gif" style="height:12px; margin-right: 2px; "  /><img src="triangle-90.gif" style="display:none; margin-right: 2px" height="12px" />
+		<a href="03-Jetty-Service.php">IJetty-Service</a></div>
+		<ul style="display: none;" id="subToc_03-Jetty-Service.html">
+		<li id="03-Jetty-Service.html#_Overview.html" ><a href="03-Jetty-Service.php#_Overview.php" >Overview</a></li>
+		<li id="03-Jetty-Service.html#_Properties.html" ><a href="03-Jetty-Service.php#_Properties.php" >Properties</a></li>
+		<li id="03-Jetty-Service.html#_CodeSamples.html" ><a href="03-Jetty-Service.php#_CodeSamples.php" >Code sampels</a></li>
+		<li id="03-Jetty-Service.html#_consoleCommands.html" ><a href="03-Jetty-Service.php#_consoleCommands.php" >Console commands</a></li>
+		<li id="03-Jetty-Service.html#_Query.html" ><a href="03-Jetty-Service.php#_Query.php" >Query jetty services</a></li>
+		<li id="03-Jetty-Service.html#_startStop.html" ><a href="03-Jetty-Service.php#_startStop.php" >Start and stop jetty services</a></li>
+		</ul>
+		</li>
+		<li class="separator"><div class="separator">
+		<img src="triangle.gif" style="height:12px; margin-right: 2px; "  /><img src="triangle-90.gif" style="display:none; margin-right: 2px" height="12px" />
+		<a href="04-Http-Application.php">Http Application</a></div>
+		<ul style="display: none;" id="subToc_04-Http-Application.html">
+		<li id="04-Http-Application.html#_Overview.html" ><a href="04-Http-Application.php#_Overview.php" >Overview</a></li>
+		<li id="04-Http-Application.html#_Properties.html" ><a href="04-Http-Application.php#_Properties.php" >Properties</a></li>
+		<li id="04-Http-Application.html#_ServletContext.html" ><a href="04-Http-Application.php#_ServletContext.php" >ServletContext</a></li>
+		<li id="04-Http-Application.html#_HttpService.html" ><a href="04-Http-Application.php#_HttpService.php" >HttpService</a></li>
+		<li id="04-Http-Application.html#_CodeSamples.html" ><a href="04-Http-Application.php#_CodeSamples.php" >Code sampels</a></li>
+		<li id="04-Http-Application.html#_consoleCommands.html" ><a href="04-Http-Application.php#_consoleCommands.php" >Console commands</a></li>
+		<li id="04-Http-Application.html#_QueryHttp.html" ><a href="04-Http-Application.php#_QueryHttp.php" >Query Http-applications</a></li>
+		<li id="04-Http-Application.html#_QueryHandlerProvider.html" ><a href="04-Http-Application.php#_QueryHandlerProvider.php" >Query Handler-Provider</a></li>
+		<li id="04-Http-Application.html#_QueryHttpServices.html" ><a href="04-Http-Application.php#_QueryHttpServices.php" >Query HttpServices</a></li>
+		</ul>
+		</li>
+		<li class="separator"><div class="separator">
+		<img src="triangle.gif" style="height:12px; margin-right: 2px; "  /><img src="triangle-90.gif" style="display:none; margin-right: 2px" height="12px" />
+		<a href="05-Vaadin-Application.php">Vaadin Application</a></div>
+		<ul style="display: none;" id="subToc_05-Vaadin-Application.html">
+		<li id="05-Vaadin-Application.html#VaadinApplication_3.html" ><a href="05-Vaadin-Application.php#VaadinApplication_3.php" >Test</a></li>
+		</ul>
+		</li>
+		</ul>
+	</div>
+	<div id="midcolumn">
+		<a name="JettyService" ></a>
+		<h1>IJetty-Service</h1>
+				<div class="toc">
+				  <ul>
+				    <li><a href="03-Jetty-Service.php#_Overview.php" >Overview</a></li>
+				    <li><a href="03-Jetty-Service.php#_Properties.php" >Properties</a></li>
+				    <li><a href="03-Jetty-Service.php#_CodeSamples.php" >Code sampels</a></li>
+				    <li><a href="03-Jetty-Service.php#_consoleCommands.php" >Console commands</a></li>
+				    <li><a href="03-Jetty-Service.php#_Query.php" >Query jetty services</a></li>
+				    <li><a href="03-Jetty-Service.php#_startStop.php" >Start and stop jetty services</a></li>
+				  </ul>
+				</div>
+				
+		<p>
+		The bundle <span class="inlinecode">org.lunifera.runtime.web.jetty</span> was introduced to provide 
+		the capability of starting / stopping and controlling different instances of jetty servers.
+		Each of this instances is independent from each other and runs on different ports.
+		</p>
+		<a name="_Overview" ></a>
+		<span style="float:left; border-top: 1px dotted #d4d4dd; margin-left: 0; margin-top: 5px;
+			padding: 5px 0;
+			padding-top: 5px;"></span><a style="float: right" href="#">Top</a>
+			<br style="clear:both"></br>
+			<h1>Overview</h1>
+			<div class="toc">
+			  <ul>
+			    <li><a href="03-Jetty-Service.php#_Overview_4.php" >Intro example</a></li>
+			  </ul>
+			</div>
+			<p>
+			<div class="image" >
+			<a class="gallery" rel="prettyPhoto[all]" title="Image 1: Overview" href="images/JettyFactory.png">
+				<img src="images/JettyFactory.png" 
+					class="img-small" 
+				/>
+			</a>
+			<div class="caption">
+				Image 1: Overview
+			</div>
+			</div>
+			</p>
+			<p>
+			To ensure a maximum of flexibility the <abbr title="org.lunifera.runtime.web.jetty.IJetty" >IJetty-Service</abbr> is implemented using <a href="http://wiki.osgi.org/wiki/Configuration_Admin" >OSGi-CM</a>.
+			Configurations can be created by the <abbr title="org.osgi.service.cm.ConfigurationAdmin" >ConfigurationAdmin</abbr>
+			passing a service factory PID (persistence id) and properties. 
+			</p>
+			<p>
+			The configuration admin...
+			  <ol>
+			  <li>stores/updates the config in the persistence store</li>
+			  <li>forwards the config to the <abbr title="org.osgi.service.cm.ManagedServiceFactory" >ManagedServiceFactory</abbr>
+			  		named <abbr title="org.lunifera.runtime.web.jetty.internal.JettyFactory" >JettyFactory</abbr></li>
+			  <li>the <abbr title="org.lunifera.runtime.web.jetty.internal.JettyFactory" >JettyFactory</abbr>... 
+			  		<ul>
+			    <li>... creates a new instance of IJetty-Service if no service is available for the given PID (not factory PID!).
+			    		Each IJetty-Service contains one jetty instance and is responsible for controlling it.</li>
+			    <li>... stops the IJetty-Service instance, updates its values and starts it again, if a service is available for the
+			    			PID.</li>
+			    <li>... stops the IJetty-Service and deletes the config if delete was called on the config.</li>
+			  </ul>
+			  
+			  </li>
+			</ol>
+			</p>
+			<a name="_Overview_4" ></a>
+			<h2>Intro example</h2>
+			<p>
+			The following code will create a new jetty service and starts the Jetty-Server at port 8081
+			<div class="literallayout">
+				<div class="incode">
+					<p class="code">
+						<span class="comment">//&nbsp;Create&nbsp;new&nbsp;jetty&nbsp;instance<br/>
+						</span><span class="comment">//<br/>
+						</span><br/>
+						<span class="comment">//&nbsp;create&nbsp;properties&nbsp;and&nbsp;add&nbsp;values&nbsp;to&nbsp;it<br/>
+						</span>Dictionary&lt;String,&nbsp;Object&gt;&nbsp;props&nbsp;=&nbsp;<span class="keyword">new</span>&nbsp;Hashtable&lt;String,&nbsp;Object&gt;();<br/>
+						props.put(JettyConstants.JETTY_SERVER_NAME,&nbsp;<span class="string">"Server1"</span>);<br/>
+						props.put(JettyConstants.HTTP_PORT,&nbsp;<span class="string">"8081"</span>);<br/>
+						<br/>
+						<span class="comment">//&nbsp;create&nbsp;new&nbsp;config&nbsp;by&nbsp;config&nbsp;admin<br/>
+						</span><span class="comment">//&nbsp;using&nbsp;the&nbsp;Factory-PID<br/>
+						</span>Configuration&nbsp;config&nbsp;=&nbsp;admin.createFactoryConfiguration(<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JettyConstants.OSGI__FACTORY_PID,&nbsp;null);<br/>
+						<br/>
+						<span class="comment">//&nbsp;create&nbsp;the&nbsp;configuration&nbsp;<br/>
+						</span><span class="comment">//&nbsp;and&nbsp;forward&nbsp;to&nbsp;the&nbsp;JettyFactory<br/>
+						</span>config.update(props);
+					</p>
+				</div>
+			</div>
+			</p>
+		<a name="_Properties" ></a>
+		<span style="float:left; border-top: 1px dotted #d4d4dd; margin-left: 0; margin-top: 5px;
+			padding: 5px 0;
+			padding-top: 5px;"></span><a style="float: right" href="#">Top</a>
+			<br style="clear:both"></br>
+			<h1>Properties</h1>
+			<p>
+			All properties that can be used are contained in <abbr title="org.lunifera.runtime.web.jetty.JettyConstants" >JettyConstants</abbr>
+			and the value type is String.
+			</p>
+			<p>
+			<table>
+			  <tr>
+			    <td>ID</td>
+			    <td>Name</td>
+			    <td>Description</td>
+			    <td>Default</td>
+			    <td>Filterable</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.server.factory</span></td>
+			    <td>Factory PID</td>
+			    <td>Create a new config using the config admin</td>
+			    <td></td>
+			    <td>true</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.id</span></td>
+			    <td>Jetty Id</td>
+			    <td>The unique jetty id</td>
+			    <td></td>
+			    <td>true</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.name</span></td>
+			    <td>Jetty Name</td>
+			    <td>The name of the jetty</td>
+			    <td>defaultserver</td>
+			    <td>true</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.http.enabled</span></td>
+			    <td>Http Enabled</td>
+			    <td>Specifies if http is enabled</td>
+			    <td>true</td>
+			    <td>false</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.http.port</span></td>
+			    <td>Http Port</td>
+			    <td>Specifies the port</td>
+			    <td>0 -- first available port</td>
+			    <td>true</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.http.host</span></td>
+			    <td>Host Name</td>
+			    <td>Specifies the host name</td>
+			    <td>0.0.0.0 -- all network adapters</td>
+			    <td>false</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.http.nio</span></td>
+			    <td>Use NIO</td>
+			    <td>True if NIO should be used</td>
+			    <td></td>
+			    <td>false</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.https.enabled</span></td>
+			    <td>Https Enabled</td>
+			    <td>True if https is enabled</td>
+			    <td>false</td>
+			    <td>false</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.https.port</span></td>
+			    <td>Https Port</td>
+			    <td>Specifies the port number for https</td>
+			    <td>0 -- first available port</td>
+			    <td>false</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.https.host</span></td>
+			    <td>Https Host</td>
+			    <td>Specifies the host name</td>
+			    <td>0.0.0.0 -- all network adapters</td>
+			    <td>false</td>
+			  </tr>
+			</table>
+			</p>
+			<p>
+			How to configure SSL see <a href="http://wiki.eclipse.org/Jetty/Howto/Configure_SSL" >SSL Config</a>
+			<table>
+			  <tr>
+			    <td>Lunifera</td>
+			    <td>Jetty</td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.ssl.keystore</span></td>
+			    <td><span class="inlinecode">ssl.keystore</span></td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.ssl.password</span></td>
+			    <td><span class="inlinecode">ssl.password</span></td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.ssl.keypassword</span></td>
+			    <td><span class="inlinecode">ssl.keypassword</span></td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.ssl.needclientauth</span></td>
+			    <td><span class="inlinecode">ssl.needclientauth</span></td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.ssl.wantclientauth</span></td>
+			    <td><span class="inlinecode">ssl.wantclientauth</span></td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.ssl.protocol</span></td>
+			    <td><span class="inlinecode">ssl.protocol</span></td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.ssl.algorithm</span></td>
+			    <td><span class="inlinecode">ssl.algorithm</span></td>
+			  </tr>
+			  <tr>
+			    <td><span class="inlinecode">lunifera.jetty.ssl.keystoretype</span></td>
+			    <td><span class="inlinecode">ssl.keystoretype</span></td>
+			  </tr>
+			</table>
+			</p>
+		<a name="_CodeSamples" ></a>
+		<span style="float:left; border-top: 1px dotted #d4d4dd; margin-left: 0; margin-top: 5px;
+			padding: 5px 0;
+			padding-top: 5px;"></span><a style="float: right" href="#">Top</a>
+			<br style="clear:both"></br>
+			<h1>Code sampels</h1>
+			<div class="toc">
+			  <ul>
+			    <li><a href="03-Jetty-Service.php#_CodeSamples_1.php" >Create new Server-Instance</a></li>
+			    <li><a href="03-Jetty-Service.php#_CodeSamples_2.php" >Update existing Server-Instance</a></li>
+			    <li><a href="03-Jetty-Service.php#_CodeSamples_3.php" >Delete existing Server-Instance</a></li>
+			  </ul>
+			</div>
+			<a name="_CodeSamples_1" ></a>
+			<h2>Create new Server-Instance</h2>
+			<p>
+			Creating a new server instance is very simple. You just have to create a new config by the configAdmin
+			and the factory PID. On calling update with the properties the JettyFactory will create a new instance
+			of jetty service. And the jetty service will internal start the jetty server.
+			</p>
+			<p>
+			<div class="literallayout">
+				<div class="incode">
+					<p class="code">
+						<span class="comment">//&nbsp;Create&nbsp;new&nbsp;jetty&nbsp;instance<br/>
+						</span><span class="comment">//<br/>
+						</span><br/>
+						<span class="comment">//&nbsp;create&nbsp;properties&nbsp;and&nbsp;add&nbsp;values&nbsp;to&nbsp;it<br/>
+						</span>Dictionary&lt;String,&nbsp;Object&gt;&nbsp;props&nbsp;=&nbsp;<span class="keyword">new</span>&nbsp;Hashtable&lt;String,&nbsp;Object&gt;();<br/>
+						props.put(JettyConstants.JETTY_SERVER_NAME,&nbsp;<span class="string">"Server1"</span>);<br/>
+						props.put(JettyConstants.HTTP_PORT,&nbsp;<span class="string">"8081"</span>);<br/>
+						<br/>
+						<span class="comment">//&nbsp;create&nbsp;new&nbsp;config&nbsp;by&nbsp;config&nbsp;admin<br/>
+						</span><span class="comment">//&nbsp;using&nbsp;the&nbsp;Factory-PID<br/>
+						</span>Configuration&nbsp;config&nbsp;=&nbsp;admin.createFactoryConfiguration(<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JettyConstants.OSGI__FACTORY_PID,&nbsp;null);<br/>
+						<br/>
+						<span class="comment">//&nbsp;create&nbsp;the&nbsp;configuration&nbsp;<br/>
+						</span><span class="comment">//&nbsp;and&nbsp;forward&nbsp;to&nbsp;the&nbsp;JettyFactory<br/>
+						</span>config.update(props);
+					</p>
+				</div>
+			</div>
+			</p>
+			<a name="_CodeSamples_2" ></a>
+			<h2>Update existing Server-Instance</h2>
+			<p>
+			To update an existing jetty service instance, you have to know its PID. Not the &quot;factory PID&quot; but the
+			unique PID of the jetty service instance. How to access the PID of a Jetty-Instance will be described
+			later.
+			</p>
+			<p>
+			Following code will update the jetty service with port 8081 to name=Server2 and port=8089.
+			Therefore the jetty server will be stopped and started afterwards again.
+			</p>
+			<p>
+			<div class="literallayout">
+				<div class="incode">
+					<p class="code">
+						<span class="comment">//&nbsp;update&nbsp;existing&nbsp;configuration<br/>
+						</span><span class="comment">//<br/>
+						</span><br/>
+						<span class="comment">//&nbsp;access&nbsp;the&nbsp;pid&nbsp;for&nbsp;jetty&nbsp;instance<br/>
+						</span>String&nbsp;pid&nbsp;=&nbsp;getPIDForServerWithPort(8081);<br/>
+						<br/>
+						<span class="comment">//&nbsp;get&nbsp;the&nbsp;config<br/>
+						</span>Configuration&nbsp;config&nbsp;=&nbsp;admin.getConfiguration(pid);<br/>
+						<br/>
+						<span class="comment">//&nbsp;update&nbsp;the&nbsp;config&nbsp;with&nbsp;new&nbsp;properties<br/>
+						</span>Dictionary&lt;String,&nbsp;Object&gt;&nbsp;props&nbsp;=&nbsp;<span class="keyword">new</span>&nbsp;Hashtable&lt;String,&nbsp;Object&gt;();<br/>
+						props.put(JettyConstants.JETTY_SERVER_NAME,&nbsp;<span class="string">"Server2"</span>);<br/>
+						props.put(JettyConstants.HTTP_PORT,&nbsp;<span class="string">"8089"</span>);<br/>
+						<br/>
+						config.update(props);
+					</p>
+				</div>
+			</div>
+			</p>
+			<a name="_CodeSamples_3" ></a>
+			<h2>Delete existing Server-Instance</h2>
+			<p>
+			To delete an existing jetty service instance, you have to know its PID. Not the &quot;factory PID&quot; but the
+			unique PID of the jetty service instance. How to access the PID of a Jetty-Instance will be described
+			later.
+			</p>
+			<p>
+			The following code will delete the jetty service with port 8081. The jetty server will be stopped properly.
+			</p>
+			<p>
+			<div class="literallayout">
+				<div class="incode">
+					<p class="code">
+						<span class="comment">//&nbsp;delete&nbsp;existing&nbsp;configuration<br/>
+						</span><span class="comment">//<br/>
+						</span><br/>
+						<span class="comment">//&nbsp;access&nbsp;the&nbsp;pid&nbsp;for&nbsp;jetty&nbsp;instance<br/>
+						</span>String&nbsp;pid&nbsp;=&nbsp;getPIDForServerWithPort(8081);<br/>
+						<br/>
+						<span class="comment">//&nbsp;get&nbsp;the&nbsp;config<br/>
+						</span>Configuration&nbsp;config&nbsp;=&nbsp;admin.getConfiguration(pid);<br/>
+						<span class="comment">//&nbsp;delete&nbsp;it<br/>
+						</span>config.delete();
+					</p>
+				</div>
+			</div>
+			</p>
+		<a name="_consoleCommands" ></a>
+		<span style="float:left; border-top: 1px dotted #d4d4dd; margin-left: 0; margin-top: 5px;
+			padding: 5px 0;
+			padding-top: 5px;"></span><a style="float: right" href="#">Top</a>
+			<br style="clear:both"></br>
+			<h1>Console commands</h1>
+			<p>
+			The jetty service feature provides OSGi console commands:
+			</p>
+			<p>
+			<div class="literallayout">
+				<div class="incode">
+					<p class="code">
+						osgi&gt;ljetty<br/>
+						----&nbsp;Lunifera&nbsp;jetty&nbsp;commands&nbsp;----<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ljetty&nbsp;&lt;cmd&gt;&nbsp;[args]<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ls&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;active&nbsp;jetty&nbsp;server<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;start|stop&gt;&nbsp;[jetty&nbsp;id]&nbsp;-&nbsp;Starts&nbsp;or&nbsp;stops&nbsp;the&nbsp;jetty&nbsp;with&nbsp;the&nbsp;given&nbsp;id<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;properties&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;available&nbsp;service&nbsp;properties
+					</p>
+				</div>
+			</div>
+			</p>
+			<p>
+			For instance <span class="inlinecode">ljetty&nbsp;ls</span> list all active jetty services.
+			<div class="literallayout">
+				<div class="incode">
+					<p class="code">
+						osgi&gt;ljetty&nbsp;ls<br/>
+						&nbsp;&nbsp;&nbsp;----&nbsp;Available&nbsp;jetty&nbsp;instances&nbsp;----<br/>
+						&nbsp;&nbsp;&nbsp;id:&nbsp;5&nbsp;&nbsp;name:&nbsp;Server1&nbsp;&nbsp;port:&nbsp;8081&nbsp;&nbsp;started:&nbsp;true&nbsp;&nbsp;pid:&nbsp;lunifera.jetty.server.factory-1361724966109-4
+					</p>
+				</div>
+			</div>
+			</p>
+		<a name="_Query" ></a>
+		<span style="float:left; border-top: 1px dotted #d4d4dd; margin-left: 0; margin-top: 5px;
+			padding: 5px 0;
+			padding-top: 5px;"></span><a style="float: right" href="#">Top</a>
+			<br style="clear:both"></br>
+			<h1>Query jetty services</h1>
+			<div class="toc">
+			  <ul>
+			    <li><a href="03-Jetty-Service.php#_Query_3.php" >Find pid by Port</a></li>
+			    <li><a href="03-Jetty-Service.php#_Query_4.php" >Find pid by Name</a></li>
+			  </ul>
+			</div>
+			<p>
+			This sections demonstrates how jetty services can be filtered. Therefore OSGi service filters are used.
+			Section <a href="03-Jetty-Service.php#_Properties.php" title="Go to &quot;Properties&quot;">Properties</a> shows all properties that can be used to query a jetty service.
+			</p>
+			<p>
+			That are
+			<ul>
+			  <li><span class="inlinecode">lunifera.jetty.server.factory</span></li>
+			  <li><span class="inlinecode">lunifera.jetty.name</span></li>
+			  <li><span class="inlinecode">lunifera.jetty.http.port</span></li>
+			</ul>
+			</p>
+			<a name="_Query_3" ></a>
+			<h2>Find pid by Port</h2>
+			<p>
+			<div class="literallayout">
+				<div class="incode">
+					<p class="code">
+						<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+						</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IJetty&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IJetty.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.jetty.http.port=8082)"</span>);<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IJetty&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
+						</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+					</p>
+				</div>
+			</div>
+			</p>
+			<a name="_Query_4" ></a>
+			<h2>Find pid by Name</h2>
+			<p>
+			<div class="literallayout">
+				<div class="incode">
+					<p class="code">
+						<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+						</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IJetty&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IJetty.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.jetty.http.name=Server1)"</span>);<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IJetty&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
+						</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+					</p>
+				</div>
+			</div>
+			</p>
+		<a name="_startStop" ></a>
+		<span style="float:left; border-top: 1px dotted #d4d4dd; margin-left: 0; margin-top: 5px;
+			padding: 5px 0;
+			padding-top: 5px;"></span><a style="float: right" href="#">Top</a>
+			<br style="clear:both"></br>
+			<h1>Start and stop jetty services</h1>
+			<p>
+			The IJetty interface provides the methods start and stop that can be used to start and stop the jetty
+			server.
+			</p>
+			<p>
+			Just follow <a href="03-Jetty-Service.php#_Query.php" title="Go to &quot;Query jetty services&quot;">Query jetty services</a> to find the proper jetty server instance. Then the methods
+			of the service can be used to control the lifecycle.
+			</p>
+			<p>
+			Please note, that a jetty service may stop or start automatically if Jetty Handlers (see <a href="04-Http-Application.php" title="Go to &quot;Http Application&quot;">Http
+			Applications</a>) have been detected.
+			</p>
+		<div id="disqus_thread"></div>
+		<script type="text/javascript" src="documentationRoot.js"></script>
+		<script type="text/javascript">
+		    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+		    var disqus_shortname = 'xtext'; // required: replace example with your forum shortname
+		
+		    // The following are highly recommended additional parameters. Remove the slashes in front to use.
+		    var disqus_identifier = 'JettyService';
+		    var disqus_url = documentationRoot+'03-Jetty-Service.php';
+		
+		    /* * * DON'T EDIT BELOW THIS LINE * * */
+		    (function() {
+		        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+		        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+		    })();
+		</script>
+ 		<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	</div>
+	<br style="clear:both;height:1em;">

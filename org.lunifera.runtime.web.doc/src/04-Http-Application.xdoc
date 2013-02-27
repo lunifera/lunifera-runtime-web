@@ -1,0 +1,380 @@
+chapter:HttpApplication[Http Application]
+
+The bundle code[org.lunifera.runtime.web.http] was introduced for two main issues:
+
+1) to manage codeRef[javax.servlet.Servlet][ServletContexts] independent from any jetty server instance. 
+
+2) to provide an codeRef[org.eclipse.equinox.http.servlet.ExtendedHttpService][ExtendedHttpService] for
+each servlet context (each Http-Application).
+
+Clients should be able to access the provided HttpServices by name, contextPath or id to register servlets,
+filters and resources on the proper http service. Each Http-Application has to provide its own HttpService.
+
+ref:JettyService[JettyServices] should be able to track the provided ServletContexts to deploy them on
+the proper jetty server instance. The target jetty server from a Http-Application can be updated in runtime and jetty services
+will ensure that the ServletContext are undeployed and redeployed on a different server properly.
+
+section:_Overview[Overview]
+
+img[../images/HttpApplication.png][Image 1: Overview][img-small][]
+
+To ensure a maximum of flexibility the codeRef[org.lunifera.runtime.web.http.IHttpApplication][IHttpApplication] is implemented using link[http://wiki.osgi.org/wiki/Configuration_Admin][OSGi-CM].
+Configurations can be created by the codeRef[org.osgi.service.cm.ConfigurationAdmin][ConfigurationAdmin]
+passing a service factory PID (persistence id) and properties. 
+
+The configuration admin...
+  ol[
+	item[stores/updates the config in the persistence store]
+	item[forwards the config to the codeRef[org.osgi.service.cm.ManagedServiceFactory][ManagedServiceFactory]
+		named codeRef[org.lunifera.runtime.web.http.internal.HttpApplicationFactory][HttpApplicationFactory]]
+	item[the codeRef[org.lunifera.runtime.web.http.internal.HttpApplicationFactory][HttpApplicationFactory]... 
+		ul[
+		item[... creates a new instance of IHttpApplication if no service is available for the given PID (not factory PID!).
+		Each IHttpApplication contains one servletContext and is responsible for controlling it. The
+		provided httpApplication-services are tracked by the ref:JettyService[JettyServices]. If a proper
+		httpApplication is found, its servletContext will become deployed to the jetty server.]
+		item[... stops the IHttpApplication instance, updates its values and starts it again, if a service is available for the
+			PID. (The servlet context will also become removed from the jetty server)]
+		item[... stops the IHttpApplication and deletes the config if delete was called on the config.]
+		]
+	]
+  ] 
+
+section2[Intro example]
+
+The following code will create a new Http-Application. And will provide a ServletContext for the contextPath
+"/demo/carstore". If "Jetty-Server1"-Service (name of the jetty-service) is up, it will detect the ServletContext
+and deploy it. Additionaly a HttpService is provided by the Http-Application. It can be accessed using
+OSGi-filters and used to register servlets, filters and resources to it.
+
+
+code[Java][
+		// Create new servletContext
+		//
+		
+		// create properties and add values to it
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(HttpConstants.APPLICATION_NAME, "Http1");
+		props.put(HttpConstants.CONTEXT_PATH, "/demo/carstore");
+		props.put(HttpConstants.JETTY_SERVER_NAME, "Jetty-Server1");
+		
+		// create new config by config admin
+		// using the Factory-PID
+		Configuration config = admin.createFactoryConfiguration(
+				HttpConstants.OSGI__FACTORY_PID, null);
+		
+		// create the configuration 
+		// and forward to the HttpApplicationFactory
+		config.update(props);
+]
+
+section:_Properties[Properties]
+
+All properties that can be used are contained in codeRef[org.lunifera.runtime.web.http.HttpConstants][HttpConstants]
+and the value type is String.
+
+table[
+tr[td[ID] td[Name] td[Description] td[Default] td[Filterable]]
+tr[td[code[lunifera.http.application.factory]] td[Factory PID] td[Create a new config using the config admin]
+ td[] td[true]]
+tr[td[code[lunifera.http.id]] td[Http-Application Id]  td[The unique application id] td[] td[true]]
+tr[td[code[lunifera.http.name]] td[Http-Application Name]   td[The name of the application] td[defaultapplication]  td[true]]
+tr[td[code[lunifera.http.contextPath]] td[Context Path] td[The context path for the servlet context provided
+by the application] td[/] td[true]]
+tr[td[code[lunifera.jetty.name]] td[Jetty Server Name] td[The name of the jetty server the servlet context
+should be deployed at] td[] td[true]]
+]
+
+section:_ServletContext[ServletContext]
+
+Each started http application provides an codeRef[org.lunifera.runtime.web.jetty.IHandlerProvider][IHandlerProvider]
+as a service which is responsible for providing a codeRef[org.eclipse.jetty.server.Handler][Jetty-Handler] instance. In case of HttpApplication a ServletContextHandler is provided and deployed to the jetty server as a root handler.
+All properties from ref:_Properties[Properties] are provided by the service.
+Each jetty service is tracking the IHandlerProvider-services with a proper filter that filters Handler-Providers
+with a matching jetty server name.
+If a Http-Application is stopped, the Handler-Provider will be unregistered from the service registry
+and registered again at start.
+
+ul[
+item[If a new Handler-Provider was detected, the jetty service will stop the jetty server, deploy the servlet
+context handler and start the jetty server again.]
+item[If an existing Handler-Provider was removed, the jetty service will stop the jetty server, undeploy the servlet
+context handler and start the jetty server again.]
+]
+
+section:_HttpService[HttpService]
+
+Each started http application also provides an codeRef[org.eclipse.equinox.http.servlet.ExtendedHttpService][ExtendedHttpService]
+as a service which can be consumed by clients to register servlets, filters and resources.
+All properties from ref:_Properties[Properties] are provided by the service.
+If a Http-Application is stopped, the HttpService will be unregistered from the service registry
+and registered again at start. It will cache all the previously registered servlets, filters and resources
+and register them again at the HttpService.
+
+section:_CodeSamples[Code sampels]
+
+section2[Create new Http-Application-Instance]
+
+Creating a new http application instance is very simple. You just have to create a new config by the configAdmin
+and the factory PID. On calling update with the properties the HttpApplicationFactory will create a new instance
+of http application. 
+
+The http application will internal provide an codeRef[org.lunifera.runtime.web.jetty.IHandlerProvider][IHandlerProvider]
+as an service offering the property lunifera.jetty.name=Server_8080. If Server_8080 is available it will
+hook up the handler and deploy it.
+
+It also provides an codeRef[org.eclipse.equinox.http.servlet.ExtendedHttpService][ExtendedHttpService]
+as an service offering the properties 
+
+ul[
+item[lunifera.http.name=Http1]
+item[lunifera.http.contextPath=/demo/carstore]
+]
+
+code[Java][
+		// Create new servletContext
+		//
+		
+		// create properties and add values to it
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(HttpConstants.APPLICATION_NAME, "Http1");
+		props.put(HttpConstants.CONTEXT_PATH, "/demo/carstore");
+		props.put(HttpConstants.JETTY_SERVER_NAME, "Server_8080");
+		
+		// create new config by config admin
+		// using the Factory-PID
+		Configuration config = admin.createFactoryConfiguration(
+				HttpConstants.OSGI__FACTORY_PID, null);
+		
+		// create the configuration 
+		// and forward to the HttpApplicationFactory
+		config.update(props);
+]
+
+section2[Update existing Http-Application-Instance]
+
+To update an existing http application instance, you have to know its PID. Not the "factory PID" but the
+unique PID of the http application instance. How to access the PID of a Http-Application-Instance will be described
+later.
+
+Following code will deploy the http application to Server2 on port 8089.
+
+code[Java][
+		// update existing configuration
+		//
+		
+		// access the pid for http application 1 from example above
+		String pid = getPIDForHttpApplication("Http1");
+		
+		// get the config
+		Configuration config = admin.getConfiguration(pid);
+		
+		// update the config with new properties
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(HttpConstants.JETTY_SERVER_NAME, "Server_8089");
+		
+		config.update(props);
+]
+
+What happens:
+ol[
+item[Http application with name "Http1" was stopped
+	ul[
+	item[Http-Application unregistered HandlerProvider-Service]
+	item[Http-Application unregistered ExtendedHttp-Service]
+	item[Jetty-Server1 detected leaving service]
+	item[Jetty-Server1 stopped]
+	item[Jetty-Server1 undeployed ServletContext-Handler]
+	item[Jetty-Server1 started again]
+	]
+]
+item[code[lunifera.jetty.name]-property was set to "Server_8089"]
+item[Http application with name "Http1" was started
+	ul[
+	item[Http-Application registered ExtendedHttp-Service]
+	item[Http-Application registered HandlerProvider-Service]
+	item[Jetty-Server2 found new service]
+	item[Jetty-Server2 stopped]
+	item[Jetty-Server2 deployed new ServletContext-Handler]
+	item[Jetty-Server2 started again]
+	]
+]
+]
+
+section2[Delete existing Http-Application-Instance]
+
+To delete an existing http application instance, you have to know its PID. Not the "factory PID" but the
+unique PID of the http application instance. How to access the PID of a Http-Application-Instance will be described
+later.
+
+The following code will delete the http application from example above.
+
+code[Java][
+		// delete existing configuration
+		//
+		
+		// access the pid for servletContext
+		String pid = getPIDForHttpApplication("Http1");
+		
+		// get the config
+		Configuration config = admin.getConfiguration(pid);
+		// delete it
+		config.delete();
+]
+
+What happens:
+ol[
+item[Http application with name "Http1" was stopped]
+item[Http-Application unregistered HandlerProvider-Service]
+item[Http-Application unregistered ExtendedHttp-Service]
+item[Jetty-Server1 detected leaving service]
+item[Jetty-Server1 stopped]
+item[Jetty-Server1 undeployed ServletContext-Handler]
+item[Jetty-Server1 started again]
+]
+
+section:_consoleCommands[Console commands]
+
+The http application feature provides OSGi console commands:
+
+code[ 
+osgi>lhttp
+---- Lunifera http application commands ----
+	lhttp <cmd> \[args\]
+		<ls>  - Lists all registered http applications
+		<start|stop> \[application id\] - Starts or stops the http application with the given id
+		<properties>  - Lists all available service properties
+]
+
+For instance code[ljetty ls] list all active http applications.
+code[ 
+osgi>lhttp ls
+	---- Available http application instances ----
+	 id: 1 	 name: ECViewApplication 	 context path: /ecview 	 jetty server: ECViewServer 	 started: true 	 pid: lunifera.http.application.factory-1361886835801-0
+]
+
+section:_QueryHttp[Query Http-applications]
+
+This sections demonstrates how http applications can be filtered. Therefore OSGi service filters are used.
+Section ref:_Properties[Properties] shows all properties that can be used to query a http application.
+
+That are
+ul[
+item[code[lunifera.http.application.factory]]
+item[code[lunifera.http.id]]
+item[code[lunifera.http.name]]
+item[code[lunifera.http.contextPath]]
+item[code[lunifera.jetty.name]]
+]
+
+section2[Find pid by contextPath]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IHttpApplication>> references = bundleContext
+			.getServiceReferences(IHttpApplication.class, "(lunifera.http.contextPath=/demo/carstore)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IHttpApplication> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+section2[Find pid by Name]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IHttpApplication>> references = bundleContext
+			.getServiceReferences(IHttpApplication.class, "(lunifera.http.name=Http1)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IHttpApplication> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+section:_QueryHandlerProvider[Query Handler-Provider]
+
+This sections demonstrates how http applications can be filtered. Therefore OSGi service filters are used.
+Section ref:_Properties[Properties] shows all properties that can be used to query a http application.
+
+That are
+ul[
+item[code[lunifera.http.application.factory]]
+item[code[lunifera.http.id]]
+item[code[lunifera.http.name]]
+item[code[lunifera.http.contextPath]]
+item[code[lunifera.jetty.name]]
+]
+
+section2[Find pid by contextPath]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IHandlerProvider>> references = bundleContext
+			.getServiceReferences(IHandlerProvider.class, "(lunifera.http.contextPath=/demo/carstore)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IHandlerProvider> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+section2[Find pid by Jetty-Server]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IHandlerProvider>> references = bundleContext
+			.getServiceReferences(IHandlerProvider.class, "(lunifera.jetty.name=Jetty-Server1)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IHandlerProvider> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+section:_QueryHttpServices[Query HttpServices]
+
+This sections demonstrates how http applications can be filtered. Therefore OSGi service filters are used.
+Section ref:_Properties[Properties] shows all properties that can be used to query a http application.
+
+That are
+ul[
+item[code[lunifera.http.application.factory]]
+item[code[lunifera.http.id]]
+item[code[lunifera.http.name]]
+item[code[lunifera.http.contextPath]]
+]
+
+section2[Find pid by contextPath]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IExtendedHttpService>> references = bundleContext
+			.getServiceReferences(IExtendedHttpService.class, "(lunifera.http.contextPath=/demo/carstore)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IExtendedHttpService> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+section2[Find pid by name]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IExtendedHttpService>> references = bundleContext
+			.getServiceReferences(IExtendedHttpService.class, "(lunifera.http.name=Http1)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IExtendedHttpService> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
