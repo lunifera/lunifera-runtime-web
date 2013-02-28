@@ -105,7 +105,7 @@ public class VaadinObservables {
 	 * @return
 	 */
 	public static UI getUI(Component widget) {
-		UI ui = widget.getUI();
+		UI ui = widget != null ? widget.getUI() : null;
 		return ui != null ? ui : UI.getCurrent();
 	}
 
