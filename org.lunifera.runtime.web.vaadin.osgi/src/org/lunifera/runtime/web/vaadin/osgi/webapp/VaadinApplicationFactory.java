@@ -136,7 +136,7 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 
 			// add the UI provider
 			for (OSGiUIProvider provider : providerMapping.values()) {
-				application.addOSGiUIProvider(provider);
+				application.addUIProvider(provider);
 			}
 
 			Dictionary<String, Object> copyProps = copy(properties);
@@ -288,11 +288,11 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 			accessLock.lock();
 			for (IVaadinApplication application : applications.values()) {
 				if (uiProvider.getVaadinApplication() == null) {
-					application.addOSGiUIProvider(uiProvider);
+					application.addUIProvider(uiProvider);
 				} else {
 					if (uiProvider.getVaadinApplication().equals(
 							application.getName())) {
-						application.addOSGiUIProvider(uiProvider);
+						application.addUIProvider(uiProvider);
 					}
 				}
 			}
@@ -310,7 +310,7 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 		try {
 			accessLock.lock();
 			for (IVaadinApplication application : applications.values()) {
-				application.removeOSGiUIProvider(uiProvider);
+				application.removeUIProvider(uiProvider);
 			}
 		} finally {
 			accessLock.unlock();

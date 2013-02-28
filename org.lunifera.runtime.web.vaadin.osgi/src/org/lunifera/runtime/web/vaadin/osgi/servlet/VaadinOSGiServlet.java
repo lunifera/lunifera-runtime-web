@@ -25,11 +25,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.icepush.servlet.MainServlet;
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
-import org.lunifera.runtime.web.vaadin.osgi.webapp.OSGiUIProvider;
 import org.vaadin.artur.icepush.ICEPush;
 import org.vaadin.artur.icepush.JavascriptProvider;
 
 import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
@@ -136,7 +136,7 @@ public class VaadinOSGiServlet extends VaadinServlet {
 							HttpServletRequest httpServletRequest) {
 						VaadinSession session = new VaadinSession(request
 								.getService());
-						for (OSGiUIProvider provider : webApplication
+						for (UIProvider provider : webApplication
 								.getUiProviders()) {
 							session.addUIProvider(provider);
 						}

@@ -64,7 +64,7 @@ public class VaadinApplication implements IVaadinApplication {
 	private String widgetset = "";
 	private String httpApplication = "";
 
-	private List<OSGiUIProvider> uiProviders = new ArrayList<OSGiUIProvider>(1);
+	private List<UIProvider> uiProviders = new ArrayList<UIProvider>(1);
 	private ExtendedHttpService httpService;
 
 	// lifecycle
@@ -465,7 +465,7 @@ public class VaadinApplication implements IVaadinApplication {
 	 * 
 	 * @param provider
 	 */
-	public void addOSGiUIProvider(OSGiUIProvider provider) {
+	public void addUIProvider(UIProvider provider) {
 		if (!uiProviders.contains(provider)) {
 			uiProviders.add(provider);
 		}
@@ -476,12 +476,12 @@ public class VaadinApplication implements IVaadinApplication {
 	 * 
 	 * @param provider
 	 */
-	public void removeOSGiUIProvider(OSGiUIProvider provider) {
+	public void removeUIProvider(UIProvider provider) {
 		uiProviders.remove(provider);
 	}
 
 	@Override
-	public List<OSGiUIProvider> getUiProviders() {
+	public List<UIProvider> getUiProviders() {
 		return Collections.unmodifiableList(uiProviders);
 	}
 
