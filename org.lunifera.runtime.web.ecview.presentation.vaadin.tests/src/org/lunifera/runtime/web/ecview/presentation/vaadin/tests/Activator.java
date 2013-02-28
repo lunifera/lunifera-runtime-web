@@ -10,8 +10,11 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletException;
 
 import org.knowhowlab.osgi.testing.assertions.BundleAssert;
 import org.knowhowlab.osgi.testing.assertions.ServiceAssert;
@@ -19,9 +22,14 @@ import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.vaadin.ui.UI;
 
 public class Activator implements BundleActivator {
 
