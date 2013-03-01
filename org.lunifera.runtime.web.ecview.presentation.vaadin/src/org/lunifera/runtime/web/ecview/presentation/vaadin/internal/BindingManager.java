@@ -10,10 +10,12 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
@@ -37,6 +39,11 @@ public class BindingManager extends
 
 	public BindingManager(IViewContext viewContext, Realm validationRealm) {
 		super(viewContext, validationRealm);
+	}
+
+	@Override
+	protected DataBindingContext createDatabindingContext(Realm validationRealm) {
+		return new EMFDataBindingContext(validationRealm);
 	}
 
 	@Override

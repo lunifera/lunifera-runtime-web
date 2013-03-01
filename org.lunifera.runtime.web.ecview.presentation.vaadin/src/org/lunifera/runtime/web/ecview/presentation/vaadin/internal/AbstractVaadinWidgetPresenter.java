@@ -84,7 +84,6 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 
 		IBindingManager bindingManger = getViewContext().getService(
 				IServiceRegistry.SERVICE__BINDING_MANAGER);
-
 		// bind visible
 		bindingManger.bindVisible(yEmbeddable, field);
 	}

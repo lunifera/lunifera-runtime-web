@@ -10,59 +10,29 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.ServletException;
-
 import org.knowhowlab.osgi.testing.assertions.BundleAssert;
 import org.knowhowlab.osgi.testing.assertions.ServiceAssert;
-import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context.BundleHelper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.UI;
-
 public class Activator implements BundleActivator {
 
+	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory
 			.getLogger(Activator.class);
 
 	private static Activator instance;
 	public static BundleContext context;
 
-	private ConfigurationAdmin cmAdmin;
-	private List<IVaadinApplication> httpApplications = new ArrayList<IVaadinApplication>();
-
 	/**
 	 * @return the instance
 	 */
 	public static Activator getInstance() {
 		return instance;
-	}
-
-	/**
-	 * @return the applications
-	 */
-	public List<IVaadinApplication> getVaadinApplications() {
-		return httpApplications;
-	}
-
-	/**
-	 * Returns the configuration admin service.
-	 * 
-	 * @return
-	 */
-	public ConfigurationAdmin getConfigurationAdmin() {
-		return cmAdmin;
 	}
 
 	@Override
@@ -72,6 +42,8 @@ public class Activator implements BundleActivator {
 
 		BundleAssert.setDefaultBundleContext(context);
 		ServiceAssert.setDefaultBundleContext(context);
+		
+		BundleHelper.ensureSetup();
 	}
 
 	/**
@@ -93,48 +65,5 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext context) throws Exception {
 		Activator.context = null;
 		instance = null;
-	}
-
-	/**
-	 * OSGi-DS component
-	 */
-	public static final class Component {
-
-		/**
-		 * Called by OSGi-DS
-		 * 
-		 * @param vaadinApplication
-		 */
-		public void addVaadinApplication(IVaadinApplication vaadinApplication) {
-			Activator.getInstance().httpApplications.add(vaadinApplication);
-		}
-
-		/**
-		 * Called by OSGi-DS
-		 * 
-		 * @param vaadinApplication
-		 */
-		public void removeVaadinApplication(IVaadinApplication vaadinApplication) {
-			Activator.getInstance().httpApplications.remove(vaadinApplication);
-		}
-
-		/**
-		 * Called by OSGi-DS
-		 * 
-		 * @param cmAdmin
-		 */
-		public void setCMAdmin(ConfigurationAdmin cmAdmin) {
-			Activator.getInstance().cmAdmin = cmAdmin;
-		}
-
-		/**
-		 * Called by OSGi-DS
-		 * 
-		 * @param httpApplication
-		 */
-		public void unsetCMAdmin(ConfigurationAdmin cmAdmin) {
-			Activator.getInstance().cmAdmin = null;
-		}
-
 	}
 }
