@@ -68,9 +68,9 @@
 				<module>org.lunifera.runtime.web.feature.http</module>
 				<module>org.lunifera.runtime.web.feature.jetty</module>
 				
-<!-- 				<module>org.lunifera.runtime.web.ecp.uimodel.presentation.vaadin</module> -->
-<!-- 				<module>org.lunifera.runtime.web.feature.ecp.uimodel.presentation.vaadin</module> -->
-<!-- 				<module>org.lunifera.runtime.web.ecview.presentation.vaadin.tests</module> -->
+				<module>org.lunifera.runtime.web.ecview.presentation.vaadin</module>
+				<module>org.lunifera.runtime.web.ecview.presentation.vaadin.tests</module>
+				<module>org.lunifera.runtime.web.feature.ecview.presentation.vaadin</module>
 			</modules>
 		</profile>
 	</profiles>
