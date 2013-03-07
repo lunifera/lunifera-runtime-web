@@ -6,7 +6,7 @@
    <feature id="org.lunifera.runtime.web.feature.vaadin.components" version="0.0.0">
       <category name="lunifera-web-features"/>
    </feature>
-   <feature id="org.lunifera.runtime.web.feature.vaadin.standalone" version="0.0.0">
+   <feature id="org.lunifera.runtime.web.feature.vaadin.osgi" version="0.0.0">
       <category name="lunifera-web-features"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.databinding" version="0.0.0">
@@ -24,7 +24,7 @@
    <feature id="org.lunifera.runtime.web.feature.vaadin.components.source" version="0.0.0">
       <category name="lunifera-web-features"/>
    </feature>
-   <feature id="org.lunifera.runtime.web.feature.vaadin.standalone.source" version="0.0.0">
+   <feature id="org.lunifera.runtime.web.feature.vaadin.osgi.source" version="0.0.0">
       <category name="lunifera-web-features"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.databinding.source" version="0.0.0">
