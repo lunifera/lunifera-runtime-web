@@ -15,6 +15,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.presentation.IPresentationFactory;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IGridLayoutEditpart;
@@ -61,6 +62,8 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new ListPresentation(editpart);
 		} else if (editpart instanceof ITableEditpart) {
 			return (A) new TablePresentation(editpart);
+		} else if (editpart instanceof IButtonEditpart) {
+			return (A) new ButtonPresentation(editpart);
 		} else if (editpart instanceof IGridLayoutEditpart) {
 			return (A) new GridLayoutPresentation(editpart);
 		} else if (editpart instanceof IHorizontalLayoutEditpart) {

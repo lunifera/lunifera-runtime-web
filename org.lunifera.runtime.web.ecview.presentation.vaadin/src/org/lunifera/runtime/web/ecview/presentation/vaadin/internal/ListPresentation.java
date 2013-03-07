@@ -55,6 +55,10 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 			list = new ListSelect();
 			list.addStyleName(CSS_CLASS__CONTROL);
 			list.setSizeFull();
+			
+			// creates the binding for the field
+			createBindings(modelAccess.yList, list);
+			
 			componentBase.addComponent(list);
 
 			if (modelAccess.isCssClassValid()) {

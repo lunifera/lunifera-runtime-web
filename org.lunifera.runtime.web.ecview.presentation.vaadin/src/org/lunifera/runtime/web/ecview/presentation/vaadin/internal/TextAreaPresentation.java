@@ -12,12 +12,14 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextArea;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 
 /**
  * This presenter is responsible to render a text area on the given layout.
@@ -55,6 +57,10 @@ public class TextAreaPresentation extends AbstractVaadinWidgetPresenter<Componen
 			textArea = new TextArea();
 			textArea.addStyleName(CSS_CLASS__CONTROL);
 			textArea.setSizeFull();
+			
+			// creates the binding for the field
+			createBindings(modelAccess.yTextArea, textArea);
+
 			componentBase.addComponent(textArea);
 
 			if (modelAccess.isCssClassValid()) {

@@ -56,6 +56,10 @@ public class ComboBoxPresentation extends AbstractVaadinWidgetPresenter<Componen
 			combo = new ComboBox();
 			combo.addStyleName(CSS_CLASS__CONTROL);
 			combo.setSizeFull();
+			
+			// creates the binding for the field
+			createBindings(modelAccess.yCombo, combo);
+			
 			componentBase.addComponent(combo);
 
 			if (modelAccess.isCssClassValid()) {

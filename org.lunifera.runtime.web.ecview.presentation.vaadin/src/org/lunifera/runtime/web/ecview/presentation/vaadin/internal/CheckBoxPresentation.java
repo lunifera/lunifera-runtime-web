@@ -55,6 +55,10 @@ public class CheckBoxPresentation extends AbstractVaadinWidgetPresenter<Componen
 			checkBox = new CheckBox();
 			checkBox.addStyleName(CSS_CLASS__CONTROL);
 			checkBox.setSizeFull();
+			
+			// creates the binding for the field
+			createBindings(modelAccess.yCheckBox, checkBox);
+
 			componentBase.addComponent(checkBox);
 
 			if (modelAccess.isCssClassValid()) {
