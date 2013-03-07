@@ -36,13 +36,6 @@
 			<build>
 				<defaultGoal>clean verify</defaultGoal>
 			</build>
-			<repositories>
-				<repository>
-					<id>ecfview</id>
-					<url>http://lun.lunifera.org/downloads/p2/ecview/nightly/</url>
-					<layout>p2</layout>
-				</repository>
-			</repositories>
 			<modules>
 				<module>org.lunifera.runtime.web.p2</module>
 				<module>org.lunifera.runtime.web.parent</module>

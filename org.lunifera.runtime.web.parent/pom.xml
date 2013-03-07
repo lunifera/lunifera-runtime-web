@@ -22,6 +22,14 @@
 	<artifactId>org.lunifera.runtime.web.parent</artifactId>
 	<packaging>pom</packaging>
 
+	<repositories>
+		<repository>
+			<id>ecfview</id>
+			<url>http://lun.lunifera.org/downloads/p2/ecview/nightly/</url>
+			<layout>p2</layout>
+		</repository>
+	</repositories>
+
 	<properties>
 		<next-release>0.0.1-RC1</next-release>
 	</properties>
