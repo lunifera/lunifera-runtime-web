@@ -95,6 +95,8 @@ public class RequestTest {
 		HttpService httpService7 = getHttpServiceByContextpath("/app7/test");
 		httpService7.registerServlet("/value77", new Value7Servlet(), null,
 				null);
+		waitCM();
+		waitCM();
 
 		// test servlet 1
 		assertEquals("Servlet1 accessed!",
