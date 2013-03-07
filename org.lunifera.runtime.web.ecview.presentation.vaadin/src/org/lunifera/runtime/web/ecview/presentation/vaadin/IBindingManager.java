@@ -16,6 +16,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
 
 import com.vaadin.data.Property;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Field;
 
 /**
@@ -33,7 +34,7 @@ public interface IBindingManager extends
 	 * @param yVisibleAble
 	 * @param field
 	 */
-	public abstract void bindVisible(YVisibleable yVisibleAble, Field<?> field);
+	public abstract void bindVisible(YVisibleable yVisibleAble, AbstractComponent abstractComponent);
 
 	/**
 	 * Binds the visible option.
@@ -42,7 +43,7 @@ public interface IBindingManager extends
 	 * @param yEnable
 	 * @param field
 	 */
-	public abstract void bindEnabled(YEnable yEnable, Field<?> field);
+	public abstract void bindEnabled(YEnable yEnable, AbstractComponent abstractComponent);
 
 	/**
 	 * Binds the visible option.

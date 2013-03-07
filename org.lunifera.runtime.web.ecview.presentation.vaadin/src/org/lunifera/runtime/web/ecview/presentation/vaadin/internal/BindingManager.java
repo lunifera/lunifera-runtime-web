@@ -28,6 +28,7 @@ import org.lunifera.runtime.web.vaadin.databinding.IVaadinModelObservableValue;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.data.Property;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Field;
 
 /**
@@ -47,9 +48,9 @@ public class BindingManager extends
 	}
 
 	@Override
-	public void bindVisible(YVisibleable yVisibleAble, Field<?> field) {
+	public void bindVisible(YVisibleable yVisibleAble, AbstractComponent abstractComponent) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
-				.observeVisible(field);
+				.observeVisible(abstractComponent);
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				yVisibleAble,
 				CoreModelPackage.eINSTANCE.getYVisibleable_Visible());
@@ -57,9 +58,9 @@ public class BindingManager extends
 	}
 
 	@Override
-	public void bindEnabled(YEnable yEnable, Field<?> field) {
+	public void bindEnabled(YEnable yEnable, AbstractComponent abstractComponent) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
-				.observeEnabled(field);
+				.observeEnabled(abstractComponent);
 		IObservableValue modelObservable = EMFObservables.observeValue(yEnable,
 				CoreModelPackage.eINSTANCE.getYEnable_Enabled());
 		getDatabindingContext().bindValue(uiObservable, modelObservable);
