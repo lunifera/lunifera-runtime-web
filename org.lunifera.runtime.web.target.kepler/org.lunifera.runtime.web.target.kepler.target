@@ -34,7 +34,7 @@
 <repository location="http://lunifera.github.com/p2/kepler/latest"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201303102102"/>
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201303141525"/>
 <repository location="http://lun.lunifera.org/downloads/p2/ecview/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">

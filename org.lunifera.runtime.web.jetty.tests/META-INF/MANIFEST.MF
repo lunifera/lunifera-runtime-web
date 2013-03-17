@@ -14,7 +14,9 @@ Require-Bundle:
  org.apache.httpcomponents.httpclient;bundle-version="4.1.2",
  org.apache.httpcomponents.httpcore;bundle-version="4.1.4",
  org.knowhowlab.osgi.testing.assertions;bundle-version="1.1.0",
- org.knowhowlab.osgi.testing.utils;bundle-version="1.1.0"
+ org.knowhowlab.osgi.testing.utils;bundle-version="1.1.0",
+ org.eclipse.equinox.ds;bundle-version="1.4.100",
+ org.eclipse.equinox.cm;bundle-version="1.0.400"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: lunifera.org
 Service-Component: OSGI-INF/*.xml

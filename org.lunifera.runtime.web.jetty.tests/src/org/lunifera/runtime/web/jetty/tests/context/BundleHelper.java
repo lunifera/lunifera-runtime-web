@@ -25,9 +25,9 @@ public class BundleHelper {
 
 		// check bundles available
 		assertBundleAvailable("org.lunifera.runtime.web.jetty");
-		assertBundleAvailable("org.eclipse.equinox.ds");
 		assertBundleAvailable("org.eclipse.equinox.util");
 		assertBundleAvailable("org.eclipse.equinox.cm");
+		assertBundleAvailable("org.eclipse.equinox.ds");
 
 		// stop jetty
 		Bundle jetty = BundleUtils.findBundle(Activator.context,
