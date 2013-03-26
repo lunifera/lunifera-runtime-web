@@ -68,28 +68,13 @@
 							<autoStart>true</autoStart>
 						</bundle>
 						<bundle>
-							<id>org.lunifera.runtime.web.http.tests</id>
+							<id>org.eclipse.emf.ecp.ecview.common.model</id>
 							<level>4</level>
 							<autoStart>true</autoStart>
 						</bundle>
 						<bundle>
-							<id>org.lunifera.runtime.web.jetty</id>
-							<level>2</level>
-							<autoStart>true</autoStart>
-						</bundle>
-						<bundle>
-							<id>org.lunifera.runtime.web.http</id>
-							<level>2</level>
-							<autoStart>true</autoStart>
-						</bundle>
-						<bundle>
-							<id>org.knowhowlab.osgi.testing.assertions</id>
-							<level>2</level>
-							<autoStart>true</autoStart>
-						</bundle>
-						<bundle>
-							<id>org.knowhowlab.osgi.testing.utils</id>
-							<level>2</level>
+							<id>org.eclipse.emf.ecore.xmi</id>
+							<level>4</level>
 							<autoStart>true</autoStart>
 						</bundle>
 					</bundleStartLevel>

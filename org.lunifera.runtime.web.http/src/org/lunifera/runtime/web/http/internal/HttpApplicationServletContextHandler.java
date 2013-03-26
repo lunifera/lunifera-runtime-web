@@ -158,11 +158,16 @@ public class HttpApplicationServletContextHandler extends
 		if (null == provider)
 			return null;
 
-//		final String pathSpec = (String) entry.getKey();
-//		final String pathInfo = PathMap.pathInfo(pathSpec, path);
-		final URL resourceUrl = provider.getResource(path);
-		if (null == resourceUrl)
-			return null;
+		final String pathSpec = (String) entry.getKey();
+		final String pathInfo = PathMap.pathInfo(pathSpec, path);
+		 URL resourceUrl = provider.getResource(pathInfo);
+		 // TODO fix me
+		if (null == resourceUrl){
+			resourceUrl = provider.getResource(path);
+			if (null == resourceUrl){
+				return null;
+			}
+		}
 		try {
 			final URL fileURL = FileLocator.toFileURL(resourceUrl);
 			return Resource.newResource(fileURL);
@@ -172,5 +177,4 @@ public class HttpApplicationServletContextHandler extends
 			return null;
 		}
 	}
-
 }
