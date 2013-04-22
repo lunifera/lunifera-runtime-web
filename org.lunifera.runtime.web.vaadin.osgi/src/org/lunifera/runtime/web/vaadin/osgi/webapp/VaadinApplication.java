@@ -492,9 +492,16 @@ public class VaadinApplication implements IVaadinApplication {
 	 * @return
 	 */
 	private String createHttpServiceFilterString(String httpApplication) {
-		String filterString = String
-				.format("(&(objectClass=org.eclipse.equinox.http.servlet.ExtendedHttpService)(lunifera.http.name=%s))",
-						httpApplication);
+		String filterString = null;
+		if (httpApplication != null && !httpApplication.equals("")) {
+			filterString = String
+					.format("(&(objectClass=org.eclipse.equinox.http.servlet.ExtendedHttpService)(lunifera.http.name=%s))",
+							httpApplication);
+		} else {
+			filterString = String
+					.format("(objectClass=org.eclipse.equinox.http.servlet.ExtendedHttpService)",
+							httpApplication);
+		}
 		return filterString;
 	}
 

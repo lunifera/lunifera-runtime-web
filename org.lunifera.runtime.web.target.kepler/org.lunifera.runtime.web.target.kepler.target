@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="23">
+<?pde version="3.8"?>
+
+<target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="23">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.core.runtime.feature.feature.group" version="1.1.0.v20120521-2346-7H7OFJJBpeIn_ddTiXpom8fJ0XZ9"/>
+<unit id="org.eclipse.core.runtime.feature.feature.group" version="1.1.0.v20130308-1450"/>
 <repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -13,7 +15,7 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.core.runtime.feature.feature.group" version="1.1.0.v20120521-2346-7H7OFJJBpeInadWSdXpooBZKYn9S"/>
+<unit id="org.eclipse.core.runtime.feature.feature.group" version="1.1.0.v20130308-1450"/>
 <repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -34,7 +36,7 @@
 <repository location="http://lunifera.github.com/p2/kepler/latest"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201303141525"/>
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201304221537"/>
 <repository location="http://lun.lunifera.org/downloads/p2/ecview/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
