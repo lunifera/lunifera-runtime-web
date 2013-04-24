@@ -1,0 +1,234 @@
+chapter:JettyService[IJetty-Service]
+
+
+
+The bundle code[org.lunifera.runtime.web.jetty] was introduced to provide 
+the capability of starting / stopping and controlling different instances of jetty servers.
+Each of this instances is independent from each other and runs on different ports.
+
+section:_Overview[Overview]
+
+img[../images/JettyFactory.png][Image 1: Overview][img-small][]
+
+To ensure a maximum of flexibility the codeRef[org.lunifera.runtime.web.jetty.IJetty][IJetty-Service] is implemented using link[http://wiki.osgi.org/wiki/Configuration_Admin][OSGi-CM].
+Configurations can be created by the codeRef[org.osgi.service.cm.ConfigurationAdmin][ConfigurationAdmin]
+passing a service factory PID (persistence id) and properties. 
+
+The configuration admin...
+  ol[
+	item[stores/updates the config in the persistence store]
+	item[forwards the config to the codeRef[org.osgi.service.cm.ManagedServiceFactory][ManagedServiceFactory]
+		named codeRef[org.lunifera.runtime.web.jetty.internal.JettyFactory][JettyFactory]]
+	item[the codeRef[org.lunifera.runtime.web.jetty.internal.JettyFactory][JettyFactory]... 
+		ul[
+		item[... creates a new instance of IJetty-Service if no service is available for the given PID (not factory PID!).
+		Each IJetty-Service contains one jetty instance and is responsible for controlling it.]
+		item[... stops the IJetty-Service instance, updates its values and starts it again, if a service is available for the
+			PID.]
+		item[... stops the IJetty-Service and deletes the config if delete was called on the config.]
+		]
+	]
+  ] 
+
+section2[Intro example]
+
+The following code will create a new jetty service and starts the Jetty-Server at port 8081
+code[Java][
+		// Create new jetty instance
+		//
+		
+		// create properties and add values to it
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
+		props.put(JettyConstants.HTTP_PORT, "8081");
+		
+		// create new config by config admin
+		// using the Factory-PID
+		Configuration config = admin.createFactoryConfiguration(
+				JettyConstants.OSGI__FACTORY_PID, null);
+		
+		// create the configuration 
+		// and forward to the JettyFactory
+		config.update(props);
+]
+
+section:_Properties[Properties]
+
+All properties that can be used are contained in codeRef[org.lunifera.runtime.web.jetty.JettyConstants][JettyConstants]
+and the value type is String.
+
+table[
+tr[td[ID] td[Name] td[Description] td[Default] td[Filterable]]
+tr[td[code[lunifera.jetty.server.factory]] td[Factory PID] td[Create a new config using the config admin]
+ td[] td[true]]
+tr[td[code[lunifera.jetty.id]] td[Jetty Id]  td[The unique jetty id] td[] td[true]]
+tr[td[code[lunifera.jetty.name]] td[Jetty Name]   td[The name of the jetty] td[defaultserver]  td[true]]
+tr[td[code[lunifera.jetty.http.enabled]] td[Http Enabled] td[Specifies if http is enabled] td[true] td[false]]
+tr[td[code[lunifera.jetty.http.port]] td[Http Port] td[Specifies the port] td[0 -- first available port] td[true]]
+tr[td[code[lunifera.jetty.http.host]] td[Host Name] td[Specifies the host name] td[0.0.0.0 -- all network adapters] td[false]]
+tr[td[code[lunifera.jetty.http.nio]] td[Use NIO] td[True if NIO should be used] td[] td[false]]
+tr[td[code[lunifera.jetty.https.enabled]] td[Https Enabled] td[True if https is enabled] td[false] td[false]]
+tr[td[code[lunifera.jetty.https.port]] td[Https Port] td[Specifies the port number for https] td[0 -- first available port] td[false]]
+tr[td[code[lunifera.jetty.https.host]] td[Https Host] td[Specifies the host name] td[0.0.0.0 -- all network adapters] td[false]]
+]
+
+How to configure SSL see link[http://wiki.eclipse.org/Jetty/Howto/Configure_SSL][SSL Config]
+table[
+tr[td[Lunifera] td[Jetty]]
+tr[td[code[lunifera.jetty.ssl.keystore]] td[code[ssl.keystore]]]
+tr[td[code[lunifera.jetty.ssl.password]] td[code[ssl.password]]]
+tr[td[code[lunifera.jetty.ssl.keypassword]] td[code[ssl.keypassword]] ]
+tr[td[code[lunifera.jetty.ssl.needclientauth]] td[code[ssl.needclientauth]] ]
+tr[td[code[lunifera.jetty.ssl.wantclientauth]] td[code[ssl.wantclientauth]] ]
+tr[td[code[lunifera.jetty.ssl.protocol]] td[code[ssl.protocol]] ]
+tr[td[code[lunifera.jetty.ssl.algorithm]] td[code[ssl.algorithm]] ]
+tr[td[code[lunifera.jetty.ssl.keystoretype]] td[code[ssl.keystoretype]]]
+]
+
+section:_CodeSamples[Code sampels]
+
+section2[Create new Server-Instance]
+
+Creating a new server instance is very simple. You just have to create a new config by the configAdmin
+and the factory PID. On calling update with the properties the JettyFactory will create a new instance
+of jetty service. And the jetty service will internal start the jetty server.
+
+code[Java][
+		// Create new jetty instance
+		//
+		
+		// create properties and add values to it
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
+		props.put(JettyConstants.HTTP_PORT, "8081");
+		
+		// create new config by config admin
+		// using the Factory-PID
+		Configuration config = admin.createFactoryConfiguration(
+				JettyConstants.OSGI__FACTORY_PID, null);
+		
+		// create the configuration 
+		// and forward to the JettyFactory
+		config.update(props);
+]
+
+section2[Update existing Server-Instance]
+
+To update an existing jetty service instance, you have to know its PID. Not the "factory PID" but the
+unique PID of the jetty service instance. How to access the PID of a Jetty-Instance will be described
+later.
+
+Following code will update the jetty service with port 8081 to name=Server2 and port=8089.
+Therefore the jetty server will be stopped and started afterwards again.
+
+code[Java][
+		// update existing configuration
+		//
+		
+		// access the pid for jetty instance
+		String pid = getPIDForServerWithPort(8081);
+		
+		// get the config
+		Configuration config = admin.getConfiguration(pid);
+		
+		// update the config with new properties
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(JettyConstants.JETTY_SERVER_NAME, "Server2");
+		props.put(JettyConstants.HTTP_PORT, "8089");
+		
+		config.update(props);
+]
+
+section2[Delete existing Server-Instance]
+
+To delete an existing jetty service instance, you have to know its PID. Not the "factory PID" but the
+unique PID of the jetty service instance. How to access the PID of a Jetty-Instance will be described
+later.
+
+The following code will delete the jetty service with port 8081. The jetty server will be stopped properly.
+
+code[Java][
+		// delete existing configuration
+		//
+		
+		// access the pid for jetty instance
+		String pid = getPIDForServerWithPort(8081);
+		
+		// get the config
+		Configuration config = admin.getConfiguration(pid);
+		// delete it
+		config.delete();
+]
+
+section:_consoleCommands[Console commands]
+
+The jetty service feature provides OSGi console commands:
+
+code[ 
+osgi>ljetty
+---- Lunifera jetty commands ----
+       ljetty <cmd> \[args\]
+           <ls>  - Lists all active jetty server
+           <start|stop> \[jetty id\] - Starts or stops the jetty with the given id
+           <properties>  - Lists all available service properties
+]
+
+For instance code[ljetty ls] list all active jetty services.
+code[ 
+osgi>ljetty ls
+     ---- Available jetty instances ----
+     id: 5  name: Server1  port: 8081  started: true  pid: lunifera.jetty.server.factory-1361724966109-4
+]
+
+section:_Query[Query jetty services]
+
+This sections demonstrates how jetty services can be filtered. Therefore OSGi service filters are used.
+Section ref:_Properties[Properties] shows all properties that can be used to query a jetty service.
+
+That are
+ul[
+item[code[lunifera.jetty.server.factory]]
+item[code[lunifera.jetty.name]]
+item[code[lunifera.jetty.http.port]]
+]
+
+section2[Find pid by Port]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IJetty>> references = bundleContext
+			.getServiceReferences(IJetty.class, "(lunifera.jetty.http.port=8082)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IJetty> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+section2[Find pid by Name]
+
+code[Java][ 
+		// find service reference
+		Collection<ServiceReference<IJetty>> references = bundleContext
+			.getServiceReferences(IJetty.class, "(lunifera.jetty.http.name=Server1)");
+			
+		if (references.iterator().hasNext()) {
+			ServiceReference<IJetty> reference = references.iterator().next();
+			// access PID by properties
+			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
+		}
+]
+
+
+section:_startStop[Start and stop jetty services]
+
+The IJetty interface provides the methods start and stop that can be used to start and stop the jetty
+server.
+
+Just follow ref:_Query[Query jetty services] to find the proper jetty server instance. Then the methods
+of the service can be used to control the lifecycle.
+
+Please note, that a jetty service may stop or start automatically if Jetty Handlers (see ref:HttpApplication[Http
+Applications]) have been detected.
+

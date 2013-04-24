@@ -1,0 +1,81 @@
+chapter:Overview[Overview]
+
+The link[https://github.com/lunifera/lunifera-runtime-web][runtime-web] repository contains
+all the bundles and features that are part of runtime but also belong to web issues.
+We separated them from the link[https://github.com/lunifera/lunifera-runtime][runtime] repository 
+to keep concerns clean.
+
+In the following the different syntactical elements are explained by example.
+
+section:_Content[Content]
+
+All feature that are required to run lunifera web parts are content of 
+the link[https://github.com/lunifera/lunifera-runtime-web][runtime-web] repo. But each feature has it's very own responsibility. 
+
+Lunifera.org heavily uses OSGi-services, 
+link[http://wiki.osgi.org/wiki/Declarative_Services][OSGi-DS] and link[http://wiki.osgi.org/wiki/Configuration_Admin][OSGi-CM].
+We are trying to avoid the use of Equinox Extensions Registry.
+
+section2:_JettyService[Jetty Services]
+
+Detailed information: ref:JettyService[JettyServices]
+
+Lunifera offers a feature based on link[http://wiki.osgi.org/wiki/Configuration_Admin][OSGi-CM] that
+allows to configure, start and stop different instances of jetty servers by the use of codeRef[org.osgi.service.cm.ConfigurationAdmin][ConfigurationAdmin].
+
+Using the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService]
+makes the configuration of jetty services really simple. Follow user guid of IConfigurationService for
+details.
+code[
+file: org.lunifera.runtime.web.jetty.server.factory_Demo01.cfg
+
+# configuration to start a jetty server
+lunifera.jetty.name=Demo-JettyServer
+lunifera.jetty.http.port=8089
+]
+
+section2:_HttpApplication[Http Applications]
+
+Detailed information: ref:HttpApplication[Http Applications]
+
+A Http Application is an abstract above a ServletContext. Each HttpApplication has it's very own ContextPath
+and provides an codeRef[org.eclipse.equinox.http.servlet.ExtendedHttpService] that can be used to register servlets, filters and
+resources. The Http Application can be configured, started and stoped by the use of codeRef[org.osgi.service.cm.ConfigurationAdmin][ConfigurationAdmin].
+
+An OSGi service property is available to assign a Http Application to a specific jetty service. Jetty services
+observe all available Http Applications and will add them (their ServletContext) to the server instance in case of matching server name.
+
+Using the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService]
+makes the configuration of http applications really simple. Follow user guid of IConfigurationService for
+details.
+code[
+file: org.lunifera.runtime.web.http.application.factory_Demo01.cfg
+
+# configuration to start a http application service
+lunifera.http.name=Demo-HttpApplication
+lunifera.http.contextPath=/myapp/demo
+lunifera.jetty.name=Demo-JettyServer		// assigns to jetty server
+]
+
+section2:_VaadinApplication[Vaadin Applications]
+
+To start a vaadin environment a couple of servlets, resources and filters have to be registered at a
+HttpService. The Vaadin Application is an OSGi service that knows which web resources are required and
+how to register them propery at a HttpService.
+
+An OSGi service property is available to assign a Vaadin Application to a specific http application. Vaadin
+applications require an ExtendedHttpService that was provided by a http application.
+
+
+Using the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService]
+makes the configuration of vaadin applications really simple. Follow user guid of IConfigurationService for
+details.
+code[
+file: org.lunifera.runtime.web.vaddin.application.factory_KwieeDemo01.cfg
+
+# configuration to start a vaadin service
+lunifera.web.vaadin.name=Demo-VaadinApplication
+lunifera.web.vaadin.uialias=app	// alias to access the main UI
+lunifera.web.vaadin.widgetset=org.lunifera.examples.widgetset.Widgetset
+lunifera.http.name=Demo-HttpApplication 	// assigns to http application
+]
