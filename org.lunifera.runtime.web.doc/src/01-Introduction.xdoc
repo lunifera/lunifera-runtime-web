@@ -24,7 +24,7 @@ Lunifera offers a feature based on link[http://wiki.osgi.org/wiki/Configuration_
 allows to configure, start and stop different instances of jetty servers by the use of codeRef[org.osgi.service.cm.ConfigurationAdmin][ConfigurationAdmin].
 
 Using the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService]
-makes the configuration of jetty services really simple. Follow user guid of IConfigurationService for
+makes the configuration of jetty services really simple. Follow user guide of IConfigurationService for
 details.
 code[
 file: org.lunifera.runtime.web.jetty.server.factory_Demo01.cfg

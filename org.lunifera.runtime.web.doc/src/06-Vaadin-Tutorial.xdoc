@@ -1,0 +1,161 @@
+chapter:VaadinTutorial[Vaadin - Your own application]
+
+This tutorial demos how you can create your own vaadin application. If you are looking for code samples
+just take a look at the link[https://github.com/lunifera/lunifera-examples/tree/master/runtime-web][example repo].
+
+To create you own application you have to create two different bundles.
+ul[
+item[code[Application-bundle] - A bundle that contains the implementation of codeRef[com.vaadin.ui.UI][com.vaadin.ui.UI] which is the main entry point. (See ref:_IVaadinApplication[UiProvider])]
+item[code[WidgetSet-bundle] -And another bundle providing the widgetset used by vaadin at client side. ]
+]
+
+section:_VaadinApplicationBundle[Application Bundle]
+
+The application bundle is used to provide an instance of codeRef[com.vaadin.ui.UI][com.vaadin.ui.UI]
+to the vaadin core. Vaadin will use it as an abstraction for a browser tab and will render all contained
+UI elements on it. So the UI-instance is the very central element to deal with.
+
+Since lunifera.org is based on OSGi the UI-instances will be created by a ComponentFactory. Using that
+way of instantiating new objects allows the use of the whiteboard pattern. Whiteboard
+pattern means, that OSGi-services can become injected automatically into the UI-instance by OSGi-DS (Declarative
+services).  
+
+The application also has to route the vaadin application. This should mean, that it has to define which
+webapplication should be used to run the vaadin application. (Detailed information according lunifera HttpApplication
+can be found here: ref:HttpApplication)
+
+
+Now lets start implementing our first example.
+This section demos the steps to prepare the application bundle.
+
+
+section2[Finished bundle]
+
+img[../images/VaadinStandaloneExample_1.png][Image 1: Finished bundle][img-small][]
+
+This image shows the structure of the finished bundle.
+
+
+section2[Prepare bundle]
+
+Use eclipse to create a plugin project like code[org.lunifera.examples.runtime.web.vaadin.standalone]. You do not need an activator since we are using declarative services.
+
+Open MANIFEST.MF and add following entries
+code[
+Bundle-Version: 0.0.1.qualifier
+Service-Component: OSGI-INF/*.xml
+Import-Package: org.osgi.service.component;version="1.2.0"
+Require-Bundle: javax.servlet;bundle-version="3.0.0",
+ com.vaadin.shared;bundle-version="7.0.0",
+ com.vaadin.server;bundle-version="7.0.0",
+ org.json;bundle-version="1.0.0",
+ org.lunifera.dependencies.bundle.vaadin.addon.icepush;bundle-version="0.5.5",
+ org.lunifera.runtime.web.vaadin.osgi;bundle-version="0.0.1",
+ org.lunifera.runtime.common;bundle-version="0.0.1"
+Bundle-ActivationPolicy: lazy
+Lunifera-Config: config
+]
+
+
+section2[Create UI class]
+
+Create your UI-class. This will be the entry point for your UI-code. 
+
+And add following code to the class.
+code[
+@Theme(Reindeer.THEME_NAME)
+public class Vaadin7StandaloneDemoUI extends OSGiUI {
+
+	@Override
+	public void init(VaadinRequest request) {
+		// your UI code will be placed here later
+	}
+]
+
+Now we have prepared a bundle that contains a working definition of code[com.vaadin.ui.UI]. As you can
+see, we are extending an OSGiyfied version called code[OSGiUI]. 
+
+
+section2[Create OSGi-Component-Factory]
+
+The main problem for now is, that the code[Vaadin-OSGi-Bridge] is not aware about our code[Vaadin7StandaloneDemoUI].
+So we are using OSGi-DS (Declarative OSGi-service) to register that class at the bridge.
+	
+
+Create a folder OSGI-INF in your bundle and add a file called vaadinUI.xml. 
+
+Then paste following code into it and replace code[org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI]
+by the UI-Classname of your example. Also change the name of the service.
+
+code[
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" 
+		factory="org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@VaadinDemo-VaadinApplication" 
+		immediate="false" name="org.lunifera.examples.runtime.web.vaadin.standalone.ui">
+   <implementation class="org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI"/>
+</scr:component>
+]
+
+code[org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@VaadinDemo-VaadinApplication]
+uses following structure.
+
+ul[
+item[code[org.lunifera.web.vaadin.UI] - Used by OSGi to find the factory.]
+item[/]
+item[code[org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI] - The name of the
+UI class as workaround since no properties can be passed into a component factory. Vaadin need the UI-class
+in the UIProvider.]
+item[@]
+item[code[VaadinDemo-VaadinApplication] - The name of the vaadin application this UI should be used
+with. Can be empty.]
+]
+
+A detailed description about the service definition can be found here ref:_IVaadinApplication.
+
+Now the code[Vaadin-OSGi-Bridge] is aware about the UI-class and got the capability to instantiate it
+by the ComponentFactory.
+
+section2[Configure Jetty]
+
+To configure a jetty server we can simply use the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]. Create a folder called config in the bundle
+and place a file called code[lunifera.jetty.server.factory_Vaadin1.cfg] there.
+
+Paste following code in there
+code[
+# configuration to start a jetty server
+lunifera.jetty.name=VaadinDemo-Server
+lunifera.jetty.http.port=8080
+]
+
+Detailed information about codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]
+is under construction. Further information about jetty see ref:_JettyService and ref:JettyService
+
+section2[Configure HttpApplication]
+
+To configure a HttpApplication (abstraction of servlet context) we also use the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]. Place a file called code[lunifera.http.application.factory_Vaadin1.cfg] there.
+
+Paste following code in there
+code[
+# configuration to start a vaadin service
+lunifera.http.name=VaadinDemo-HttpApplication
+lunifera.http.contextPath=/
+lunifera.jetty.name=VaadinDemo-Server
+]
+
+Further information about jetty see ref:_HttpApplication and ref:HttpApplication
+
+
+section2[Configure VaadinApplication]
+
+To configure jetty we also use the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]. Place a file called code[lunifera.vaadin.application.factory_Vaadin1.cfg] there.
+
+Paste following code in there
+code[
+# configuration to start a vaadin service
+lunifera.web.vaadin.name=VaadinDemo-VaadinApplication
+lunifera.web.vaadin.uialias=demo
+lunifera.web.vaadin.widgetset=org.lunifera.examples.runtime.web.vaadin.standalone.widgetset.Widgetset
+lunifera.http.name=VaadinDemo-HttpApplication
+]
+
+Further information about jetty see ref:_VaadinApplication and ref:VaadinApplication

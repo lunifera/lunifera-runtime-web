@@ -115,7 +115,7 @@ props.put(VaadinConstants.HTTP_APPLICATION_NAME,&nbsp;<span class="string">"Http
 <br/>
 <span class="comment">//&nbsp;create&nbsp;the&nbsp;configuration&nbsp;<br/>
 </span><span class="comment">//&nbsp;and&nbsp;forward&nbsp;to&nbsp;the&nbsp;VaadinApplicationFactory<br/>
-</span>config.update(props);<br/>
+</span>config.update(props);
 </p>
 </div>
 </div>
@@ -263,7 +263,7 @@ To find the assigned HttpService, the property VaadinConstants.HTTP_APPLICATION_
 </span><span class="comment">//<br/>
 </span>Collection&lt;ServiceReference&lt;ExtendedHttpService&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(ExtendedHttpService.<span class="keyword">class</span>,&nbsp;<span class="string">"(&amp;(objectClass=org.eclipse.equinox.http.servlet.ExtendedHttpService)(lunifera.http.name=Http1))"</span>);<br/>
-....<br/>
+....
 </p>
 </div>
 </div>
@@ -296,7 +296,7 @@ props.put(VaadinConstants.HTTP_APPLICATION_NAME,&nbsp;<span class="string">"Http
 <br/>
 <span class="comment">//&nbsp;create&nbsp;the&nbsp;configuration&nbsp;<br/>
 </span><span class="comment">//&nbsp;and&nbsp;forward&nbsp;to&nbsp;the&nbsp;VaadinApplicationFactory<br/>
-</span>config.update(props);<br/>
+</span>config.update(props);
 </p>
 </div>
 </div>
@@ -328,7 +328,7 @@ Following code will force the vaadin application to use HttpService with name Ht
 </span>Dictionary&lt;String,&nbsp;Object&gt;&nbsp;props&nbsp;=&nbsp;<span class="keyword">new</span>&nbsp;Hashtable&lt;String,&nbsp;Object&gt;();<br/>
 props.put(VaadinConstants.HTTP_APPLICATION_NAME,&nbsp;<span class="string">"Http2"</span>);<br/>
 <br/>
-config.update(props);<br/>
+config.update(props);
 </p>
 </div>
 </div>
@@ -379,7 +379,7 @@ The following code will delete the vaadin application from example above.
 <span class="comment">//&nbsp;get&nbsp;the&nbsp;config<br/>
 </span>Configuration&nbsp;config&nbsp;=&nbsp;admin.getConfiguration(pid);<br/>
 <span class="comment">//&nbsp;delete&nbsp;it<br/>
-</span>config.delete();<br/>
+</span>config.delete();
 </p>
 </div>
 </div>
@@ -409,7 +409,7 @@ osgi&gt;lvaadin<br/>
 &nbsp;&nbsp;&nbsp;lvaadin&nbsp;&lt;cmd&gt;&nbsp;[args]<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;start|stop&gt;&nbsp;[application&nbsp;id]&nbsp;-&nbsp;Starts&nbsp;or&nbsp;stops&nbsp;the&nbsp;vaadin&nbsp;application&nbsp;with&nbsp;the&nbsp;given&nbsp;id<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ls&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;registered&nbsp;vaadin&nbsp;applications<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;properties&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;available&nbsp;service&nbsp;properties<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;properties&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;available&nbsp;service&nbsp;properties
 </p>
 </div>
 </div>
@@ -421,7 +421,7 @@ For instance <span class="inlinecode">ljetty&nbsp;ls</span> list all active http
 <p class="code">
 osgi&gt;lvaadin&nbsp;ls<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;----&nbsp;Available&nbsp;vaadin&nbsp;application&nbsp;instances&nbsp;----<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id:&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:&nbsp;ECViewApplication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vaadin&nbsp;application:&nbsp;ECViewApplication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ui&nbsp;alias:&nbsp;demo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;widgetset:&nbsp;org.lunifera.examples.runtime.web.ecp.uimodel.presentation.vaadin.widgetset.Widgetset&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id:&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:&nbsp;ECViewApplication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vaadin&nbsp;application:&nbsp;ECViewApplication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ui&nbsp;alias:&nbsp;demo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;widgetset:&nbsp;org.lunifera.examples.runtime.web.ecp.uimodel.presentation.vaadin.widgetset.Widgetset
 </p>
 </div>
 </div>
@@ -461,14 +461,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IVaadinApplication&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IVaadinApplication.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.web.vaadin.name=Carstore-Web)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IVaadinApplication&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>
@@ -479,14 +479,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IVaadinApplication&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IVaadinApplication.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.web.vaadin.widgetset=org.lunifera.examples.runtime.web.vaadin.standalone.widgetset.Widgetset)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IVaadinApplication&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>
@@ -522,7 +522,7 @@ It is a good idea to follow the example in <span class="inlinecode">org.lunifera
 <span class="keyword">public</span>&nbsp;<span class="keyword">class</span>&nbsp;Vaadin7StandaloneDemoUI&nbsp;<span class="keyword">extends</span>&nbsp;OSGiUI&nbsp;{<br/>
 @Override<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span>&nbsp;<span class="keyword">void</span>&nbsp;init(VaadinRequest&nbsp;request)&nbsp;{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;....<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;....
 </p>
 </div>
 </div>
@@ -539,7 +539,7 @@ As a second step, the OSGi-DS component factory has to be defined and registered
 &nbsp;&nbsp;&nbsp;&nbsp;factory=<span class="string">"org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@VaadinDemo-VaadinApplication"</span>&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;immediate=<span class="string">"false"</span>&nbsp;name=<span class="string">"org.lunifera.examples.runtime.web.vaadin.standalone.ui"</span>&gt;<br/>
 &nbsp;&lt;implementation&nbsp;class=<span class="string">"org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI"</span>/&gt;<br/>
-&lt;/scr:component&gt;<br/>
+&lt;/scr:component&gt;
 </p>
 </div>
 </div>
@@ -573,7 +573,7 @@ A possible Carstore-Web definition could look something like:
 &nbsp;&nbsp;&nbsp;&nbsp;factory=<span class="string">"org.lunifera.web.vaadin.UI/org.lunifera.example.carstore.ui.UI@Carstore-Web"</span>&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;immediate=<span class="string">"false"</span>&nbsp;name=<span class="string">"org.lunifera.example.carstore.ui"</span>&gt;<br/>
 &nbsp;&lt;implementation&nbsp;class=<span class="string">"org.lunifera.example.carstore.ui.UI"</span>/&gt;<br/>
-&lt;/scr:component&gt;<br/>
+&lt;/scr:component&gt;
 </p>
 </div>
 </div>

@@ -1,10 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.lunifera.runtime.web.doc
-Bundle-SymbolicName: org.lunifera.runtime.web.help;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: My Company
-Import-Package: javax.servlet;version="2.6.0",
+Bundle-SymbolicName: org.lunifera.runtime.web.doc;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: lunifera.org
+Import-Package: com.vaadin.ui;version="7.0.2.nightly-7f9e51e0e31c5c0a699c7ca486aaf993d5aec347-401",
+ javax.servlet;version="2.6.0",
  org.eclipse.equinox.http.servlet;version="1.1.0",
  org.eclipse.jetty.server;version="8.1.3",
  org.lunifera.runtime.component.configuration.manager.service,

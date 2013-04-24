@@ -104,7 +104,7 @@ props.put(HttpConstants.JETTY_SERVER_NAME,&nbsp;<span class="string">"Jetty-Serv
 <br/>
 <span class="comment">//&nbsp;create&nbsp;the&nbsp;configuration&nbsp;<br/>
 </span><span class="comment">//&nbsp;and&nbsp;forward&nbsp;to&nbsp;the&nbsp;HttpApplicationFactory<br/>
-</span>config.update(props);<br/>
+</span>config.update(props);
 </p>
 </div>
 </div>
@@ -301,7 +301,7 @@ props.put(HttpConstants.JETTY_SERVER_NAME,&nbsp;<span class="string">"Server_808
 <br/>
 <span class="comment">//&nbsp;create&nbsp;the&nbsp;configuration&nbsp;<br/>
 </span><span class="comment">//&nbsp;and&nbsp;forward&nbsp;to&nbsp;the&nbsp;HttpApplicationFactory<br/>
-</span>config.update(props);<br/>
+</span>config.update(props);
 </p>
 </div>
 </div>
@@ -333,7 +333,7 @@ Following code will deploy the http application to Server2 on port 8089.
 </span>Dictionary&lt;String,&nbsp;Object&gt;&nbsp;props&nbsp;=&nbsp;<span class="keyword">new</span>&nbsp;Hashtable&lt;String,&nbsp;Object&gt;();<br/>
 props.put(HttpConstants.JETTY_SERVER_NAME,&nbsp;<span class="string">"Server_8089"</span>);<br/>
 <br/>
-config.update(props);<br/>
+config.update(props);
 </p>
 </div>
 </div>
@@ -417,7 +417,7 @@ The following code will delete the http application from example above.
 <span class="comment">//&nbsp;get&nbsp;the&nbsp;config<br/>
 </span>Configuration&nbsp;config&nbsp;=&nbsp;admin.getConfiguration(pid);<br/>
 <span class="comment">//&nbsp;delete&nbsp;it<br/>
-</span>config.delete();<br/>
+</span>config.delete();
 </p>
 </div>
 </div>
@@ -462,7 +462,7 @@ osgi&gt;lhttp<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;lhttp&nbsp;&lt;cmd&gt;&nbsp;[args]<br/>
 &lt;ls&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;registered&nbsp;http&nbsp;applications<br/>
 &lt;start|stop&gt;&nbsp;[application&nbsp;id]&nbsp;-&nbsp;Starts&nbsp;or&nbsp;stops&nbsp;the&nbsp;http&nbsp;application&nbsp;with&nbsp;the&nbsp;given&nbsp;id<br/>
-&lt;properties&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;available&nbsp;service&nbsp;properties<br/>
+&lt;properties&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;available&nbsp;service&nbsp;properties
 </p>
 </div>
 </div>
@@ -474,7 +474,7 @@ For instance <span class="inlinecode">ljetty&nbsp;ls</span> list all active http
 <p class="code">
 osgi&gt;lhttp&nbsp;ls<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;----&nbsp;Available&nbsp;http&nbsp;application&nbsp;instances&nbsp;----<br/>
-id:&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:&nbsp;ECViewApplication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context&nbsp;path:&nbsp;/ecview&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jetty&nbsp;server:&nbsp;ECViewServer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;started:&nbsp;true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pid:&nbsp;lunifera.http.application.factory-1361886835801-0<br/>
+id:&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:&nbsp;ECViewApplication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context&nbsp;path:&nbsp;/ecview&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jetty&nbsp;server:&nbsp;ECViewServer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;started:&nbsp;true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pid:&nbsp;lunifera.http.application.factory-1361886835801-0
 </p>
 </div>
 </div>
@@ -511,14 +511,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IHttpApplication&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IHttpApplication.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.http.contextPath=/demo/carstore)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IHttpApplication&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>
@@ -529,14 +529,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IHttpApplication&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IHttpApplication.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.http.name=Http1)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IHttpApplication&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>
@@ -573,14 +573,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IHandlerProvider&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IHandlerProvider.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.http.contextPath=/demo/carstore)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IHandlerProvider&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>
@@ -591,14 +591,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IHandlerProvider&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IHandlerProvider.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.jetty.name=Jetty-Server1)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IHandlerProvider&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>
@@ -632,14 +632,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IExtendedHttpService&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IExtendedHttpService.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.http.contextPath=/demo/carstore)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IExtendedHttpService&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>
@@ -650,14 +650,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IExtendedHttpService&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IExtendedHttpService.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.http.name=Http1)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IExtendedHttpService&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>

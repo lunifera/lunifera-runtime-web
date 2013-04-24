@@ -106,4 +106,22 @@
 			</topic>
 		</topic>
 	</topic>
+	<topic href="contents/06-Vaadin-Tutorial.html#VaadinTutorial" label="Vaadin - Your own application" >
+		<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle" label="Application Bundle" >
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_5" label="Finished bundle" >
+			</topic>
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_6" label="Prepare bundle" >
+			</topic>
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_7" label="Create UI class" >
+			</topic>
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_8" label="Create OSGi-Component-Factory" >
+			</topic>
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_9" label="Configure Jetty" >
+			</topic>
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_10" label="Configure HttpApplication" >
+			</topic>
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_11" label="Configure VaadinApplication" >
+			</topic>
+		</topic>
+	</topic>
 </toc>
