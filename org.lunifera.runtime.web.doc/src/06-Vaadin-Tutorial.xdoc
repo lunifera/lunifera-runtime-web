@@ -115,10 +115,26 @@ A detailed description about the service definition can be found here ref:_IVaad
 Now the code[Vaadin-OSGi-Bridge] is aware about the UI-class and got the capability to instantiate it
 by the ComponentFactory.
 
+
+section:_VaadinApplicationBundle_Configure[Configure Applications]
+
+In order to use the UI-class we have to define...
+ul[
+item[A VaadinApplication that provides the UI-class to vaadin core.]
+item[A HttpApplication which is an abstraction above a servlet context. Each HttpApplication has its
+very own contextPath. A HttpApplication can run exactly one VaadinApplication.]
+item[A JettyServer instance. Each jetty server can run many HttpApplications.]
+]
+
+Therefore we are using codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService].
+This service reads properties from a file and pass them to the OSGi Configuration Admin.
+
+Detailed information about codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]
+is under construction. 
+
 section2[Configure Jetty]
 
-To configure a jetty server we can simply use the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]. Create a folder called config in the bundle
-and place a file called code[lunifera.jetty.server.factory_Vaadin1.cfg] there.
+Create a folder called config in the bundle and place a file called code[lunifera.jetty.server.factory_Vaadin1.cfg] there.
 
 Paste following code in there
 code[
@@ -127,8 +143,7 @@ lunifera.jetty.name=VaadinDemo-Server
 lunifera.jetty.http.port=8080
 ]
 
-Detailed information about codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]
-is under construction. Further information about jetty see ref:_JettyService and ref:JettyService
+Further information about jetty see ref:_JettyService and ref:JettyService
 
 section2[Configure HttpApplication]
 

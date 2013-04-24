@@ -116,11 +116,13 @@
 			</topic>
 			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_8" label="Create OSGi-Component-Factory" >
 			</topic>
-			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_9" label="Configure Jetty" >
+		</topic>
+		<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_Configure" label="Configure Applications" >
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_Configure_4" label="Configure Jetty" >
 			</topic>
-			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_10" label="Configure HttpApplication" >
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_Configure_5" label="Configure HttpApplication" >
 			</topic>
-			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_11" label="Configure VaadinApplication" >
+			<topic href="contents/06-Vaadin-Tutorial.html#_VaadinApplicationBundle_Configure_6" label="Configure VaadinApplication" >
 			</topic>
 		</topic>
 	</topic>
