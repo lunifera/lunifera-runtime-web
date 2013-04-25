@@ -233,7 +233,7 @@ item[Jetty-Server1 undeployed ServletContext-Handler]
 item[Jetty-Server1 started again]
 ]
 
-section:_consoleCommands[Console commands]
+section:_httpConsoleCommands[Console commands]
 
 The http application feature provides OSGi console commands:
 

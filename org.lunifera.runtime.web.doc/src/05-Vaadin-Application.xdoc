@@ -197,7 +197,7 @@ item[Vaadin application with name "Carstore-Web" was stopped]
 item[Vaadin-Application unregistered all servlets,...]
 ]
 
-section:_consoleCommands[Console commands]
+section:_vaadinConsoleCommands[Console commands]
 
 The vaadin application feature provides OSGi console commands:
 

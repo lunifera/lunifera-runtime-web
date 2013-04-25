@@ -160,7 +160,7 @@ code[Java][
 		config.delete();
 ]
 
-section:_consoleCommands[Console commands]
+section:_jettyConsoleCommands[Console commands]
 
 The jetty service feature provides OSGi console commands:
 
