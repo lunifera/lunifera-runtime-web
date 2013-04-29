@@ -19,7 +19,7 @@
       <category name="lunifera-web-features"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.addon.osgi" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.common.source" version="0.0.0">
       <category name="lunifera-web-features"/>
@@ -40,7 +40,8 @@
       <category name="lunifera-web-features"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.addon.osgi.source" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <category-def name="lunifera-web-features" label="Lunifera Web Features"/>
+   <category-def name="lunifera-web-vaadin-addons" label="lunifera Web Vaadin Addons"/>
 </site>
