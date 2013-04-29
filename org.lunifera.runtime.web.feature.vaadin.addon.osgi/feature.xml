@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.lunifera.runtime.web.feature.vaadin.addon.osgi"
+      label="%featureName"
+      version="0.0.1.qualifier"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import feature="org.lunifera.runtime.web.feature.vaadin.common" version="0.0.1.qualifier"/>
+      <import feature="org.lunifera.runtime.web.feature.vaadin.osgi" version="0.0.1.qualifier"/>
+      <import feature="org.lunifera.runtime.feature.common" version="0.0.1.qualifier"/>
+   </requires>
+
+</feature>

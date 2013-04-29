@@ -64,7 +64,8 @@
 				<module>org.lunifera.runtime.web.feature.vaadin.databinding</module>
 
 				<module>org.lunifera.runtime.web.feature.vaadin.osgi</module>
-
+				<module>org.lunifera.runtime.web.feature.vaadin.addon.osgi</module>
+				
 				<module>org.lunifera.runtime.web.feature.http</module>
 				<module>org.lunifera.runtime.web.feature.jetty</module>
 
