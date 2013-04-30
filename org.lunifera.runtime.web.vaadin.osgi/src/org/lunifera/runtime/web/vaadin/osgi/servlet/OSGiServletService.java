@@ -28,9 +28,8 @@ public class OSGiServletService extends VaadinServletService {
 
 	public OSGiServletService(VaadinServlet servlet,
 			DeploymentConfiguration deploymentConfiguration,
-			IVaadinSessionFactory factory) {
+			IVaadinSessionFactory factory) throws ServiceException {
 		super(servlet, deploymentConfiguration);
-
 		this.factory = factory;
 	}
 

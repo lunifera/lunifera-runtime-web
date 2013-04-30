@@ -29,6 +29,7 @@ import org.vaadin.artur.icepush.ICEPush;
 import org.vaadin.artur.icepush.JavascriptProvider;
 
 import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.ServiceException;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
@@ -125,7 +126,8 @@ public class VaadinOSGiServlet extends VaadinServlet {
 
 	@Override
 	protected OSGiServletService createServletService(
-			DeploymentConfiguration deploymentConfiguration) {
+			DeploymentConfiguration deploymentConfiguration)
+			throws ServiceException {
 
 		// create the servlet service initialized with the ui provider
 		OSGiServletService service = new OSGiServletService(this,
