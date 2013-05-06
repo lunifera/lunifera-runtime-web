@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?>
-
-<target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="23">
+<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="23">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.core.runtime.feature.feature.group" version="1.1.0.v20130308-1450"/>
@@ -25,32 +23,32 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.1"/>
-<unit id="org.lunifera.runtime.feature.logging.equinox.over.slf4j.source.feature.group" version="0.0.1.201304301337"/>
-<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.1.0.201304301330"/>
-<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="3.9.0.201304301330"/>
+<unit id="org.lunifera.runtime.feature.logging.equinox.over.slf4j.source.feature.group" version="0.0.1.201305052116"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.1.0.201305052109"/>
+<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="3.9.0.201305052109"/>
 <unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.5.5"/>
-<unit id="org.lunifera.dependencies.feature.equinox.testing.feature.group" version="3.9.0.201304301330"/>
-<unit id="org.lunifera.runtime.feature.configuration.manager.feature.group" version="0.0.1.201304301337"/>
-<unit id="org.lunifera.runtime.feature.logging.equinox.over.slf4j.feature.group" version="0.0.1.201304301337"/>
-<unit id="org.lunifera.runtime.feature.configuration.manager.source.feature.group" version="0.0.1.201304301337"/>
+<unit id="org.lunifera.dependencies.feature.equinox.testing.feature.group" version="3.9.0.201305052109"/>
+<unit id="org.lunifera.runtime.feature.configuration.manager.feature.group" version="0.0.1.201305052116"/>
+<unit id="org.lunifera.runtime.feature.logging.equinox.over.slf4j.feature.group" version="0.0.1.201305052116"/>
+<unit id="org.lunifera.runtime.feature.configuration.manager.source.feature.group" version="0.0.1.201305052116"/>
 <repository location="http://lun.lunifera.org/downloads/p2/lunifera/kepler/latest/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201304292005"/>
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201305042005"/>
 <repository location="http://lun.lunifera.org/downloads/p2/ecview/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.lunifera.dependencies.feature.assert-utilities.feature.group" version="1.2.0"/>
 <unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.1"/>
-<unit id="org.lunifera.runtime.feature.configuration.manager.feature.group" version="0.0.1.201304301337"/>
+<unit id="org.lunifera.runtime.feature.configuration.manager.feature.group" version="0.0.1.201305052116"/>
 <unit id="org.lunifera.dependencies.feature.vaadin.addon.icepush.feature.group" version="0.5.5"/>
-<unit id="org.lunifera.dependencies.feature.equinox.testing.feature.group" version="3.9.0.201304301330"/>
-<unit id="org.lunifera.dependencies.feature.xtext.headless.feature.group" version="2.4.0.201304301330"/>
-<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.1.0.201304301330"/>
-<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="3.9.0.201304301330"/>
-<unit id="org.lunifera.runtime.feature.logging.equinox.over.slf4j.feature.group" version="0.0.1.201304301337"/>
-<unit id="org.lunifera.runtime.feature.common.feature.group" version="0.0.1.201304301337"/>
-<unit id="org.lunifera.dependencies.feature.weld.feature.group" version="1.2.0.201304301330"/>
+<unit id="org.lunifera.dependencies.feature.equinox.testing.feature.group" version="3.9.0.201305052109"/>
+<unit id="org.lunifera.dependencies.feature.xtext.headless.feature.group" version="2.4.0.201305052109"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.1.0.201305052109"/>
+<unit id="org.lunifera.dependencies.feature.equinox.feature.group" version="3.9.0.201305052109"/>
+<unit id="org.lunifera.runtime.feature.logging.equinox.over.slf4j.feature.group" version="0.0.1.201305052116"/>
+<unit id="org.lunifera.runtime.feature.common.feature.group" version="0.0.1.201305052116"/>
+<unit id="org.lunifera.dependencies.feature.weld.feature.group" version="1.2.0.201305052109"/>
 <repository location="http://lun.lunifera.org/downloads/p2/lunifera/kepler/latest/"/>
 </location>
 </locations>

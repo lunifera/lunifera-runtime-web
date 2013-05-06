@@ -62,6 +62,7 @@ public class VaadinApplication implements IVaadinApplication {
 	private String name = VaadinConstants.DEFAULT_APPLICATION_NAME;
 	private String uiAlias = VaadinConstants.DEFAULT_UI_ALIAS;
 	private String widgetset = "";
+	private boolean productionMode;
 	private String httpApplication = "";
 
 	private List<UIProvider> uiProviders = new ArrayList<UIProvider>(1);
@@ -158,6 +159,18 @@ public class VaadinApplication implements IVaadinApplication {
 	 */
 	public void setWidgetSetName(String widgetset) {
 		this.widgetset = isStringValid(widgetset) ? widgetset : "";
+	}
+
+	@Override
+	public boolean isProductionMode() {
+		return productionMode;
+	}
+	
+	/**
+	 * @param productionMode the productionMode to set
+	 */
+	protected void setProductionMode(boolean productionMode) {
+		this.productionMode = productionMode;
 	}
 
 	/**
@@ -304,7 +317,9 @@ public class VaadinApplication implements IVaadinApplication {
 		properties.put(VaadinConstants.APPLICATION_NAME, getName());
 		properties.put(VaadinConstants.WIDGETSET, getWidgetSetName());
 		properties.put("widgetset", getWidgetSetName());
-
+		properties.put("productionMode", "true");
+		
+		
 		servlet = new VaadinOSGiServlet(this);
 		servletAlias = String.format("/%s", getUIAlias());
 		defaultContext = new WebResourcesHttpContext(Activator

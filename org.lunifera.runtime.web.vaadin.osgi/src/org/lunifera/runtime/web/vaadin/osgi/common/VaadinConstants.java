@@ -48,6 +48,11 @@ public class VaadinConstants {
 	 * The OSGi property for specifying the widgetset.
 	 */
 	public static final String WIDGETSET = "lunifera.web.vaadin.widgetset";
+	
+	/**
+	 * The OSGi property for specifying the productionmode.
+	 */
+	public static final String PRODUCTIONMODE = "lunifera.web.vaadin.productionmode";
 
 	/**
 	 * Property for the name of the IHttpApplication the

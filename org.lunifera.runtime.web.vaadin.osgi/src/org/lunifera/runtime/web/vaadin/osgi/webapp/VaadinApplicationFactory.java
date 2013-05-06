@@ -129,10 +129,17 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 				uialias = (String) properties.get(VaadinConstants.UI_ALIAS);
 			}
 
+			boolean productionMode = false;
+			if (properties.get(VaadinConstants.PRODUCTIONMODE) != null) {
+				productionMode = Boolean.valueOf((String) properties
+						.get(VaadinConstants.PRODUCTIONMODE));
+			}
+
 			application.setName(name);
 			application.setWidgetSetName(widgetsetName);
 			application.setHttpApplication(httpApplicationName);
 			application.setUIAlias(uialias);
+			application.setProductionMode(productionMode);
 
 			// add the UI provider
 			for (OSGiUIProvider provider : providerMapping.values()) {

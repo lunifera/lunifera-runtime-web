@@ -15,7 +15,6 @@ package org.lunifera.runtime.web.vaadin.osgi.common;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.lunifera.runtime.web.vaadin.osgi.webapp.OSGiUIProvider;
 
 import com.vaadin.server.UIProvider;
 
@@ -63,6 +62,13 @@ public interface IVaadinApplication {
 	 * @return
 	 */
 	String getWidgetSetName();
+
+	/**
+	 * Returns true, if the application is running in production mode.
+	 * 
+	 * @return
+	 */
+	boolean isProductionMode();
 
 	/**
 	 * Returns a list of ui providers available for the vaadin web application.
