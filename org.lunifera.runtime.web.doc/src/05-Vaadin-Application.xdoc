@@ -86,11 +86,11 @@ tr[td[code[lunifera.web.vaadin.name]] td[Vaadin-Application Name]   td[The name 
 tr[td[code[lunifera.web.vaadin.uialias]] td[UI alias] td[The alias to access the main UI] td[lunifera] td[true]]
 tr[td[code[lunifera.web.vaadin.widgetset]] td[Widgetset Name] td[The name of the widgetset that should
 be used] td[] td[true]]
+tr[td[code[lunifera.web.vaadin.productionmode]] td[Production Mode] td[False if extended logging and
+debugging behaviour should be used] td[false] td[true]]
 tr[td[code[lunifera.http.name]] td[Http-Application name] td[The name of the Http-Application. The HttpService
 will be filtered by that name] td[] td[true]]
 ]
-
-
 
 section:_CodeSamples[Code sampels]
 
