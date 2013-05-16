@@ -53,7 +53,7 @@ public class WebResourcesHttpContext implements HttpContext, BundleListener {
 		for (Bundle bundle : resourceBundles) {
 			String uri = "";
 			if (isServerBundle(bundle) || isClientBundle(bundle)
-					|| isThemesBundle(bundle)) {
+					|| isThemesBundle(bundle) || isPushBundle(bundle)) {
 				uri = name.startsWith("/") ? name : "/" + name;
 			} else {
 				uri = name.startsWith("/") ? name : "/" + name;
@@ -86,7 +86,7 @@ public class WebResourcesHttpContext implements HttpContext, BundleListener {
 
 	private void checkBundleForResources(Bundle bundle) {
 		if (isClientBundle(bundle) || isServerBundle(bundle)
-				|| isThemesBundle(bundle)) {
+				|| isThemesBundle(bundle) || isPushBundle(bundle)) {
 			resourceBundles.add(bundle);
 		} else if (null != bundle.getHeaders().get("Vaadin-Resources")) {
 			resourceBundles.add(bundle);
@@ -115,6 +115,16 @@ public class WebResourcesHttpContext implements HttpContext, BundleListener {
 		return bundle.getSymbolicName().equals("com.vaadin.client")
 				|| bundle.getSymbolicName()
 						.equals("com.vaadin.client-compiled");
+	}
+
+	/**
+	 * Returns true, if the bundle is the vaadin push bundle.
+	 * 
+	 * @param bundle
+	 * @return
+	 */
+	private boolean isPushBundle(Bundle bundle) {
+		return bundle.getSymbolicName().equals("com.vaadin.push");
 	}
 
 	/**

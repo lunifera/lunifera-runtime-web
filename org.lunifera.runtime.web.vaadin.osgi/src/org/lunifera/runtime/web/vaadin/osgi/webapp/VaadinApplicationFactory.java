@@ -94,6 +94,9 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 	public void updated(String pid, Dictionary<String, ?> properties)
 			throws ConfigurationException {
 
+		System.out.println("Update");
+		logger.debug("Calling update");
+
 		try {
 			accessLock.lock();
 			VaadinApplication application = (VaadinApplication) applications
@@ -142,8 +145,15 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 			application.setProductionMode(productionMode);
 
 			// add the UI provider
-			for (OSGiUIProvider provider : providerMapping.values()) {
-				application.addUIProvider(provider);
+			for (OSGiUIProvider uiProvider : providerMapping.values()) {
+				if (uiProvider.getVaadinApplication() == null) {
+					application.addUIProvider(uiProvider);
+				} else {
+					if (uiProvider.getVaadinApplication().equals(
+							application.getName())) {
+						application.addUIProvider(uiProvider);
+					}
+				}
 			}
 
 			Dictionary<String, Object> copyProps = copy(properties);
@@ -169,6 +179,7 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 			// start the application again
 			//
 			application.start();
+
 			logger.debug(
 					"New IVaadinApplication {} deployed on 'http application' {}",
 					application.getName(), application.getHttpApplication());
@@ -233,42 +244,52 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void addUIFactory(ServiceReference<ComponentFactory> reference) {
-		ComponentFactory factory = reference.getBundle().getBundleContext()
-				.getService(reference);
-		String name = (String) reference.getProperty("component.factory");
-		String[] tokens = name.split("/");
-		if (tokens.length != 2) {
-			logger.error(
-					"UiFactory {} does not meet syntax. (org.lunifera.web.vaadin.UI/[uiclass]@[vaadinApp]) Eg: org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@StandaloneDemo",
-					name);
-			return;
-		}
 
-		String className;
-		String vaadinApplication;
-		String[] innerTokens = tokens[1].split("@");
-		if (innerTokens.length == 1) {
-			className = innerTokens[0];
-			vaadinApplication = null;
-		} else {
-			className = innerTokens[0];
-			vaadinApplication = innerTokens[1];
-		}
-
-		OSGiUIProvider uiProvider = null;
+		System.out.println("Adding ui factory");
 		try {
-			uiProvider = new OSGiUIProvider(factory,
-					(Class<? extends UI>) reference.getBundle().loadClass(
-							className), vaadinApplication);
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException(e);
-		}
-		if (uiProvider != null) {
-			providerMapping.put(factory, uiProvider);
-		}
+			logger.debug("Adding ui factory");
 
-		// handle added ui provider
-		uiProviderAdded(uiProvider);
+			accessLock.lock();
+
+			ComponentFactory factory = reference.getBundle().getBundleContext()
+					.getService(reference);
+			String name = (String) reference.getProperty("component.factory");
+			String[] tokens = name.split("/");
+			if (tokens.length != 2) {
+				logger.error(
+						"UiFactory {} does not meet syntax. (org.lunifera.web.vaadin.UI/[uiclass]@[vaadinApp]) Eg: org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@StandaloneDemo",
+						name);
+				return;
+			}
+
+			String className;
+			String vaadinApplication;
+			String[] innerTokens = tokens[1].split("@");
+			if (innerTokens.length == 1) {
+				className = innerTokens[0];
+				vaadinApplication = null;
+			} else {
+				className = innerTokens[0];
+				vaadinApplication = innerTokens[1];
+			}
+
+			OSGiUIProvider uiProvider = null;
+			try {
+				uiProvider = new OSGiUIProvider(factory,
+						(Class<? extends UI>) reference.getBundle().loadClass(
+								className), vaadinApplication);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException(e);
+			}
+			if (uiProvider != null) {
+				providerMapping.put(factory, uiProvider);
+			}
+
+			// handle added ui provider
+			uiProviderAdded(uiProvider);
+		} finally {
+			accessLock.unlock();
+		}
 	}
 
 	/**
@@ -279,9 +300,15 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 	 */
 	protected void removeUIFactory(ComponentFactory factory,
 			Map<String, Object> properties) {
-		OSGiUIProvider uiProvider = providerMapping.remove(factory);
-		if (uiProvider != null) {
-			uiProviderRemoved(uiProvider);
+		try {
+			accessLock.lock();
+
+			OSGiUIProvider uiProvider = providerMapping.remove(factory);
+			if (uiProvider != null) {
+				uiProviderRemoved(uiProvider);
+			}
+		} finally {
+			accessLock.unlock();
 		}
 	}
 

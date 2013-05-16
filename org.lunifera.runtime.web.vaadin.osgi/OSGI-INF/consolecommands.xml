@@ -4,4 +4,5 @@
    <service>
       <provide interface="org.eclipse.osgi.framework.console.CommandProvider"/>
    </service>
+   <reference bind="bindConfigAdmin" cardinality="0..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="unbindConfigAdmin"/>
 </scr:component>

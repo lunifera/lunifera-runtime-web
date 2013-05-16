@@ -317,7 +317,7 @@ public class VaadinApplication implements IVaadinApplication {
 		properties.put(VaadinConstants.APPLICATION_NAME, getName());
 		properties.put(VaadinConstants.WIDGETSET, getWidgetSetName());
 		properties.put("widgetset", getWidgetSetName());
-		properties.put("productionMode", "true");
+		properties.put("productionMode", Boolean.toString(isProductionMode()));
 		
 		
 		servlet = new VaadinOSGiServlet(this);
