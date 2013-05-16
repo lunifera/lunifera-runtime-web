@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.vaadin.osgi.webapp;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +23,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,9 +48,12 @@ public class ConsoleCommands implements CommandProvider {
 				"Lists all available service properties"));
 		commands.add(new Command("<start|stop>", "[application id]",
 				"Starts or stops the vaadin application with the given id"));
+		commands.add(new Command("<dlt>", "[application id]",
+				"Deletes the vaadin application with the given id"));
 	}
 
 	private BundleContext bundleContext;
+	private ConfigurationAdmin configAdmin;
 
 	/**
 	 * Called by OSGi-DS
@@ -79,6 +85,8 @@ public class ConsoleCommands implements CommandProvider {
 			startApplication(ci);
 		} else if (argument.equals("stop")) {
 			stopApplication(ci);
+		} else if (argument.equals("dlt")) {
+			deleteApplication(ci);
 		} else {
 			ci.println("ERROR - not a valid command!");
 			ci.println(getHelp());
@@ -106,7 +114,7 @@ public class ConsoleCommands implements CommandProvider {
 	public void printApplication(CommandInterpreter ci,
 			IVaadinApplication service) {
 		ci.println(String
-				.format("\t id: %s \t name: %s \t vaadin application: %s \t ui alias: %s \t widgetset: %s \t started: %s \t pid: %s",
+				.format("\t id: %s \t name: %s \t http-application: %s \t ui alias: %s \t widgetset: %s \t started: %s \t pid: %s",
 						service.getId(), service.getName(),
 						service.getHttpApplication(), service.getUIAlias(),
 						service.getWidgetSetName(),
@@ -148,6 +156,44 @@ public class ConsoleCommands implements CommandProvider {
 		}
 		printApplication(ci, application);
 
+	}
+
+	/**
+	 * Deletes the application with the given id.
+	 * 
+	 * @param ci
+	 */
+	private void deleteApplication(CommandInterpreter ci) {
+
+		if (configAdmin == null) {
+			ci.println("\tERROR: ConfigAdmin not available. Start equinox.cm!");
+			return;
+		}
+
+		String id = ci.nextArgument();
+		if (id == null) {
+			ci.println("\tERROR: No id specified!");
+			return;
+		}
+
+		VaadinApplication application = (VaadinApplication) findVaadinApplication(id);
+		if (application == null) {
+			ci.println("\tERROR: Application not found!");
+			return;
+		}
+
+		String pid = findVaadinApplicationPID(id);
+		Configuration config;
+		try {
+			config = configAdmin.getConfiguration(pid);
+			if (config != null) {
+				config.delete();
+			}
+		} catch (IOException e) {
+			logger.error("{}", e);
+		}
+
+		ci.println("\tVaadinApplication successfully deleted!");
 	}
 
 	/**
@@ -231,6 +277,24 @@ public class ConsoleCommands implements CommandProvider {
 			command.writeTo(builder);
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * Called by OSGi DS
+	 * 
+	 * @param configAdmin
+	 */
+	protected void bindConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = configAdmin;
+	}
+
+	/**
+	 * Called by OSGi DS
+	 * 
+	 * @param configAdmin
+	 */
+	protected void unbindConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = null;
 	}
 
 	private static class Command {
