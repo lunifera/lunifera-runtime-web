@@ -244,6 +244,24 @@ public class HttpApplication implements IHttpApplication {
 				throw new RuntimeException(e);
 			}
 
+			// register http service 
+			// ATTENTION: First the http service has to be registered. Otherwise servlets can not add servletContext listener if servlet context already started!
+			//
+			if (httpServiceRegistration == null) {
+				Hashtable<String, Object> properties = new Hashtable<String, Object>();
+				properties.put(HttpConstants.APPLICATION_ID, getId());
+				properties.put(HttpConstants.APPLICATION_NAME, getName());
+				properties.put(HttpConstants.CONTEXT_PATH, getContextPath());
+				if (getJettyServer() != null) {
+					properties.put(HttpConstants.JETTY_SERVER_NAME,
+							getJettyServer());
+				}
+				httpServiceRegistration = context.registerService(
+						new String[] { HttpService.class.getName(),
+								ExtendedHttpService.class.getName() },
+						httpServiceFactory, properties);
+			}
+
 			// register jetty handler
 			//
 			if (jettyHandlerProviderRegistration == null) {
@@ -260,22 +278,6 @@ public class HttpApplication implements IHttpApplication {
 								servletContext), properties);
 			}
 
-			// register http service
-			//
-			if (httpServiceRegistration == null) {
-				Hashtable<String, Object> properties = new Hashtable<String, Object>();
-				properties.put(HttpConstants.APPLICATION_ID, getId());
-				properties.put(HttpConstants.APPLICATION_NAME, getName());
-				properties.put(HttpConstants.CONTEXT_PATH, getContextPath());
-				if (getJettyServer() != null) {
-					properties.put(HttpConstants.JETTY_SERVER_NAME,
-							getJettyServer());
-				}
-				httpServiceRegistration = context.registerService(
-						new String[] { HttpService.class.getName(),
-								ExtendedHttpService.class.getName() },
-						httpServiceFactory, properties);
-			}
 		} finally {
 			accessLock.unlock();
 			started = true;
