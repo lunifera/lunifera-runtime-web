@@ -196,7 +196,7 @@ public class VaadinApplication implements IVaadinApplication {
 			logger.debug("HttpApplication {} is already started", getName());
 			return;
 		}
-
+		
 		// ensure that only one threas manipulates the contents
 		accessLock.lock();
 		try {

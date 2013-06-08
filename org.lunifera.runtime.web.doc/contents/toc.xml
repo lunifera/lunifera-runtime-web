@@ -55,7 +55,7 @@
 			<topic href="contents/04-Http-Application.html#_CodeSamples_3" label="Delete existing Http-Application-Instance" >
 			</topic>
 		</topic>
-		<topic href="contents/04-Http-Application.html#_httpConsoleCommands" label="Console commands" >
+		<topic href="contents/04-Http-Application.html#_consoleCommands" label="Console commands" >
 		</topic>
 		<topic href="contents/04-Http-Application.html#_QueryHttp" label="Query Http-applications" >
 			<topic href="contents/04-Http-Application.html#_QueryHttp_3" label="Find pid by contextPath" >
@@ -93,7 +93,7 @@
 			<topic href="contents/05-Vaadin-Application.html#_CodeSamples_4" label="Delete existing Vaadin-Application-Instance" >
 			</topic>
 		</topic>
-		<topic href="contents/05-Vaadin-Application.html#_vaadinConsoleCommands" label="Console commands" >
+		<topic href="contents/05-Vaadin-Application.html#_consoleCommands" label="Console commands" >
 		</topic>
 		<topic href="contents/05-Vaadin-Application.html#_QueryHttp" label="Query Vaadin-Applications" >
 			<topic href="contents/05-Vaadin-Application.html#_QueryHttp_3" label="Find pid by name" >

@@ -82,7 +82,7 @@ props.put(JettyConstants.HTTP_PORT,&nbsp;<span class="string">"8081"</span>);<br
 <br/>
 <span class="comment">//&nbsp;create&nbsp;the&nbsp;configuration&nbsp;<br/>
 </span><span class="comment">//&nbsp;and&nbsp;forward&nbsp;to&nbsp;the&nbsp;JettyFactory<br/>
-</span>config.update(props);<br/>
+</span>config.update(props);
 </p>
 </div>
 </div>
@@ -386,7 +386,7 @@ props.put(JettyConstants.HTTP_PORT,&nbsp;<span class="string">"8081"</span>);<br
 <br/>
 <span class="comment">//&nbsp;create&nbsp;the&nbsp;configuration&nbsp;<br/>
 </span><span class="comment">//&nbsp;and&nbsp;forward&nbsp;to&nbsp;the&nbsp;JettyFactory<br/>
-</span>config.update(props);<br/>
+</span>config.update(props);
 </p>
 </div>
 </div>
@@ -420,7 +420,7 @@ Therefore the jetty server will be stopped and started afterwards again.
 props.put(JettyConstants.JETTY_SERVER_NAME,&nbsp;<span class="string">"Server2"</span>);<br/>
 props.put(JettyConstants.HTTP_PORT,&nbsp;<span class="string">"8089"</span>);<br/>
 <br/>
-config.update(props);<br/>
+config.update(props);
 </p>
 </div>
 </div>
@@ -448,7 +448,7 @@ The following code will delete the jetty service with port 8081. The jetty serve
 <span class="comment">//&nbsp;get&nbsp;the&nbsp;config<br/>
 </span>Configuration&nbsp;config&nbsp;=&nbsp;admin.getConfiguration(pid);<br/>
 <span class="comment">//&nbsp;delete&nbsp;it<br/>
-</span>config.delete();<br/>
+</span>config.delete();
 </p>
 </div>
 </div>
@@ -467,7 +467,7 @@ osgi&gt;ljetty<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ljetty&nbsp;&lt;cmd&gt;&nbsp;[args]<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ls&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;active&nbsp;jetty&nbsp;server<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;start|stop&gt;&nbsp;[jetty&nbsp;id]&nbsp;-&nbsp;Starts&nbsp;or&nbsp;stops&nbsp;the&nbsp;jetty&nbsp;with&nbsp;the&nbsp;given&nbsp;id<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;properties&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;available&nbsp;service&nbsp;properties<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;properties&gt;&nbsp;&nbsp;-&nbsp;Lists&nbsp;all&nbsp;available&nbsp;service&nbsp;properties
 </p>
 </div>
 </div>
@@ -479,7 +479,7 @@ For instance <span class="inlinecode">ljetty&nbsp;ls</span> list all active jett
 <p class="code">
 osgi&gt;ljetty&nbsp;ls<br/>
 &nbsp;&nbsp;&nbsp;----&nbsp;Available&nbsp;jetty&nbsp;instances&nbsp;----<br/>
-&nbsp;&nbsp;&nbsp;id:&nbsp;5&nbsp;&nbsp;name:&nbsp;Server1&nbsp;&nbsp;port:&nbsp;8081&nbsp;&nbsp;started:&nbsp;true&nbsp;&nbsp;pid:&nbsp;lunifera.jetty.server.factory-1361724966109-4<br/>
+&nbsp;&nbsp;&nbsp;id:&nbsp;5&nbsp;&nbsp;name:&nbsp;Server1&nbsp;&nbsp;port:&nbsp;8081&nbsp;&nbsp;started:&nbsp;true&nbsp;&nbsp;pid:&nbsp;lunifera.jetty.server.factory-1361724966109-4
 </p>
 </div>
 </div>
@@ -510,14 +510,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IJetty&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IJetty.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.jetty.http.port=8082)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IJetty&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>
@@ -528,14 +528,14 @@ That are
 <div class="literallayout">
 <div class="incode">
 <p class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
+<span class="comment">//&nbsp;find&nbsp;service&nbsp;reference<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection&lt;ServiceReference&lt;IJetty&gt;&gt;&nbsp;references&nbsp;=&nbsp;bundleContext<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.getServiceReferences(IJetty.<span class="keyword">class</span>,&nbsp;<span class="string">"(lunifera.jetty.http.name=Server1)"</span>);<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;(references.iterator().hasNext())&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceReference&lt;IJetty&gt;&nbsp;reference&nbsp;=&nbsp;references.iterator().next();<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;access&nbsp;PID&nbsp;by&nbsp;properties<br/>
 </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;pid&nbsp;=&nbsp;(String)&nbsp;reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 </div>
 </div>

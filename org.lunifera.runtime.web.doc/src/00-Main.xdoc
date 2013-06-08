@@ -30,4 +30,8 @@ chapter-ref[HttpApplication]
 
 chapter-ref[VaadinApplication]
 
-chapter-ref[VaadinTutorial]
+chapter-ref[VaadinTutorial_RunStandalone]
+
+chapter-ref[VaadinTutorial_CreateStandaloneExample]
+
+chapter-ref[VaadinTutorial_HttpAndJetty]

@@ -11,7 +11,7 @@ to.
 
 A standalone example can be found in the bundle code[org.lunifera.examples.runtime.web.vaadin.standalone].
 
-section:_Overview[Overview]
+section:VaadinApplication_Overview[Overview]
 
 img[../images/VaadinApplication.png][Image 1: Overview][img-small][]
 
@@ -72,7 +72,7 @@ code[Java][
 		config.update(props);
 ]
 
-section:_Properties[Properties]
+section:VaadinApplication_Properties[Properties]
 
 All properties that can be used are contained in codeRef[org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants][VaadinConstants]
 and the value type is String.
@@ -92,7 +92,7 @@ tr[td[code[lunifera.http.name]] td[Http-Application name] td[The name of the Htt
 will be filtered by that name] td[] td[true]]
 ]
 
-section:_CodeSamples[Code sampels]
+section:VaadinApplication_CodeSamples[Code sampels]
 
 section2[HttpService selection]
 
@@ -197,7 +197,7 @@ item[Vaadin application with name "Carstore-Web" was stopped]
 item[Vaadin-Application unregistered all servlets,...]
 ]
 
-section:_vaadinConsoleCommands[Console commands]
+section:VaadinApplication_vaadinConsoleCommands[Console commands]
 
 The vaadin application feature provides OSGi console commands:
 
@@ -217,7 +217,7 @@ osgi>lvaadin ls
 	 id: 1 	 name: ECViewApplication 	 vaadin application: ECViewApplication 	 ui alias: demo 	 widgetset: org.lunifera.examples.runtime.web.ecp.uimodel.presentation.vaadin.widgetset.Widgetset 
 ]
 
-section:_QueryHttp[Query Vaadin-Applications]
+section:VaadinApplication_QueryHttp[Query Vaadin-Applications]
 
 This sections demonstrates how vaadin applications can be filtered. Therefore OSGi service filters are used.
 Section ref:_Properties[Properties] shows all properties that can be used to query a http application.
@@ -260,7 +260,7 @@ code[Java][
 		}
 ]
 
-section:_IVaadinApplication[Vaadin-Appplication-service]
+section:VaadinApplication_IVaadinApplication[Vaadin-Appplication-service]
 
 The codeRef[org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication][Vaadin-Application-Service] can be used to get information about the application,
 to control its lifecycle and to added UI-Providers. It is not possible to change the values of its properties. Therefore OSGi-CM must be used.

@@ -1,15 +1,15 @@
 <?php require_once($_SERVER['DOCUMENT_ROOT'] . "/eclipse.org-common/system/app.class.php");	require_once($_SERVER['DOCUMENT_ROOT'] . "/eclipse.org-common/system/nav.class.php"); 	require_once($_SERVER['DOCUMENT_ROOT'] . "/eclipse.org-common/system/menu.class.php"); 	$App 	= new App();	$Nav	= new Nav();	$Menu 	= new Menu();		include($App->getProjectCommon());    # All on the same line to unclutter the user's desktop'
 	include("include.php");
-	$pageTitle 		= "Vaadin - Your own application";
+	$pageTitle 		= "Vaadin tutorial - "Create standalone example"";
 	
-	$html = file_get_contents('06-Vaadin-Tutorial.html');
+	$html = file_get_contents('07-VaadinTutorial-CreateStandaloneExample.html');
 
 	$Nav->setLinkList(array());
 	
 	$App->AddExtraHtmlHeader('
 	<script type="text/javascript">
 	function init() {
-		var docName = "06-Vaadin-Tutorial.html";
+		var docName = "07-VaadinTutorial-CreateStandaloneExample.html";
 	    initTocMenu(docName);
 		highlightCurrentSection(docName);
 	}

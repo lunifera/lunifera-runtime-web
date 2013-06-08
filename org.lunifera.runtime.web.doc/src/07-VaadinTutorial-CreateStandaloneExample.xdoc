@@ -1,16 +1,18 @@
-chapter:VaadinTutorial[Vaadin - Your own application]
+chapter:VaadinTutorial_CreateStandaloneExample[Vaadin tutorial - "Create standalone example"]
 
-This tutorial demos how you can create your own vaadin application. If you are looking for code samples
+This tutorial demos how you can create your own simple vaadin application based on equinox.http.jetty bundle. If you are looking for code samples
 just take a look at the link[https://github.com/lunifera/lunifera-examples/tree/master/runtime-web][example repo].
+
+ATTENTION: No vaadin push is provided by the example!
 
 To create you own application you have to create two different bundles.
 ul[
 item[code[Application-bundle] - A bundle that contains the implementation of codeRef[com.vaadin.ui.UI][com.vaadin.ui.UI] which is the main entry point. (See ref:_IVaadinApplication[UiProvider])]
-item[code[WidgetSet-bundle] - A bundle providing the widgetset used by vaadin at client side.]
-item[code[Targetdefinition-bundle] - Defines the target platform used to run the application properly.]
+item[code[WidgetSet-bundle] - A bundle providing the widgetset used by vaadin at client side. (Optional)]
+item[code[Targetdefinition-file] - Defines the target platform used to run the application properly.]
 ]
 
-section:_VaadinApplicationBundle[Application Bundle]
+section:VaadinTutorial_CreateStandaloneExample_VaadinApplicationBundle[Application Bundle]
 
 The application bundle is used to provide an instance of codeRef[com.vaadin.ui.UI][com.vaadin.ui.UI]
 to the vaadin core. Vaadin will use it as an abstraction for a browser tab and will render all contained
@@ -21,14 +23,12 @@ way of instantiating new objects allows the use of the whiteboard pattern. White
 pattern means, that OSGi-services can become injected automatically into the UI-instance by OSGi-DS (Declarative
 services).  
 
-The application also has to route the vaadin application. This should mean, that it has to define which
-webapplication should be used to run the vaadin application. (Detailed information according lunifera HttpApplication
-can be found here: ref:HttpApplication[HttpApplication])
+The application also has to route the vaadin application. This example uses the equinox.servlet bundle
+and therefor the context path and jetty port have to be defined at startup time in the launch configuration.
+For extended usescase see ref:VaadinTutorial_HttpAndJetty[VaadinTutorial with HttpAndJetty]
 
-
-Now lets start implementing our first example.
+Now lets start implementing the example.
 This section demos the steps to prepare the application bundle.
-
 
 section2[Finished bundle]
 
@@ -47,12 +47,12 @@ Bundle-Version: 0.0.1.qualifier
 Service-Component: OSGI-INF/*.xml
 Import-Package: org.osgi.service.component;version="1.2.0"
 Require-Bundle: javax.servlet;bundle-version="3.0.0",
- com.vaadin.shared;bundle-version="7.0.0",
- com.vaadin.server;bundle-version="7.0.0",
+ com.vaadin.shared;bundle-version="7.1.0",
+ com.vaadin.server;bundle-version="7.1.0",
  org.json;bundle-version="1.0.0",
- org.lunifera.dependencies.bundle.vaadin.addon.icepush;bundle-version="0.5.5",
  org.lunifera.runtime.web.vaadin.osgi;bundle-version="0.0.1",
- org.lunifera.runtime.common;bundle-version="0.0.1"
+ org.lunifera.runtime.common;bundle-version="0.0.1",
+ org.lunifera.runtime.component.configuration.manager;bundle-version="0.0.1",
 Bundle-ActivationPolicy: lazy
 Lunifera-Config: config
 ]
@@ -117,15 +117,9 @@ Now the code[Vaadin-OSGi-Bridge] is aware about the UI-class and got the capabil
 by the ComponentFactory.
 
 
-section:_VaadinApplicationBundle_Configure[Configure Applications]
+section:VaadinTutorial_CreateStandaloneExample_VaadinApplicationBundle_Configure[Configure Application]
 
-In order to use the UI-class we have to define...
-ul[
-item[A VaadinApplication that initializes the HttpService with servlets and resources and provides the UI-class to vaadin core.]
-item[A HttpApplication which is an abstraction above a servlet context. Each HttpApplication has its
-very own contextPath and provides a HttpService. A HttpApplication can run exactly one VaadinApplication.]
-item[A JettyServer instance. Each jetty server can host many HttpApplications.]
-]
+In order to use the UI-class we have to define a VaadinApplication-Service that initializes the HttpService with servlets and resources and provides the UI-class to vaadin core.
 
 Therefore we are using codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService].
 This service reads properties from a file and pass them to the OSGi Configuration Admin.
@@ -133,50 +127,43 @@ This service reads properties from a file and pass them to the OSGi Configuratio
 Detailed information about codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]
 is under construction. 
 
-section2:_configureJetty[Configure Jetty]
+section2:_configureJetty[Configure Jetty and ContextPath]
 
-Create a folder called config in the bundle and place a file called code[lunifera.jetty.server.factory_Vaadin1.cfg] there.
+To configure the jetty port and the context path you have to specify vm arguments in launch config tab
+"Arguments" under "VM arguments":
 
-Paste following code in there
 code[
-# configuration to start a jetty server
-lunifera.jetty.name=VaadinDemo-Server
-lunifera.jetty.http.port=8080
+-Dorg.osgi.service.http.port=8084
+-Dorg.eclipse.equinox.http.jetty.context.path=/test
 ]
-
-Further information about jetty see ref:_JettyService[Intro] and ref:JettyService[JettyService]
-
-section2:_configureHttpApplication[Configure HttpApplication]
-
-To configure a HttpApplication (abstraction of servlet context) we also use the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]. Place a file called code[lunifera.http.application.factory_Vaadin1.cfg] there.
-
-Paste following code in there
-code[
-# configuration to start a vaadin service
-lunifera.http.name=VaadinDemo-HttpApplication
-lunifera.http.contextPath=/
-lunifera.jetty.name=VaadinDemo-Server
-]
-
-Further information about jetty see ref:_HttpApplication[Intro] and ref:HttpApplication[HttpApplication]
-
 
 section2:_configureVaadinApplication[Configure VaadinApplication]
 
-To configure jetty we also use the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]. Place a file called code[lunifera.vaadin.application.factory_Vaadin1.cfg] there.
+To configure the vaadin service we use the codeRef[org.lunifera.runtime.component.configuration.manager.service.IConfigurationService][ConfigurationService]. Place a file called code[lunifera.vaadin.application.factory_Vaadin1.cfg] there.
 
 Paste following code in there
 code[
 # configuration to start a vaadin service
 lunifera.web.vaadin.name=VaadinDemo-VaadinApplication
-lunifera.web.vaadin.uialias=demo
-lunifera.web.vaadin.widgetset=org.lunifera.examples.runtime.web.vaadin.standalone.widgetset.Widgetset
-lunifera.http.name=VaadinDemo-HttpApplication
+lunifera.web.vaadin.uialias=standalone
+lunifera.web.vaadin.widgetset=org.lunifera.examples.runtime.web.vaadin.standalone.widgetset
 ]
 
-Further information about jetty see ref:_VaadinApplication[Intro] and ref:VaadinApplication[VaadinApplication]
+Further information about vaadin services see ref:_VaadinApplication[Intro] and ref:VaadinApplication[VaadinApplication]
 
-section:_VaadinWidgetsetBundle[Widgetset Bundle]
+section:VaadinTutorial_CreateStandaloneExample_VaadinWidgetsetBundle[Widgetset Bundle]
+
+
+ATTENTION: This step is optional! It must be defined if additional addons should be used in the resulting
+application.
+
+For default widgetset just change the config for OSGi-CM to:
+code[
+# configuration to start a vaadin service
+...
+lunifera.web.vaadin.widgetset=com.vaadin.DefaultWidgetSet
+...
+]
 
 In order to run a VaadinApplication a widgetset bundle is required. It contains the client side web resources
 like html, java script, images,...
@@ -252,11 +239,10 @@ code[
 	"http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
 <module>
 	<inherits name="com.vaadin.DefaultWidgetSet" />
-    <inherits name="org.vaadin.artur.icepush.IcepushaddonWidgetset" />
 </module>
 ]
 
-It defines a widgetset that used vaadins default widgetset and the widgetset of the ICEPush addon. Based
+It defines a widgetset that used vaadins default widgetset. Based
 on that information the maven build will compile the widgetsets resources and javascript code based on
 the contents of the named widgetset definitions. For instance html files, images and css files are added. Java-Classes are compiled to java script,...
 
@@ -282,11 +268,6 @@ code[
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>icepush</artifactId>
 			<version>${vaadin-icepush-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.icefaces</groupId>
-			<artifactId>icepush</artifactId>
-			<version>${icepush-version}</version>
 		</dependency>
 		
 		....
@@ -410,18 +391,18 @@ code[
 	</profile>
 ]
 
-section:_VaadinTargetPlatform[Targetdefinition]
+section:VaadinTutorial_CreateStandaloneExample_VaadinTargetPlatform[Targetdefinition]
 
 A targetdefinition defines the bundles to be used to compile and run the application. The example states
 above uses the target definition called code[org.lunifera.examples.runtime.web.target.kepler].
 
 The runtime-web-repository contains a proper targetdefinition. Feel free to use it as a template for
-your applications. Just remove things you do not need. The target definition can be found link[https://github.com/lunifera/lunifera-runtime-web/tree/master/org.lunifera.runtime.web.target.kepler][here].
+your applications. Just remove things you do not need. The target definition can be found link[https://github.com/lunifera/lunifera-examples/tree/master/runtime-web/org.lunifera.examples.runtime.web.vaadin.standalone][here].
 
 img[../images/VaadinStandaloneExample_3.png][Image 3: Resolved TargetDefinition][img-small][]
 
 
-section:_VaadinApplicationLaunch[Launch application]
+section:VaadinTutorial_CreateStandaloneExample_VaadinApplicationLaunch[Launch application]
 
 To launch your vaadin application you have to create an OSGi-launch-config. Or just use link[https://github.com/lunifera/lunifera-examples/tree/vaaclipse/runtime-web/org.lunifera.examples.runtime.web.vaadin.standalone/launch][this one]
 as a template. 
@@ -489,7 +470,7 @@ tr[td[code[slf4j.log4j12]] td[]]
 ]
 
 
-section:_VaadinApplicationStart[Start the application in browser]
+section:VaadinTutorial_CreateStandaloneExample_VaadinApplicationStart[Start the application in browser]
 
 The URL to access the application is based on following information.
 
@@ -497,13 +478,15 @@ http://localhost:{port}/{contextPath}/{alias}
 
 table[
 tr[td[Value] td[Property] td[See]]
-tr[td[code[{port}]] td[code[lunifera.jetty.http.port]] td[ref:_configureJetty[Configure Jetty]]]
-tr[td[code[{contextPath}]] td[code[lunifera.http.contextPath]] td[ref:_configureHttpApplication[Configure HttpApplication]]]
+tr[td[code[{port}]] td[code[from launchconfig]] td[-Dorg.osgi.service.http.port]]
+tr[td[code[{contextPath}]] td[code[from launchconfig]] td[-Dorg.eclipse.equinox.http.jetty.context.path]]
 tr[td[code[{alias}]] td[code[lunifera.web.vaadin.uialias]] td[ref:_configureVaadinApplication[Configure VaadinApplication]]]
 ]
 
-So the url to access the demo application is link[http://localhost:8080/alias][http://localhost:8080/alias].
+So the url to access the demo application is link[http://localhost:8084/standalone][http://localhost:8084/standalone].
 
+
+section:VaadinTutorial_CreateStandaloneExample_OnProblem[In case of problems]
 
 If any problems occur and the browser does not show anything, use following information to check if the
 system started properly.
@@ -511,9 +494,7 @@ system started properly.
 table[
 tr[td[Issue type] td[Command help] td[Class to start debugging]]
 tr[td[code[Nothing is started]]  td[] td[codeRef[org.lunifera.runtime.component.configuration.manager.spi.SystemConfigurationComponent][SystemConfigurationComponent#scanBundle]]]
-tr[td[code[No Jetty started]]  td[ref:_jettyConsoleCommands[Commands]] td[codeRef[org.lunifera.runtime.web.jetty.internal.JettyFactory][JettyFactory#updated]]]
-tr[td[code[No Http Application started]]  td[ref:_httpConsoleCommands[Commands]] td[codeRef[org.lunifera.runtime.web.http.internal.HttpApplicationFactory][HttpApplicationFactory#updated]]]
-tr[td[code[No Vaadin Application started]] td[ref:_vaadinConsoleCommands[Commands]] td[codeRef[org.lunifera.runtime.web.vaadin.osgi.webapp.VaadinApplicationFactory][VaadinApplicationFactory#updated]]]
+tr[td[code[No Vaadin Application started]] td[ref:VaadinApplication_vaadinConsoleCommands[Commands]] td[codeRef[org.lunifera.runtime.web.vaadin.osgi.webapp.VaadinApplicationFactory][VaadinApplicationFactory#updated]]]
 ]
 
 

@@ -5,6 +5,9 @@ body {
     font-family: Tahoma, Arial, sans-serif;
     font-size: 10pt;
     line-height: 140%
+    display: block;
+    margin-left: 75px;
+    width: 800px;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -63,6 +66,12 @@ EM.UILabel {
 
 .img-small {
 	height: 300px;
+	padding-left: 0px;
+	display: block;
+}
+
+.img-very-small {
+	height: 150px;
 	padding-left: 0px;
 	display: block;
 }

@@ -1,0 +1,1031 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" >
+<title>Vaadin tutorial - "Create standalone example"</title>
+
+<link href="book.css" rel="stylesheet" type="text/css">
+<link href="code.css" rel="stylesheet" type="text/css">
+<link rel="home" href="xtext.html" title="">
+</head>
+<body>
+<a name="VaadinTutorial_CreateStandaloneExample"></a>
+<h1>Vaadin tutorial - "Create standalone example"</h1>
+<p>
+This tutorial demos how you can create your own simple vaadin application based on equinox.http.jetty bundle. If you are looking for code samples
+just take a look at the <a href="https://github.com/lunifera/lunifera-examples/tree/master/runtime-web">example repo</a>.
+</p>
+<p>
+ATTENTION: No vaadin push is provided by the example!
+</p>
+<p>
+To create you own application you have to create two different bundles.
+<ul>
+	<li>
+		<span class="inlinecode">Application-bundle</span> - A bundle that contains the implementation of <abbr title="com.vaadin.ui.UI" >com.vaadin.ui.UI</abbr> which is the main entry point. (See <a href="05-Vaadin-Application.html#_IVaadinApplication" title="Go to &quot;Vaadin-Appplication-service&quot;">UiProvider</a>)
+	</li>
+	<li>
+		<span class="inlinecode">WidgetSet-bundle</span> - A bundle providing the widgetset used by vaadin at client side. (Optional)
+	</li>
+	<li>
+		<span class="inlinecode">Targetdefinition-file</span> - Defines the target platform used to run the application properly.
+	</li>
+</ul>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinApplicationBundle"></a>
+<h2>Application Bundle</h2>
+<p>
+The application bundle is used to provide an instance of <abbr title="com.vaadin.ui.UI" >com.vaadin.ui.UI</abbr>
+to the vaadin core. Vaadin will use it as an abstraction for a browser tab and will render all contained
+UI elements on it. So the UI-instance is the very central element to deal with.
+</p>
+<p>
+Since lunifera.org is based on OSGi the UI-instances will be created by a ComponentFactory. Using that
+way of instantiating new objects allows the use of the whiteboard pattern. Whiteboard
+pattern means, that OSGi-services can become injected automatically into the UI-instance by OSGi-DS (Declarative
+services).  
+</p>
+<p>
+The application also has to route the vaadin application. This example uses the equinox.servlet bundle
+and therefor the context path and jetty port have to be defined at startup time in the launch configuration.
+For extended usescase see <a href="08-VaadinTutorial-HttpAndJetty.html#VaadinTutorial_HttpAndJetty" title="Go to &quot;Vaadin tutorial - "Using lunifera http and jetty"&quot;">VaadinTutorial with HttpAndJetty</a>
+</p>
+<p>
+Now lets start implementing the example.
+This section demos the steps to prepare the application bundle.
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinApplicationBundle_5"></a>
+<h3>Finished bundle</h3>
+<p>
+<div class="image" >
+<img src="../images/VaadinStandaloneExample_1.png" class="img-small" 
+/>
+<div class="caption">
+Image 1: Finished bundle
+</div>
+</div>
+</p>
+<p>
+This image shows the structure of the finished bundle.
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinApplicationBundle_6"></a>
+<h3>Prepare bundle</h3>
+<p>
+Use eclipse to create a plugin project like <span class="inlinecode">org.lunifera.examples.runtime.web.vaadin.standalone</span>. You do not need an activator since we are using declarative services.
+</p>
+<p>
+Open MANIFEST.MF and add following entries
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+Bundle-Version:&nbsp;0.0.1.qualifier<br/>
+Service-Component:&nbsp;OSGI-INF/*.xml<br/>
+Import-Package:&nbsp;org.osgi.service.component;version="1.2.0"<br/>
+Require-Bundle:&nbsp;javax.servlet;bundle-version="3.0.0",<br/>
+&nbsp;com.vaadin.shared;bundle-version="7.1.0",<br/>
+&nbsp;com.vaadin.server;bundle-version="7.1.0",<br/>
+&nbsp;org.json;bundle-version="1.0.0",<br/>
+&nbsp;org.lunifera.runtime.web.vaadin.osgi;bundle-version="0.0.1",<br/>
+&nbsp;org.lunifera.runtime.common;bundle-version="0.0.1",<br/>
+&nbsp;org.lunifera.runtime.component.configuration.manager;bundle-version="0.0.1",<br/>
+Bundle-ActivationPolicy:&nbsp;lazy<br/>
+Lunifera-Config:&nbsp;config<br/>
+</p>
+</div>
+</div>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinApplicationBundle_7"></a>
+<h3>Create UI class</h3>
+<p>
+Create your UI-class. This will be the entry point for your UI-code. 
+</p>
+<p>
+And add following code to the class.
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+@Theme(Reindeer.THEME_NAME)<br/>
+<span class="keyword">public</span>&nbsp;<span class="keyword">class</span>&nbsp;Vaadin7StandaloneDemoUI&nbsp;<span class="keyword">extends</span>&nbsp;OSGiUI&nbsp;{<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@Override<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span>&nbsp;<span class="keyword">void</span>&nbsp;init(VaadinRequest&nbsp;request)&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;your&nbsp;UI&nbsp;code&nbsp;will&nbsp;be&nbsp;placed&nbsp;here&nbsp;later<br/>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+</p>
+</div>
+</div>
+</p>
+<p>
+Now we have prepared a bundle that contains a working definition of <span class="inlinecode">com.vaadin.ui.UI</span>. As you can
+see, we are extending an OSGiyfied version called <span class="inlinecode">OSGiUI</span>. 
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinApplicationBundle_8"></a>
+<h3>Create OSGi-Component-Factory</h3>
+<p>
+The main problem for now is, that the <span class="inlinecode">Vaadin-OSGi-Bridge</span> is not aware about our <span class="inlinecode">Vaadin7StandaloneDemoUI</span>.
+So we are using OSGi-DS (Declarative OSGi-service) to register that class at the bridge.
+</p>
+<p>
+Create a folder OSGI-INF in your bundle and add a file called vaadinUI.xml. 
+</p>
+<p>
+Then paste following code into it and replace <span class="inlinecode">org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI</span>
+by the UI-Classname of your example. Also change the name of the service.
+</p>
+<p>
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+&lt;?xml&nbsp;version=<span class="string">"1.0"</span>&nbsp;encoding=<span class="string">"UTF-8"</span>?&gt;<br/>
+&lt;scr:component&nbsp;xmlns:scr=<span class="string">"http://www.osgi.org/xmlns/scr/v1.1.0"</span>&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;factory=<span class="string">"org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@VaadinDemo-VaadinApplication"</span>&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;immediate=<span class="string">"false"</span>&nbsp;name=<span class="string">"org.lunifera.examples.runtime.web.vaadin.standalone.ui"</span>&gt;<br/>
+&nbsp;&nbsp;&nbsp;&lt;implementation&nbsp;class=<span class="string">"org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI"</span>/&gt;<br/>
+&lt;/scr:component&gt;<br/>
+</p>
+</div>
+</div>
+</p>
+<p>
+<span class="inlinecode">org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@VaadinDemo-VaadinApplication</span>
+uses following structure.
+</p>
+<p>
+<ul>
+	<li>
+		<span class="inlinecode">org.lunifera.web.vaadin.UI</span> - Used by OSGi to find the factory.
+	</li>
+	<li>
+		/
+	</li>
+	<li>
+		<span class="inlinecode">org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI</span> - The name of the
+		UI class as workaround since no properties can be passed into a component factory. Vaadin need the UI-class
+		in the UIProvider.
+	</li>
+	<li>
+		@
+	</li>
+	<li>
+		<span class="inlinecode">VaadinDemo-VaadinApplication</span> - The name of the vaadin application this UI should be used
+		with. Can be empty.
+	</li>
+</ul>
+</p>
+<p>
+A detailed description about the service definition can be found here <a href="05-Vaadin-Application.html#_IVaadinApplication" title="Go to &quot;Vaadin-Appplication-service&quot;">VaadinApplication</a>.
+</p>
+<p>
+Now the <span class="inlinecode">Vaadin-OSGi-Bridge</span> is aware about the UI-class and got the capability to instantiate it
+by the ComponentFactory.
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinApplicationBundle_Configure"></a>
+<h2>Configure Application</h2>
+<p>
+In order to use the UI-class we have to define a VaadinApplication-Service that initializes the HttpService with servlets and resources and provides the UI-class to vaadin core.
+</p>
+<p>
+Therefore we are using <abbr title="org.lunifera.runtime.component.configuration.manager.service.IConfigurationService" >ConfigurationService</abbr>.
+This service reads properties from a file and pass them to the OSGi Configuration Admin.
+</p>
+<p>
+Detailed information about <abbr title="org.lunifera.runtime.component.configuration.manager.service.IConfigurationService" >ConfigurationService</abbr>
+is under construction. 
+</p>
+<a name="_configureJetty"></a>
+<h3>Configure Jetty and ContextPath</h3>
+<p>
+To configure the jetty port and the context path you have to specify vm arguments in launch config tab
+"Arguments" under "VM arguments":
+</p>
+<p>
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+-Dorg.osgi.service.http.port=8084<br/>
+-Dorg.eclipse.equinox.http.jetty.context.path=/test<br/>
+</p>
+</div>
+</div>
+</p>
+<a name="_configureVaadinApplication"></a>
+<h3>Configure VaadinApplication</h3>
+<p>
+To configure the vaadin service we use the <abbr title="org.lunifera.runtime.component.configuration.manager.service.IConfigurationService" >ConfigurationService</abbr>. Place a file called <span class="inlinecode">lunifera.vaadin.application.factory_Vaadin1.cfg</span> there.
+</p>
+<p>
+Paste following code in there
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+#&nbsp;configuration&nbsp;to&nbsp;start&nbsp;a&nbsp;vaadin&nbsp;service<br/>
+lunifera.web.vaadin.name=VaadinDemo-VaadinApplication<br/>
+lunifera.web.vaadin.uialias=standalone<br/>
+lunifera.web.vaadin.widgetset=org.lunifera.examples.runtime.web.vaadin.standalone.widgetset<br/>
+</p>
+</div>
+</div>
+</p>
+<p>
+Further information about vaadin services see <a href="01-Introduction.html#_VaadinApplication" title="Go to &quot;Vaadin Applications&quot;">Intro</a> and <a href="05-Vaadin-Application.html#VaadinApplication" title="Go to &quot;Vaadin Application&quot;">VaadinApplication</a>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinWidgetsetBundle"></a>
+<h2>Widgetset Bundle</h2>
+<p>
+ATTENTION: This step is optional! It must be defined if additional addons should be used in the resulting
+application.
+</p>
+<p>
+For default widgetset just change the config for OSGi-CM to:
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+#&nbsp;configuration&nbsp;to&nbsp;start&nbsp;a&nbsp;vaadin&nbsp;service<br/>
+...<br/>
+lunifera.web.vaadin.widgetset=com.vaadin.DefaultWidgetSet<br/>
+...<br/>
+</p>
+</div>
+</div>
+</p>
+<p>
+In order to run a VaadinApplication a widgetset bundle is required. It contains the client side web resources
+like html, java script, images,...
+Since vaadin is based on <a href="https://developers.google.com/web-toolkit/">GWT (Google Web Toolkit)</a> the
+client side widgets are written in java and have to become compiled to java script. The result of that
+compile is called widgetset. <abbr title="org.lunifera.runtime.web.vaadin.osgi.servlet.WebResourcesHttpContext" >WebResourcesHttpContext</abbr>
+is used to provide the resources to the browser.
+</p>
+<p>
+Lunifera.org uses maven to compile the widgset. So only a few manual steps are required during setup
+but the compile is done automatically. Please note that you should not put the widgetset into the source
+code repository. It may get some MB of data and each compile results in differing widgetset content that
+has to be pushed again.
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinWidgetsetBundle_5"></a>
+<h3>Finished widgetset bundle</h3>
+<p>
+<div class="image" >
+<img src="../images/VaadinStandaloneExample_2.png" class="img-small" 
+/>
+<div class="caption">
+Image 2: Finished widgetset bundle
+</div>
+</div>
+</p>
+<p>
+This image shows the structure of the compiled widgetset bundle.
+</p>
+<p>
+The most important parts are
+</p>
+<p>
+<ul>
+	<li>
+		<span class="inlinecode">Widgetset.gwt.xml</span> - Definition of the widgetset and its contents. Required for compile.
+	</li>
+	<li>
+		<span class="inlinecode">resources-folder</span> - It contains the compiled widgetset. Should be added to .gitignore
+	</li>
+	<li>
+		<span class="inlinecode">pom.xml</span> - Contains the definition to compile the widgetset properly.
+	</li>
+</ul>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinWidgetsetBundle_6"></a>
+<h3>Prepare bundle</h3>
+<p>
+Use eclipse to create a plugin project like <span class="inlinecode">org.lunifera.examples.runtime.web.vaadin.standalone.widgetset</span>. You do not need an activator.
+</p>
+<p>
+Open MANIFEST.MF and add following entries and adjust versions if required.
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+Bundle-Version:&nbsp;0.0.1.qualifier<br/>
+Vaadin-Resources:&nbsp;resources<br/>
+Require-Bundle:&nbsp;com.vaadin.server;bundle-version=<span class="string">"7.0.0"</span>,<br/>
+&nbsp;com.vaadin.client;bundle-version=<span class="string">"7.0.0"</span>,<br/>
+&nbsp;com.vaadin.shared;bundle-version=<span class="string">"7.0.0"</span>,<br/>
+&nbsp;com.vaadin.shared.deps;bundle-version=<span class="string">"1.0.2"</span><br/>
+</p>
+</div>
+</div>
+</p>
+<p>
+Note the <span class="inlinecode">Vaadin-Resources</span> header in the MANIFEST. It is used by <abbr title="org.lunifera.runtime.web.vaadin.osgi.servlet.WebResourcesHttpContext" >WebResourcesHttpContext</abbr>
+to detect all vaadin resource bundles and the folder that contains the resources.
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinWidgetsetBundle_7"></a>
+<h3>Create  widgetset class</h3>
+<p>
+Every widgetset need its own implementation of UI. So create a class called <span class="inlinecode">WidgetsetUI</span> and put
+following code in it.
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+<span class="keyword">import</span>&nbsp;com.vaadin.server.VaadinRequest;<br/>
+<span class="keyword">import</span>&nbsp;com.vaadin.ui.Label;<br/>
+<span class="keyword">import</span>&nbsp;com.vaadin.ui.UI;<br/>
+<br/>
+@SuppressWarnings(<span class="string">"serial"</span>)<br/>
+<span class="keyword">public</span>&nbsp;<span class="keyword">class</span>&nbsp;WidgetsetUI&nbsp;<span class="keyword">extends</span>&nbsp;UI&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@Override<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span>&nbsp;<span class="keyword">void</span>&nbsp;init(VaadinRequest&nbsp;request)&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Label&nbsp;label&nbsp;=&nbsp;<span class="keyword">new</span>&nbsp;Label(<span class="string">"Hello&nbsp;Vaadin&nbsp;user"</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setContent(label);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+}<br/>
+</p>
+</div>
+</div>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinWidgetsetBundle_8"></a>
+<h3>Create  widgetset</h3>
+<p>
+Create a file called <span class="inlinecode">Widgetset.gwt.xml</span> and put following code in it.
+</p>
+<p>
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+&lt;?xml&nbsp;version=<span class="string">"1.0"</span>&nbsp;encoding=<span class="string">"UTF-8"</span>?&gt;<br/>
+&lt;!DOCTYPE&nbsp;module&nbsp;PUBLIC&nbsp;<span class="string">"-//Google&nbsp;Inc.//DTD&nbsp;Google&nbsp;Web&nbsp;Toolkit&nbsp;1.7.0//EN"</span>&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd"</span>&gt;<br/>
+&lt;module&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;inherits&nbsp;name=<span class="string">"com.vaadin.DefaultWidgetSet"</span>&nbsp;/&gt;<br/>
+&lt;/module&gt;<br/>
+</p>
+</div>
+</div>
+</p>
+<p>
+It defines a widgetset that used vaadins default widgetset. Based
+on that information the maven build will compile the widgetsets resources and javascript code based on
+the contents of the named widgetset definitions. For instance html files, images and css files are added. Java-Classes are compiled to java script,...
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinWidgetsetBundle_9"></a>
+<h3>Configure widgetset build</h3>
+<p>
+This tutorial does not include the way how to prepare your projects to give them a proper maven/tycho
+nature. I assume that you are familar with that steps and will prepare the maven artefacts properly.
+</p>
+<p>
+Now open the pom.xml of the project and add following information to it.
+</p>
+<p>
+<ul>
+	<li>
+		<span class="inlinecode">Dependencies</span> - Add all dependencies to the pom.xml as stated below.
+	</li>
+	<li>
+		<span class="inlinecode">configure&nbsp;vaadin-maven-plugin</span> - Configure the vaadin-maven-plugin.
+	</li>
+</ul>
+</p>
+<p>
+Feel free to copy the code from the lunifera example into your pom.xml. It can be found here <a href="https://github.com/lunifera/lunifera-examples/blob/master/runtime-web/org.lunifera.examples.runtime.web.vaadin.standalone.widgetset/pom.xml">pom.xml</a>.
+</p>
+<p>
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+&lt;dependencies&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dependency&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.vaadin.addons&lt;/groupId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;icepush&lt;/artifactId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;${vaadin-icepush-version}&lt;/version&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/dependency&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;....<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;....<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;all&nbsp;dependencies&nbsp;are&nbsp;required<br/>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;....<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;....<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dependency&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;junit&lt;/groupId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;junit&lt;/artifactId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;LATEST&lt;/version&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;scope&gt;test&lt;/scope&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/dependency&gt;<br/>
+&lt;/dependencies&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;build&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugins&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugin&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;com.vaadin&lt;/groupId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;vaadin-maven-plugin&lt;/artifactId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;7.0-SNAPSHOT&lt;/version&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;configuration&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extraJvmArgs&gt;-Xmx1024M&nbsp;-Xss1024k&lt;/extraJvmArgs&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;&lt;runTarget&gt;mobilemail&lt;/runTarget&gt;&nbsp;--&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;We&nbsp;are&nbsp;doing&nbsp;<span class="string">"inplace"</span>&nbsp;but&nbsp;into&nbsp;subdir&nbsp;VAADIN/widgetsets.&nbsp;This&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;way&nbsp;compatible&nbsp;with&nbsp;Vaadin&nbsp;eclipse&nbsp;plugin.&nbsp;--&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;webappDirectory&gt;${basedir}/resources/VAADIN/widgetsets<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/webappDirectory&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hostedWebapp&gt;${basedir}/resources/VAADIN/widgetsets<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hostedWebapp&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;noServer&gt;true&lt;/noServer&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;Remove&nbsp;draftCompile&nbsp;when&nbsp;project&nbsp;is&nbsp;ready&nbsp;--&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;draftCompile&gt;true&lt;/draftCompile&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;strict&gt;true&lt;/strict&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;compileReport&gt;false&lt;/compileReport&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;style&gt;PRETTY&lt;/style&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;runTarget&gt;http:<span class="comment">//localhost:8080/&lt;/runTarget&gt;<br/>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;Remove&nbsp;these&nbsp;when&nbsp;going&nbsp;to&nbsp;release&nbsp;dependencies&nbsp;--&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;force&gt;true&lt;/force&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;executions&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;execution&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goals&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goal&gt;resources&lt;/goal&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goal&gt;compile&lt;/goal&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/goals&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/execution&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/executions&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugin&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;As&nbsp;we&nbsp;are&nbsp;doing&nbsp;<span class="string">"inplace"</span>&nbsp;GWT&nbsp;compilation,&nbsp;ensure&nbsp;the&nbsp;widgetset&nbsp;--&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;directory&nbsp;is&nbsp;cleaned&nbsp;properly&nbsp;--&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugin&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;configuration&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;filesets&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fileset&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;directory&gt;/resources/VAADIN/widgetsets&lt;/directory&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/fileset&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/filesets&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugin&gt;<br/>
+</p>
+</div>
+</div>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinWidgetsetBundle_10"></a>
+<h3>Adjust parent pom</h3>
+<p>
+In the parent pom you have to add the vaadin-repositories.
+</p>
+<p>
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+&lt;repository&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;id&gt;vaadin-addons&lt;/id&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;url&gt;http:<span class="comment">//maven.vaadin.com/vaadin-addons&lt;/url&gt;<br/>
+</span>&lt;/repository&gt;<br/>
+&lt;repository&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;id&gt;vaadin-snapshots&lt;/id&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;url&gt;http:<span class="comment">//oss.sonatype.org/content/repositories/vaadin-snapshots/&lt;/url&gt;<br/>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;releases&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;enabled&gt;false&lt;/enabled&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/releases&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;snapshots&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;enabled&gt;true&lt;/enabled&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/snapshots&gt;<br/>
+&lt;/repository&gt;<br/>
+</p>
+</div>
+</div>
+</p>
+<p>
+And to define a profile to run the widgetset build.
+</p>
+<p>
+<div class="literallayout">
+<div class="incode">
+<p class="code">
+&lt;profile&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;id&gt;runtime-web--build-widgetsets&lt;/id&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;activation&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;activeByDefault&gt;false&lt;/activeByDefault&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/activation&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;build&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;defaultGoal&gt;verify&lt;/defaultGoal&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugins&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugin&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.eclipse.tycho&lt;/groupId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;target-platform-configuration&lt;/artifactId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;${tycho-version}&lt;/version&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;configuration&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;&lt;resolver&gt;p2&lt;/resolver&gt;&nbsp;--&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;&lt;pomDependencies&gt;consider&lt;/pomDependencies&gt;&nbsp;--&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ignoreTychoRepositories&gt;true&lt;/ignoreTychoRepositories&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;target&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifact&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.lunifera.examples&lt;/groupId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;org.lunifera.examples.runtime.web.target.kepler&lt;/artifactId&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;${project.version}&lt;/version&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/artifact&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/target&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugin&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugins&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/build&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;modules&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;module&gt;runtime-web/org.lunifera.examples.runtime.web.target.kepler&lt;/module&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;module&gt;runtime-web/org.lunifera.examples.runtime.web.vaadin.standalone.widgetset&lt;/module&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/modules&gt;<br/>
+&lt;/profile&gt;<br/>
+</p>
+</div>
+</div>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinTargetPlatform"></a>
+<h2>Targetdefinition</h2>
+<p>
+A targetdefinition defines the bundles to be used to compile and run the application. The example states
+above uses the target definition called <span class="inlinecode">org.lunifera.examples.runtime.web.target.kepler</span>.
+</p>
+<p>
+The runtime-web-repository contains a proper targetdefinition. Feel free to use it as a template for
+your applications. Just remove things you do not need. The target definition can be found <a href="https://github.com/lunifera/lunifera-examples/tree/master/runtime-web/org.lunifera.examples.runtime.web.vaadin.standalone">here</a>.
+</p>
+<p>
+<div class="image" >
+<img src="../images/VaadinStandaloneExample_3.png" class="img-small" 
+/>
+<div class="caption">
+Image 3: Resolved TargetDefinition
+</div>
+</div>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinApplicationLaunch"></a>
+<h2>Launch application</h2>
+<p>
+To launch your vaadin application you have to create an OSGi-launch-config. Or just use <a href="https://github.com/lunifera/lunifera-examples/tree/vaaclipse/runtime-web/org.lunifera.examples.runtime.web.vaadin.standalone/launch">this one</a>
+as a template. 
+</p>
+<p>
+You have to take care about following issues 
+</p>
+<p>
+<ul>
+	<li>
+		Add <span class="inlinecode">org.lunifera.runtime.component.configuration.manager</span> and set autostart true
+	</li>
+	<li>
+		Add <span class="inlinecode">org.eclipse.equinox.ds</span>
+	</li>
+	<li>
+		Add <span class="inlinecode">org.eclipse.equinox.cm</span> and set autostart true
+	</li>
+</ul>
+</p>
+<p>
+The following table shows all bundles required:
+</p>
+<p>
+<table>
+<tr>
+<td>
+bundle
+</td>
+<td>
+autostart
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">com.springsource.javax.portlet</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">com.vaadin.client</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">com.vaadin.server</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">com.vaadin.shared.deps</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">com.vaadin.shared</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">com.vaadin.themes</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">javax.el</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">javax.servlet.jsp</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">javax.servlet</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.apache.commons.lang</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.apache.commons.logging</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.apache.felix.gogo.command</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.apache.felix.gogo.runtime</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.apache.felix.gogo.shell</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.apache.log4j</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.apache.shiro.core</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.apache.shiro.web</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.equinox.cm</span>
+</td>
+<td>
+true
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.equinox.common</span>
+</td>
+<td>
+true
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.equinox.console</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.equinox.ds</span>
+</td>
+<td>
+true
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.equinox.http.servlet</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.equinox.preferences</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.equinox.registry</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.equinox.util</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.jetty.continuation</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.jetty.http</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.jetty.io</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.jetty.security</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.jetty.server</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.jetty.servlet</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.jetty.util</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.osgi</span>
+</td>
+<td>
+true
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.eclipse.osgi.services</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.jsoup</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.examples.runtime.web.vaadin.standalone</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.examples.runtime.web.vaadin.standalone.widgetset</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.runtime.common</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.runtime.component.configuration.manager</span>
+</td>
+<td>
+true
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.runtime.web.common</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.runtime.web.http</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.runtime.web.jetty</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.runtime.web.vaadin.osgi</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.dependencies.bundle.vaadin.addon.icepush</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">org.lunifera.dependencies.fragment.jdk</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">slf4j.api</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">slf4j.jcl</span>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">slf4j.log4j12</span>
+</td>
+<td>
+</td>
+</tr>
+</table>
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_VaadinApplicationStart"></a>
+<h2>Start the application in browser</h2>
+<p>
+The URL to access the application is based on following information.
+</p>
+<p>
+http://localhost:{port}/{contextPath}/{alias}
+</p>
+<p>
+<table>
+<tr>
+<td>
+Value
+</td>
+<td>
+Property
+</td>
+<td>
+See
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">{port}</span>
+</td>
+<td>
+<span class="inlinecode">from&nbsp;launchconfig</span>
+</td>
+<td>
+-Dorg.osgi.service.http.port
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">{contextPath}</span>
+</td>
+<td>
+<span class="inlinecode">from&nbsp;launchconfig</span>
+</td>
+<td>
+-Dorg.eclipse.equinox.http.jetty.context.path
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">{alias}</span>
+</td>
+<td>
+<span class="inlinecode">lunifera.web.vaadin.uialias</span>
+</td>
+<td>
+<a href="07-VaadinTutorial-CreateStandaloneExample.html#_configureVaadinApplication" title="Go to &quot;Configure VaadinApplication&quot;">Configure VaadinApplication</a>
+</td>
+</tr>
+</table>
+</p>
+<p>
+So the url to access the demo application is <a href="http://localhost:8084/standalone">http://localhost:8084/standalone</a>.
+</p>
+<a name="VaadinTutorial_CreateStandaloneExample_OnProblem"></a>
+<h2>In case of problems</h2>
+<p>
+If any problems occur and the browser does not show anything, use following information to check if the
+system started properly.
+</p>
+<p>
+<table>
+<tr>
+<td>
+Issue type
+</td>
+<td>
+Command help
+</td>
+<td>
+Class to start debugging
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">Nothing&nbsp;is&nbsp;started</span>
+</td>
+<td>
+</td>
+<td>
+<abbr title="org.lunifera.runtime.component.configuration.manager.spi.SystemConfigurationComponent" >SystemConfigurationComponent#scanBundle</abbr>
+</td>
+</tr>
+<tr>
+<td>
+<span class="inlinecode">No&nbsp;Vaadin&nbsp;Application&nbsp;started</span>
+</td>
+<td>
+<a href="" title="Go to &quot;Console commands&quot;">Commands</a>
+</td>
+<td>
+<abbr title="org.lunifera.runtime.web.vaadin.osgi.webapp.VaadinApplicationFactory" >VaadinApplicationFactory#updated</abbr>
+</td>
+</tr>
+</table>
+</p>
+</body>
+</html>

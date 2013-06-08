@@ -25,7 +25,7 @@ Clients should be able to access the provided HttpServices by name, contextPath 
 filters and resources on the proper http service. Each Http-Application has to provide its own HttpService.
 </p>
 <p>
-<a href="" title="Go to &quot;IJetty-Service&quot;">JettyServices</a> should be able to track the provided ServletContexts to deploy them on
+<a href="03-Jetty-Service.html#JettyService" title="Go to &quot;IJetty-Service&quot;">JettyServices</a> should be able to track the provided ServletContexts to deploy them on
 the proper jetty server instance. The target jetty server from a Http-Application can be updated in runtime and jetty services
 will ensure that the ServletContext are undeployed and redeployed on a different server properly.
 </p>
@@ -61,7 +61,7 @@ The configuration admin...
 			<li>
 				... creates a new instance of IHttpApplication if no service is available for the given PID (not factory PID!).
 						Each IHttpApplication contains one servletContext and is responsible for controlling it. The
-						provided httpApplication-services are tracked by the <a href="" title="Go to &quot;IJetty-Service&quot;">JettyServices</a>. If a proper
+						provided httpApplication-services are tracked by the <a href="03-Jetty-Service.html#JettyService" title="Go to &quot;IJetty-Service&quot;">JettyServices</a>. If a proper
 						httpApplication is found, its servletContext will become deployed to the jetty server.
 			</li>
 			<li>
@@ -448,7 +448,7 @@ What happens:
 	</li>
 </ol>
 </p>
-<a name="_httpConsoleCommands"></a>
+<a name="_consoleCommands"></a>
 <h2>Console commands</h2>
 <p>
 The http application feature provides OSGi console commands:
