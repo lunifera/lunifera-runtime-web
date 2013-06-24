@@ -21,7 +21,6 @@ codelanguage-def[Manifest]
 	Bundle-Version:,Vaadin-Resources:,Require-Bundle:
 ]
 
-
 chapter-ref[Overview]
 
 chapter-ref[JettyService]
@@ -35,3 +34,5 @@ chapter-ref[VaadinTutorial_RunStandalone]
 chapter-ref[VaadinTutorial_CreateStandaloneExample]
 
 chapter-ref[VaadinTutorial_HttpAndJetty]
+
+chapter-ref[VaaclipseExample]

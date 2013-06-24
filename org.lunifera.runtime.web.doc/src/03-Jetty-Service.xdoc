@@ -208,7 +208,7 @@ code[Java][
 
 section2[Find pid by Name]
 
-code[Java][ 
+code[Java][
 		// find service reference
 		Collection<ServiceReference<IJetty>> references = bundleContext
 			.getServiceReferences(IJetty.class, "(lunifera.jetty.http.name=Server1)");
@@ -219,7 +219,6 @@ code[Java][
 			String pid = (String) reference.getProperty(org.osgi.framework.Constants.SERVICE_PID);
 		}
 ]
-
 
 section:_startStop[Start and stop jetty services]
 

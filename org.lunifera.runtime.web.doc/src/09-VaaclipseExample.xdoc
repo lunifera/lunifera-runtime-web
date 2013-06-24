@@ -1,0 +1,33 @@
+chapter:VaaclipseExample[Vaaclipse example - "How to run"]
+
+This help page contains an introduction how to install the vaaclips example.
+
+  img[../images/Vaaclipse_Example1.png][Image: The result of example][img-small][]
+
+  ol[
+  	item[Ensure you are using java 7.]
+  	item[Please note that pom.xml will show an error. That does not effect the result! So just ignore.]
+	item[Go to link[http://lun.lunifera.org/downloads/examples/vaadin/][Lunifera downloads] and dowload
+	Vaaclipse_Example.zip]
+	item[Unzip contained project and import into your workspace.]
+	item[Project code[org.lunifera.examples.vaaclipse.howto] contains a file called code[org.lunifera.examples.vaaclipse.target.kepler.howto.target].
+	It contains all required P2 repositories to setup your workspace properly.]
+	item[Open it and wait until TP is resolved. If error occur please use the "Update" button an the
+	right side of the view. Select the repos one by one and click update for each. Then the TP should
+	resolve. This will take some minutes.]
+	item[If resolved then click "Set as targetplatform" on the upper right side of the view.]
+	item[Now you can import the example projects.]
+	item[Open Plugin-View (Window -> Show View -> Other -> Plugin-View)]
+	item[Scroll down and select NEWEST code[org.lunifera.examples.vaaclipse.demo1.e4]. Due to a strange
+	behaviour of TP two bundles are loaded. Please use the newest!]
+	item[The right mouse click -> Import as source project]
+	item[Expand code[org.lunifera.examples.vaaclipse.demo1.e4], select the demo1.product file, right
+	mouse click and select "Debug as Eclipse Application"]
+	item[Console should show some messages from vaadin.]
+	item[Open browser and address URL to "link[http://localhost:8081/demo][http://localhost:8081/demo]"]
+	item[The browser should show the vaaclipse demo]
+	item[In vaaclipse browser app - "Virtual Filesystem -> open lunifera/user/User.tasks"]
+	item[Select a task in table.]
+  ] 
+  
+  Have fun with it...
