@@ -10,11 +10,13 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YAction;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YField;
 import org.eclipse.emf.ecp.ecview.common.model.core.util.CoreModelUtil;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
@@ -85,7 +87,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		CoreModelUtil.initTransientValues(yEmbeddable);
 
 		IBindingManager bindingManger = getViewContext().getService(
-				IServiceRegistry.SERVICE__BINDING_MANAGER);
+				org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class.getName());
 		// bind visible
 		bindingManger.bindVisible(yEmbeddable, abstractComponent);
 	}
@@ -101,7 +103,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		createBindings((YEmbeddable) yAction, abstractComponent);
 
 		IBindingManager bindingManger = getViewContext().getService(
-				IServiceRegistry.SERVICE__BINDING_MANAGER);
+				org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class.getName());
 
 		// bind enabled
 		bindingManger.bindEnabled(yAction, abstractComponent);
@@ -117,7 +119,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		createBindings((YEmbeddable) yField, abstractComponent);
 		
 		IBindingManager bindingManger = getViewContext().getService(
-				IServiceRegistry.SERVICE__BINDING_MANAGER);
+				org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class.getName());
 		
 		// bind enabled
 		bindingManger.bindEnabled(yField, abstractComponent);
@@ -127,6 +129,22 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			bindingManger.bindReadonly(yField,
 					(Property.ReadOnlyStatusChangeNotifier) abstractComponent);
 		}
+	}
+	
+	@Override
+	public IObservable getObservableValue(Object model) {
+		return internalGetObservableEndpoint((YEmbeddableBindingEndpoint) model);
+	}
+
+	/**
+	 * Has to provide an instance of IObservable for the given bindableValue.
+	 * 
+	 * @param bindableValue
+	 * @return
+	 */
+	protected IObservable internalGetObservableEndpoint(
+			YEmbeddableBindingEndpoint bindableValue) {
+		throw new UnsupportedOperationException("Must be overridden!");
 	}
 
 }

@@ -17,6 +17,7 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
@@ -29,7 +30,6 @@ import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Field;
 
 /**
  * Is used to bind values.
@@ -39,7 +39,17 @@ public class BindingManager extends
 		implements IBindingManager {
 
 	public BindingManager(IViewContext viewContext, Realm validationRealm) {
-		super(viewContext, validationRealm);
+		super(validationRealm);
+	}
+
+	/**
+	 * Casts element to EObject.
+	 * 
+	 * @param element
+	 * @return
+	 */
+	protected EObject castEObject(Object element) {
+		return (EObject) element;
 	}
 
 	@Override
@@ -48,11 +58,12 @@ public class BindingManager extends
 	}
 
 	@Override
-	public void bindVisible(YVisibleable yVisibleAble, AbstractComponent abstractComponent) {
+	public void bindVisible(YVisibleable yVisibleAble,
+			AbstractComponent abstractComponent) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
 				.observeVisible(abstractComponent);
 		IObservableValue modelObservable = EMFObservables.observeValue(
-				yVisibleAble,
+				castEObject(yVisibleAble),
 				CoreModelPackage.eINSTANCE.getYVisibleable_Visible());
 		getDatabindingContext().bindValue(uiObservable, modelObservable);
 	}
@@ -61,7 +72,8 @@ public class BindingManager extends
 	public void bindEnabled(YEnable yEnable, AbstractComponent abstractComponent) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
 				.observeEnabled(abstractComponent);
-		IObservableValue modelObservable = EMFObservables.observeValue(yEnable,
+		IObservableValue modelObservable = EMFObservables.observeValue(
+				castEObject(yEnable),
 				CoreModelPackage.eINSTANCE.getYEnable_Enabled());
 		getDatabindingContext().bindValue(uiObservable, modelObservable);
 	}
@@ -72,7 +84,8 @@ public class BindingManager extends
 		IVaadinModelObservableValue uiObservable = VaadinObservables
 				.observeReadonly(field);
 		IObservableValue modelObservable = EMFObservables.observeValue(
-				yEditable, CoreModelPackage.eINSTANCE.getYEditable_Editable());
+				castEObject(yEditable),
+				CoreModelPackage.eINSTANCE.getYEditable_Editable());
 		getDatabindingContext().bindValue(
 				uiObservable,
 				modelObservable,

@@ -12,6 +12,7 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Map;
 
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
@@ -200,6 +201,11 @@ public class ViewPresentation extends AbstractDisposable implements
 	@Override
 	public IViewContext getViewContext() {
 		return getEditpart().getContext();
+	}
+
+	@Override
+	public IObservable getObservableValue(Object model) {
+		throw new UnsupportedOperationException("Must be overridden!");
 	}
 
 	/**

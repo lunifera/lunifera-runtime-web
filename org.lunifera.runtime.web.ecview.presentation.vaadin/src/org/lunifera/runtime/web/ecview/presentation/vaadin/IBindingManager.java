@@ -17,7 +17,6 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Field;
 
 /**
  * A manager that is responsible for binding data for one view instance. Each
@@ -25,7 +24,7 @@ import com.vaadin.ui.Field;
  * contained are bindings related to the associated view.
  */
 public interface IBindingManager extends
-		org.eclipse.emf.ecp.ecview.common.binding.IBindingManager {
+		org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager {
 
 	/**
 	 * Binds the visible option.
@@ -34,7 +33,8 @@ public interface IBindingManager extends
 	 * @param yVisibleAble
 	 * @param field
 	 */
-	public abstract void bindVisible(YVisibleable yVisibleAble, AbstractComponent abstractComponent);
+	public abstract void bindVisible(YVisibleable yVisibleAble,
+			AbstractComponent abstractComponent);
 
 	/**
 	 * Binds the visible option.
@@ -43,7 +43,8 @@ public interface IBindingManager extends
 	 * @param yEnable
 	 * @param field
 	 */
-	public abstract void bindEnabled(YEnable yEnable, AbstractComponent abstractComponent);
+	public abstract void bindEnabled(YEnable yEnable,
+			AbstractComponent abstractComponent);
 
 	/**
 	 * Binds the visible option.

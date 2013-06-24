@@ -42,6 +42,15 @@
    <feature id="org.lunifera.runtime.web.feature.vaadin.addon.osgi.source" version="0.0.0">
       <category name="lunifera-web-vaadin-addons"/>
    </feature>
+   <feature id="org.lunifera.runtime.web.feature.ecview.presentation.vaadin" version="0.0.1">
+      <category name="lunifera-web-features"/>
+   </feature>
+   <feature id="org.lunifera.runtime.web.feature.ecview.presentation.vaadin.source" version="0.0.1">
+      <category name="lunifera-web-features"/>
+   </feature>
+   <feature url="features/org.eclipse.emf.ecp.ecview.feature.core_0.0.1.qualifier.jar" id="org.eclipse.emf.ecp.ecview.feature.core" version="0.0.1.qualifier">
+      <category name="lunifera-web-features"/>
+   </feature>
    <category-def name="lunifera-web-features" label="Lunifera Web Features"/>
    <category-def name="lunifera-web-vaadin-addons" label="lunifera Web Vaadin Addons"/>
 </site>
