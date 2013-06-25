@@ -99,6 +99,16 @@ public class VaadinObservables {
 	}
 
 	/**
+	 * Activates the realm for the current thread.
+	 * 
+	 * @param ui
+	 */
+	public static void activateRealm(final UI ui){
+		UIRealm uiRealm =	(UIRealm) getRealm(ui);
+		uiRealm.makeDefault();
+	}
+
+	/**
 	 * Returns the UI of the widget or the current UI.
 	 * 
 	 * @param widget
@@ -1272,6 +1282,13 @@ public class VaadinObservables {
 		@Override
 		public boolean isCurrent() {
 			return UI.getCurrent() == ui;
+		}
+
+		/**
+		 * Makes the realm to the thread default.
+		 */
+		public void makeDefault() {
+			setDefault(this);
 		}
 
 		@Override
