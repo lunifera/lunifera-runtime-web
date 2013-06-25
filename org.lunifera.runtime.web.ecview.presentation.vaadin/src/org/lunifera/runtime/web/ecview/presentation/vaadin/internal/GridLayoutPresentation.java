@@ -229,7 +229,9 @@ public class GridLayoutPresentation extends
 		// add the element to the grid layout
 		//
 		if (col1 >= 0 && row1 >= 0 && (col1 < col2 || row1 < row2)) {
-			gridlayout.setRows(row2 + 1);
+			if(gridlayout.getRows() < row2 +1){
+				gridlayout.setRows(row2 + 1);
+			}
 			gridlayout.addComponent(child, col1, row1, col2, row2);
 		} else if (col1 < 0 || row1 < 0) {
 			gridlayout.addComponent(child);
@@ -661,8 +663,11 @@ public class GridLayoutPresentation extends
 		}
 
 		public void addCell(int row, Cell cell) {
-			cells.add(row, cell);
-
+			try {
+				cells.add(row, cell);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 			YAlignment alignment = cell.getAlignment();
 			// if not already sure, that it should expand
 			// try to find out
