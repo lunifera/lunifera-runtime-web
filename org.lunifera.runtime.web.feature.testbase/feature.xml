@@ -18,11 +18,11 @@
    </license>
 
    <requires>
-      <import feature="org.lunifera.runtime.web.feature.jetty" version="0.0.1.qualifier"/>
+      <import feature="org.lunifera.runtime.web.feature.jetty" version="0.0.0"/>
    </requires>
 
    <plugin
-         id="org.lunifera.runtime.web.http"
+         id="org.lunifera.runtime.web.testbase"
          download-size="0"
          install-size="0"
          version="0.0.0"
