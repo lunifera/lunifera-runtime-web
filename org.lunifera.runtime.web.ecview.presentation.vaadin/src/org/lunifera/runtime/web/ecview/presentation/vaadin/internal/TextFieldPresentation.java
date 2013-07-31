@@ -10,8 +10,13 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.util.CoreModelUtil;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 
@@ -75,6 +80,31 @@ public class TextFieldPresentation extends
 		return componentBase;
 	}
 
+	@Override
+	protected IObservable internalGetObservableEndpoint(
+			YEmbeddableBindingEndpoint bindableValue) {
+		if (bindableValue == null) {
+			throw new NullPointerException("BindableValue must not be null!");
+		}
+
+		if (bindableValue instanceof YEmbeddableValueEndpoint) {
+			return internalGetValueEndpoint();
+		}
+		throw new IllegalArgumentException("Not a valid input: "
+				+ bindableValue);
+	}
+
+	/**
+	 * Returns the observable to observe value.
+	 * 
+	 * @return
+	 */
+	protected IObservableValue internalGetValueEndpoint() {
+		// return the observable value for text
+		return EMFObservables.observeValue(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YTEXT_FIELD__VALUE);
+	}
+
 	/**
 	 * Creates the bindings for the given values.
 	 * 
@@ -82,6 +112,10 @@ public class TextFieldPresentation extends
 	 * @param field
 	 */
 	protected void createBindings(YTextField yField, TextField field) {
+		// create the model binding from ridget to ECView-model
+		createModelBinding(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YTEXT_FIELD__VALUE, text);
+
 		super.createBindings(yField, field);
 	}
 

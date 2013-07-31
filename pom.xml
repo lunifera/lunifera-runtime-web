@@ -59,12 +59,16 @@
 
 				<module>org.lunifera.runtime.web.vaadin.databinding</module>
 				<module>org.lunifera.runtime.web.vaadin.databinding.tests</module>
-
+				
+				<module>org.lunifera.runtime.web.testbase</module>
+				
 				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.databinding</module>
 
 				<module>org.lunifera.runtime.web.feature.ecview.presentation.vaadin</module>
+
+				<module>org.lunifera.runtime.web.feature.testbase</module>
 
 				<module>org.lunifera.runtime.web.feature.vaadin.osgi</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.addon.osgi</module>
