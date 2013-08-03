@@ -14,21 +14,28 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
 import org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants;
 import org.lunifera.runtime.web.vaadin.osgi.tests.Activator;
+import org.lunifera.runtime.web.vaadin.osgi.tests.context.helper.UI_WithProviderFactory;
+import org.lunifera.runtime.web.vaadin.osgi.webapp.OSGiUIProvider;
+import org.lunifera.runtime.web.vaadin.osgi.webapp.VaadinApplication;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.http.HttpService;
 
+import com.vaadin.server.UIProvider;
+
+@SuppressWarnings("restriction")
 public class VaadinApplicationFactoryTest {
 
 	private ConfigurationAdmin cm;
@@ -45,6 +52,34 @@ public class VaadinApplicationFactoryTest {
 		BundleHelper.ensureSetup();
 		cm = Activator.getInstance().getConfigurationAdmin();
 		activator = Activator.getInstance();
+
+		try {
+			Collection<ServiceReference<IVaadinApplication>> appRefs = Activator.context
+					.getServiceReferences(IVaadinApplication.class, null);
+			for (ServiceReference<IVaadinApplication> ref : appRefs) {
+				String pid = (String) ref.getProperty("service.pid");
+				Configuration config = cm.getConfiguration(pid);
+				if (config != null) {
+					config.delete();
+				}
+			}
+
+			Collection<ServiceReference<HttpService>> httpRefs = Activator.context
+					.getServiceReferences(HttpService.class, null);
+			for (ServiceReference<HttpService> ref : httpRefs) {
+				String pid = (String) ref.getProperty("service.pid");
+				if (pid != null) {
+					Configuration config = cm.getConfiguration(pid);
+					if (config != null) {
+						config.delete();
+					}
+				}
+			}
+		} catch (InvalidSyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -435,7 +470,7 @@ public class VaadinApplicationFactoryTest {
 				VaadinConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		waitCM();
-		
+
 		String id = Activator.getInstance().getVaadinApplications().get(0)
 				.getId();
 		Collection<ServiceReference<IVaadinApplication>> refs = Activator.context
@@ -463,8 +498,7 @@ public class VaadinApplicationFactoryTest {
 				VaadinConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		waitCM();
-		
-		
+
 		Collection<ServiceReference<IVaadinApplication>> refs = Activator.context
 				.getServiceReferences(IVaadinApplication.class,
 						"(lunifera.web.vaadin.name=Application1)");
@@ -490,8 +524,7 @@ public class VaadinApplicationFactoryTest {
 				VaadinConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		waitCM();
-		
-		
+
 		Collection<ServiceReference<IVaadinApplication>> refs = Activator.context
 				.getServiceReferences(IVaadinApplication.class,
 						"(lunifera.web.vaadin.uialias=alias1)");
@@ -517,8 +550,7 @@ public class VaadinApplicationFactoryTest {
 				VaadinConstants.OSGI__FACTORY_PID, null);
 		config.update(prepareDefaultProps());
 		waitCM();
-		
-		
+
 		Collection<ServiceReference<IVaadinApplication>> refs = Activator.context
 				.getServiceReferences(IVaadinApplication.class,
 						"(lunifera.http.name=http1)");
@@ -527,6 +559,88 @@ public class VaadinApplicationFactoryTest {
 		}
 
 		config.delete();
+	}
+
+	@Test
+	public void test_UiProviderFactory() throws IOException {
+		waitCM();
+		waitCM();
+
+		Assert.assertEquals(0, activator.getVaadinApplications().size());
+		Assert.assertEquals(0, activator.getHttpServices().size());
+
+		// create new instance
+		Configuration config = cm.createFactoryConfiguration(
+				VaadinConstants.OSGI__FACTORY_PID, null);
+		config.update(prepareUiProviderFactoryTestProps());
+
+		waitCM();
+		waitCM();
+		waitCM();
+		waitCM();
+
+		VaadinApplication app = (VaadinApplication) activator
+				.getVaadinApplications().get(0);
+		List<OSGiUIProvider> providers = app.getUiProviders();
+		Assert.assertEquals(1, providers.size());
+
+		// Ensure that the customer UI provider was used
+		Assert.assertTrue(providers.get(0) instanceof UI_WithProviderFactory.UiProvider);
+	}
+
+	@Test
+	public void test_NoUiProviderFactory() throws IOException {
+		waitCM();
+		waitCM();
+
+		Assert.assertEquals(0, activator.getVaadinApplications().size());
+		Assert.assertEquals(0, activator.getHttpServices().size());
+
+		// create new instance
+		Configuration config = cm.createFactoryConfiguration(
+				VaadinConstants.OSGI__FACTORY_PID, null);
+		config.update(prepareNoUiProviderFactoryTestProps());
+
+		waitCM();
+		waitCM();
+		waitCM();
+		waitCM();
+
+		VaadinApplication app = (VaadinApplication) activator
+				.getVaadinApplications().get(0);
+		List<OSGiUIProvider> providers = app.getUiProviders();
+		Assert.assertEquals(1, providers.size());
+
+		// Ensure that the default UI provider was used
+		Assert.assertEquals(providers.get(0).getClass().getName(),
+				OSGiUIProvider.class.getName());
+	}
+
+	@Test
+	public void test_DefaultUiProvider() throws IOException {
+		waitCM();
+		waitCM();
+
+		Assert.assertEquals(0, activator.getVaadinApplications().size());
+		Assert.assertEquals(0, activator.getHttpServices().size());
+
+		// create new instance
+		Configuration config = cm.createFactoryConfiguration(
+				VaadinConstants.OSGI__FACTORY_PID, null);
+		config.update(prepareUiProviderFactoryTestProps());
+
+		waitCM();
+		waitCM();
+		waitCM();
+		waitCM();
+
+		VaadinApplication app = (VaadinApplication) activator
+				.getVaadinApplications().get(0);
+		List<OSGiUIProvider> providers = app.getUiProviders();
+		Assert.assertEquals(1, providers.size());
+
+		// Ensure that the customer UI provider was used
+		Assert.assertTrue(providers.get(0) instanceof UI_WithProviderFactory.UiProvider);
 	}
 
 	private void waitCM() {
@@ -547,6 +661,32 @@ public class VaadinApplicationFactoryTest {
 		props.put(VaadinConstants.HTTP_APPLICATION_NAME, "http1");
 		props.put(VaadinConstants.WIDGETSET, "widgetset1");
 		props.put(VaadinConstants.UI_ALIAS, "alias1");
+		return props;
+	}
+
+	/**
+	 * Prepares properties for providerFactoryTest.
+	 * 
+	 * @return
+	 */
+	public Dictionary<String, Object> prepareUiProviderFactoryTestProps() {
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(VaadinConstants.APPLICATION_NAME, "providerFactoryTest");
+		props.put(VaadinConstants.HTTP_APPLICATION_NAME, "http1");
+		props.put(VaadinConstants.UI_ALIAS, "alias");
+		return props;
+	}
+
+	/**
+	 * Prepares properties for the noProviderFactoryTest.
+	 * 
+	 * @return
+	 */
+	public Dictionary<String, Object> prepareNoUiProviderFactoryTestProps() {
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		props.put(VaadinConstants.APPLICATION_NAME, "noProviderFactoryTest");
+		props.put(VaadinConstants.HTTP_APPLICATION_NAME, "http1");
+		props.put(VaadinConstants.UI_ALIAS, "alias");
 		return props;
 	}
 

@@ -14,15 +14,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import junit.framework.Assert;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -30,6 +29,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.eclipse.core.runtime.IStatus;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.http.HttpConstants;
@@ -52,8 +53,8 @@ import org.osgi.service.http.NamespaceException;
 public class VaadinRequestTest {
 
 	private ConfigurationAdmin cm;
-	@SuppressWarnings("unused")
 	private Activator activator;
+	private List<Configuration> toDelete = new ArrayList<Configuration>();
 
 	/**
 	 * Setup tests.
@@ -66,6 +67,13 @@ public class VaadinRequestTest {
 		BundleHelper.ensureSetup();
 		cm = Activator.getInstance().getConfigurationAdmin();
 		activator = Activator.getInstance();
+	}
+
+	@After
+	public void tearDown() throws IOException {
+		for (Configuration config : toDelete) {
+			config.delete();
+		}
 	}
 
 	/**
@@ -81,16 +89,16 @@ public class VaadinRequestTest {
 			InvalidSyntaxException, ServletException, NamespaceException {
 
 		// create new applications
-		Configuration httpApp1Config = startHttpApp1("Server1");
-		Configuration httpApp7Config = startHttpApp7("Server1");
+		startHttpApp1("Server1");
+		startHttpApp7("Server1");
 		waitCM();
 
 		// start a new jetty server
-		Configuration jettyConfig = startJetty1();
+		startJetty1();
 
 		// create vaadin applications
-		Configuration vaadinApp1Config = startVaadin1("HttpApp1");
-		Configuration vaadinApp2Config = startVaadin2("HttpApp7");
+		startVaadin1("HttpApp1");
+		startVaadin2("HttpApp7");
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
@@ -103,7 +111,7 @@ public class VaadinRequestTest {
 		HttpResponse response = httpGET("http://localhost:8091/app1/test/alias1/");
 		Assert.assertEquals(500, response.getStatusLine().getStatusCode());
 		Assert.assertEquals(
-				"No UIProvider has been added and there is no \"UI\" init parameter.",
+				"Server Error",
 				response.getStatusLine().getReasonPhrase());
 
 		// alias not registered
@@ -114,18 +122,12 @@ public class VaadinRequestTest {
 		HttpResponse response3 = httpGET("http://localhost:8091/app7/test/alias2");
 		Assert.assertEquals(500, response3.getStatusLine().getStatusCode());
 		Assert.assertEquals(
-				"No UIProvider has been added and there is no \"UI\" init parameter.",
+				"Server Error",
 				response3.getStatusLine().getReasonPhrase());
 
 		assertStatusOK("Application1");
 		assertStatusOK("Application2");
 
-		// stop the services again
-		jettyConfig.delete();
-		httpApp1Config.delete();
-		httpApp7Config.delete();
-		vaadinApp1Config.delete();
-		vaadinApp2Config.delete();
 	}
 
 	/**
@@ -141,17 +143,17 @@ public class VaadinRequestTest {
 			InvalidSyntaxException, ServletException, NamespaceException {
 
 		// create new applications
-		Configuration httpApp1Config = startHttpApp1("Server1");
-		Configuration httpApp7Config = startHttpApp7("Server2");
+		startHttpApp1("Server1");
+		startHttpApp7("Server2");
 		waitCM();
 
 		// start a new jetty server
-		Configuration jettyConfig = startJetty1();
-		Configuration jetty2Config = startJetty2();
+		startJetty1();
+		startJetty2();
 
 		// create vaadin applications
-		Configuration vaadinApp1Config = startVaadin1("HttpApp1");
-		Configuration vaadinApp2Config = startVaadin2("HttpApp7");
+		startVaadin1("HttpApp1");
+		startVaadin2("HttpApp7");
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
@@ -164,7 +166,7 @@ public class VaadinRequestTest {
 		HttpResponse response = httpGET("http://localhost:8091/app1/test/alias1/");
 		Assert.assertEquals(500, response.getStatusLine().getStatusCode());
 		Assert.assertEquals(
-				"No UIProvider has been added and there is no \"UI\" init parameter.",
+				"Server Error",
 				response.getStatusLine().getReasonPhrase());
 		Assert.assertEquals(404,
 				httpGET("http://localhost:8091/app7/test/alias2")
@@ -174,7 +176,7 @@ public class VaadinRequestTest {
 		HttpResponse response3 = httpGET("http://localhost:8099/app7/test/alias2");
 		Assert.assertEquals(500, response3.getStatusLine().getStatusCode());
 		Assert.assertEquals(
-				"No UIProvider has been added and there is no \"UI\" init parameter.",
+				"Server Error",
 				response3.getStatusLine().getReasonPhrase());
 		Assert.assertEquals(404,
 				httpGET("http://localhost:8099/app1/test/alias1/")
@@ -183,13 +185,6 @@ public class VaadinRequestTest {
 		assertStatusOK("Application1");
 		assertStatusOK("Application2");
 
-		// stop the services again
-		jettyConfig.delete();
-		jetty2Config.delete();
-		httpApp1Config.delete();
-		httpApp7Config.delete();
-		vaadinApp1Config.delete();
-		vaadinApp2Config.delete();
 	}
 
 	/**
@@ -206,15 +201,15 @@ public class VaadinRequestTest {
 
 		// create new applications
 		Configuration httpApp1Config = startHttpApp1("Server1");
-		Configuration httpApp7Config = startHttpApp7("Server2");
+		startHttpApp7("Server2");
 		waitCM();
 
 		// start a new jetty server
-		Configuration jettyConfig = startJetty1();
-		Configuration jetty2Config = startJetty2();
+		startJetty1();
+		startJetty2();
 
 		// create vaadin applications
-		Configuration vaadinApp1Config = startVaadin1("HttpApp1");
+		startVaadin1("HttpApp1");
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
@@ -249,13 +244,6 @@ public class VaadinRequestTest {
 		Assert.assertEquals(500,
 				httpGET("http://localhost:8099/app1/test/alias1/")
 						.getStatusLine().getStatusCode());
-
-		// stop the services again
-		jettyConfig.delete();
-		jetty2Config.delete();
-		httpApp1Config.delete();
-		httpApp7Config.delete();
-		vaadinApp1Config.delete();
 	}
 
 	/**
@@ -271,13 +259,13 @@ public class VaadinRequestTest {
 			InvalidSyntaxException, ServletException, NamespaceException {
 
 		// create new applications
-		Configuration httpApp1Config = startHttpApp1("Server1");
-		Configuration httpApp7Config = startHttpApp7("Server2");
+		startHttpApp1("Server1");
+		startHttpApp7("Server2");
 		waitCM();
 
 		// start a new jetty server
-		Configuration jettyConfig = startJetty1();
-		Configuration jetty2Config = startJetty2();
+		startJetty1();
+		startJetty2();
 
 		// create vaadin applications
 		Configuration vaadinApp1Config = startVaadin1("HttpApp1");
@@ -315,12 +303,6 @@ public class VaadinRequestTest {
 				httpGET("http://localhost:8099/app7/test/alias1")
 						.getStatusLine().getStatusCode());
 
-		// stop the services again
-		jettyConfig.delete();
-		jetty2Config.delete();
-		httpApp1Config.delete();
-		httpApp7Config.delete();
-		vaadinApp1Config.delete();
 	}
 
 	/**
@@ -335,17 +317,17 @@ public class VaadinRequestTest {
 			InvalidSyntaxException, ServletException, NamespaceException {
 
 		// create new applications
-		Configuration httpApp1Config = startHttpApp1("Server1");
-		Configuration httpApp7Config = startHttpApp7("Server2");
+		startHttpApp1("Server1");
+		startHttpApp7("Server2");
 		waitCM();
 
 		// start a new jetty server
-		Configuration jettyConfig = startJetty1();
-		Configuration jetty2Config = startJetty2();
+		startJetty1();
+		startJetty2();
 
 		// create vaadin applications
 		Configuration vaadinApp1Config = startVaadin1("HttpApp1");
-		Configuration vaadinApp7Config = startVaadin2("HttpApp7");
+		startVaadin2("HttpApp7");
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
@@ -377,13 +359,6 @@ public class VaadinRequestTest {
 		Assert.assertEquals(IStatus.ERROR, status.getSeverity());
 		assertStatusOK("Application2");
 
-		// stop the services again
-		jettyConfig.delete();
-		jetty2Config.delete();
-		httpApp1Config.delete();
-		httpApp7Config.delete();
-		vaadinApp1Config.delete();
-		vaadinApp7Config.delete();
 	}
 
 	/**
@@ -398,17 +373,17 @@ public class VaadinRequestTest {
 			InvalidSyntaxException, ServletException, NamespaceException {
 
 		// create new applications
-		Configuration httpApp1Config = startHttpApp1("Server1");
-		Configuration httpApp7Config = startHttpApp7("Server2");
+		startHttpApp1("Server1");
+		startHttpApp7("Server2");
 		waitCM();
 
 		// start a new jetty server
-		Configuration jettyConfig = startJetty1();
-		Configuration jetty2Config = startJetty2();
+		startJetty1();
+		startJetty2();
 
 		// create vaadin applications
 		Configuration vaadinApp1Config = startVaadin1("HttpApp1");
-		Configuration vaadinApp7Config = startVaadin2("HttpApp7");
+		startVaadin2("HttpApp7");
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
 		waitCM(); // restarting servers
@@ -441,13 +416,6 @@ public class VaadinRequestTest {
 		IVaadinApplication app2 = getVaadinApplication("Application2");
 		Assert.assertTrue(app2.isStarted());
 
-		// stop the services again
-		jettyConfig.delete();
-		jetty2Config.delete();
-		httpApp1Config.delete();
-		httpApp7Config.delete();
-		vaadinApp1Config.delete();
-		vaadinApp7Config.delete();
 	}
 
 	/**
@@ -477,6 +445,7 @@ public class VaadinRequestTest {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
+	@SuppressWarnings("unused")
 	private String httpGETFirstLine(String url) throws IOException,
 			ClientProtocolException {
 		HttpResponse resp = httpGET(url);
@@ -516,6 +485,9 @@ public class VaadinRequestTest {
 		props.put(JettyConstants.JETTY_SERVER_NAME, "Server1");
 		props.put(JettyConstants.HTTP_PORT, "8091");
 		jettyConfig.update(props);
+
+		toDelete.add(jettyConfig);
+
 		return jettyConfig;
 	}
 
@@ -532,6 +504,9 @@ public class VaadinRequestTest {
 		props.put(JettyConstants.JETTY_SERVER_NAME, "Server2");
 		props.put(JettyConstants.HTTP_PORT, "8099");
 		jettyConfig.update(props);
+
+		toDelete.add(jettyConfig);
+
 		return jettyConfig;
 	}
 
@@ -549,6 +524,9 @@ public class VaadinRequestTest {
 		Configuration httpAppConfig = cm.createFactoryConfiguration(
 				HttpConstants.OSGI__FACTORY_PID, null);
 		httpAppConfig.update(props);
+
+		toDelete.add(httpAppConfig);
+
 		return httpAppConfig;
 	}
 
@@ -566,6 +544,9 @@ public class VaadinRequestTest {
 		Configuration httpApp7Config = cm.createFactoryConfiguration(
 				HttpConstants.OSGI__FACTORY_PID, null);
 		httpApp7Config.update(props);
+
+		toDelete.add(httpApp7Config);
+
 		return httpApp7Config;
 	}
 
@@ -584,6 +565,9 @@ public class VaadinRequestTest {
 		Configuration httpAppConfig = cm.createFactoryConfiguration(
 				VaadinConstants.OSGI__FACTORY_PID, null);
 		httpAppConfig.update(props);
+
+		toDelete.add(httpAppConfig);
+
 		return httpAppConfig;
 	}
 
@@ -602,6 +586,9 @@ public class VaadinRequestTest {
 		Configuration httpAppConfig = cm.createFactoryConfiguration(
 				VaadinConstants.OSGI__FACTORY_PID, null);
 		httpAppConfig.update(props);
+
+		toDelete.add(httpAppConfig);
+
 		return httpAppConfig;
 	}
 
@@ -627,24 +614,6 @@ public class VaadinRequestTest {
 		try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
-		}
-	}
-
-	@SuppressWarnings("serial")
-	private static class Value1Servlet extends HttpServlet {
-		protected void doGet(HttpServletRequest request,
-				HttpServletResponse response) throws ServletException,
-				IOException {
-			response.getOutputStream().print("Servlet1 accessed!");
-		}
-	}
-
-	@SuppressWarnings("serial")
-	private static class Value7Servlet extends HttpServlet {
-		protected void doGet(HttpServletRequest request,
-				HttpServletResponse response) throws ServletException,
-				IOException {
-			response.getOutputStream().print("Servlet7 accessed!");
 		}
 	}
 

@@ -15,9 +15,12 @@ package org.lunifera.runtime.web.vaadin.osgi.common;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.lunifera.runtime.web.vaadin.osgi.webapp.OSGiUIProvider;
 
-import com.vaadin.server.UIProvider;
-
+/**
+ * A wrapper that handles the registration of servlets, resources and filters at
+ * the HttpService.
+ */
 public interface IVaadinApplication {
 
 	/**
@@ -75,7 +78,7 @@ public interface IVaadinApplication {
 	 * 
 	 * @return
 	 */
-	List<UIProvider> getUiProviders();
+	List<OSGiUIProvider> getUiProviders();
 
 	/**
 	 * Is called to add an UI provider. Can be called twice with the same
@@ -83,14 +86,14 @@ public interface IVaadinApplication {
 	 * 
 	 * @param uiProvider
 	 */
-	void addUIProvider(UIProvider uiProvider);
+	void addUIProvider(OSGiUIProvider uiProvider);
 
 	/**
 	 * Is called to remove an ui provider.
 	 * 
 	 * @param uiProvider
 	 */
-	void removeUIProvider(UIProvider remove);
+	void removeUIProvider(OSGiUIProvider remove);
 
 	/**
 	 * Returns true, if the application is started.

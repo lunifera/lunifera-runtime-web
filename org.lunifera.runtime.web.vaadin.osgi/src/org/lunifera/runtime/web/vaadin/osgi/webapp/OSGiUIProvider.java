@@ -27,16 +27,32 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class OSGiUIProvider extends UIProvider {
 
-	private final ComponentFactory factory;
+	private ComponentFactory uiFactory;
 	private final Class<? extends UI> uiClass;
 	private final String vaadinApplication;
 
-	public OSGiUIProvider(ComponentFactory factory,
-			Class<? extends UI> uiClass, String vaadinApplication) {
+	public OSGiUIProvider(String vaadinApplication, Class<? extends UI> uiClass) {
 		super();
-		this.factory = factory;
 		this.uiClass = uiClass;
 		this.vaadinApplication = vaadinApplication;
+	}
+
+	/**
+	 * Sets the component factory used to create new UI instances.
+	 * 
+	 * @param uiFactory
+	 */
+	void setUIFactory(ComponentFactory uiFactory) {
+		this.uiFactory = uiFactory;
+	}
+
+	/**
+	 * Returns the component factory.
+	 * 
+	 * @return factory
+	 */
+	ComponentFactory getUIFactory() {
+		return this.uiFactory;
 	}
 
 	/**
@@ -59,7 +75,7 @@ public class OSGiUIProvider extends UIProvider {
 	public UI createInstance(UICreateEvent event) {
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 
-		ComponentInstance instance = factory.newInstance(properties);
+		ComponentInstance instance = uiFactory.newInstance(properties);
 		OSGiUI ui = (OSGiUI) instance.getInstance();
 		ui.setComponentInstance(instance);
 

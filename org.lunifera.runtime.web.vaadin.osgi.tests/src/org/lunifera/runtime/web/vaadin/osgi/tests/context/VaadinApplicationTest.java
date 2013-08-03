@@ -10,9 +10,9 @@
  */
 package org.lunifera.runtime.web.vaadin.osgi.tests.context;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -35,6 +35,7 @@ import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
 
+@SuppressWarnings("restriction")
 public class VaadinApplicationTest {
 
 	private Activator activator;

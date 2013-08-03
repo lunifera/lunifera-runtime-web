@@ -21,10 +21,10 @@ Import-Package: javax.servlet;version="2.6.0",
  org.osgi.util.tracker;version="1.5.1",
  org.slf4j;version="1.6.4"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.vaadin.osgi,
+Export-Package: org.lunifera.runtime.web.vaadin.osgi;x-internal:=true,
  org.lunifera.runtime.web.vaadin.osgi.common,
- org.lunifera.runtime.web.vaadin.osgi.servlet,
- org.lunifera.runtime.web.vaadin.osgi.webapp
+ org.lunifera.runtime.web.vaadin.osgi.servlet;x-internal:=true,
+ org.lunifera.runtime.web.vaadin.osgi.webapp;x-internal:=true
 Service-Component: OSGI-INF/*.xml
 Require-Bundle: org.eclipse.equinox.common;bundle-version="3.6.100",
  com.vaadin.server;bundle-version="7.1.0",

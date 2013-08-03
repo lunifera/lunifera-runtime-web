@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="org.lunifera.web.vaadin.UI/org.lunifera.runtime.web.vaadin.osgi.tests.context.helper.UI_WithProviderFactory@providerFactoryTest" immediate="false" name="org.lunifera.runtime.web.vaadin.osgi.tests.withproviderfactory">
+   <implementation class="org.lunifera.runtime.web.vaadin.osgi.tests.context.helper.UI_WithProviderFactory"/>
+   <service>
+      <provide interface="org.osgi.service.component.ComponentFactory"/>
+   </service>
+</scr:component>

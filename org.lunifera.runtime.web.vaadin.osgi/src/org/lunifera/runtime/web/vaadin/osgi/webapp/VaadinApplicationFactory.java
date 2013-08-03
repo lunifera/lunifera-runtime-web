@@ -17,10 +17,13 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.lunifera.runtime.web.vaadin.osgi.common.IOSGiUiProviderFactory;
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
 import org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants;
 import org.osgi.framework.ServiceReference;
@@ -44,15 +47,16 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 
 	private final Lock accessLock = new ReentrantLock();
 
-	private Map<String, IVaadinApplication> applications = Collections
-			.synchronizedMap(new HashMap<String, IVaadinApplication>());
+	private Map<String, VaadinApplication> applications = Collections
+			.synchronizedMap(new HashMap<String, VaadinApplication>());
 	private Map<String, ServiceRegistration<IVaadinApplication>> registrations = Collections
 			.synchronizedMap(new HashMap<String, ServiceRegistration<IVaadinApplication>>());
 
 	private int lastServiceId = 0;
 	private ComponentContext context;
 
-	private final Map<ComponentFactory, OSGiUIProvider> providerMapping = new HashMap<ComponentFactory, OSGiUIProvider>();
+	private List<IOSGiUiProviderFactory> providerFactories = new CopyOnWriteArrayList<IOSGiUiProviderFactory>();
+	private List<UiFactoryWrapper> uiFactories = new CopyOnWriteArrayList<UiFactoryWrapper>();
 
 	/**
 	 * Called by OSGi-DS.
@@ -85,6 +89,15 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 		logger.debug("{} stopped", getName());
 	}
 
+	/**
+	 * Returns true, if the factory is active.
+	 * 
+	 * @return
+	 */
+	protected boolean isActive() {
+		return context != null;
+	}
+
 	@Override
 	public String getName() {
 		return "IVaadinApplication Factory";
@@ -99,8 +112,7 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 
 		try {
 			accessLock.lock();
-			VaadinApplication application = (VaadinApplication) applications
-					.get(pid);
+			VaadinApplication application = applications.get(pid);
 			if (application == null) {
 				application = new VaadinApplication(
 						Integer.toString(++lastServiceId),
@@ -144,16 +156,10 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 			application.setUIAlias(uialias);
 			application.setProductionMode(productionMode);
 
-			// add the UI provider
-			for (OSGiUIProvider uiProvider : providerMapping.values()) {
-				if (uiProvider.getVaadinApplication() == null) {
-					application.addUIProvider(uiProvider);
-				} else {
-					if (uiProvider.getVaadinApplication().equals(
-							application.getName())) {
-						application.addUIProvider(uiProvider);
-					}
-				}
+			// create and set the UI provider to the application
+			OSGiUIProvider provider = createUIProvider(application.getName());
+			if (provider != null) {
+				application.addUIProvider(provider);
 			}
 
 			Dictionary<String, Object> copyProps = copy(properties);
@@ -187,6 +193,36 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 		} finally {
 			accessLock.unlock();
 		}
+	}
+
+	/**
+	 * Creates the UI provider for the given application name.
+	 * 
+	 * @param applicationName
+	 * @return
+	 */
+	protected OSGiUIProvider createUIProvider(String applicationName) {
+
+		// iterate all the factories with match application name
+		OSGiUIProvider provider = null;
+		for (UiFactoryWrapper factory : uiFactories) {
+			if (applicationName.equals(factory.vaadinApplication)) {
+				provider = factory.createProvider();
+				break;
+			}
+		}
+
+		// if no UI provider was found, try to find a factory with empty
+		// application name
+		if (provider == null) {
+			for (UiFactoryWrapper factory : uiFactories) {
+				if (factory.vaadinApplication == null) {
+					provider = factory.createProvider();
+					break;
+				}
+			}
+		}
+		return provider;
 	}
 
 	/**
@@ -237,22 +273,38 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 	}
 
 	/**
+	 * Adds the OSGi UI provider factory.
+	 * 
+	 * @param providerFactory
+	 */
+	protected void addUIProviderFactory(IOSGiUiProviderFactory providerFactory) {
+		providerFactories.add(providerFactory);
+	}
+
+	/**
+	 * Removes the OSGi UI provider factory.
+	 * 
+	 * @param providerFactory
+	 */
+	protected void removeUIProviderFactory(
+			IOSGiUiProviderFactory providerFactory) {
+		providerFactories.remove(providerFactory);
+	}
+
+	/**
 	 * Called by OSGi-DS and adds a component factory that is used to create
 	 * instances of UIs.
 	 * 
 	 * @param reference
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addUIFactory(ServiceReference<ComponentFactory> reference) {
-
-		System.out.println("Adding ui factory");
 		try {
-			logger.debug("Adding ui factory");
-
 			accessLock.lock();
 
-			ComponentFactory factory = reference.getBundle().getBundleContext()
-					.getService(reference);
+			logger.debug("Adding ui factory");
+
+			// parse the target of service
+			//
 			String name = (String) reference.getProperty("component.factory");
 			String[] tokens = name.split("/");
 			if (tokens.length != 2) {
@@ -262,31 +314,22 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 				return;
 			}
 
-			String className;
+			String uiClassName;
 			String vaadinApplication;
 			String[] innerTokens = tokens[1].split("@");
 			if (innerTokens.length == 1) {
-				className = innerTokens[0];
+				uiClassName = innerTokens[0];
 				vaadinApplication = null;
 			} else {
-				className = innerTokens[0];
+				uiClassName = innerTokens[0];
 				vaadinApplication = innerTokens[1];
 			}
 
-			OSGiUIProvider uiProvider = null;
-			try {
-				uiProvider = new OSGiUIProvider(factory,
-						(Class<? extends UI>) reference.getBundle().loadClass(
-								className), vaadinApplication);
-			} catch (ClassNotFoundException e) {
-				throw new IllegalStateException(e);
-			}
-			if (uiProvider != null) {
-				providerMapping.put(factory, uiProvider);
-			}
+			// register factory internally
+			//
+			uiFactories.add(new UiFactoryWrapper(vaadinApplication,
+					uiClassName, reference));
 
-			// handle added ui provider
-			uiProviderAdded(uiProvider);
 		} finally {
 			accessLock.unlock();
 		}
@@ -302,10 +345,8 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 			Map<String, Object> properties) {
 		try {
 			accessLock.lock();
-
-			OSGiUIProvider uiProvider = providerMapping.remove(factory);
-			if (uiProvider != null) {
-				uiProviderRemoved(uiProvider);
+			for (VaadinApplication application : applications.values()) {
+				application.removeUIProviderForFactory(factory);
 			}
 		} finally {
 			accessLock.unlock();
@@ -336,18 +377,59 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 	}
 
 	/**
-	 * Remove UI provider from the web application.
-	 * 
-	 * @param uiProvider
+	 * A wrapper class to keep information about pending factory. Pending means
+	 * that the service was not activated yet.
 	 */
-	private void uiProviderRemoved(OSGiUIProvider uiProvider) {
-		try {
-			accessLock.lock();
-			for (IVaadinApplication application : applications.values()) {
-				application.removeUIProvider(uiProvider);
+	private class UiFactoryWrapper {
+
+		private final String vaadinApplication;
+		private final ServiceReference<ComponentFactory> reference;
+		private final String uiClassName;
+
+		public UiFactoryWrapper(String vaadinApplication, String uiClassName,
+				ServiceReference<ComponentFactory> reference) {
+			super();
+			this.vaadinApplication = vaadinApplication;
+			this.uiClassName = uiClassName;
+			this.reference = reference;
+		}
+
+		@SuppressWarnings("unchecked")
+		public OSGiUIProvider createProvider() {
+			ComponentFactory uiFactory = reference.getBundle()
+					.getBundleContext().getService(reference);
+
+			Class<? extends UI> uiClass = null;
+			try {
+				uiClass = (Class<? extends UI>) reference.getBundle()
+						.loadClass(uiClassName);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException(e);
 			}
-		} finally {
-			accessLock.unlock();
+
+			// iterates all UI provider factories to find a proper UI provider
+			OSGiUIProvider uiProvider = null;
+			for (IOSGiUiProviderFactory providerFactory : providerFactories) {
+				uiProvider = providerFactory.createUiProvider(
+						vaadinApplication, uiClass);
+				if (uiProvider == null) {
+					continue;
+				}
+				uiProvider.setUIFactory(uiFactory);
+				break;
+			}
+
+			// If no provider was found for the given vaadin application, then
+			// add a default one
+			if (uiProvider == null) {
+				uiProvider = new OSGiUIProvider(vaadinApplication, uiClass);
+				uiProvider.setUIFactory(uiFactory);
+			}
+
+			// handle added UI provider
+			uiProviderAdded(uiProvider);
+
+			return uiProvider;
 		}
 	}
 }

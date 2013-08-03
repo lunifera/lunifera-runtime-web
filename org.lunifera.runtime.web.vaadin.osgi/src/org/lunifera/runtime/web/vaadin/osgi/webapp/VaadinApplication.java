@@ -15,6 +15,7 @@ package org.lunifera.runtime.web.vaadin.osgi.webapp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -34,6 +35,7 @@ import org.lunifera.runtime.web.vaadin.osgi.servlet.WebResourcesHttpContext;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.ComponentFactory;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
@@ -65,7 +67,7 @@ public class VaadinApplication implements IVaadinApplication {
 	private boolean productionMode;
 	private String httpApplication = "";
 
-	private List<UIProvider> uiProviders = new ArrayList<UIProvider>(1);
+	private List<OSGiUIProvider> uiProviders = new ArrayList<OSGiUIProvider>(1);
 	private ExtendedHttpService httpService;
 
 	// lifecycle
@@ -165,9 +167,10 @@ public class VaadinApplication implements IVaadinApplication {
 	public boolean isProductionMode() {
 		return productionMode;
 	}
-	
+
 	/**
-	 * @param productionMode the productionMode to set
+	 * @param productionMode
+	 *            the productionMode to set
 	 */
 	protected void setProductionMode(boolean productionMode) {
 		this.productionMode = productionMode;
@@ -196,7 +199,7 @@ public class VaadinApplication implements IVaadinApplication {
 			logger.debug("HttpApplication {} is already started", getName());
 			return;
 		}
-		
+
 		// ensure that only one threas manipulates the contents
 		accessLock.lock();
 		try {
@@ -318,8 +321,7 @@ public class VaadinApplication implements IVaadinApplication {
 		properties.put(VaadinConstants.WIDGETSET, getWidgetSetName());
 		properties.put("widgetset", getWidgetSetName());
 		properties.put("productionMode", Boolean.toString(isProductionMode()));
-		
-		
+
 		servlet = new VaadinOSGiServlet(this);
 		servletAlias = String.format("/%s", getUIAlias());
 		defaultContext = new WebResourcesHttpContext(Activator
@@ -480,7 +482,7 @@ public class VaadinApplication implements IVaadinApplication {
 	 * 
 	 * @param provider
 	 */
-	public void addUIProvider(UIProvider provider) {
+	public void addUIProvider(OSGiUIProvider provider) {
 		if (!uiProviders.contains(provider)) {
 			uiProviders.add(provider);
 		}
@@ -491,12 +493,27 @@ public class VaadinApplication implements IVaadinApplication {
 	 * 
 	 * @param provider
 	 */
-	public void removeUIProvider(UIProvider provider) {
+	public void removeUIProvider(OSGiUIProvider provider) {
 		uiProviders.remove(provider);
 	}
 
+	/**
+	 * Removes an {@link UIProvider} for the given component factory that is used created UI instances.
+	 * 
+	 * @param uiFactory
+	 */
+	protected void removeUIProviderForFactory(ComponentFactory uiFactory) {
+		for (Iterator<OSGiUIProvider> iterator = uiProviders.iterator(); iterator
+				.hasNext();) {
+			OSGiUIProvider provider = (OSGiUIProvider) iterator.next();
+			if (provider.getUIFactory() == uiFactory) {
+				iterator.remove();
+			}
+		}
+	}
+
 	@Override
-	public List<UIProvider> getUiProviders() {
+	public List<OSGiUIProvider> getUiProviders() {
 		return Collections.unmodifiableList(uiProviders);
 	}
 
