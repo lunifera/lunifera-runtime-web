@@ -333,19 +333,18 @@ For some reasons it is not enough to use the default OSGiUiProvider. Maybe you a
 your own UIProvider to influence the creation of themes and so on.
 
 Lunifera provides a service called code[org.lunifera.runtime.web.vaadin.osgi.common.IOSGiUiProviderFactory].
-I can be provided as an OSGi service and will be hooked up by the code[VaadinApplicationFactory].
+It must be provided as an OSGi service and will be hooked up by the code[VaadinApplicationFactory].
 
-code[Java][ 
+code[Java][
 public class UiProviderFactory implements IOSGiUiProviderFactory {
 
-	@Override
 	public CustomOSGiUiProvider createUiProvider(String vaadinApplication,
 			Class<? extends UI> uiClass) {
-		if (vaadinApplication != null
+			if (vaadinApplication != null
 				&& vaadinApplication.equals("Carstore-Web")) {
-			return new CarstoreUIProvider(vaadinApplication, uiClass);
-		}
-		return null;
+				return new CarstoreUIProvider(vaadinApplication, uiClass);
+			}
+	 	return null;
 	}
 }
 ]
@@ -353,7 +352,7 @@ public class UiProviderFactory implements IOSGiUiProviderFactory {
 The code above shows how simple it is to provide a custom UIProvider for a given vaadinApplication and
 uiClass.
 
-It also requires an OSGI service that will register the factory at the OSGi service registry.
+It also requires an OSGI component definition (DS) to register the factory at the OSGi service registry.
 
 Use following snippet and adjust it to your needs to provide the service:
 code[ 
