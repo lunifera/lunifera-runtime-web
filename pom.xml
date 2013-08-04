@@ -40,9 +40,6 @@
 				<module>org.lunifera.runtime.web.p2</module>
 				<module>org.lunifera.runtime.web.parent</module>
 
-				<module>org.lunifera.runtime.web.common</module>
-				<module>org.lunifera.runtime.web.common.tests</module>
-
 				<module>org.lunifera.runtime.web.http</module>
 				<module>org.lunifera.runtime.web.http.tests</module>
 
@@ -60,18 +57,12 @@
 				<module>org.lunifera.runtime.web.vaadin.databinding</module>
 				<module>org.lunifera.runtime.web.vaadin.databinding.tests</module>
 				
-				<module>org.lunifera.runtime.web.testbase</module>
-				
 				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.databinding</module>
-
-				<module>org.lunifera.runtime.web.feature.ecview.presentation.vaadin</module>
-
-				<module>org.lunifera.runtime.web.feature.testbase</module>
-
 				<module>org.lunifera.runtime.web.feature.vaadin.osgi</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.addon.osgi</module>
+				<module>org.lunifera.runtime.web.feature.ecview.presentation.vaadin</module>
 
 				<module>org.lunifera.runtime.web.feature.http</module>
 				<module>org.lunifera.runtime.web.feature.jetty</module>

@@ -19,8 +19,14 @@
 
    <requires>
       <import feature="org.lunifera.runtime.web.feature.vaadin.common" version="0.0.1.qualifier"/>
-      <import feature="org.lunifera.runtime.web.feature.vaadin.osgi" version="0.0.1.qualifier"/>
       <import feature="org.lunifera.runtime.feature.common" version="0.0.1.qualifier"/>
    </requires>
+
+   <plugin
+         id="org.lunifera.runtime.web.vaadin.osgi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

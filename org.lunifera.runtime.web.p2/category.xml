@@ -42,12 +42,6 @@
    <feature id="org.lunifera.runtime.web.feature.ecview.presentation.vaadin.source" version="0.0.0">
       <category name="lunifera-web-features"/>
    </feature>
-   <feature id="org.lunifera.runtime.web.feature.testbase" version="0.0.0">
-      <category name="lunifera-web-features"/>
-   </feature>
-   <feature id="org.lunifera.runtime.web.feature.testbase.source" version="0.0.0">
-      <category name="lunifera-web-features"/>
-   </feature>
    <category-def name="lunifera-web-features" label="Lunifera Web Features"/>
    <category-def name="lunifera-web-vaadin-addons" label="lunifera Web Vaadin Addons"/>
 </site>

@@ -17,10 +17,6 @@
       %license
    </license>
 
-   <requires>
-      <import feature="org.lunifera.dependencies.feature.vaadin.addon.icepush" version="0.5.5"/>
-   </requires>
-
    <plugin
          id="org.lunifera.runtime.web.vaadin.osgi"
          download-size="0"
