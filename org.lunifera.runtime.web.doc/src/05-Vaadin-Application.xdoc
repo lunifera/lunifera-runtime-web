@@ -267,7 +267,9 @@ to control its lifecycle and to added UI-Providers. It is not possible to change
 
 section2:_UIProvider[UI-Provider]
 
-As described above the service allows to add UI-Providers. For normal UI-Providers are provided by the
+As described above the service allows to add UI-Providers. By default the UIProvider is of type OSGiUIProvider.
+In the lowser section ref:_IOSGiUiProviderFactory[UiProviderFactory] a service will be defined to provide your very own providers
+for vaadin applications or UI-classes. For normal UI-Providers are provided by the
 core implementation of the Vaadin-Application. They are used to create instances of code[com.vaadin.ui.UI]
 which are the root UI-elements of each browser tab. In vaadin 7 each browser window or tab is based on
 an UI-instance.
@@ -324,3 +326,45 @@ code[
    <implementation class="org.lunifera.example.carstore.ui.UI"/>
 </scr:component>
 ]
+
+section2:_IOSGiUiProviderFactory[UiProviderFactory]
+
+For some reasons it is not enough to use the default OSGiUiProvider. Maybe you are interested in writing
+your own UIProvider to influence the creation of themes and so on.
+
+Lunifera provides a service called code[org.lunifera.runtime.web.vaadin.osgi.common.IOSGiUiProviderFactory].
+I can be provided as an OSGi service and will be hooked up by the code[VaadinApplicationFactory].
+
+code[Java][ 
+public class UiProviderFactory implements IOSGiUiProviderFactory {
+
+	@Override
+	public CustomOSGiUiProvider createUiProvider(String vaadinApplication,
+			Class<? extends UI> uiClass) {
+		if (vaadinApplication != null
+				&& vaadinApplication.equals("Carstore-Web")) {
+			return new CarstoreUIProvider(vaadinApplication, uiClass);
+		}
+		return null;
+	}
+}
+]
+
+The code above shows how simple it is to provide a custom UIProvider for a given vaadinApplication and
+uiClass.
+
+It also requires an OSGI service that will register the factory at the OSGi service registry.
+
+Use following snippet and adjust it to your needs to provide the service:
+code[ 
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lunifera.carstore.ui.uiproviderfactory">
+   <implementation class="org.lunifera.carstore.ui.CarstoreUIProvider"/>
+   <service>
+      <provide interface="org.lunifera.runtime.web.vaadin.osgi.common.IOSGiUiProviderFactory"/>
+   </service>
+</scr:component>
+]
+An example can be found at link[https://github.com/lunifera/lunifera-vaadin-examples/tree/master/org.lunifera.example.vaadin.osgi/org.lunifera.example.vaadin.lunifera.uiprovider][UIProviderExample].
+Use it with the code[org.lunifera.example.vaadin.lunifera.standalone] configurations. The code[org.lunifera.example.vaadin.lunifera.uiprovider]
+is just an addon for code[org.lunifera.example.vaadin.lunifera.standalone].
