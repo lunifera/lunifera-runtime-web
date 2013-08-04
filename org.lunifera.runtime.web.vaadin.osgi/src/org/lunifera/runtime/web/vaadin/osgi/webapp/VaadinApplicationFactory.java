@@ -203,21 +203,21 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 	 */
 	protected OSGiUIProvider createUIProvider(String applicationName) {
 
-		// iterate all the factories with match application name
+		// iterate all the factories with match application name filter
 		OSGiUIProvider provider = null;
 		for (UiFactoryWrapper factory : uiFactories) {
-			if (applicationName.equals(factory.vaadinApplication)) {
-				provider = factory.createProvider();
+			if (applicationName.equals(factory.vaadinApplicationFilter)) {
+				provider = factory.createProvider(applicationName);
 				break;
 			}
 		}
 
 		// if no UI provider was found, try to find a factory with empty
-		// application name
+		// application name filter
 		if (provider == null) {
 			for (UiFactoryWrapper factory : uiFactories) {
-				if (factory.vaadinApplication == null) {
-					provider = factory.createProvider();
+				if (factory.vaadinApplicationFilter == null) {
+					provider = factory.createProvider(applicationName);
 					break;
 				}
 			}
@@ -382,20 +382,25 @@ public class VaadinApplicationFactory implements ManagedServiceFactory {
 	 */
 	private class UiFactoryWrapper {
 
-		private final String vaadinApplication;
+		private final String vaadinApplicationFilter;
 		private final ServiceReference<ComponentFactory> reference;
 		private final String uiClassName;
 
-		public UiFactoryWrapper(String vaadinApplication, String uiClassName,
-				ServiceReference<ComponentFactory> reference) {
+		public UiFactoryWrapper(String vaadinApplicationFilter,
+				String uiClassName, ServiceReference<ComponentFactory> reference) {
 			super();
-			this.vaadinApplication = vaadinApplication;
+			this.vaadinApplicationFilter = vaadinApplicationFilter;
 			this.uiClassName = uiClassName;
 			this.reference = reference;
 		}
 
 		@SuppressWarnings("unchecked")
-		public OSGiUIProvider createProvider() {
+		public OSGiUIProvider createProvider(String vaadinApplication) {
+			if (vaadinApplicationFilter != null
+					&& !vaadinApplicationFilter.equals(vaadinApplication)) {
+				return null;
+			}
+
 			ComponentFactory uiFactory = reference.getBundle()
 					.getBundleContext().getService(reference);
 
