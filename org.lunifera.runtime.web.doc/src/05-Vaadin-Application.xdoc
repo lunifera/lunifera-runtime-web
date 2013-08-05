@@ -358,7 +358,7 @@ Use following snippet and adjust it to your needs to provide the service:
 code[ 
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lunifera.carstore.ui.uiproviderfactory">
-   <implementation class="org.lunifera.carstore.ui.CarstoreUIProvider"/>
+   <implementation class="org.lunifera.carstore.ui.UiProviderFactory"/>
    <service>
       <provide interface="org.lunifera.runtime.web.vaadin.osgi.common.IOSGiUiProviderFactory"/>
    </service>
