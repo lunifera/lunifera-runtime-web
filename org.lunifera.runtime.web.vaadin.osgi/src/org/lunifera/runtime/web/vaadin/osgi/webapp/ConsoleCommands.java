@@ -129,7 +129,7 @@ public class ConsoleCommands implements CommandProvider {
 	 */
 	private void printFilterProperties(CommandInterpreter ci) {
 		ci.println("\t---- Available OSGi properties ----");
-		ci.println("\t" + VaadinConstants.APPLICATION_ID);
+		ci.println("\t" + VaadinConstants.EXTERNAL_PID);
 		ci.println("\t" + VaadinConstants.APPLICATION_NAME);
 		ci.println("\t" + VaadinConstants.UI_ALIAS);
 		ci.println("\t" + VaadinConstants.WIDGETSET);
@@ -206,9 +206,9 @@ public class ConsoleCommands implements CommandProvider {
 		IVaadinApplication application = null;
 		try {
 			Collection<ServiceReference<IVaadinApplication>> refs = bundleContext
-					.getServiceReferences(IVaadinApplication.class, String
-							.format("(%s=%s)", VaadinConstants.APPLICATION_ID,
-									id));
+					.getServiceReferences(IVaadinApplication.class,
+							String.format("(%s=%s)",
+									VaadinConstants.EXTERNAL_PID, id));
 			if (refs.size() == 1) {
 				application = bundleContext.getService(refs.iterator().next());
 			}
@@ -228,9 +228,9 @@ public class ConsoleCommands implements CommandProvider {
 		String pid = null;
 		try {
 			Collection<ServiceReference<IVaadinApplication>> refs = bundleContext
-					.getServiceReferences(IVaadinApplication.class, String
-							.format("(%s=%s)", VaadinConstants.APPLICATION_ID,
-									id));
+					.getServiceReferences(IVaadinApplication.class,
+							String.format("(%s=%s)",
+									VaadinConstants.EXTERNAL_PID, id));
 			if (refs.size() == 1) {
 				pid = (String) refs.iterator().next()
 						.getProperty(Constants.SERVICE_PID);

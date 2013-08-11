@@ -81,26 +81,18 @@ public interface IVaadinApplication {
 	List<OSGiUIProvider> getUiProviders();
 
 	/**
-	 * Is called to add an UI provider. Can be called twice with the same
-	 * instance. Handle that issue internal.
-	 * 
-	 * @param uiProvider
-	 */
-	void addUIProvider(OSGiUIProvider uiProvider);
-
-	/**
-	 * Is called to remove an ui provider.
-	 * 
-	 * @param uiProvider
-	 */
-	void removeUIProvider(OSGiUIProvider remove);
-
-	/**
 	 * Returns true, if the application is started.
 	 * 
 	 * @return
 	 */
 	boolean isStarted();
+
+	/**
+	 * Returns true, if the application is deployed to a servlet container.
+	 * 
+	 * @return
+	 */
+	boolean isDeployed();
 
 	/**
 	 * Starts the application. All required servlets, resources and filters will
@@ -113,10 +105,5 @@ public interface IVaadinApplication {
 	 * unregistered at the http service.
 	 */
 	void stop();
-
-	/**
-	 * Destroys the application and prepares it for garbage collection.
-	 */
-	void destroy();
 
 }

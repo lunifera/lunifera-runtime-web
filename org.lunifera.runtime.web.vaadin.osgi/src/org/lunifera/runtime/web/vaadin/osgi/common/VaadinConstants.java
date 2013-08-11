@@ -22,10 +22,10 @@ public class VaadinConstants {
 	public static final String OSGI__FACTORY_PID = "lunifera.vaadin.application.factory";
 
 	/**
-	 * Property for the id of the http application.
+	 * Property for the external PID of vaadin application.
 	 */
-	public static final String APPLICATION_ID = "lunifera.web.vaadin.id";
-
+	public static final String EXTERNAL_PID = "lunifera.externalPid";
+	
 	/**
 	 * Property for the name of a {@link IHttpApplication}.
 	 */

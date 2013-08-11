@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.lunifera.runtime.web.vaadin.osgi">
-   <implementation class="org.lunifera.runtime.web.vaadin.osgi.webapp.VaadinApplicationFactory"/>
-   <service>
-      <provide interface="org.osgi.service.cm.ManagedServiceFactory"/>
-   </service>
-   <property name="service.pid" type="String" value="lunifera.vaadin.application.factory"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" configuration-policy="require" immediate="true" name="lunifera.vaadin.application.factory">
+   <implementation class="org.lunifera.runtime.web.vaadin.osgi.webapp.VaadinApplication"/>
    <reference bind="addUIFactory" cardinality="0..n" interface="org.osgi.service.component.ComponentFactory" name="ComponentFactory" policy="dynamic" target="(component.factory=org.lunifera.web.vaadin.UI/*)" unbind="removeUIFactory"/>
    <reference bind="addUIProviderFactory" cardinality="0..n" interface="org.lunifera.runtime.web.vaadin.osgi.common.IOSGiUiProviderFactory" name="IOSGiUiProviderFactory" policy="dynamic" unbind="removeUIProviderFactory"/>
+   <service>
+      <provide interface="org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication"/>
+   </service>
 </scr:component>

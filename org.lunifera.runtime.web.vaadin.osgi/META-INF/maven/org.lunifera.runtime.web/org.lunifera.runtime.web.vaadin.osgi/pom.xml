@@ -19,5 +19,4 @@
 	</parent>
 	<artifactId>org.lunifera.runtime.web.vaadin.osgi</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>0.7.1-SNAPSHOT</version>
 </project>

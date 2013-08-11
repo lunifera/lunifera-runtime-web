@@ -7,11 +7,11 @@ import com.vaadin.ui.UI;
 /**
  * The base class for customer ui provider implementation.
  */
+@SuppressWarnings("serial")
 public abstract class CustomOSGiUiProvider extends OSGiUIProvider {
 
 	public CustomOSGiUiProvider(String vaadinApplication,
 			Class<? extends UI> uiClass) {
 		super(vaadinApplication, uiClass);
 	}
-
 }
