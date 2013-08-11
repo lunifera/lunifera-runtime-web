@@ -67,23 +67,9 @@
 				<module>org.lunifera.runtime.web.feature.http</module>
 				<module>org.lunifera.runtime.web.feature.jetty</module>
 
-				<module>org.lunifera.runtime.web.doc</module>
-
 				<!-- <module>org.lunifera.runtime.web.ecview.presentation.vaadin</module> -->
 				<!-- <module>org.lunifera.runtime.web.ecview.presentation.vaadin.tests</module> -->
 				<!-- <module>org.lunifera.runtime.web.feature.ecview.presentation.vaadin</module> -->
-			</modules>
-		</profile>
-		<profile>
-			<id>lunifera.build.documentation</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<defaultGoal>clean verify</defaultGoal>
-			</build>
-			<modules>
-				<module>org.lunifera.runtime.web.doc</module>
 			</modules>
 		</profile>
 	</profiles>

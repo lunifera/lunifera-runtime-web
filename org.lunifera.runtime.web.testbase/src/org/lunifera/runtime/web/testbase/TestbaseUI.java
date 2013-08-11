@@ -79,11 +79,11 @@ public class TestbaseUI extends UI {
 	protected void initializeParts() {
 		for (Bundle bundle : Activator.getTestBaseBundles()) {
 			BundleWiring wiring = bundle.adapt(BundleWiring.class);
-			for (String name : wiring.listResources("/", "*.class",
+			for (String name : wiring.listResources("target/classes/", "*.class",
 					BundleWiring.FINDENTRIES_RECURSE)) {
 				try {
-					Class<?> clazz = bundle.loadClass(name);
-					if (clazz.isAssignableFrom(ITestPart.class)
+					Class<?> clazz = bundle.loadClass(name.replace("target/classes/", "").replace("/", ".").replace(".class", ""));
+					if (ITestPart.class.isAssignableFrom(clazz)
 							&& clazz.isAnnotationPresent(Testable.class)) {
 						Testable annotation = clazz
 								.getAnnotation(Testable.class);

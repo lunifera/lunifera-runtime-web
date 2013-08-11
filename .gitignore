@@ -18,3 +18,5 @@ plugin.xml_gen
 .project
 /build.runtime-web.kepler.latest.log.properties
 **/log
+**/org.lunifera.runtime.web.doc/contents/
+**/org.lunifera.runtime.web.doc/website/
