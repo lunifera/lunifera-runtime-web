@@ -10,9 +10,12 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
-import java.util.Iterator;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.Assert;
+import java.util.Iterator;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -86,12 +89,12 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
-		Assert.assertTrue(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 
 		yGridlayout.getElements().remove(yText);
-		Assert.assertFalse(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertFalse(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 	}
 
 	/**
@@ -122,7 +125,7 @@ public class TextFieldPresentationTests {
 				.getWidget();
 
 		TextField text = (TextField) unwrapText(baseComponentContainer);
-		Assert.assertEquals(1, baseComponentContainer.getComponentCount());
+		assertEquals(1, baseComponentContainer.getComponentCount());
 
 		// assert layout
 		CssLayout layout = (CssLayout) baseComponentContainer;
@@ -170,21 +173,21 @@ public class TextFieldPresentationTests {
 		TextField text2 = (TextField) unwrapText(text2BaseComponentContainer);
 
 		// assert css class
-		Assert.assertTrue(text1BaseComponentContainer.getStyleName().contains(
+		assertTrue(text1BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
-		Assert.assertTrue(text2BaseComponentContainer.getStyleName().contains(
+		assertTrue(text2BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
 
-		Assert.assertTrue(text1.getStyleName().contains("anyOtherClass"));
-		Assert.assertTrue(text2.getStyleName().contains(
+		assertTrue(text1.getStyleName().contains("anyOtherClass"));
+		assertTrue(text2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
 
 		// assert css id
-		Assert.assertEquals("ID_0815", text1BaseComponentContainer.getId());
-		Assert.assertNull(text1.getId());
-		Assert.assertEquals(text2Editpart.getId(),
+		assertEquals("ID_0815", text1BaseComponentContainer.getId());
+		assertNull(text1.getId());
+		assertEquals(text2Editpart.getId(),
 				text2BaseComponentContainer.getId());
-		Assert.assertNull(text2.getId());
+		assertNull(text2.getId());
 	}
 	
 	/**
@@ -227,26 +230,26 @@ public class TextFieldPresentationTests {
 
 		// start tests
 		//
-		Assert.assertTrue(text1.isVisible());
-		Assert.assertTrue(text1.isEnabled());
-		Assert.assertFalse(text1.isReadOnly());
+		assertTrue(text1.isVisible());
+		assertTrue(text1.isEnabled());
+		assertFalse(text1.isReadOnly());
 		
-		Assert.assertTrue(text2.isVisible());
-		Assert.assertTrue(text2.isEnabled());
-		Assert.assertFalse(text2.isReadOnly());
+		assertTrue(text2.isVisible());
+		assertTrue(text2.isEnabled());
+		assertFalse(text2.isReadOnly());
 		
 		yText1.setVisible(false);
-		Assert.assertFalse(text1.isVisible());
+		assertFalse(text1.isVisible());
 		
 		yText1.setEnabled(false);
-		Assert.assertFalse(text1.isEnabled());
+		assertFalse(text1.isEnabled());
 		
 		yText1.setEditable(false);
-		Assert.assertTrue(text1.isReadOnly());
+		assertTrue(text1.isReadOnly());
 		
 		// target to model
 		text1.setReadOnly(false);
-		Assert.assertTrue(yText1.isEditable());
+		assertTrue(yText1.isEditable());
 		
 	}
 
@@ -272,13 +275,14 @@ public class TextFieldPresentationTests {
 	 *            model element
 	 * @return component
 	 */
+	@SuppressWarnings("unchecked")
 	protected Component getComponent(YElement yView) {
 		IElementEditpart editpart = DelegatingEditPartManager.getInstance()
 				.getEditpart(yView);
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

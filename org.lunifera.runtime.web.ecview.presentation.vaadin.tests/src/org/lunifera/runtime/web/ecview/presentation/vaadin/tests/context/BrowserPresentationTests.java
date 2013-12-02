@@ -10,12 +10,12 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
-import java.util.Iterator;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Iterator;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -24,29 +24,29 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YBrowser;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ButtonPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
+import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 
 /**
- * Tests the {@link ButtonPresentation}.
+ * Tests the {@link TextFieldPresentation}.
  */
 @SuppressWarnings("restriction")
-public class ButtonPresentationTests {
+public class BrowserPresentationTests {
 
 	private SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 	private CssLayout rootLayout = new CssLayout();
@@ -75,24 +75,24 @@ public class ButtonPresentationTests {
 		// build the view model
 		// ...> yView
 		// ......> yGridLayout
-		// .........> yButton
+		// .........> yBrowser
 		YView yView = factory.createView();
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
-		YButton yButton = factory.createButton();
-		yGridlayout.getElements().add(yButton);
+		YBrowser yBrowser = factory.createBrowser();
+		yGridlayout.getElements().add(yBrowser);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IButtonEditpart buttonEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton);
-		IWidgetPresentation<Component> presentation = buttonEditpart
+		IBrowserEditpart textEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yBrowser);
+		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 
-		yGridlayout.getElements().remove(yButton);
+		yGridlayout.getElements().remove(yBrowser);
 		assertFalse(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 	}
@@ -109,22 +109,22 @@ public class ButtonPresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yButton
+		// ......> yBrowser
 		YView yView = factory.createView();
-		YButton yButton = factory.createButton();
-		yView.setContent(yButton);
+		YBrowser yBrowser = factory.createBrowser();
+		yView.setContent(yBrowser);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IButtonEditpart buttonEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton);
-		IWidgetPresentation<Component> presentation = buttonEditpart
+		IBrowserEditpart textEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yBrowser);
+		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
 
-		Button button = (Button) unwrapButton(baseComponentContainer);
+		BrowserFrame text = (BrowserFrame) unwrapText(baseComponentContainer);
 		assertEquals(1, baseComponentContainer.getComponentCount());
 
 		// assert layout
@@ -142,54 +142,53 @@ public class ButtonPresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yButton
+		// ......> yBrowser
 		YView yView = factory.createView();
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
-		YButton yButton1 = factory.createButton();
-		yButton1.setCssID("ID_0815");
-		yButton1.setCssClass("anyOtherClass");
-		yLayout.getElements().add(yButton1);
-		YButton yButton2 = factory.createButton();
-		yLayout.getElements().add(yButton2);
+		YBrowser yBrowser1 = factory.createBrowser();
+		yBrowser1.setCssID("ID_0815");
+		yBrowser1.setCssClass("anyOtherClass");
+		yLayout.getElements().add(yBrowser1);
+		YBrowser yBrowser2 = factory.createBrowser();
+		yLayout.getElements().add(yBrowser2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IButtonEditpart button1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton1);
-		IButtonEditpart button2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton2);
-		IWidgetPresentation<Component> button1Presentation = button1Editpart
+		IBrowserEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yBrowser1);
+		IBrowserEditpart text2Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yBrowser2);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		IWidgetPresentation<Component> button2Presentation = button2Editpart
+		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer button1BaseComponentContainer = (ComponentContainer) button1Presentation
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
 				.getWidget();
-		ComponentContainer button2BaseComponentContainer = (ComponentContainer) button2Presentation
+		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
 				.getWidget();
 
-		Button button1 = (Button) unwrapButton(button1BaseComponentContainer);
-		Button button2 = (Button) unwrapButton(button2BaseComponentContainer);
+		BrowserFrame text1 = (BrowserFrame) unwrapText(text1BaseComponentContainer);
+		BrowserFrame text2 = (BrowserFrame) unwrapText(text2BaseComponentContainer);
 
 		// assert css class
-		assertTrue(button1BaseComponentContainer.getStyleName().contains(
+		assertTrue(text1BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
-		assertTrue(button2BaseComponentContainer.getStyleName().contains(
+		assertTrue(text2BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
 
-		assertTrue(button1.getStyleName().contains("anyOtherClass"));
-		assertTrue(button2.getStyleName().contains(
+		assertTrue(text1.getStyleName().contains("anyOtherClass"));
+		assertTrue(text2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", button1BaseComponentContainer.getId());
-		assertNull(button1.getId());
-		assertEquals(button2Editpart.getId(),
-				button2BaseComponentContainer.getId());
-		assertNull(button2.getId());
+		assertEquals("ID_0815", text1BaseComponentContainer.getId());
+		assertNull(text1.getId());
+		assertEquals(text2Editpart.getId(), text2BaseComponentContainer.getId());
+		assertNull(text2.getId());
 	}
-	
+
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -201,49 +200,56 @@ public class ButtonPresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yButton
+		// ......> yBrowser
 		YView yView = factory.createView();
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
-		YButton yButton1 = factory.createButton();
-		yLayout.getElements().add(yButton1);
-		YButton yButton2 = factory.createButton();
-		yLayout.getElements().add(yButton2);
+		YBrowser yBrowser1 = factory.createBrowser();
+		yLayout.getElements().add(yBrowser1);
+		YBrowser yBrowser2 = factory.createBrowser();
+		yLayout.getElements().add(yBrowser2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IButtonEditpart button1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton1);
-		IButtonEditpart button2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton2);
-		IWidgetPresentation<Component> button1Presentation = button1Editpart
+		IBrowserEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yBrowser1);
+		IBrowserEditpart text2Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yBrowser2);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		IWidgetPresentation<Component> button2Presentation = button2Editpart
+		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer button1BaseComponentContainer = (ComponentContainer) button1Presentation
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
 				.getWidget();
-		ComponentContainer button2BaseComponentContainer = (ComponentContainer) button2Presentation
+		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
 				.getWidget();
-		Button button1 = (Button) unwrapButton(button1BaseComponentContainer);
-		Button button2 = (Button) unwrapButton(button2BaseComponentContainer);
+		BrowserFrame text1 = (BrowserFrame) unwrapText(text1BaseComponentContainer);
+		BrowserFrame text2 = (BrowserFrame) unwrapText(text2BaseComponentContainer);
 
 		// start tests
 		//
-		assertTrue(button1.isVisible());
-		assertTrue(button1.isEnabled());
-		assertFalse(button1.isReadOnly());
-		
-		assertTrue(button2.isVisible());
-		assertTrue(button2.isEnabled());
-		assertFalse(button2.isReadOnly());
-		
-		yButton1.setVisible(false);
-		assertFalse(button1.isVisible());
-		
-		yButton1.setEnabled(false);
-		assertFalse(button1.isEnabled());
-		
+		assertTrue(text1.isVisible());
+		assertTrue(text1.isEnabled());
+		assertFalse(text1.isReadOnly());
+
+		assertTrue(text2.isVisible());
+		assertTrue(text2.isEnabled());
+		assertFalse(text2.isReadOnly());
+
+		yBrowser1.setVisible(false);
+		assertFalse(text1.isVisible());
+
+		yBrowser1.setEnabled(false);
+		assertFalse(text1.isEnabled());
+
+		yBrowser1.setEditable(false);
+		assertTrue(text1.isReadOnly());
+
+		// target to model
+		text1.setReadOnly(false);
+		assertTrue(yBrowser1.isEditable());
+
 	}
 
 	/**
@@ -252,7 +258,7 @@ public class ButtonPresentationTests {
 	 * @param component
 	 * @return
 	 */
-	private Component unwrapButton(Component component) {
+	private Component unwrapText(Component component) {
 		if (component instanceof ComponentContainer) {
 			ComponentContainer composite = (ComponentContainer) component;
 			Iterator<Component> iter = composite.iterator();
@@ -275,7 +281,8 @@ public class ButtonPresentationTests {
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart)
+					.getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

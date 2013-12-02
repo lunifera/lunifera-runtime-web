@@ -10,7 +10,10 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
 import java.util.Iterator;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -84,12 +87,12 @@ public class ComboBoxPresentationTests {
 				.getInstance().getEditpart(yComboBox);
 		IWidgetPresentation<Component> presentation = comboBoxEditpart
 				.getPresentation();
-		Assert.assertTrue(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 
 		yGridlayout.getElements().remove(yComboBox);
-		Assert.assertFalse(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertFalse(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 	}
 
 	/**
@@ -120,7 +123,7 @@ public class ComboBoxPresentationTests {
 				.getWidget();
 
 		ComboBox comboBox = (ComboBox) unwrapText(baseComponentContainer);
-		Assert.assertEquals(1, baseComponentContainer.getComponentCount());
+		assertEquals(1, baseComponentContainer.getComponentCount());
 
 		// assert layout
 		CssLayout layout = (CssLayout) baseComponentContainer;
@@ -168,21 +171,21 @@ public class ComboBoxPresentationTests {
 		ComboBox comboBox2 = (ComboBox) unwrapText(comboBox2BaseComponentContainer);
 
 		// assert css class
-		Assert.assertTrue(comboBox1BaseComponentContainer.getStyleName().contains(
+		assertTrue(comboBox1BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
-		Assert.assertTrue(comboBox2BaseComponentContainer.getStyleName().contains(
+		assertTrue(comboBox2BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
 
-		Assert.assertTrue(comboBox1.getStyleName().contains("anyOtherClass"));
-		Assert.assertTrue(comboBox2.getStyleName().contains(
+		assertTrue(comboBox1.getStyleName().contains("anyOtherClass"));
+		assertTrue(comboBox2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
 
 		// assert css id
-		Assert.assertEquals("ID_0815", comboBox1BaseComponentContainer.getId());
-		Assert.assertNull(comboBox1.getId());
-		Assert.assertEquals(comboBox2Editpart.getId(),
+		assertEquals("ID_0815", comboBox1BaseComponentContainer.getId());
+		assertNull(comboBox1.getId());
+		assertEquals(comboBox2Editpart.getId(),
 				comboBox2BaseComponentContainer.getId());
-		Assert.assertNull(comboBox2.getId());
+		assertNull(comboBox2.getId());
 	}
 	
 	/**
@@ -225,26 +228,26 @@ public class ComboBoxPresentationTests {
 
 		// start tests
 		//
-		Assert.assertTrue(comboBox1.isVisible());
-		Assert.assertTrue(comboBox1.isEnabled());
-		Assert.assertFalse(comboBox1.isReadOnly());
+		assertTrue(comboBox1.isVisible());
+		assertTrue(comboBox1.isEnabled());
+		assertFalse(comboBox1.isReadOnly());
 		
-		Assert.assertTrue(comboBox2.isVisible());
-		Assert.assertTrue(comboBox2.isEnabled());
-		Assert.assertFalse(comboBox2.isReadOnly());
+		assertTrue(comboBox2.isVisible());
+		assertTrue(comboBox2.isEnabled());
+		assertFalse(comboBox2.isReadOnly());
 		
 		yComboBox1.setVisible(false);
-		Assert.assertFalse(comboBox1.isVisible());
+		assertFalse(comboBox1.isVisible());
 		
 		yComboBox1.setEnabled(false);
-		Assert.assertFalse(comboBox1.isEnabled());
+		assertFalse(comboBox1.isEnabled());
 		
 		yComboBox1.setEditable(false);
-		Assert.assertTrue(comboBox1.isReadOnly());
+		assertTrue(comboBox1.isReadOnly());
 		
 		// target to model
 		comboBox1.setReadOnly(false);
-		Assert.assertTrue(yComboBox1.isEditable());
+		assertTrue(yComboBox1.isEditable());
 		
 	}
 
@@ -270,13 +273,14 @@ public class ComboBoxPresentationTests {
 	 *            model element
 	 * @return component
 	 */
+	@SuppressWarnings("unchecked")
 	protected Component getComponent(YElement yView) {
 		IElementEditpart editpart = DelegatingEditPartManager.getInstance()
 				.getEditpart(yView);
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

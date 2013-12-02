@@ -10,7 +10,10 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
 import java.util.Iterator;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -84,12 +87,12 @@ public class CheckBoxPresentationTests {
 				.getInstance().getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = checkBoxEditpart
 				.getPresentation();
-		Assert.assertTrue(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 
 		yGridlayout.getElements().remove(yCheckBox);
-		Assert.assertFalse(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertFalse(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 	}
 
 	/**
@@ -120,7 +123,7 @@ public class CheckBoxPresentationTests {
 				.getWidget();
 
 		CheckBox checkBox = (CheckBox) unwrapText(baseComponentContainer);
-		Assert.assertEquals(1, baseComponentContainer.getComponentCount());
+		assertEquals(1, baseComponentContainer.getComponentCount());
 
 		// assert layout
 		CssLayout layout = (CssLayout) baseComponentContainer;
@@ -168,21 +171,21 @@ public class CheckBoxPresentationTests {
 		CheckBox checkBox2 = (CheckBox) unwrapText(checkBox2BaseComponentContainer);
 
 		// assert css class
-		Assert.assertTrue(checkBox1BaseComponentContainer.getStyleName().contains(
+		assertTrue(checkBox1BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
-		Assert.assertTrue(checkBox2BaseComponentContainer.getStyleName().contains(
+		assertTrue(checkBox2BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
 
-		Assert.assertTrue(checkBox1.getStyleName().contains("anyOtherClass"));
-		Assert.assertTrue(checkBox2.getStyleName().contains(
+		assertTrue(checkBox1.getStyleName().contains("anyOtherClass"));
+		assertTrue(checkBox2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
 
 		// assert css id
-		Assert.assertEquals("ID_0815", checkBox1BaseComponentContainer.getId());
-		Assert.assertNull(checkBox1.getId());
-		Assert.assertEquals(checkBox2Editpart.getId(),
+		assertEquals("ID_0815", checkBox1BaseComponentContainer.getId());
+		assertNull(checkBox1.getId());
+		assertEquals(checkBox2Editpart.getId(),
 				checkBox2BaseComponentContainer.getId());
-		Assert.assertNull(checkBox2.getId());
+		assertNull(checkBox2.getId());
 	}
 	
 	/**
@@ -225,26 +228,26 @@ public class CheckBoxPresentationTests {
 
 		// start tests
 		//
-		Assert.assertTrue(checkBox1.isVisible());
-		Assert.assertTrue(checkBox1.isEnabled());
-		Assert.assertFalse(checkBox1.isReadOnly());
+		assertTrue(checkBox1.isVisible());
+		assertTrue(checkBox1.isEnabled());
+		assertFalse(checkBox1.isReadOnly());
 		
-		Assert.assertTrue(checkBox2.isVisible());
-		Assert.assertTrue(checkBox2.isEnabled());
-		Assert.assertFalse(checkBox2.isReadOnly());
+		assertTrue(checkBox2.isVisible());
+		assertTrue(checkBox2.isEnabled());
+		assertFalse(checkBox2.isReadOnly());
 		
 		yCheckBox1.setVisible(false);
-		Assert.assertFalse(checkBox1.isVisible());
+		assertFalse(checkBox1.isVisible());
 		
 		yCheckBox1.setEnabled(false);
-		Assert.assertFalse(checkBox1.isEnabled());
+		assertFalse(checkBox1.isEnabled());
 		
 		yCheckBox1.setEditable(false);
-		Assert.assertTrue(checkBox1.isReadOnly());
+		assertTrue(checkBox1.isReadOnly());
 		
 		// target to model
 		checkBox1.setReadOnly(false);
-		Assert.assertTrue(yCheckBox1.isEditable());
+		assertTrue(yCheckBox1.isEditable());
 		
 	}
 
@@ -270,13 +273,14 @@ public class CheckBoxPresentationTests {
 	 *            model element
 	 * @return component
 	 */
+	@SuppressWarnings("unchecked")
 	protected Component getComponent(YElement yView) {
 		IElementEditpart editpart = DelegatingEditPartManager.getInstance()
 				.getEditpart(yView);
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

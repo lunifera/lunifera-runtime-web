@@ -10,7 +10,10 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
 import java.util.Iterator;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -84,12 +87,12 @@ public class TextAreaPresentationTests {
 				.getInstance().getEditpart(yTextArea);
 		IWidgetPresentation<Component> presentation = textAreaEditpart
 				.getPresentation();
-		Assert.assertTrue(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 
 		yGridlayout.getElements().remove(yTextArea);
-		Assert.assertFalse(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertFalse(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 	}
 
 	/**
@@ -120,7 +123,7 @@ public class TextAreaPresentationTests {
 				.getWidget();
 
 		TextArea textArea = (TextArea) unwrapText(baseComponentContainer);
-		Assert.assertEquals(1, baseComponentContainer.getComponentCount());
+		assertEquals(1, baseComponentContainer.getComponentCount());
 
 		// assert layout
 		CssLayout layout = (CssLayout) baseComponentContainer;
@@ -168,21 +171,21 @@ public class TextAreaPresentationTests {
 		TextArea textArea2 = (TextArea) unwrapText(textArea2BaseComponentContainer);
 
 		// assert css class
-		Assert.assertTrue(textArea1BaseComponentContainer.getStyleName().contains(
+		assertTrue(textArea1BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
-		Assert.assertTrue(textArea2BaseComponentContainer.getStyleName().contains(
+		assertTrue(textArea2BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
 
-		Assert.assertTrue(textArea1.getStyleName().contains("anyOtherClass"));
-		Assert.assertTrue(textArea2.getStyleName().contains(
+		assertTrue(textArea1.getStyleName().contains("anyOtherClass"));
+		assertTrue(textArea2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
 
 		// assert css id
-		Assert.assertEquals("ID_0815", textArea1BaseComponentContainer.getId());
-		Assert.assertNull(textArea1.getId());
-		Assert.assertEquals(textArea2Editpart.getId(),
+		assertEquals("ID_0815", textArea1BaseComponentContainer.getId());
+		assertNull(textArea1.getId());
+		assertEquals(textArea2Editpart.getId(),
 				textArea2BaseComponentContainer.getId());
-		Assert.assertNull(textArea2.getId());
+		assertNull(textArea2.getId());
 	}
 	
 	/**
@@ -225,26 +228,26 @@ public class TextAreaPresentationTests {
 
 		// start tests
 		//
-		Assert.assertTrue(textArea1.isVisible());
-		Assert.assertTrue(textArea1.isEnabled());
-		Assert.assertFalse(textArea1.isReadOnly());
+		assertTrue(textArea1.isVisible());
+		assertTrue(textArea1.isEnabled());
+		assertFalse(textArea1.isReadOnly());
 		
-		Assert.assertTrue(textArea2.isVisible());
-		Assert.assertTrue(textArea2.isEnabled());
-		Assert.assertFalse(textArea2.isReadOnly());
+		assertTrue(textArea2.isVisible());
+		assertTrue(textArea2.isEnabled());
+		assertFalse(textArea2.isReadOnly());
 		
 		yTextArea1.setVisible(false);
-		Assert.assertFalse(textArea1.isVisible());
+		assertFalse(textArea1.isVisible());
 		
 		yTextArea1.setEnabled(false);
-		Assert.assertFalse(textArea1.isEnabled());
+		assertFalse(textArea1.isEnabled());
 		
 		yTextArea1.setEditable(false);
-		Assert.assertTrue(textArea1.isReadOnly());
+		assertTrue(textArea1.isReadOnly());
 		
 		// target to model
 		textArea1.setReadOnly(false);
-		Assert.assertTrue(yTextArea1.isEditable());
+		assertTrue(yTextArea1.isEditable());
 		
 	}
 
@@ -270,13 +273,14 @@ public class TextAreaPresentationTests {
 	 *            model element
 	 * @return component
 	 */
+	@SuppressWarnings("unchecked")
 	protected Component getComponent(YElement yView) {
 		IElementEditpart editpart = DelegatingEditPartManager.getInstance()
 				.getEditpart(yView);
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

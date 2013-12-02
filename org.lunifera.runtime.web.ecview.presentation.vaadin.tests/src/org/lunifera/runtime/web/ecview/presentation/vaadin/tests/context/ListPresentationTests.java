@@ -12,7 +12,10 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
 import java.util.Iterator;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -86,12 +89,12 @@ public class ListPresentationTests {
 				.getInstance().getEditpart(yList);
 		IWidgetPresentation<Component> presentation = listEditpart
 				.getPresentation();
-		Assert.assertTrue(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 
 		yGridlayout.getElements().remove(yList);
-		Assert.assertFalse(presentation.isRendered());
-		Assert.assertFalse(presentation.isDisposed());
+		assertFalse(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
 	}
 
 	/**
@@ -122,7 +125,7 @@ public class ListPresentationTests {
 				.getWidget();
 
 		ListSelect label = (ListSelect) unwrapList(baseComponentContainer);
-		Assert.assertEquals(1, baseComponentContainer.getComponentCount());
+		assertEquals(1, baseComponentContainer.getComponentCount());
 
 		// assert layout
 		CssLayout layout = (CssLayout) baseComponentContainer;
@@ -170,21 +173,21 @@ public class ListPresentationTests {
 		ListSelect label2 = (ListSelect) unwrapList(list2BaseComponentContainer);
 
 		// assert css class
-		Assert.assertTrue(list1BaseComponentContainer.getStyleName().contains(
+		assertTrue(list1BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
-		Assert.assertTrue(list2BaseComponentContainer.getStyleName().contains(
+		assertTrue(list2BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
 
-		Assert.assertTrue(label1.getStyleName().contains("anyOtherClass"));
-		Assert.assertTrue(label2.getStyleName().contains(
+		assertTrue(label1.getStyleName().contains("anyOtherClass"));
+		assertTrue(label2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
 
 		// assert css id
-		Assert.assertEquals("ID_0815", list1BaseComponentContainer.getId());
-		Assert.assertNull(label1.getId());
-		Assert.assertEquals(list2Editpart.getId(),
+		assertEquals("ID_0815", list1BaseComponentContainer.getId());
+		assertNull(label1.getId());
+		assertEquals(list2Editpart.getId(),
 				list2BaseComponentContainer.getId());
-		Assert.assertNull(label2.getId());
+		assertNull(label2.getId());
 	}
 	
 	/**
@@ -227,19 +230,19 @@ public class ListPresentationTests {
 
 		// start tests
 		//
-		Assert.assertTrue(label1.isVisible());
-		Assert.assertTrue(label1.isEnabled());
-		Assert.assertFalse(label1.isReadOnly());
+		assertTrue(label1.isVisible());
+		assertTrue(label1.isEnabled());
+		assertFalse(label1.isReadOnly());
 		
-		Assert.assertTrue(label2.isVisible());
-		Assert.assertTrue(label2.isEnabled());
-		Assert.assertFalse(label2.isReadOnly());
+		assertTrue(label2.isVisible());
+		assertTrue(label2.isEnabled());
+		assertFalse(label2.isReadOnly());
 		
 		yList1.setVisible(false);
-		Assert.assertFalse(label1.isVisible());
+		assertFalse(label1.isVisible());
 		
 		yList1.setEnabled(false);
-		Assert.assertFalse(label1.isEnabled());
+		assertFalse(label1.isEnabled());
 		
 	}
 
@@ -265,13 +268,14 @@ public class ListPresentationTests {
 	 *            model element
 	 * @return component
 	 */
+	@SuppressWarnings("unchecked")
 	protected Component getComponent(YElement yView) {
 		IElementEditpart editpart = DelegatingEditPartManager.getInstance()
 				.getEditpart(yView);
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

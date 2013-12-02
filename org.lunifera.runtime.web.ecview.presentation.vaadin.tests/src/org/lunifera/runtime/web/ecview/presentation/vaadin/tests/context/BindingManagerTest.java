@@ -10,7 +10,8 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
@@ -50,15 +51,15 @@ public class BindingManagerTest {
 		yText.setEnabled(yText.isInitialEditable());
 
 		bindingManager.bindEnabled(yText, text);
-		Assert.assertTrue(text.isEnabled());
+		assertTrue(text.isEnabled());
 
 		yText.setEnabled(false);
-		Assert.assertFalse(text.isEnabled());
+		assertFalse(text.isEnabled());
 
 		// test target to model
 		text.setEnabled(true);
 		// -> no update
-		Assert.assertFalse(yText.isEnabled());
+		assertFalse(yText.isEnabled());
 	}
 
 	@Test
@@ -68,15 +69,15 @@ public class BindingManagerTest {
 		yText.setVisible(yText.isInitialVisible());
 
 		bindingManager.bindVisible(yText, text);
-		Assert.assertTrue(text.isVisible());
+		assertTrue(text.isVisible());
 
 		yText.setVisible(false);
-		Assert.assertFalse(text.isVisible());
+		assertFalse(text.isVisible());
 
 		// test target to model
 		text.setVisible(true);
 		// -> no update
-		Assert.assertFalse(yText.isVisible());
+		assertFalse(yText.isVisible());
 	}
 
 	@Test
@@ -86,13 +87,13 @@ public class BindingManagerTest {
 		yText.setEditable(yText.isInitialEditable());
 
 		bindingManager.bindReadonly(yText, text);
-		Assert.assertFalse(text.isReadOnly());
+		assertFalse(text.isReadOnly());
 
 		yText.setEditable(true);
-		Assert.assertFalse(text.isReadOnly());
+		assertFalse(text.isReadOnly());
 
 		// test target to model
 		text.setReadOnly(false);
-		Assert.assertTrue(yText.isEditable());
+		assertTrue(yText.isEditable());
 	}
 }

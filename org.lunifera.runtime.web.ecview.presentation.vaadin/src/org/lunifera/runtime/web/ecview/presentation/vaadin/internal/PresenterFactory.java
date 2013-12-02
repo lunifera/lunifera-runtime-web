@@ -15,13 +15,17 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.presentation.IPresentationFactory;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IGridLayoutEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IHorizontalLayoutEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
@@ -33,19 +37,21 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
  */
 public class PresenterFactory implements IPresentationFactory {
 
-	public PresenterFactory(){
-		
+	public PresenterFactory() {
+
 	}
-	
+
 	@Override
 	public boolean isFor(IViewContext uiContext, IElementEditpart editpart) {
 		String presentationURI = uiContext.getPresentationURI();
-		return presentationURI != null && presentationURI.equals(VaadinRenderer.UI_KIT_URI);
+		return presentationURI != null
+				&& presentationURI.equals(VaadinRenderer.UI_KIT_URI);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <A extends IWidgetPresentation<?>> A createPresentation(IViewContext uiContext, IElementEditpart editpart) {
+	public <A extends IWidgetPresentation<?>> A createPresentation(
+			IViewContext uiContext, IElementEditpart editpart) {
 		if (editpart instanceof IViewEditpart) {
 			return (A) new ViewPresentation((IViewEditpart) editpart);
 		} else if (editpart instanceof ITextFieldEditpart) {
@@ -70,10 +76,18 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new HorizontalLayoutPresentation(editpart);
 		} else if (editpart instanceof IVerticalLayoutEditpart) {
 			return (A) new VerticalLayoutPresentation(editpart);
+		} else if (editpart instanceof IDecimalFieldEditpart) {
+			return (A) new DecimalFieldPresentation(editpart);
+		} else if (editpart instanceof INumericFieldEditpart) {
+			return (A) new NumericFieldPresentation(editpart);
+		} else if (editpart instanceof IDateTimeEditpart) {
+			return (A) new DateTimePresentation(editpart);
+		} else if (editpart instanceof IBrowserEditpart) {
+			return (A) new BrowserPresentation(editpart);
 		}
 
-		throw new IllegalArgumentException(String.format("No presenter available for editpart %s[%s]", editpart
-			.getClass().getName(), editpart.getId()));
+		throw new IllegalArgumentException(String.format(
+				"No presenter available for editpart %s[%s]", editpart
+						.getClass().getName(), editpart.getId()));
 	}
-
 }
