@@ -17,7 +17,121 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../org.lunifera.runtime.web.parent/pom.xml</relativePath>
 	</parent>
+
 	<artifactId>org.lunifera.runtime.web.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
 
+	<properties>
+		<lunifera.deployment.p2.label>runtime</lunifera.deployment.p2.label>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<resolver>p2</resolver>
+					<pomDependencies>consider</pomDependencies>
+					<environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>lunifera.build.p2</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<ecfview-p2>http://lun.lunifera.org/downloads/p2/ecview/nightly/</ecfview-p2>
+				<lunifera.deployment.p2.origin.dir>${project.build.directory}/repository</lunifera.deployment.p2.origin.dir>
+				<associate.p2>${lunifera.build.eclipse.platform.p2.url},${orbit-site},${ecfview-p2}</associate.p2>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>create.p2.inf</id>
+								<phase>package</phase>
+								<configuration>
+									<quiet>true</quiet>
+									<target>
+										<ant antfile="build.xml" target="basic.build" dir=".">
+											<property name="lunifera.deployment.p2.origin.dir"
+												value="${lunifera.deployment.p2.origin.dir}" />
+											<property name="associate.sites" value="${associate.p2}" />
+										</ant>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.ant</groupId>
+								<artifactId>ant</artifactId>
+								<version>1.8.4</version>
+							</dependency>
+							<dependency>
+								<groupId>ant-contrib</groupId>
+								<artifactId>ant-contrib</artifactId>
+								<version>1.0b3</version>
+								<exclusions>
+									<exclusion>
+										<groupId>ant</groupId>
+										<artifactId>ant</artifactId>
+									</exclusion>
+								</exclusions>
+							</dependency>
+							<dependency>
+								<groupId>net.sf.saxon</groupId>
+								<artifactId>Saxon-HE</artifactId>
+								<version>9.4</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.lunifera.runtime.web</groupId>
+				<artifactId>org.lunifera.runtime.web.parent</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

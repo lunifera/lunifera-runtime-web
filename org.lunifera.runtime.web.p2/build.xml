@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+#====================================================================== 
+# Copyright (c) 2012, 2013 Committers of lunifera.org - Lunifera.org.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     Cristiano Gavião - initial API and implementation
+#====================================================================== 
+-->
+<project default="basic.build" name="Lunifera Runtime Web P2 with aggregate repositories">
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+	
+	<target name="init">
+		<property name="update.site.source.dir" value="${lunifera.deployment.p2.origin.dir}" />
+
+		<echo>Loaded associate sites: ${associate.sites}</echo>
+		<echo>Source dir: ${update.site.source.dir}</echo>
+
+	</target>
+
+	<target name="basic.build" description="Lunifera aggregate P2 repository" depends="init, unpack.content.jar,remove.references,add.associate.sites,remove.uncategorized.category,pack.content.jar" />
+
+	<target name="add.associate.sites" if="associate.sites">
+		<if>
+			<and>
+				<!-- Defined in associate.sites -->
+				<isset property="associate.sites" />
+				<not>
+					<equals arg1="${associate.sites}" arg2="" />
+				</not>
+			</and>
+			<then>
+				<!-- counter variable -->
+				<echo>p2.repos=${associate.sites}</echo>
+				<var name="associate.sites.0" value="" />
+				<for param="associate.site" list="${associate.sites}" delimiter=",">
+					<sequential>
+						<var name="associate.sites.0" value="${associate.sites.0}00" />
+						<echo>length=${associate.sites.0}</echo>
+					</sequential>
+				</for>
+				<length property="associate.sites.length" string="${associate.sites.0}" />
+
+				<echo>length=${associate.sites.length}</echo>
+
+				<loadfile srcfile="${update.site.source.dir}/content.xml" property="content.xml">
+					<filterchain>
+						<tailfilter lines="-1" skip="1" />
+					</filterchain>
+				</loadfile>
+				<echo file="${update.site.source.dir}/content.xml" message="${content.xml}" />
+				<echo file="${update.site.source.dir}/content.xml" append="true">  &lt;references size='${associate.sites.length}'>
+</echo>
+				<for param="associate.site" list="${associate.sites}" delimiter=",">
+					<sequential>
+						<!-- insert into content.xml -->
+						
+						<echo>Adding associate p2: @{associate.site}</echo>
+						
+						<echo file="${update.site.source.dir}/content.xml" append="true">    &lt;repository uri='@{associate.site}' url='@{associate.site}' type='0' options='1'/>
+    &lt;repository uri='@{associate.site}' url='@{associate.site}' type='1' options='1'/>
+</echo>
+					</sequential>
+				</for>
+				<echo file="${update.site.source.dir}/content.xml" append="true">  &lt;/references>
+&lt;/repository>
+</echo>
+			</then>
+		</if>
+	</target>
+
+	<target name="remove.references">
+		<copy file="${update.site.source.dir}/content.xml" tofile="${update.site.source.dir}/content.old.xml" overwrite="true" />
+		<xslt style="remove-references.xsl" in="${update.site.source.dir}/content.old.xml" out="${update.site.source.dir}/content.xml" />
+	</target>
+
+	<target name="remove.uncategorized.category">
+		<copy file="${update.site.source.dir}/content.xml" tofile="${update.site.source.dir}/content.old.xml" overwrite="true" />
+		<xslt style="remove-uncategorized.xsl" in="${update.site.source.dir}/content.old.xml" out="${update.site.source.dir}/content.xml" />
+	</target>
+
+	<target name="unpack.content.jar">
+		<if>
+			<available file="${update.site.source.dir}/content.jar" type="file" />
+			<then>
+				<unzip src="${update.site.source.dir}/content.jar" dest="${update.site.source.dir}" />
+				<delete file="${update.site.source.dir}/content.jar" />
+			</then>
+		</if>
+	</target>
+
+	<target name="pack.content.jar">
+		<zip destfile="${update.site.source.dir}/content.jar" basedir="${update.site.source.dir}" includes="content.xml" />
+		<delete file="${update.site.source.dir}/content.xml" />
+		<delete file="${update.site.source.dir}/content.old.xml" />
+	</target>
+
+</project>
