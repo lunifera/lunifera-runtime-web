@@ -22,7 +22,7 @@
 	<packaging>eclipse-repository</packaging>
 
 	<properties>
-		<lunifera.deployment.p2.label>runtime</lunifera.deployment.p2.label>
+		<lunifera.deployment.p2.label>runtime-web</lunifera.deployment.p2.label>
 	</properties>
 
 	<build>
