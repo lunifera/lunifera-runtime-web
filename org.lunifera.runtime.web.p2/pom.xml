@@ -15,7 +15,6 @@
 		<groupId>org.lunifera.releng.maven</groupId>
 		<artifactId>org.lunifera.releng.maven.parent.tycho.repository.p2</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath />
 	</parent>
 
 	<artifactId>org.lunifera.runtime.web.p2</artifactId>
@@ -24,6 +23,14 @@
 	<properties>
 		<lunifera.deployment.p2.label>runtime-web</lunifera.deployment.p2.label>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>ecview</id>
+			<url>http://lun.lunifera.org/downloads/p2/ecview/nightly/</url>
+			<layout>p2</layout>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
@@ -131,6 +138,11 @@
 				<version>0.0.1-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.lunifera.runtime.web</groupId>
+				<artifactId>org.lunifera.runtime.web.ecview.presentation.vaadin</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
