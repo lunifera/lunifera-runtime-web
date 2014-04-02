@@ -21,6 +21,8 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
@@ -33,6 +35,7 @@ import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
@@ -185,11 +188,10 @@ public class TextFieldPresentationTests {
 		// assert css id
 		assertEquals("ID_0815", text1BaseComponentContainer.getId());
 		assertNull(text1.getId());
-		assertEquals(text2Editpart.getId(),
-				text2BaseComponentContainer.getId());
+		assertEquals(text2Editpart.getId(), text2BaseComponentContainer.getId());
 		assertNull(text2.getId());
 	}
-	
+
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -230,27 +232,88 @@ public class TextFieldPresentationTests {
 
 		// start tests
 		//
+		yText1.setValue("");
+		yText2.setValue("");
+
 		assertTrue(text1.isVisible());
 		assertTrue(text1.isEnabled());
 		assertFalse(text1.isReadOnly());
-		
+		assertEquals("", text1.getValue());
+
 		assertTrue(text2.isVisible());
 		assertTrue(text2.isEnabled());
 		assertFalse(text2.isReadOnly());
-		
+		assertEquals("", text2.getValue());
+
 		yText1.setVisible(false);
 		assertFalse(text1.isVisible());
-		
+
 		yText1.setEnabled(false);
 		assertFalse(text1.isEnabled());
-		
+
 		yText1.setEditable(false);
 		assertTrue(text1.isReadOnly());
-		
+
 		// target to model
 		text1.setReadOnly(false);
 		assertTrue(yText1.isEditable());
-		
+
+		yText1.setValue("huhu");
+		yText2.setValue("haha");
+		assertEquals("huhu", text1.getValue());
+		assertEquals("haha", text2.getValue());
+
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_ValueBinding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTextField yText1 = factory.createTextField();
+		yLayout.getElements().add(yText1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITextFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText1);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		TextField text1 = (TextField) unwrapText(text1BaseComponentContainer);
+
+		// start tests
+		//
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		yText1.setValue("");
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean("Huhu");
+		beanBinding.setPropertyPath("value");
+		beanBinding.setBean(bean);
+		yBindingSet.addBinding(yText1.createValueEndpoint(), beanBinding);
+		assertEquals("Huhu", text1.getValue());
+		assertEquals("Huhu", yText1.getValue());
+
+		// bean = new ValueBean("Huhu11");
+		// beanBinding.setPropertyPath("value");
+		// TODO Setting a bean later does not cause any sideeffects. See
+		// BeanBindingEndpointEditpart. The binding for the bean is not
+		// refreshed.
+		// beanBinding.setBean(bean);
+		// assertEquals("Huhu11", text1.getValue());
+		// assertEquals("Huhu11", yText1.getValue());
+
+		bean.setValue("Haha");
+		assertEquals("Haha", text1.getValue());
+		assertEquals("Haha", yText1.getValue());
 	}
 
 	/**
@@ -282,7 +345,8 @@ public class TextFieldPresentationTests {
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart)
+					.getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

@@ -19,18 +19,23 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextArea;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextAreaPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
@@ -38,6 +43,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 /**
@@ -249,6 +255,57 @@ public class TextAreaPresentationTests {
 		textArea1.setReadOnly(false);
 		assertTrue(yTextArea1.isEditable());
 		
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_ValueBinding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTextArea yText1 = factory.createTextArea();
+		yLayout.getElements().add(yText1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITextAreaEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText1);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		TextArea text1 = (TextArea) unwrapText(text1BaseComponentContainer);
+
+		// start tests
+		//
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		yText1.setValue("");
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean("Huhu");
+		beanBinding.setPropertyPath("value");
+		beanBinding.setBean(bean);
+		yBindingSet.addBinding(yText1.createValueEndpoint(), beanBinding);
+		assertEquals("Huhu", text1.getValue());
+		assertEquals("Huhu", yText1.getValue());
+
+		// bean = new ValueBean("Huhu11");
+		// beanBinding.setPropertyPath("value");
+		// TODO Setting a bean later does not cause any sideeffects. See
+		// BeanBindingEndpointEditpart. The binding for the bean is not
+		// refreshed.
+		// beanBinding.setBean(bean);
+		// assertEquals("Huhu11", text1.getValue());
+		// assertEquals("Huhu11", yText1.getValue());
+
+		bean.setValue("Haha");
+		assertEquals("Haha", text1.getValue());
+		assertEquals("Haha", yText1.getValue());
 	}
 
 	/**

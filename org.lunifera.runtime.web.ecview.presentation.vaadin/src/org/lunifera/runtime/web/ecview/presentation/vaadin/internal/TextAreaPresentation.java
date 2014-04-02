@@ -10,21 +10,26 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextArea;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 
 /**
  * This presenter is responsible to render a text area on the given layout.
  */
-public class TextAreaPresentation extends AbstractVaadinWidgetPresenter<Component> {
+public class TextAreaPresentation extends
+		AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -33,7 +38,8 @@ public class TextAreaPresentation extends AbstractVaadinWidgetPresenter<Componen
 	/**
 	 * Constructor.
 	 * 
-	 * @param editpart The editpart of that presenter
+	 * @param editpart
+	 *            The editpart of that presenter
 	 */
 	public TextAreaPresentation(IElementEditpart editpart) {
 		super((ITextAreaEditpart) editpart);
@@ -57,7 +63,7 @@ public class TextAreaPresentation extends AbstractVaadinWidgetPresenter<Componen
 			textArea = new TextArea();
 			textArea.addStyleName(CSS_CLASS__CONTROL);
 			textArea.setSizeFull();
-			
+
 			// creates the binding for the field
 			createBindings(modelAccess.yTextArea, textArea);
 
@@ -72,6 +78,44 @@ public class TextAreaPresentation extends AbstractVaadinWidgetPresenter<Componen
 			}
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected IObservable internalGetObservableEndpoint(
+			YEmbeddableBindingEndpoint bindableValue) {
+		if (bindableValue == null) {
+			throw new NullPointerException("BindableValue must not be null!");
+		}
+
+		if (bindableValue instanceof YEmbeddableValueEndpoint) {
+			return internalGetValueEndpoint();
+		}
+		throw new IllegalArgumentException("Not a valid input: "
+				+ bindableValue);
+	}
+
+	/**
+	 * Returns the observable to observe value.
+	 * 
+	 * @return
+	 */
+	protected IObservableValue internalGetValueEndpoint() {
+		// return the observable value for text
+		return EMFObservables.observeValue(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YTEXT_FIELD__VALUE);
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YTextArea yField, TextArea field) {
+		createModelBinding(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YTEXT_AREA__VALUE, textArea);
+
+		super.createBindings(yField, field);
 	}
 
 	@Override
@@ -90,7 +134,8 @@ public class TextAreaPresentation extends AbstractVaadinWidgetPresenter<Componen
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -159,7 +204,8 @@ public class TextAreaPresentation extends AbstractVaadinWidgetPresenter<Componen
 		 * @return
 		 */
 		public boolean isLabelValid() {
-			return yTextArea.getDatadescription() != null && yTextArea.getDatadescription().getLabel() != null;
+			return yTextArea.getDatadescription() != null
+					&& yTextArea.getDatadescription().getLabel() != null;
 		}
 
 		/**
