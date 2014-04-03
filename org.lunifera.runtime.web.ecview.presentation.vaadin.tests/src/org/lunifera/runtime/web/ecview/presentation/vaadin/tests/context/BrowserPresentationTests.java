@@ -246,10 +246,10 @@ public class BrowserPresentationTests {
 		yBrowser1.setEditable(false);
 		assertTrue(text1.isReadOnly());
 
-		// target to model
+		// target to model -> UI element does not send notifications for
+		// readOnly state changes
 		text1.setReadOnly(false);
-		assertTrue(yBrowser1.isEditable());
-
+		assertFalse(yBrowser1.isEditable());
 	}
 
 	/**

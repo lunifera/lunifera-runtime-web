@@ -8,22 +8,24 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
-import java.util.Iterator;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Iterator;
+
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.junit.Before;
@@ -31,13 +33,14 @@ import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.CheckBoxPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.UI;
 
 /**
@@ -187,7 +190,7 @@ public class CheckBoxPresentationTests {
 				checkBox2BaseComponentContainer.getId());
 		assertNull(checkBox2.getId());
 	}
-	
+
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -228,27 +231,84 @@ public class CheckBoxPresentationTests {
 
 		// start tests
 		//
+		assertFalse(checkBox1.getValue());
 		assertTrue(checkBox1.isVisible());
 		assertTrue(checkBox1.isEnabled());
 		assertFalse(checkBox1.isReadOnly());
-		
+
 		assertTrue(checkBox2.isVisible());
 		assertTrue(checkBox2.isEnabled());
 		assertFalse(checkBox2.isReadOnly());
-		
+
 		yCheckBox1.setVisible(false);
 		assertFalse(checkBox1.isVisible());
-		
+
 		yCheckBox1.setEnabled(false);
 		assertFalse(checkBox1.isEnabled());
-		
+
 		yCheckBox1.setEditable(false);
 		assertTrue(checkBox1.isReadOnly());
-		
+
 		// target to model
 		checkBox1.setReadOnly(false);
 		assertTrue(yCheckBox1.isEditable());
-		
+
+		yCheckBox1.setValue(false);
+		assertFalse(checkBox1.getValue());
+
+		yCheckBox1.setValue(true);
+		assertTrue(checkBox1.getValue());
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_ValueBinding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YCheckBox yCheckBox1 = factory.createCheckBox();
+		yLayout.getElements().add(yCheckBox1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ICheckboxEditpart checkBox1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yCheckBox1);
+		IWidgetPresentation<Component> checkBox1Presentation = checkBox1Editpart
+				.getPresentation();
+		ComponentContainer checkBox1BaseComponentContainer = (ComponentContainer) checkBox1Presentation
+				.getWidget();
+		CheckBox checkBox1 = (CheckBox) unwrapText(checkBox1BaseComponentContainer);
+
+		// start tests
+		//
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		checkBox1.setValue(false);
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean(true);
+		beanBinding.setPropertyPath("boolValue");
+		beanBinding.setBean(bean);
+		yBindingSet.addBinding(yCheckBox1.createValueEndpoint(), beanBinding);
+		assertTrue(yCheckBox1.isValue());
+		assertTrue(checkBox1.getValue());
+
+		// bean = new ValueBean("Huhu11");
+		// beanBinding.setPropertyPath("value");
+		// TODO Setting a bean later does not cause any sideeffects. See
+		// BeanBindingEndpointEditpart. The binding for the bean is not
+		// refreshed.
+		// beanBinding.setBean(bean);
+		// assertEquals("Huhu11", text1.getValue());
+		// assertEquals("Huhu11", yText1.getValue());
+
+		bean.setBoolValue(false);
+		assertFalse("Haha", checkBox1.getValue());
+		assertFalse("Haha", yCheckBox1.isValue());
 	}
 
 	/**
@@ -280,7 +340,8 @@ public class CheckBoxPresentationTests {
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart)
+					.getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

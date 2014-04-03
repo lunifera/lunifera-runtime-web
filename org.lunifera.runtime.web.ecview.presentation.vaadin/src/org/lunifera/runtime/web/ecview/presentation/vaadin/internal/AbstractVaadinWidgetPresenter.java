@@ -144,6 +144,8 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		if (abstractComponent instanceof Property.ReadOnlyStatusChangeNotifier) {
 			bindingManger.bindReadonly(yField,
 					(Property.ReadOnlyStatusChangeNotifier) abstractComponent);
+		} else {
+			bindingManger.bindReadonlyOneway(yField, abstractComponent);
 		}
 	}
 

@@ -10,7 +10,13 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 
@@ -22,7 +28,8 @@ import com.vaadin.ui.CssLayout;
 /**
  * This presenter is responsible to render a checkBox on the given layout.
  */
-public class CheckBoxPresentation extends AbstractVaadinWidgetPresenter<Component> {
+public class CheckBoxPresentation extends
+		AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -31,7 +38,8 @@ public class CheckBoxPresentation extends AbstractVaadinWidgetPresenter<Componen
 	/**
 	 * Constructor.
 	 * 
-	 * @param editpart The editpart of that presenter
+	 * @param editpart
+	 *            The editpart of that presenter
 	 */
 	public CheckBoxPresentation(IElementEditpart editpart) {
 		super((ICheckboxEditpart) editpart);
@@ -55,7 +63,7 @@ public class CheckBoxPresentation extends AbstractVaadinWidgetPresenter<Componen
 			checkBox = new CheckBox();
 			checkBox.addStyleName(CSS_CLASS__CONTROL);
 			checkBox.setSizeFull();
-			
+
 			// creates the binding for the field
 			createBindings(modelAccess.yCheckBox, checkBox);
 
@@ -70,6 +78,45 @@ public class CheckBoxPresentation extends AbstractVaadinWidgetPresenter<Componen
 			}
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected IObservable internalGetObservableEndpoint(
+			YEmbeddableBindingEndpoint bindableValue) {
+		if (bindableValue == null) {
+			throw new NullPointerException("BindableValue must not be null!");
+		}
+
+		if (bindableValue instanceof YEmbeddableValueEndpoint) {
+			return internalGetValueEndpoint();
+		}
+		throw new IllegalArgumentException("Not a valid input: "
+				+ bindableValue);
+	}
+
+	/**
+	 * Returns the observable to observe value.
+	 * 
+	 * @return
+	 */
+	protected IObservableValue internalGetValueEndpoint() {
+		// return the observable value for text
+		return EMFObservables.observeValue(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YCHECK_BOX__VALUE);
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YCheckBox yField, CheckBox field) {
+		// create the model binding from ridget to ECView-model
+		createModelBinding(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YCHECK_BOX__VALUE, field);
+
+		super.createBindings(yField, field);
 	}
 
 	@Override
@@ -88,7 +135,8 @@ public class CheckBoxPresentation extends AbstractVaadinWidgetPresenter<Componen
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -157,7 +205,8 @@ public class CheckBoxPresentation extends AbstractVaadinWidgetPresenter<Componen
 		 * @return
 		 */
 		public boolean isLabelValid() {
-			return yCheckBox.getDatadescription() != null && yCheckBox.getDatadescription().getLabel() != null;
+			return yCheckBox.getDatadescription() != null
+					&& yCheckBox.getDatadescription().getLabel() != null;
 		}
 
 		/**

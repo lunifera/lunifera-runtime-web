@@ -250,6 +250,15 @@ public class NumericFieldPresentationTests {
 		text1.setReadOnly(false);
 		assertTrue(yText1.isEditable());
 
+		yText1.setValue(112233);
+		assertEquals("112.233", text1.getValue());
+
+		yText1.setValue(332211);
+		assertEquals("332.211", text1.getValue());
+
+		text1.setValue("998.877");
+		assertEquals(998877, yText1.getValue());
+
 	}
 
 	/**

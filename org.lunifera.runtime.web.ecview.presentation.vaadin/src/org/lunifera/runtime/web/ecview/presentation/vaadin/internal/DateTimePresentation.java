@@ -10,7 +10,13 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 
@@ -70,8 +76,49 @@ public class DateTimePresentation extends
 			if (modelAccess.isLabelValid()) {
 				dateField.setCaption(modelAccess.getLabel());
 			}
+
+			dateField.setDateFormat(modelAccess.getDateformat());
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected IObservable internalGetObservableEndpoint(
+			YEmbeddableBindingEndpoint bindableValue) {
+		if (bindableValue == null) {
+			throw new NullPointerException("BindableValue must not be null!");
+		}
+
+		if (bindableValue instanceof YEmbeddableValueEndpoint) {
+			return internalGetValueEndpoint();
+		}
+		throw new IllegalArgumentException("Not a valid input: "
+				+ bindableValue);
+	}
+
+	/**
+	 * Returns the observable to observe value.
+	 * 
+	 * @return
+	 */
+	protected IObservableValue internalGetValueEndpoint() {
+		// return the observable value for text
+		return EMFObservables.observeValue(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YDATE_TIME__VALUE);
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YDateTime yField, DateField field) {
+		// create the model binding from ridget to ECView-model
+		createModelBinding(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YDATE_TIME__VALUE, field);
+
+		super.createBindings(yField, field);
 	}
 
 	@Override
@@ -171,6 +218,37 @@ public class DateTimePresentation extends
 		 */
 		public String getLabel() {
 			return yDateTime.getDatadescription().getLabel();
+		}
+
+		/**
+		 * Returns true, if the date format is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isDateformatValid() {
+			return yDateTime.getDatadescription() != null
+					&& yDateTime.getDatatype().getFormat() != null;
+		}
+
+		/**
+		 * Returns the date format.
+		 * 
+		 * @return
+		 */
+		public String getDateformat() {
+			if (yDateTime.getDatatype() == null) {
+				return "yyyy.MM.dd HH:mm";
+			}
+
+			switch (yDateTime.getDatatype().getFormat()) {
+			case DATE:
+				return "yyyy.MM.dd";
+			case DATE_TIME:
+				return "yyyy.MM.dd HH:mm";
+			case TIME:
+				return "HH:mm:ss";
+			}
+			return "yyyy.MM.dd HH:mm";
 		}
 	}
 }

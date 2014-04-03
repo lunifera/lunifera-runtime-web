@@ -10,11 +10,24 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
+import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -72,6 +85,65 @@ public class NumericFieldPresentation extends
 			}
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected IObservable internalGetObservableEndpoint(
+			YEmbeddableBindingEndpoint bindableValue) {
+		if (bindableValue == null) {
+			throw new NullPointerException("BindableValue must not be null!");
+		}
+
+		if (bindableValue instanceof YEmbeddableValueEndpoint) {
+			return internalGetValueEndpoint();
+		}
+		throw new IllegalArgumentException("Not a valid input: "
+				+ bindableValue);
+	}
+
+	/**
+	 * Returns the observable to observe value.
+	 * 
+	 * @return
+	 */
+	protected IObservableValue internalGetValueEndpoint() {
+		// return the observable value for text
+		return EMFObservables.observeValue(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YNUMERIC_FIELD__VALUE);
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YNumericField yField, NumberField field) {
+		// create the model binding from ridget to ECView-model
+		createModelBinding(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YNUMERIC_FIELD__VALUE, field,
+				null, null);
+
+		super.createBindings(yField, field);
+	}
+
+	protected Binding createModelBinding(EObject model,
+			EStructuralFeature modelFeature, AbstractField<?> field,
+			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
+		IBindingManager bindingManager = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		if (bindingManager != null) {
+			// bind the value of yText to textRidget
+			IObservableValue modelObservable = EMFObservables.observeValue(
+					model, modelFeature);
+			IObservableValue uiObservable = VaadinObservables
+					.observeConvertedValue(field);
+			return bindingManager.bindValue(uiObservable, modelObservable,
+					targetToModel, modelToTarget);
+		}
+		return null;
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Component;
 
 /**
  * A manager that is responsible for binding data for one view instance. Each
@@ -47,7 +48,7 @@ public interface IBindingManager extends
 			AbstractComponent abstractComponent);
 
 	/**
-	 * Binds the visible option.
+	 * Binds the readonly option.
 	 * 
 	 * @param viewContext
 	 * @param yEditable
@@ -55,5 +56,16 @@ public interface IBindingManager extends
 	 */
 	public abstract void bindReadonly(YEditable yEditable,
 			Property.ReadOnlyStatusChangeNotifier field);
+
+	/**
+	 * Binds the readonly option. No notification for readonly state will be
+	 * send from the ui element. To receive noticiations use
+	 * {@link IBindingManager#bindReadonly(YEditable, com.vaadin.data.Property.ReadOnlyStatusChangeNotifier)}
+	 * 
+	 * @param viewContext
+	 * @param yEditable
+	 * @param field
+	 */
+	public abstract void bindReadonlyOneway(YEditable yEditable, Component field);
 
 }

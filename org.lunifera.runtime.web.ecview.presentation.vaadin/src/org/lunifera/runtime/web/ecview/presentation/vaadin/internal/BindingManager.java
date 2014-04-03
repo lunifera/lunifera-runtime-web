@@ -12,6 +12,7 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -30,6 +31,7 @@ import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Component;
 
 /**
  * Is used to bind values.
@@ -93,6 +95,23 @@ public class BindingManager extends
 						.setConverter(new BoolNegator()),
 				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
 						.setConverter(new BoolNegator()));
+	}
+
+	@Override
+	public void bindReadonlyOneway(YEditable yEditable, Component field) {
+		IObservableValue uiObservable = BeansObservables.observeValue(field,
+				"readOnly");
+		IObservableValue modelObservable = EMFObservables.observeValue(
+				castEObject(yEditable),
+				CoreModelPackage.eINSTANCE.getYEditable_Editable());
+		getDatabindingContext().bindValue(
+				uiObservable,
+				modelObservable,
+				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
+						.setConverter(new BoolNegator()),
+				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
+						.setConverter(new BoolNegator()));
+
 	}
 
 	/**

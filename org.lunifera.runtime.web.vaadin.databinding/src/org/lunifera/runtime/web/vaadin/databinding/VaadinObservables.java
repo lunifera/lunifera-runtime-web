@@ -103,8 +103,8 @@ public class VaadinObservables {
 	 * 
 	 * @param ui
 	 */
-	public static void activateRealm(final UI ui){
-		UIRealm uiRealm =	(UIRealm) getRealm(ui);
+	public static void activateRealm(final UI ui) {
+		UIRealm uiRealm = (UIRealm) getRealm(ui);
 		uiRealm.makeDefault();
 	}
 
@@ -219,6 +219,19 @@ public class VaadinObservables {
 	public static IVaadinModelObservableValue observeValue(
 			Property.ValueChangeNotifier notifier) {
 		return VaadinProperties.propertyValue().observe(notifier);
+	}
+
+	/**
+	 * Returns an observable value tracking the converted value of the given
+	 * field.
+	 * 
+	 * @param field
+	 * @return
+	 */
+	public static IVaadinComponentObservableValue observeConvertedValue(
+			AbstractField<?> field) {
+		return VaadinProperties.accessor(AbstractField.class, "convertedValue")
+				.observe(field);
 	}
 
 	/**

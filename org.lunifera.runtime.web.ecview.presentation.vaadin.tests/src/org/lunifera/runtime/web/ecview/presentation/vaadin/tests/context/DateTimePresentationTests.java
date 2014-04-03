@@ -15,12 +15,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
@@ -33,6 +36,7 @@ import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
@@ -250,6 +254,63 @@ public class DateTimePresentationTests {
 		text1.setReadOnly(false);
 		assertTrue(yText1.isEditable());
 
+		Date date = new Date();
+		yText1.setValue(date);
+		assertEquals("31.12.2014", text1.getValue());
+
+		yText1.setValue(date);
+		assertEquals("1.1.2014", text1.getValue());
+
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_ValueBinding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDateTime yText1 = factory.createDateTime();
+		yLayout.getElements().add(yText1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDateTimeEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText1);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		DateField text1 = (DateField) unwrapText(text1BaseComponentContainer);
+
+		// start tests
+		//
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean(new Date());
+		beanBinding.setPropertyPath("dateValue");
+		beanBinding.setBean(bean);
+		yBindingSet.addBinding(yText1.createValueEndpoint(), beanBinding);
+		assertEquals("Huhu", text1.getValue());
+		assertEquals("Huhu", yText1.getValue());
+
+		// bean = new ValueBean("Huhu11");
+		// beanBinding.setPropertyPath("value");
+		// TODO Setting a bean later does not cause any sideeffects. See
+		// BeanBindingEndpointEditpart. The binding for the bean is not
+		// refreshed.
+		// beanBinding.setBean(bean);
+		// assertEquals("Huhu11", text1.getValue());
+		// assertEquals("Huhu11", yText1.getValue());
+
+		bean.setValue("Haha");
+		assertEquals("Haha", text1.getValue());
+		assertEquals("Haha", yText1.getValue());
 	}
 
 	/**
