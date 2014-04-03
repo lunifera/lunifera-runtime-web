@@ -28,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -317,6 +318,12 @@ public class CheckBoxPresentationTests {
 		yCheckBox1.setValue(false);
 		assertFalse(bean.isBoolValue());
 		assertFalse(checkBox1.getValue());
+	}
+	
+	@Test
+	public void testBindingIsDisposed(){
+		// test that the binding is disposed if field is disposed
+		Assert.fail();
 	}
 
 	/**

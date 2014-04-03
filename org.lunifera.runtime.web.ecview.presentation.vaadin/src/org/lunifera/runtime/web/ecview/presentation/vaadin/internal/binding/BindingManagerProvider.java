@@ -1,4 +1,4 @@
-package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding;
 
 import org.eclipse.emf.ecp.ecview.common.context.IContext;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;

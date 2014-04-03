@@ -26,6 +26,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -249,6 +250,12 @@ public class ComboBoxPresentationTests {
 		comboBox1.setReadOnly(false);
 		assertTrue(yComboBox1.isEditable());
 		
+	}
+	
+	@Test
+	public void testBindingIsDisposed(){
+		// test that the binding is disposed if field is disposed
+		Assert.fail();
 	}
 
 	/**

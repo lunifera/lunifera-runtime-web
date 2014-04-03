@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Florian Pirchner (Vienna, Austria) and others.
+ * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,8 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
@@ -28,12 +30,13 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
@@ -251,6 +254,93 @@ public class DecimalFieldPresentationTests {
 		text1.setReadOnly(false);
 		assertTrue(yText1.isEditable());
 
+		yText1.setValue(1122.33);
+		assertEquals("1.122,33", text1.getValue());
+
+		yText1.setValue(3322.11);
+		assertEquals("3.322,11", text1.getValue());
+
+		text1.setValue("9.988,77");
+		assertEquals(9988.77, yText1.getValue(), 0);
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_ValueBinding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDecimalField yField1 = factory.createDecimalField();
+		yLayout.getElements().add(yField1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDecimalFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yField1);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		DecimalField field1 = (DecimalField) unwrapText(text1BaseComponentContainer);
+
+		// start tests
+		//
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean(9988.77);
+		beanBinding.setPropertyPath("doubleValue");
+		beanBinding.setBean(bean);
+		yBindingSet.addBinding(yField1.createValueEndpoint(), beanBinding);
+		assertEquals("9.988,77", field1.getValue());
+		assertEquals(9988.77, yField1.getValue(), 0);
+
+		// bean = new ValueBean("Huhu11");
+		// beanBinding.setPropertyPath("value");
+		// TODO Setting a bean later does not cause any sideeffects. See
+		// BeanBindingEndpointEditpart. The binding for the bean is not
+		// refreshed.
+		// beanBinding.setBean(bean);
+		// assertEquals("Huhu11", text1.getValue());
+		// assertEquals("Huhu11", yText1.getValue());
+
+		bean.setDoubleValue(2233.44);
+		assertEquals("2.233,44", field1.getValue());
+		assertEquals(2233.44, yField1.getValue(), 0);
+
+		field1.setValue("4.455,66");
+		assertEquals(4455.66, bean.getDoubleValue(), 0);
+		assertEquals(4455.66, yField1.getValue(), 0);
+
+		yField1.setValue(7788.99);
+		assertEquals(7788.99, bean.getDoubleValue(), 0);
+		assertEquals("7.788,99", field1.getValue());
+	}
+
+	@Test
+	public void testMarkNegative() {
+		Assert.fail("Implement");
+	}
+	
+	@Test
+	public void testGrouping() {
+		Assert.fail("Implement");
+	}
+
+	@Test
+	public void testPrecision() {
+		Assert.fail("Implement");
+	}
+
+	@Test
+	public void testBindingIsDisposed() {
+		// test that the binding is disposed if field is disposed
+		Assert.fail();
 	}
 
 	/**

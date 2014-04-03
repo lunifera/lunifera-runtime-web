@@ -1,4 +1,4 @@
-package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;

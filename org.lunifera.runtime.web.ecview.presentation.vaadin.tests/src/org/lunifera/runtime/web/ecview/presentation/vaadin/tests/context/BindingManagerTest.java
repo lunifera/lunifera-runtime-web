@@ -17,7 +17,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.BindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding.BindingManager;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;

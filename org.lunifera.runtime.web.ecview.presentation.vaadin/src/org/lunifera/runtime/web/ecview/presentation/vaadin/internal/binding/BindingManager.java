@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Florian Pirchner (Vienna, Austria) and others.
+ * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,9 @@
  * Contributors:
  * Florian Pirchner - initial API and implementation
  */
-package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.BeansObservables;
@@ -25,6 +26,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.vaadin.databinding.IVaadinComponentObservableValue;
 import org.lunifera.runtime.web.vaadin.databinding.IVaadinModelObservableValue;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -60,6 +62,15 @@ public class BindingManager extends
 	}
 
 	@Override
+	public Binding bindValue(IObservableValue target, IObservableValue model) {
+		return bindValue(
+				target,
+				model,
+				new ECViewUpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE),
+				new ECViewUpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+	}
+
+	@Override
 	public void bindVisible(YVisibleable yVisibleAble,
 			AbstractComponent abstractComponent) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
@@ -88,13 +99,16 @@ public class BindingManager extends
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yEditable),
 				CoreModelPackage.eINSTANCE.getYEditable_Editable());
-		getDatabindingContext().bindValue(
-				uiObservable,
-				modelObservable,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
-						.setConverter(new BoolNegator()),
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
-						.setConverter(new BoolNegator()));
+		getDatabindingContext()
+				.bindValue(
+						uiObservable,
+						modelObservable,
+						new ECViewUpdateValueStrategy(
+								UpdateValueStrategy.POLICY_UPDATE)
+								.setConverter(new BoolNegator()),
+						new ECViewUpdateValueStrategy(
+								UpdateValueStrategy.POLICY_UPDATE)
+								.setConverter(new BoolNegator()));
 	}
 
 	@Override
@@ -104,13 +118,16 @@ public class BindingManager extends
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yEditable),
 				CoreModelPackage.eINSTANCE.getYEditable_Editable());
-		getDatabindingContext().bindValue(
-				uiObservable,
-				modelObservable,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
-						.setConverter(new BoolNegator()),
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
-						.setConverter(new BoolNegator()));
+		getDatabindingContext()
+				.bindValue(
+						uiObservable,
+						modelObservable,
+						new ECViewUpdateValueStrategy(
+								UpdateValueStrategy.POLICY_UPDATE)
+								.setConverter(new BoolNegator()),
+						new ECViewUpdateValueStrategy(
+								UpdateValueStrategy.POLICY_UPDATE)
+								.setConverter(new BoolNegator()));
 
 	}
 

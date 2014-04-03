@@ -30,6 +30,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -314,6 +315,12 @@ public class TextAreaPresentationTests {
 		yText1.setValue("Haha2");
 		assertEquals("Haha2", bean.getValue());
 		assertEquals("Haha2", text1.getValue());
+	}
+	
+	@Test
+	public void testBindingIsDisposed(){
+		// test that the binding is disposed if field is disposed
+		Assert.fail();
 	}
 
 	/**

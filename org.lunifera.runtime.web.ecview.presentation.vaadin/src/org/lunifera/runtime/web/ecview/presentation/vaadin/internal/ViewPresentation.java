@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Florian Pirchner (Vienna, Austria) and others.
+ * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
@@ -206,6 +207,16 @@ public class ViewPresentation extends AbstractDisposable implements
 	@Override
 	public IObservable getObservableValue(Object model) {
 		throw new UnsupportedOperationException("Must be overridden!");
+	}
+
+	@Override
+	public void exec(Runnable runnable) {
+		componentBase.getUI().accessSynchronously(runnable);
+	}
+
+	@Override
+	public Future<?> execAsync(Runnable runnable) {
+		return componentBase.getUI().access(runnable);
 	}
 
 	/**

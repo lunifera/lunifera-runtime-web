@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Florian Pirchner (Vienna, Austria) and others.
+ * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,26 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
+import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -28,6 +43,7 @@ public class DecimalFieldPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private DecimalField decimalField;
+	private Binding eObjectToUIBinding;
 
 	/**
 	 * Constructor.
@@ -43,6 +59,7 @@ public class DecimalFieldPresentation extends
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("serial")
 	@Override
 	public Component createWidget(Object parent) {
 		if (componentBase == null) {
@@ -57,6 +74,16 @@ public class DecimalFieldPresentation extends
 			decimalField = new DecimalField();
 			decimalField.addStyleName(CSS_CLASS__CONTROL);
 			decimalField.setSizeFull();
+
+			decimalField
+					.addValueChangeListener(new Property.ValueChangeListener() {
+						@Override
+						public void valueChange(ValueChangeEvent event) {
+							if (eObjectToUIBinding != null) {
+								eObjectToUIBinding.updateTargetToModel();
+							}
+						}
+					});
 
 			// creates the binding for the field
 			createBindings(modelAccess.yDecimalField, decimalField);
@@ -74,6 +101,66 @@ public class DecimalFieldPresentation extends
 			decimalField.setPrecision(modelAccess.getPrecision());
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected IObservable internalGetObservableEndpoint(
+			YEmbeddableBindingEndpoint bindableValue) {
+		if (bindableValue == null) {
+			throw new NullPointerException("BindableValue must not be null!");
+		}
+
+		if (bindableValue instanceof YEmbeddableValueEndpoint) {
+			return internalGetValueEndpoint();
+		}
+		throw new IllegalArgumentException("Not a valid input: "
+				+ bindableValue);
+	}
+
+	/**
+	 * Returns the observable to observe value.
+	 * 
+	 * @return
+	 */
+	protected IObservableValue internalGetValueEndpoint() {
+		// return the observable value for text
+		return EMFObservables.observeValue(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YDECIMAL_FIELD__VALUE);
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YDecimalField yField, DecimalField field) {
+		// create the model binding from ridget to ECView-model
+
+		eObjectToUIBinding = createModelBinding(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YDECIMAL_FIELD__VALUE, field,
+				null, null);
+
+		super.createBindings(yField, field);
+	}
+
+	protected Binding createModelBinding(EObject model,
+			EStructuralFeature modelFeature, AbstractField<?> field,
+			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
+		IBindingManager bindingManager = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		if (bindingManager != null) {
+			// bind the value of yText to textRidget
+			IObservableValue modelObservable = EMFObservables.observeValue(
+					model, modelFeature);
+			IObservableValue uiObservable = VaadinObservables
+					.observeConvertedValue(field);
+			return bindingManager.bindValue(uiObservable, modelObservable,
+					targetToModel, modelToTarget);
+		}
+		return null;
 	}
 
 	@Override
@@ -109,6 +196,8 @@ public class DecimalFieldPresentation extends
 	protected void internalDispose() {
 		// unrender the ui component
 		unrender();
+
+		eObjectToUIBinding = null;
 	}
 
 	/**
@@ -182,7 +271,7 @@ public class DecimalFieldPresentation extends
 		 */
 		public int getPrecision() {
 			return yDecimalField.getDatatype() != null ? yDecimalField
-					.getDatatype().getPrecision() : 0;
+					.getDatatype().getPrecision() : 2;
 		}
 	}
 }
