@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -20,6 +21,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 
+import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -78,6 +80,18 @@ public class DateTimePresentation extends
 			}
 
 			dateField.setDateFormat(modelAccess.getDateformat());
+
+			dateField
+					.addValueChangeListener(new Property.ValueChangeListener() {
+						@Override
+						public void valueChange(Property.ValueChangeEvent event) {
+							Binding binding = BindingUtil
+									.getValueBinding(modelAccess.yDateTime);
+							if (binding != null) {
+								binding.updateTargetToModel();
+							}
+						}
+					});
 		}
 		return componentBase;
 	}
