@@ -307,8 +307,16 @@ public class CheckBoxPresentationTests {
 		// assertEquals("Huhu11", yText1.getValue());
 
 		bean.setBoolValue(false);
-		assertFalse("Haha", checkBox1.getValue());
-		assertFalse("Haha", yCheckBox1.isValue());
+		assertFalse(checkBox1.getValue());
+		assertFalse(yCheckBox1.isValue());
+		
+		checkBox1.setValue(true);
+		assertTrue(bean.isBoolValue());
+		assertTrue(yCheckBox1.isValue());
+
+		yCheckBox1.setValue(false);
+		assertFalse(bean.isBoolValue());
+		assertFalse(checkBox1.getValue());
 	}
 
 	/**

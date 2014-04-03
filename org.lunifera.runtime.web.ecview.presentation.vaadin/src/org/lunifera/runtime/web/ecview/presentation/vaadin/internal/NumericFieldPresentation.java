@@ -12,6 +12,7 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -27,6 +28,8 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -41,6 +44,7 @@ public class NumericFieldPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private NumberField numberField;
+	private Binding eObjectToUIBinding;
 
 	/**
 	 * Constructor.
@@ -56,6 +60,7 @@ public class NumericFieldPresentation extends
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("serial")
 	@Override
 	public Component createWidget(Object parent) {
 		if (componentBase == null) {
@@ -70,6 +75,16 @@ public class NumericFieldPresentation extends
 			numberField = new NumberField();
 			numberField.addStyleName(CSS_CLASS__CONTROL);
 			numberField.setSizeFull();
+
+			numberField
+					.addValueChangeListener(new Property.ValueChangeListener() {
+						@Override
+						public void valueChange(ValueChangeEvent event) {
+							if (eObjectToUIBinding != null) {
+								eObjectToUIBinding.updateTargetToModel();
+							}
+						}
+					});
 
 			// creates the binding for the field
 			createBindings(modelAccess.yNumericField, numberField);
@@ -120,7 +135,30 @@ public class NumericFieldPresentation extends
 	 */
 	protected void createBindings(YNumericField yField, NumberField field) {
 		// create the model binding from ridget to ECView-model
-		createModelBinding(castEObject(getModel()),
+
+//		UpdateValueStrategy targetToModel = new UpdateValueStrategy(
+//				UpdateValueStrategy.POLICY_UPDATE);
+//		targetToModel.setConverter(new IConverter() {
+//			@Override
+//			public Object getToType() {
+//				return null;
+//			}
+//
+//			@Override
+//			public Object getFromType() {
+//				return null;
+//			}
+//
+//			@Override
+//			public Object convert(Object fromObject) {
+//				if (fromObject == null) {
+//					return 0l;
+//				}
+//				return ((Integer) fromObject).longValue();
+//			}
+//		});
+
+		eObjectToUIBinding = createModelBinding(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YNUMERIC_FIELD__VALUE, field,
 				null, null);
 
@@ -179,6 +217,8 @@ public class NumericFieldPresentation extends
 	protected void internalDispose() {
 		// unrender the ui component
 		unrender();
+
+		eObjectToUIBinding = null;
 	}
 
 	/**

@@ -10,10 +10,15 @@ public class BindingUtil {
 
 	/**
 	 * Returns the value binding for the given bindable.
+	 * 
 	 * @param bindable
 	 * @return
 	 */
 	public static Binding getValueBinding(YValueBindable bindable) {
+		if (bindable == null || bindable.getValueBindingEndpoint() == null) {
+			return null;
+		}
+
 		YBinding yBinding = bindable.getValueBindingEndpoint().getBinding();
 		IBindingEditpart bindingEditpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yBinding);

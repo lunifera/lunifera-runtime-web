@@ -256,11 +256,11 @@ public class DateTimePresentationTests {
 
 		Date date = new Date();
 		yText1.setValue(date);
-		assertEquals("31.12.2014", text1.getValue());
+		assertEquals(date, text1.getValue());
 
-		yText1.setValue(date);
-		assertEquals("1.1.2014", text1.getValue());
-
+		date = new Date();
+		text1.setValue(date);
+		assertEquals(date, yText1.getValue());
 	}
 
 	@Test
@@ -295,9 +295,11 @@ public class DateTimePresentationTests {
 		ValueBean bean = new ValueBean(new Date());
 		beanBinding.setPropertyPath("dateValue");
 		beanBinding.setBean(bean);
+
 		yBindingSet.addBinding(yText1.createValueEndpoint(), beanBinding);
-		assertEquals("Huhu", text1.getValue());
-		assertEquals("Huhu", yText1.getValue());
+		bean.setDateValue(new Date(100000));
+		assertEquals(bean.getDateValue(), text1.getValue());
+		assertEquals(bean.getDateValue(), yText1.getValue());
 
 		// bean = new ValueBean("Huhu11");
 		// beanBinding.setPropertyPath("value");
@@ -308,9 +310,19 @@ public class DateTimePresentationTests {
 		// assertEquals("Huhu11", text1.getValue());
 		// assertEquals("Huhu11", yText1.getValue());
 
-		bean.setValue("Haha");
-		assertEquals("Haha", text1.getValue());
-		assertEquals("Haha", yText1.getValue());
+		bean.setDateValue(new Date(100001));
+		assertEquals(bean.getDateValue(), text1.getValue());
+		assertEquals(bean.getDateValue().getTime(), yText1.getValue().getTime());
+
+		Date date = new Date(100002);
+		text1.setValue(date);
+		assertEquals(date, bean.getDateValue());
+		assertEquals(date, yText1.getValue());
+
+		date = new Date(100003);
+		yText1.setValue(date);
+		assertEquals(date, bean.getDateValue());
+		assertEquals(date, text1.getValue());
 	}
 
 	/**

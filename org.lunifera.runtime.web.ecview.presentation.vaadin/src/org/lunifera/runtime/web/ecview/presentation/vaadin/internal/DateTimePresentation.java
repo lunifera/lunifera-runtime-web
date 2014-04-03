@@ -21,7 +21,6 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 
-import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -36,6 +35,7 @@ public class DateTimePresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private DateField dateField;
+	private Binding widgetValueBinding;
 
 	/**
 	 * Constructor.
@@ -81,17 +81,18 @@ public class DateTimePresentation extends
 
 			dateField.setDateFormat(modelAccess.getDateformat());
 
-			dateField
-					.addValueChangeListener(new Property.ValueChangeListener() {
-						@Override
-						public void valueChange(Property.ValueChangeEvent event) {
-							Binding binding = BindingUtil
-									.getValueBinding(modelAccess.yDateTime);
-							if (binding != null) {
-								binding.updateTargetToModel();
-							}
-						}
-					});
+			// dateField
+			// .addValueChangeListener(new Property.ValueChangeListener() {
+			// @Override
+			// public void valueChange(Property.ValueChangeEvent event) {
+			// // observe the value property since binding is to
+			// // convertedValue property and convertedValue
+			// // property does not notify about changes
+			// if (widgetValueBinding != null) {
+			// widgetValueBinding.updateTargetToModel();
+			// }
+			// }
+			// });
 		}
 		return componentBase;
 	}
@@ -128,9 +129,10 @@ public class DateTimePresentation extends
 	 * @param field
 	 */
 	protected void createBindings(YDateTime yField, DateField field) {
-		// create the model binding from ridget to ECView-model
-		createModelBinding(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YDATE_TIME__VALUE, field);
+		// create the model binding from widget to ECView-model
+		widgetValueBinding = createModelBinding(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YDATE_TIME__VALUE, field, null,
+				null);
 
 		super.createBindings(yField, field);
 	}
@@ -168,6 +170,9 @@ public class DateTimePresentation extends
 	protected void internalDispose() {
 		// unrender the ui component
 		unrender();
+
+		widgetValueBinding.dispose();
+		widgetValueBinding = null;
 	}
 
 	/**

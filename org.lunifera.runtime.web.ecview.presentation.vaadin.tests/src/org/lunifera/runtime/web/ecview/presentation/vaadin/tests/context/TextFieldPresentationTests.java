@@ -15,6 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
@@ -314,6 +315,14 @@ public class TextFieldPresentationTests {
 		bean.setValue("Haha");
 		assertEquals("Haha", text1.getValue());
 		assertEquals("Haha", yText1.getValue());
+		
+		text1.setValue("Haha1");
+		assertEquals("Haha1", bean.getValue());
+		assertEquals("Haha1", yText1.getValue());
+
+		yText1.setValue("Haha2");
+		assertEquals("Haha2", bean.getValue());
+		assertEquals("Haha2", text1.getValue());
 	}
 
 	/**

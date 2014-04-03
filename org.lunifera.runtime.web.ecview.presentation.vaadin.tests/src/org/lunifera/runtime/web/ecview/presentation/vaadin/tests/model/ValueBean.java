@@ -7,6 +7,8 @@ public class ValueBean extends AbstractBean {
 	private String value;
 	private boolean boolValue;
 	private Date dateValue;
+	private int intValue;
+	private long longValue;
 
 	public ValueBean(String value) {
 		super();
@@ -21,6 +23,16 @@ public class ValueBean extends AbstractBean {
 	public ValueBean(Date value) {
 		super();
 		this.dateValue = value;
+	}
+	
+	public ValueBean(int value) {
+		super();
+		this.intValue = value;
+	}
+	
+	public ValueBean(long value) {
+		super();
+		this.longValue = value;
 	}
 
 	/**
@@ -52,7 +64,28 @@ public class ValueBean extends AbstractBean {
 	}
 
 	public void setDateValue(Date dateValue) {
-		this.dateValue = dateValue;
+		firePropertyChanged("dateValue", this.dateValue,
+				this.dateValue = dateValue);
 	}
+
+	public int getIntValue() {
+		return intValue;
+	}
+
+	public void setIntValue(int intValue) {
+		firePropertyChanged("intValue", this.intValue,
+				this.intValue = intValue);
+	}
+
+	public long getLongValue() {
+		return longValue;
+	}
+
+	public void setLongValue(long longValue) {
+		firePropertyChanged("longValue", this.longValue,
+				this.longValue = longValue);
+	}
+	
+	
 
 }

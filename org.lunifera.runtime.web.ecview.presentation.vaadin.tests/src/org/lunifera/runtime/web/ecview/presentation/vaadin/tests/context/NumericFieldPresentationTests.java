@@ -21,6 +21,8 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
@@ -33,6 +35,7 @@ import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
@@ -40,6 +43,7 @@ import org.osgi.service.cm.ConfigurationException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 
 /**
@@ -259,6 +263,64 @@ public class NumericFieldPresentationTests {
 		text1.setValue("998.877");
 		assertEquals(998877, yText1.getValue());
 
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_ValueBinding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YNumericField yField1 = factory.createNumericField();
+		yLayout.getElements().add(yField1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		INumericFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yField1);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		NumberField field1 = (NumberField) unwrapText(text1BaseComponentContainer);
+
+		// start tests
+		//
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean(998877);
+		beanBinding.setPropertyPath("intValue");
+		beanBinding.setBean(bean);
+		yBindingSet.addBinding(yField1.createValueEndpoint(), beanBinding);
+		assertEquals("998.877", field1.getValue());
+		assertEquals(998877, yField1.getValue());
+
+		// bean = new ValueBean("Huhu11");
+		// beanBinding.setPropertyPath("value");
+		// TODO Setting a bean later does not cause any sideeffects. See
+		// BeanBindingEndpointEditpart. The binding for the bean is not
+		// refreshed.
+		// beanBinding.setBean(bean);
+		// assertEquals("Huhu11", text1.getValue());
+		// assertEquals("Huhu11", yText1.getValue());
+
+		bean.setIntValue(223344);
+		assertEquals("223.344", field1.getValue());
+		assertEquals(223344, yField1.getValue());
+
+		field1.setValue("445.566");
+		assertEquals(445566, bean.getIntValue());
+		assertEquals(445566, yField1.getValue());
+
+		yField1.setValue(778899);
+		assertEquals(778899, bean.getIntValue());
+		assertEquals("778.899", field1.getValue());
 	}
 
 	/**
