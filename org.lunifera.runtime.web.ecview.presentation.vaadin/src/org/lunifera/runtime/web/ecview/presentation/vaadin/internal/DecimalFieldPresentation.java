@@ -20,10 +20,12 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YValueBindable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding.BindingUtil;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
@@ -81,6 +83,11 @@ public class DecimalFieldPresentation extends
 						public void valueChange(ValueChangeEvent event) {
 							if (eObjectToUIBinding != null) {
 								eObjectToUIBinding.updateTargetToModel();
+								
+								Binding domainToEObjectBinding = BindingUtil.getValueBinding((YValueBindable) getModel());
+								if(domainToEObjectBinding != null) {
+									domainToEObjectBinding.updateTargetToModel();
+								}
 							}
 						}
 					});
@@ -99,6 +106,8 @@ public class DecimalFieldPresentation extends
 			}
 
 			decimalField.setPrecision(modelAccess.getPrecision());
+			decimalField.setUseGrouping(modelAccess.isGrouping());
+
 		}
 		return componentBase;
 	}
@@ -272,6 +281,16 @@ public class DecimalFieldPresentation extends
 		public int getPrecision() {
 			return yDecimalField.getDatatype() != null ? yDecimalField
 					.getDatatype().getPrecision() : 2;
+		}
+		
+		/**
+		 * Returns the grouping of the decimal field.
+		 * 
+		 * @return
+		 */
+		public boolean isGrouping() {
+			return yDecimalField.getDatatype() != null ? yDecimalField
+					.getDatatype().isGrouping() : true;
 		}
 	}
 }

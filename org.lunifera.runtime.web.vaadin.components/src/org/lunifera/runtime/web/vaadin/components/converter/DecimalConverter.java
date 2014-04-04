@@ -202,6 +202,7 @@ public class DecimalConverter extends StringToDoubleConverter {
 
 		result.setGroupingUsed(useGrouping);
 
+
 		return result;
 	}
 

@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -44,7 +45,6 @@ import org.osgi.service.cm.ConfigurationException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 
 /**
@@ -64,6 +64,7 @@ public class NumericFieldPresentationTests {
 	 */
 	@Before
 	public void setup() throws ConfigurationException, BundleException {
+		Locale.setDefault(Locale.GERMANY);
 		UI.setCurrent(new DefaultUI());
 		UI.getCurrent().setContent(rootLayout);
 	}
@@ -323,18 +324,18 @@ public class NumericFieldPresentationTests {
 		assertEquals(778899, bean.getIntValue());
 		assertEquals("778.899", field1.getValue());
 	}
-	
+
 	@Test
-	public void testBindingIsDisposed(){
+	public void testBindingIsDisposed() {
 		// test that the binding is disposed if field is disposed
 		Assert.fail();
 	}
-	
+
 	@Test
 	public void testMarkNegative() {
 		Assert.fail("Implement");
 	}
-	
+
 	@Test
 	public void testGrouping() {
 		Assert.fail("Implement");
