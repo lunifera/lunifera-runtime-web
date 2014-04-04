@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -26,6 +27,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
@@ -39,6 +41,7 @@ import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding.BindingUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.osgi.framework.BundleException;
@@ -71,10 +74,6 @@ public class DecimalFieldPresentationTests {
 		UI.getCurrent().setContent(rootLayout);
 	}
 
-	
-	
-	
-	
 	/**
 	 * Tests rendering issues.
 	 * 
@@ -271,7 +270,7 @@ public class DecimalFieldPresentationTests {
 		text1.setValue("9.988,77");
 		assertEquals(9988.77, yText1.getValue(), 0);
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_ValueBinding() throws Exception {
@@ -330,13 +329,11 @@ public class DecimalFieldPresentationTests {
 		assertEquals("7.788,99", field1.getValue());
 	}
 
-	
-	
 	@Test
 	public void test_MarkNegative() {
-//		Assert.fail("Implement");
+		// Assert.fail("Implement");
 	}
-	
+
 	@Test
 	public void test_Grouping() throws ContextException {
 
@@ -352,13 +349,13 @@ public class DecimalFieldPresentationTests {
 		YDecimalDatatype dt1 = factory.createDecimalDatatype();
 		dt1.setGrouping(true);
 		yField1.setDatatype(dt1);
-		
+
 		YDecimalField yField2 = factory.createDecimalField();
 		yLayout.getElements().add(yField2);
 		YDecimalDatatype dt2 = factory.createDecimalDatatype();
 		dt2.setGrouping(false);
 		yField2.setDatatype(dt2);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -369,8 +366,7 @@ public class DecimalFieldPresentationTests {
 		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
 				.getWidget();
 		DecimalField field1 = (DecimalField) unwrapText(text1BaseComponentContainer);
-		
-		
+
 		IDecimalFieldEditpart text2Editpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yField2);
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
@@ -390,7 +386,7 @@ public class DecimalFieldPresentationTests {
 		yBindingSet.addBinding(yField1.createValueEndpoint(), beanBinding);
 		assertEquals("9.988,77", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
-		
+
 		YBeanBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
 		ValueBean bean2 = new ValueBean(9988.77);
 		beanBinding2.setPropertyPath("doubleValue");
@@ -399,12 +395,10 @@ public class DecimalFieldPresentationTests {
 		assertEquals("9988,77", field2.getValue());
 		assertEquals(9988.77, yField2.getValue(), 0);
 
-		
-		
 		bean.setDoubleValue(2233.44);
 		assertEquals("2.233,44", field1.getValue());
 		assertEquals(2233.44, yField1.getValue(), 0);
-		
+
 		bean2.setDoubleValue(2233.44);
 		assertEquals("2233,44", field2.getValue());
 		assertEquals(2233.44, yField2.getValue(), 0);
@@ -412,14 +406,13 @@ public class DecimalFieldPresentationTests {
 		field1.setValue("4.455,66");
 		assertEquals(4455.66, bean.getDoubleValue(), 0);
 		assertEquals(4455.66, yField1.getValue(), 0);
-		
-		
-		// grouped value in ungrouped field is not converted 
+
+		// grouped value in ungrouped field is not converted
 		field2.setValue("4.455,66");
-//		assertEquals("4455,66", field2.getValue());
-//		assertEquals(4455.66, bean2.getDoubleValue(), 0);
-//		assertEquals(4455.66, yField2.getValue(), 0);
-		
+		// assertEquals("4455,66", field2.getValue());
+		// assertEquals(4455.66, bean2.getDoubleValue(), 0);
+		// assertEquals(4455.66, yField2.getValue(), 0);
+
 		field2.setValue("4455,66");
 		assertEquals("4455,66", field2.getValue());
 		assertEquals(4455.66, bean2.getDoubleValue(), 0);
@@ -428,11 +421,11 @@ public class DecimalFieldPresentationTests {
 		yField1.setValue(7788.99);
 		assertEquals(7788.99, bean.getDoubleValue(), 0);
 		assertEquals("7.788,99", field1.getValue());
-		
+
 		yField2.setValue(7788.99);
 		assertEquals(7788.99, bean2.getDoubleValue(), 0);
 		assertEquals("7788,99", field2.getValue());
-	
+
 	}
 
 	@Test
@@ -445,13 +438,13 @@ public class DecimalFieldPresentationTests {
 		YDecimalDatatype dt1 = factory.createDecimalDatatype();
 		dt1.setPrecision(3);
 		yField1.setDatatype(dt1);
-		
+
 		YDecimalField yField2 = factory.createDecimalField();
 		yLayout.getElements().add(yField2);
 		YDecimalDatatype dt2 = factory.createDecimalDatatype();
 		dt2.setPrecision(0);
 		yField2.setDatatype(dt2);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -462,8 +455,7 @@ public class DecimalFieldPresentationTests {
 		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
 				.getWidget();
 		DecimalField field1 = (DecimalField) unwrapText(text1BaseComponentContainer);
-		
-		
+
 		IDecimalFieldEditpart text2Editpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yField2);
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
@@ -483,7 +475,7 @@ public class DecimalFieldPresentationTests {
 		yBindingSet.addBinding(yField1.createValueEndpoint(), beanBinding);
 		assertEquals("9.988,770", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
-		
+
 		YBeanBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
 		ValueBean bean2 = new ValueBean(9988.77);
 		beanBinding2.setPropertyPath("doubleValue");
@@ -494,46 +486,210 @@ public class DecimalFieldPresentationTests {
 		// rounded value should be written back to bean itself
 		assertEquals(9989, bean2.getDoubleValue(), 0);
 
-		
-		
 		bean.setDoubleValue(2233.44);
 		assertEquals("2.233,440", field1.getValue());
 		assertEquals(2233.44, yField1.getValue(), 0);
-		
+
 		bean2.setDoubleValue(2233.44);
 		assertEquals("2.233", field2.getValue());
 		assertEquals(2233, yField2.getValue(), 0);
 		// rounded value should be written back to bean itself
 		assertEquals(2233, bean2.getDoubleValue(), 0);
-		
-		
+
 		field1.setValue("4.455,66");
 		assertEquals(4455.660, bean.getDoubleValue(), 0);
 		assertEquals(4455.66, yField1.getValue(), 0);
-		
+
 		field2.setValue("4.455,66");
 		assertEquals("4.456", field2.getValue());
 		assertEquals(4456, yField2.getValue(), 0);
 		assertEquals(4456, bean2.getDoubleValue(), 0);
-		
 
 		yField1.setValue(7788.99);
 		assertEquals(7788.99, bean.getDoubleValue(), 0);
 		assertEquals("7.788,990", field1.getValue());
-		
+
 		yField2.setValue(7788.99);
 		assertEquals(7789, bean2.getDoubleValue(), 0);
-		assertEquals("7.789", field2.getValue());	
+		assertEquals("7.789", field2.getValue());
 		assertEquals(7789, yField2.getValue(), 0);
 
-		
-	
 	}
 
 	@Test
-	public void test_BindingIsDisposed() {
-		// test that the binding is disposed if field is disposed
-//		Assert.fail();
+	public void test_BindingIsDisposed() throws ContextException {
+		YView yView = factory.createView();
+		YDecimalField yText = factory.createDecimalField();
+		yView.setContent(yText);
+		YDecimalDatatype dt = factory.createDecimalDatatype();
+		dt.setGrouping(true);
+		yText.setDatatype(dt);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDecimalFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+
+		DecimalField text = (DecimalField) unwrapText(baseComponentContainer);
+		assertEquals(1, baseComponentContainer.getComponentCount());
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean(123.0);
+		beanBinding.setPropertyPath("doubleValue");
+		beanBinding.setBean(bean);
+
+		YEmbeddableValueEndpoint valueEndpoint = yText.createValueEndpoint();
+		yBindingSet.addBinding(valueEndpoint, beanBinding);
+		assertEquals("123,00", text.getValue());
+		assertEquals(123, bean.getDoubleValue(), 0);
+
+		IElementEditpart beanBindingEditPart = DelegatingEditPartManager
+				.getInstance().getEditpart(beanBinding);
+		IElementEditpart valueEndpointEditPart = DelegatingEditPartManager
+				.getInstance().getEditpart(valueEndpoint);
+
+		Binding binding = BindingUtil.getValueBinding(yText);
+		assertFalse(textEditpart.isDisposed());
+		assertFalse(presentation.isDisposed());
+		assertFalse(binding.isDisposed());
+		assertFalse(beanBindingEditPart.isDisposed());
+		assertFalse(valueEndpointEditPart.isDisposed());
+
+		textEditpart.dispose();
+		assertTrue(textEditpart.isDisposed());
+		assertTrue(presentation.isDisposed());
+		assertTrue(binding.isDisposed());
+		assertTrue(beanBindingEditPart.isDisposed());
+		assertTrue(valueEndpointEditPart.isDisposed());
+
+	}
+
+	@Test
+	public void test_BindingWithUnrender() throws ContextException {
+		YView yView = factory.createView();
+		YDecimalField yText = factory.createDecimalField();
+		yView.setContent(yText);
+		YDecimalDatatype dt = factory.createDecimalDatatype();
+		dt.setGrouping(true);
+		yText.setDatatype(dt);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDecimalFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+
+		DecimalField text = (DecimalField) unwrapText(baseComponentContainer);
+		assertEquals(1, baseComponentContainer.getComponentCount());
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean(123.0);
+		beanBinding.setPropertyPath("doubleValue");
+		beanBinding.setBean(bean);
+
+		YEmbeddableValueEndpoint valueEndpoint = yText.createValueEndpoint();
+		yBindingSet.addBinding(valueEndpoint, beanBinding);
+		assertEquals("123,00", text.getValue());
+		assertEquals(123, bean.getDoubleValue(), 0);
+
+		presentation.unrender();
+		Assert.fail();
+
+		IElementEditpart beanBindingEditPart = DelegatingEditPartManager
+				.getInstance().getEditpart(beanBinding);
+		IElementEditpart valueEndpointEditPart = DelegatingEditPartManager
+				.getInstance().getEditpart(valueEndpoint);
+
+		Binding binding = BindingUtil.getValueBinding(yText);
+		assertFalse(textEditpart.isDisposed());
+		assertFalse(presentation.isDisposed());
+		assertFalse(binding.isDisposed());
+		assertFalse(beanBindingEditPart.isDisposed());
+		assertFalse(valueEndpointEditPart.isDisposed());
+
+		textEditpart.dispose();
+		assertTrue(textEditpart.isDisposed());
+		assertTrue(presentation.isDisposed());
+		assertTrue(binding.isDisposed());
+		assertTrue(beanBindingEditPart.isDisposed());
+		assertTrue(valueEndpointEditPart.isDisposed());
+
+	}
+
+	@Test
+	public void test_Binding_RemoveAndAddElement() throws ContextException {
+		YView yView = factory.createView();
+		YDecimalField yText = factory.createDecimalField();
+		yView.setContent(yText);
+		YDecimalDatatype dt = factory.createDecimalDatatype();
+		dt.setGrouping(true);
+		yText.setDatatype(dt);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDecimalFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+
+		DecimalField text = (DecimalField) unwrapText(baseComponentContainer);
+		assertEquals(1, baseComponentContainer.getComponentCount());
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean(123.0);
+		beanBinding.setPropertyPath("doubleValue");
+		beanBinding.setBean(bean);
+
+		YEmbeddableValueEndpoint valueEndpoint = yText.createValueEndpoint();
+		yBindingSet.addBinding(valueEndpoint, beanBinding);
+		assertEquals("123,00", text.getValue());
+		assertEquals(123, bean.getDoubleValue(), 0);
+
+		// force unrender
+		yView.setContent(null);
+
+		// force re-render
+		yView.setContent(yText);
+
+		Assert.fail();
+
+		IElementEditpart beanBindingEditPart = DelegatingEditPartManager
+				.getInstance().getEditpart(beanBinding);
+		IElementEditpart valueEndpointEditPart = DelegatingEditPartManager
+				.getInstance().getEditpart(valueEndpoint);
+
+		Binding binding = BindingUtil.getValueBinding(yText);
+		assertFalse(textEditpart.isDisposed());
+		assertFalse(presentation.isDisposed());
+		assertFalse(binding.isDisposed());
+		assertFalse(beanBindingEditPart.isDisposed());
+		assertFalse(valueEndpointEditPart.isDisposed());
+
+		textEditpart.dispose();
+		assertTrue(textEditpart.isDisposed());
+		assertTrue(presentation.isDisposed());
+		assertTrue(binding.isDisposed());
+		assertTrue(beanBindingEditPart.isDisposed());
+		assertTrue(valueEndpointEditPart.isDisposed());
+
 	}
 
 	/**

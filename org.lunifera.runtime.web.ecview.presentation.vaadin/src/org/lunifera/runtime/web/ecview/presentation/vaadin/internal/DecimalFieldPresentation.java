@@ -18,6 +18,7 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YValueBindable;
@@ -83,10 +84,12 @@ public class DecimalFieldPresentation extends
 						public void valueChange(ValueChangeEvent event) {
 							if (eObjectToUIBinding != null) {
 								eObjectToUIBinding.updateTargetToModel();
-								
-								Binding domainToEObjectBinding = BindingUtil.getValueBinding((YValueBindable) getModel());
-								if(domainToEObjectBinding != null) {
-									domainToEObjectBinding.updateTargetToModel();
+
+								Binding domainToEObjectBinding = BindingUtil
+										.getValueBinding((YValueBindable) getModel());
+								if (domainToEObjectBinding != null) {
+									domainToEObjectBinding
+											.updateTargetToModel();
 								}
 							}
 						}
@@ -207,6 +210,14 @@ public class DecimalFieldPresentation extends
 		unrender();
 
 		eObjectToUIBinding = null;
+
+		// dispose the binding too
+		IBindingEditpart valueBindingEditpart = BindingUtil
+				.getValueBindingEditpart((YValueBindable) getModel());
+		if (valueBindingEditpart != null) {
+			valueBindingEditpart.dispose();
+		}
+
 	}
 
 	/**
@@ -282,7 +293,7 @@ public class DecimalFieldPresentation extends
 			return yDecimalField.getDatatype() != null ? yDecimalField
 					.getDatatype().getPrecision() : 2;
 		}
-		
+
 		/**
 		 * Returns the grouping of the decimal field.
 		 * 
