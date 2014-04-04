@@ -330,8 +330,13 @@ public class DecimalFieldPresentationTests {
 	}
 
 	@Test
+	public void test_CreateBindingBeforeRendering() {
+		Assert.fail("Implement");
+	}
+	
+	@Test
 	public void test_MarkNegative() {
-		// Assert.fail("Implement");
+		Assert.fail("Implement");
 	}
 
 	@Test
