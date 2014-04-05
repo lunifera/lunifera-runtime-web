@@ -364,12 +364,20 @@ public class VerticalLayoutPresentation extends
 
 	@Override
 	protected void internalDispose() {
-		unrender();
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 	}
 
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {

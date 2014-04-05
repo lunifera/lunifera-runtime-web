@@ -15,8 +15,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
@@ -24,6 +26,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
@@ -35,13 +38,13 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding.BindingUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.osgi.framework.BundleException;
@@ -330,10 +333,64 @@ public class DecimalFieldPresentationTests {
 	}
 
 	@Test
-	public void test_CreateBindingBeforeRendering() {
-		Assert.fail("Implement");
+	public void test_CreateBindingBeforeRendering() throws ContextException {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDecimalField yField1 = factory.createDecimalField();
+		yLayout.getElements().add(yField1);
+
+		//
+		// ADD THE BINDING BEFORE RENDERING
+		//
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		ValueBean bean = new ValueBean(9988.77);
+		beanBinding.setPropertyPath("doubleValue");
+		beanBinding.setBean(bean);
+		yBindingSet.addBinding(yField1.createValueEndpoint(), beanBinding);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDecimalFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yField1);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		DecimalField field1 = (DecimalField) unwrapText(text1BaseComponentContainer);
+
+		assertEquals("9.988,77", field1.getValue());
+		assertEquals(9988.77, yField1.getValue(), 0);
+
+		// bean = new ValueBean("Huhu11");
+		// beanBinding.setPropertyPath("value");
+		// TODO Setting a bean later does not cause any sideeffects. See
+		// BeanBindingEndpointEditpart. The binding for the bean is not
+		// refreshed.
+		// beanBinding.setBean(bean);
+		// assertEquals("Huhu11", text1.getValue());
+		// assertEquals("Huhu11", yText1.getValue());
+
+		bean.setDoubleValue(2233.44);
+		assertEquals("2.233,44", field1.getValue());
+		assertEquals(2233.44, yField1.getValue(), 0);
+
+		field1.setValue("4.455,66");
+		assertEquals(4455.66, bean.getDoubleValue(), 0);
+		assertEquals(4455.66, yField1.getValue(), 0);
+
+		yField1.setValue(7788.99);
+		assertEquals(7788.99, bean.getDoubleValue(), 0);
+		assertEquals("7.788,99", field1.getValue());
 	}
-	
+
 	@Test
 	public void test_MarkNegative() {
 		Assert.fail("Implement");
@@ -535,7 +592,7 @@ public class DecimalFieldPresentationTests {
 
 		IDecimalFieldEditpart textEditpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yText);
-		IWidgetPresentation<Component> presentation = textEditpart
+		AbstractVaadinWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
@@ -560,12 +617,17 @@ public class DecimalFieldPresentationTests {
 		IElementEditpart valueEndpointEditPart = DelegatingEditPartManager
 				.getInstance().getEditpart(valueEndpoint);
 
-		Binding binding = BindingUtil.getValueBinding(yText);
+		Set<Binding> toUIBindings = presentation.getUIBindings();
+
+		Binding binding = ModelUtil.getValueBinding(yText);
 		assertFalse(textEditpart.isDisposed());
 		assertFalse(presentation.isDisposed());
 		assertFalse(binding.isDisposed());
 		assertFalse(beanBindingEditPart.isDisposed());
 		assertFalse(valueEndpointEditPart.isDisposed());
+		for (Binding toUiBinding : toUIBindings) {
+			assertFalse(toUiBinding.isDisposed());
+		}
 
 		textEditpart.dispose();
 		assertTrue(textEditpart.isDisposed());
@@ -573,7 +635,10 @@ public class DecimalFieldPresentationTests {
 		assertTrue(binding.isDisposed());
 		assertTrue(beanBindingEditPart.isDisposed());
 		assertTrue(valueEndpointEditPart.isDisposed());
-
+		for (Binding toUiBinding : toUIBindings) {
+			assertTrue(toUiBinding.isDisposed());
+		}
+		assertEquals(0, presentation.getUIBindings().size());
 	}
 
 	@Test
@@ -590,7 +655,7 @@ public class DecimalFieldPresentationTests {
 
 		IDecimalFieldEditpart textEditpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yText);
-		IWidgetPresentation<Component> presentation = textEditpart
+		AbstractVaadinWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
@@ -610,27 +675,88 @@ public class DecimalFieldPresentationTests {
 		assertEquals("123,00", text.getValue());
 		assertEquals(123, bean.getDoubleValue(), 0);
 
-		presentation.unrender();
-		Assert.fail();
-
 		IElementEditpart beanBindingEditPart = DelegatingEditPartManager
 				.getInstance().getEditpart(beanBinding);
 		IElementEditpart valueEndpointEditPart = DelegatingEditPartManager
 				.getInstance().getEditpart(valueEndpoint);
 
-		Binding binding = BindingUtil.getValueBinding(yText);
-		assertFalse(textEditpart.isDisposed());
-		assertFalse(presentation.isDisposed());
-		assertFalse(binding.isDisposed());
-		assertFalse(beanBindingEditPart.isDisposed());
-		assertFalse(valueEndpointEditPart.isDisposed());
+		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertTrue(presentation.isRendered());
+		Binding binding = ModelUtil.getValueBinding(yText);
+		IBindingEditpart bindingEditpart = ModelUtil
+				.getValueBindingEditpart(yText);
+		Assert.assertFalse(binding.isDisposed());
+		Assert.assertFalse(bindingEditpart.isDisposed());
+		Assert.assertTrue(bindingEditpart.isBound());
 
-		textEditpart.dispose();
-		assertTrue(textEditpart.isDisposed());
-		assertTrue(presentation.isDisposed());
-		assertTrue(binding.isDisposed());
-		assertTrue(beanBindingEditPart.isDisposed());
-		assertTrue(valueEndpointEditPart.isDisposed());
+		Set<Binding> uiBindings = new HashSet<Binding>(
+				presentation.getUIBindings());
+		for (Binding uiBinding : uiBindings) {
+			Assert.assertFalse(uiBinding.isDisposed());
+		}
+
+		Assert.assertFalse(beanBindingEditPart.isDisposed());
+		Assert.assertFalse(valueEndpointEditPart.isDisposed());
+
+		//
+		// Unrender
+		//
+		presentation.unrender();
+
+		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertFalse(presentation.isRendered());
+		Assert.assertTrue(binding.isDisposed());
+		Assert.assertFalse(bindingEditpart.isDisposed());
+		Assert.assertFalse(bindingEditpart.isBound());
+		for (Binding uiBinding : uiBindings) {
+			Assert.assertTrue(uiBinding.isDisposed());
+		}
+
+		Assert.assertTrue(beanBindingEditPart.isDisposed());
+		Assert.assertTrue(valueEndpointEditPart.isDisposed());
+
+		//
+		// now render the element again
+		//
+		rootLayout.addComponent(presentation.createWidget(rootLayout));
+
+		beanBindingEditPart = DelegatingEditPartManager.getInstance()
+				.getEditpart(beanBinding);
+		valueEndpointEditPart = DelegatingEditPartManager.getInstance()
+				.getEditpart(valueEndpoint);
+
+		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertTrue(presentation.isRendered());
+		binding = ModelUtil.getValueBinding(yText);
+		bindingEditpart = ModelUtil.getValueBindingEditpart(yText);
+		Assert.assertFalse(binding.isDisposed());
+		Assert.assertFalse(bindingEditpart.isDisposed());
+		Assert.assertTrue(bindingEditpart.isBound());
+
+		uiBindings = new HashSet<Binding>(presentation.getUIBindings());
+		for (Binding uiBinding : uiBindings) {
+			Assert.assertFalse(uiBinding.isDisposed());
+		}
+
+		Assert.assertFalse(beanBindingEditPart.isDisposed());
+		Assert.assertFalse(valueEndpointEditPart.isDisposed());
+
+		//
+		// And unrender
+		//
+		presentation.unrender();
+
+		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertFalse(presentation.isRendered());
+		Assert.assertTrue(binding.isDisposed());
+		Assert.assertFalse(bindingEditpart.isDisposed());
+		Assert.assertFalse(bindingEditpart.isBound());
+		for (Binding uiBinding : uiBindings) {
+			Assert.assertTrue(uiBinding.isDisposed());
+		}
+
+		Assert.assertTrue(beanBindingEditPart.isDisposed());
+		Assert.assertTrue(valueEndpointEditPart.isDisposed());
 
 	}
 
@@ -648,7 +774,7 @@ public class DecimalFieldPresentationTests {
 
 		IDecimalFieldEditpart textEditpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yText);
-		IWidgetPresentation<Component> presentation = textEditpart
+		AbstractVaadinWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
@@ -668,32 +794,88 @@ public class DecimalFieldPresentationTests {
 		assertEquals("123,00", text.getValue());
 		assertEquals(123, bean.getDoubleValue(), 0);
 
-		// force unrender
-		yView.setContent(null);
-
-		// force re-render
-		yView.setContent(yText);
-
-		Assert.fail();
-
 		IElementEditpart beanBindingEditPart = DelegatingEditPartManager
 				.getInstance().getEditpart(beanBinding);
 		IElementEditpart valueEndpointEditPart = DelegatingEditPartManager
 				.getInstance().getEditpart(valueEndpoint);
 
-		Binding binding = BindingUtil.getValueBinding(yText);
-		assertFalse(textEditpart.isDisposed());
-		assertFalse(presentation.isDisposed());
-		assertFalse(binding.isDisposed());
-		assertFalse(beanBindingEditPart.isDisposed());
-		assertFalse(valueEndpointEditPart.isDisposed());
+		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertTrue(presentation.isRendered());
+		Binding binding = ModelUtil.getValueBinding(yText);
+		IBindingEditpart bindingEditpart = ModelUtil
+				.getValueBindingEditpart(yText);
+		Assert.assertFalse(binding.isDisposed());
+		Assert.assertFalse(bindingEditpart.isDisposed());
+		Assert.assertTrue(bindingEditpart.isBound());
 
-		textEditpart.dispose();
-		assertTrue(textEditpart.isDisposed());
-		assertTrue(presentation.isDisposed());
-		assertTrue(binding.isDisposed());
-		assertTrue(beanBindingEditPart.isDisposed());
-		assertTrue(valueEndpointEditPart.isDisposed());
+		Set<Binding> uiBindings = new HashSet<Binding>(
+				presentation.getUIBindings());
+		for (Binding uiBinding : uiBindings) {
+			Assert.assertFalse(uiBinding.isDisposed());
+		}
+
+		Assert.assertFalse(beanBindingEditPart.isDisposed());
+		Assert.assertFalse(valueEndpointEditPart.isDisposed());
+
+		//
+		// Unrender by remove
+		//
+		yView.setContent(null);
+
+		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertFalse(presentation.isRendered());
+		Assert.assertTrue(binding.isDisposed());
+		Assert.assertFalse(bindingEditpart.isDisposed());
+		Assert.assertFalse(bindingEditpart.isBound());
+		for (Binding uiBinding : uiBindings) {
+			Assert.assertTrue(uiBinding.isDisposed());
+		}
+
+		Assert.assertTrue(beanBindingEditPart.isDisposed());
+		Assert.assertTrue(valueEndpointEditPart.isDisposed());
+
+		//
+		// now render the element again
+		//
+		yView.setContent(yText);
+
+		beanBindingEditPart = DelegatingEditPartManager.getInstance()
+				.getEditpart(beanBinding);
+		valueEndpointEditPart = DelegatingEditPartManager.getInstance()
+				.getEditpart(valueEndpoint);
+
+		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertTrue(presentation.isRendered());
+		binding = ModelUtil.getValueBinding(yText);
+		bindingEditpart = ModelUtil.getValueBindingEditpart(yText);
+		Assert.assertFalse(binding.isDisposed());
+		Assert.assertFalse(bindingEditpart.isDisposed());
+		Assert.assertTrue(bindingEditpart.isBound());
+
+		uiBindings = new HashSet<Binding>(presentation.getUIBindings());
+		for (Binding uiBinding : uiBindings) {
+			Assert.assertFalse(uiBinding.isDisposed());
+		}
+
+		Assert.assertFalse(beanBindingEditPart.isDisposed());
+		Assert.assertFalse(valueEndpointEditPart.isDisposed());
+
+		//
+		// And unrender
+		//
+		yView.setContent(null);
+
+		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertFalse(presentation.isRendered());
+		Assert.assertTrue(binding.isDisposed());
+		Assert.assertFalse(bindingEditpart.isDisposed());
+		Assert.assertFalse(bindingEditpart.isBound());
+		for (Binding uiBinding : uiBindings) {
+			Assert.assertTrue(uiBinding.isDisposed());
+		}
+
+		Assert.assertTrue(beanBindingEditPart.isDisposed());
+		Assert.assertTrue(valueEndpointEditPart.isDisposed());
 
 	}
 

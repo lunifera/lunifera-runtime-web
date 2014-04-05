@@ -98,6 +98,10 @@ public class ButtonPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {
@@ -113,8 +117,11 @@ public class ButtonPresentation extends
 	 */
 	@Override
 	protected void internalDispose() {
-		// unrender the ui component
-		unrender();
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 	}
 
 	/**

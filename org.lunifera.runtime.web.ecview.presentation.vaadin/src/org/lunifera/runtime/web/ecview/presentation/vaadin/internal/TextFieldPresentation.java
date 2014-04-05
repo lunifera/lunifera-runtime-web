@@ -113,8 +113,8 @@ public class TextFieldPresentation extends
 	 */
 	protected void createBindings(YTextField yField, TextField field) {
 		// create the model binding from ridget to ECView-model
-		createModelBinding(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTEXT_FIELD__VALUE, text);
+		registerBinding(createBindings_Value(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YTEXT_FIELD__VALUE, text));
 
 		super.createBindings(yField, field);
 	}
@@ -135,6 +135,10 @@ public class TextFieldPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {
@@ -150,8 +154,11 @@ public class TextFieldPresentation extends
 	 */
 	@Override
 	protected void internalDispose() {
-		// unrender the ui component
-		unrender();
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 	}
 
 	/**

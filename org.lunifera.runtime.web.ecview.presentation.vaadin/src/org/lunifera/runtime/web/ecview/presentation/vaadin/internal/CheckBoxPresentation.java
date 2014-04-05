@@ -113,8 +113,8 @@ public class CheckBoxPresentation extends
 	 */
 	protected void createBindings(YCheckBox yField, CheckBox field) {
 		// create the model binding from ridget to ECView-model
-		createModelBinding(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YCHECK_BOX__VALUE, field);
+		registerBinding(createBindings_Value(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YCHECK_BOX__VALUE, field));
 
 		super.createBindings(yField, field);
 	}
@@ -135,6 +135,10 @@ public class CheckBoxPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+			
+			// unbind all active bindings
+			unbind();
+			
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {
@@ -150,8 +154,11 @@ public class CheckBoxPresentation extends
 	 */
 	@Override
 	protected void internalDispose() {
-		// unrender the ui component
-		unrender();
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 	}
 
 	/**

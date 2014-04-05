@@ -44,7 +44,7 @@ public class NumericFieldPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private NumberField numberField;
-	private Binding eObjectToUIBinding;
+	private Binding binding_valueToUI;
 
 	/**
 	 * Constructor.
@@ -80,8 +80,8 @@ public class NumericFieldPresentation extends
 					.addValueChangeListener(new Property.ValueChangeListener() {
 						@Override
 						public void valueChange(ValueChangeEvent event) {
-							if (eObjectToUIBinding != null) {
-								eObjectToUIBinding.updateTargetToModel();
+							if (binding_valueToUI != null) {
+								binding_valueToUI.updateTargetToModel();
 							}
 						}
 					});
@@ -136,9 +136,11 @@ public class NumericFieldPresentation extends
 	protected void createBindings(YNumericField yField, NumberField field) {
 		// create the model binding from ridget to ECView-model
 
-		eObjectToUIBinding = createModelBinding(castEObject(getModel()),
+		binding_valueToUI = createModelBinding(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YNUMERIC_FIELD__VALUE, field,
 				null, null);
+		
+		registerBinding(binding_valueToUI);
 
 		super.createBindings(yField, field);
 	}
@@ -178,6 +180,10 @@ public class NumericFieldPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+			
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {
@@ -193,10 +199,11 @@ public class NumericFieldPresentation extends
 	 */
 	@Override
 	protected void internalDispose() {
-		// unrender the ui component
-		unrender();
-
-		eObjectToUIBinding = null;
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 	}
 
 	/**

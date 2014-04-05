@@ -10,9 +10,12 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Future;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
@@ -149,6 +152,11 @@ public class ViewPresentation extends AbstractDisposable implements
 	@Override
 	public boolean isRendered() {
 		return componentBase != null;
+	}
+
+	@Override
+	public Set<Binding> getUIBindings() {
+		return Collections.emptySet();
 	}
 
 	/**

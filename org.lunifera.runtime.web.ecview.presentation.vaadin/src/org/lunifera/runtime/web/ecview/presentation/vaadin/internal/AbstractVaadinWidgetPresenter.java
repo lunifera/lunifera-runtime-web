@@ -10,6 +10,9 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.IObservable;
@@ -20,11 +23,15 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YAction;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YField;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
+import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
 import org.eclipse.emf.ecp.ecview.common.model.core.util.CoreModelUtil;
+import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleEvent;
+import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleService;
+import org.eclipse.emf.ecp.ecview.common.notification.LifecycleEvent;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
@@ -51,10 +58,20 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 */
 	public static final String CSS_CLASS__CONTROL = IConstants.CSS_CLASS__CONTROL;
 
+	// a reference to viewContext is required for disposal. Otherwise the view
+	// may not become accessed
+	private IViewContext viewContext;
+
 	private final IEmbeddableEditpart editpart;
+
+	private IBindingManager bindingManger;
+	private Set<Binding> bindings = new HashSet<Binding>();
+
+	private IViewContext disposingTempViewContext;
 
 	public AbstractVaadinWidgetPresenter(IEmbeddableEditpart editpart) {
 		this.editpart = editpart;
+		viewContext = editpart.getView().getContext();
 	}
 
 	/**
@@ -77,101 +94,137 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * @return viewContext
 	 */
 	public IViewContext getViewContext() {
-		return getEditpart().getView().getContext();
+		return viewContext;
 	}
 
 	/**
-	 * Creates the bindings for the given elements.
+	 * Creates the bindings from the ECView EMF model to the given UI element.
 	 * 
 	 * @param yEmbeddable
 	 * @param field
+	 * 
+	 * @return Binding - the created binding
 	 */
 	protected void createBindings(YEmbeddable yEmbeddable,
 			AbstractComponent abstractComponent) {
 
-		// initialize the transient values
-		//
-		CoreModelUtil.initTransientValues(yEmbeddable);
-
-		IBindingManager bindingManger = getViewContext()
+		bindingManger = getViewContext()
 				.getService(
 						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
 								.getName());
-		// bind visible
-		bindingManger.bindVisible(yEmbeddable, abstractComponent);
+		applyDefaults(yEmbeddable);
+
+		if (yEmbeddable instanceof YVisibleable) {
+			registerBinding(createBindings_Visiblility(yEmbeddable,
+					abstractComponent));
+		}
+
+		if (yEmbeddable instanceof YEnable) {
+			registerBinding(createBindings_Enabled((YEnable) yEmbeddable,
+					abstractComponent));
+		}
+
+		if (yEmbeddable instanceof YEditable) {
+			registerBinding(createBindings_Editable((YEditable) yEmbeddable,
+					abstractComponent));
+		}
+
+		// createBindings_Value(yEmbeddable, modelFeature, field, targetToModel,
+		// modelToTarget)
+
 	}
 
 	/**
-	 * Creates the bindings for the given elements.
+	 * Binds the editable flag from the ecview model to the ui element.
 	 * 
-	 * @param yEmbeddable
-	 * @param field
-	 */
-	protected void createBindings(YAction yAction,
-			AbstractComponent abstractComponent) {
-
-		createBindings((YEmbeddable) yAction, abstractComponent);
-
-		IBindingManager bindingManger = getViewContext()
-				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
-								.getName());
-
-		// bind enabled
-		bindingManger.bindEnabled(yAction, abstractComponent);
-	}
-
-	/**
-	 * Creates the bindings for the given elements.
+	 * @param yEditable
+	 * @param abstractComponent
 	 * 
-	 * @param yEmbeddable
-	 * @param field
+	 * @return Binding - the created binding
 	 */
-	protected void createBindings(YField yField,
+	protected Binding createBindings_Editable(YEditable yEditable,
 			AbstractComponent abstractComponent) {
-
-		createBindings((YEmbeddable) yField, abstractComponent);
-
-		IBindingManager bindingManger = getViewContext()
-				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
-								.getName());
-
-		// bind enabled
-		bindingManger.bindEnabled(yField, abstractComponent);
-
 		// bind readonly
 		if (abstractComponent instanceof Property.ReadOnlyStatusChangeNotifier) {
-			bindingManger.bindReadonly(yField,
+			return bindingManger.bindReadonly(yEditable,
 					(Property.ReadOnlyStatusChangeNotifier) abstractComponent);
 		} else {
-			bindingManger.bindReadonlyOneway(yField, abstractComponent);
+			return bindingManger.bindReadonlyOneway(yEditable,
+					abstractComponent);
 		}
 	}
 
 	/**
-	 * Creates the model binding from ridget to ECView-model.
+	 * Applies the defaults to the ecview model. Transient values will be
+	 * configured properly.
 	 * 
-	 * @param model
-	 * @param modelFeature
-	 * @param field
-	 * @return binding
-	 * @return
+	 * @param yEmbeddable
 	 */
-	protected Object createModelBinding(EObject model,
-			EStructuralFeature modelFeature, Field<?> field) {
-		return createModelBinding(model, modelFeature, field, null, null);
+	protected void applyDefaults(YEmbeddable yEmbeddable) {
+		// initialize the transient values
+		//
+		CoreModelUtil.initTransientValues(yEmbeddable);
 	}
 
 	/**
-	 * Creates the model binding from ridget to ECView-model.
+	 * Binds the visible flag from the ecview model to the ui element.
+	 * 
+	 * @param yVisibleable
+	 * @param abstractComponent
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindings_Visiblility(YVisibleable yVisibleable,
+			AbstractComponent abstractComponent) {
+		// bind visible
+		return bindingManger.bindVisible(yVisibleable, abstractComponent);
+	}
+
+	/**
+	 * Binds the enabled flag from the ecview model to the ui element.
+	 * 
+	 * @param yEnable
+	 * @param abstractComponent
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindings_Enabled(YEnable yEnable,
+			AbstractComponent abstractComponent) {
+		IBindingManager bindingManger = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+
+		// bind enabled
+		return bindingManger.bindEnabled(yEnable, abstractComponent);
+	}
+
+	/**
+	 * Creates a binding for the value attribute from the ECView-UI-model to the
+	 * UI element.
 	 * 
 	 * @param model
 	 * @param modelFeature
 	 * @param field
 	 * @return binding
+	 * @@return Binding - the created binding
 	 */
-	protected Binding createModelBinding(EObject model,
+	protected Binding createBindings_Value(EObject model,
+			EStructuralFeature modelFeature, Field<?> field) {
+		return createBindings_Value(model, modelFeature, field, null, null);
+	}
+
+	/**
+	 * Binds the value attribute from the ecview model to the ui element.
+	 * 
+	 * @param model
+	 * @param modelFeature
+	 * @param field
+	 * @return binding
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindings_Value(EObject model,
 			EStructuralFeature modelFeature, Field<?> field,
 			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
 		IBindingManager bindingManager = getViewContext()
@@ -188,6 +241,26 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 					targetToModel, modelToTarget);
 		}
 		return null;
+	}
+
+	/**
+	 * Registers the given binding to be managed by the presenter. If the widget
+	 * becomes disposed or unrendered, all the bindings will become disposed.
+	 * 
+	 * @param binding
+	 */
+	protected void registerBinding(Binding binding) {
+		bindings.add(binding);
+	}
+
+	/**
+	 * Unbinds all currently active bindings.
+	 */
+	protected void unbind() {
+		for (Binding binding : bindings) {
+			binding.dispose();
+		}
+		bindings.clear();
 	}
 
 	@Override
@@ -208,6 +281,62 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 
 	protected EObject castEObject(Object model) {
 		return (EObject) model;
+	}
+
+	@Override
+	protected void internalDispose() {
+
+	}
+
+	@Override
+	protected void notifyDisposeListeners() {
+		super.notifyDisposeListeners();
+		sendDisposedLifecycleEvent();
+	}
+
+	/**
+	 * Send a dispose lifecycle event to all registered listeners.
+	 */
+	protected void sendDisposedLifecycleEvent() {
+		ILifecycleService service = getViewContext().getService(
+				ILifecycleService.class.getName());
+		if (service != null) {
+			service.notifyLifecycle(new LifecycleEvent(getEditpart(),
+					ILifecycleEvent.TYPE_DISPOSED));
+		}
+	}
+
+	/**
+	 * Send a rendered lifecycle event to all registered listeners.
+	 */
+	protected void sendRenderedLifecycleEvent() {
+		ILifecycleService service = getViewContext().getService(
+				ILifecycleService.class.getName());
+		if (service != null) {
+			service.notifyLifecycle(new LifecycleEvent(getEditpart(),
+					ILifecycleEvent.TYPE_RENDERED));
+		}
+	}
+
+	/**
+	 * Send a rendered lifecycle event to all registered listeners.
+	 */
+	protected void sendUnrenderedLifecycleEvent() {
+		ILifecycleService service = getViewContext().getService(
+				ILifecycleService.class.getName());
+		if (service != null) {
+			service.notifyLifecycle(new LifecycleEvent(getEditpart(),
+					ILifecycleEvent.TYPE_UNRENDERED));
+		}
+	}
+
+	/**
+	 * For testing purposes.
+	 * 
+	 * @return
+	 */
+	public Set<Binding> getUIBindings() {
+		return bindings;
 	}
 
 }

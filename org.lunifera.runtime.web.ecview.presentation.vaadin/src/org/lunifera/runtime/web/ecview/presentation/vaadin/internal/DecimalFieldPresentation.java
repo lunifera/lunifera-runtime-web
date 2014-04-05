@@ -18,15 +18,14 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YValueBindable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding.BindingUtil;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
@@ -46,7 +45,7 @@ public class DecimalFieldPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private DecimalField decimalField;
-	private Binding eObjectToUIBinding;
+	private Binding binding_valueToUI;
 
 	/**
 	 * Constructor.
@@ -82,10 +81,10 @@ public class DecimalFieldPresentation extends
 					.addValueChangeListener(new Property.ValueChangeListener() {
 						@Override
 						public void valueChange(ValueChangeEvent event) {
-							if (eObjectToUIBinding != null) {
-								eObjectToUIBinding.updateTargetToModel();
+							if (binding_valueToUI != null) {
+								binding_valueToUI.updateTargetToModel();
 
-								Binding domainToEObjectBinding = BindingUtil
+								Binding domainToEObjectBinding = ModelUtil
 										.getValueBinding((YValueBindable) getModel());
 								if (domainToEObjectBinding != null) {
 									domainToEObjectBinding
@@ -111,6 +110,8 @@ public class DecimalFieldPresentation extends
 			decimalField.setPrecision(modelAccess.getPrecision());
 			decimalField.setUseGrouping(modelAccess.isGrouping());
 
+			// send an event, that the content was rendered again
+			sendRenderedLifecycleEvent();
 		}
 		return componentBase;
 	}
@@ -149,9 +150,11 @@ public class DecimalFieldPresentation extends
 	protected void createBindings(YDecimalField yField, DecimalField field) {
 		// create the model binding from ridget to ECView-model
 
-		eObjectToUIBinding = createModelBinding(castEObject(getModel()),
+		binding_valueToUI = createModelBinding(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YDECIMAL_FIELD__VALUE, field,
 				null, null);
+
+		registerBinding(binding_valueToUI);
 
 		super.createBindings(yField, field);
 	}
@@ -191,6 +194,10 @@ public class DecimalFieldPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {
@@ -198,6 +205,8 @@ public class DecimalFieldPresentation extends
 			}
 			componentBase = null;
 			decimalField = null;
+
+			sendUnrenderedLifecycleEvent();
 		}
 	}
 
@@ -206,16 +215,11 @@ public class DecimalFieldPresentation extends
 	 */
 	@Override
 	protected void internalDispose() {
-		// unrender the ui component
-		unrender();
-
-		eObjectToUIBinding = null;
-
-		// dispose the binding too
-		IBindingEditpart valueBindingEditpart = BindingUtil
-				.getValueBindingEditpart((YValueBindable) getModel());
-		if (valueBindingEditpart != null) {
-			valueBindingEditpart.dispose();
+		try {
+			unrender();
+			binding_valueToUI = null;
+		} finally {
+			super.internalDispose();
 		}
 
 	}

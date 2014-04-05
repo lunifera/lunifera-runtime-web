@@ -35,7 +35,7 @@ public class DateTimePresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private DateField dateField;
-	private Binding widgetValueBinding;
+	private Binding binding_valueToUI;
 
 	/**
 	 * Constructor.
@@ -130,9 +130,10 @@ public class DateTimePresentation extends
 	 */
 	protected void createBindings(YDateTime yField, DateField field) {
 		// create the model binding from widget to ECView-model
-		widgetValueBinding = createModelBinding(castEObject(getModel()),
+		binding_valueToUI = createBindings_Value(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YDATE_TIME__VALUE, field, null,
 				null);
+		registerBinding(binding_valueToUI);
 
 		super.createBindings(yField, field);
 	}
@@ -153,6 +154,10 @@ public class DateTimePresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+			
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {
@@ -168,11 +173,14 @@ public class DateTimePresentation extends
 	 */
 	@Override
 	protected void internalDispose() {
-		// unrender the ui component
-		unrender();
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 
-		widgetValueBinding.dispose();
-		widgetValueBinding = null;
+		binding_valueToUI.dispose();
+		binding_valueToUI = null;
 	}
 
 	/**

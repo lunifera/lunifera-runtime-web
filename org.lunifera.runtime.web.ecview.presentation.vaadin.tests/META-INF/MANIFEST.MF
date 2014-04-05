@@ -15,7 +15,8 @@ Require-Bundle:
  org.lunifera.runtime.web.vaadin.common;bundle-version="0.0.1",
  org.lunifera.runtime.web.ecview.presentation.vaadin;bundle-version="0.0.1",
  org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.0.1",
- org.lunifera.runtime.web.vaadin.components
+ org.lunifera.runtime.web.vaadin.components,
+ org.eclipse.emf.ecp.ecview.util.emf
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: lunifera.org
 Import-Package: javax.servlet;version="2.6.0",

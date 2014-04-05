@@ -71,35 +71,36 @@ public class BindingManager extends
 	}
 
 	@Override
-	public void bindVisible(YVisibleable yVisibleAble,
+	public Binding bindVisible(YVisibleable yVisibleAble,
 			AbstractComponent abstractComponent) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
 				.observeVisible(abstractComponent);
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yVisibleAble),
 				CoreModelPackage.eINSTANCE.getYVisibleable_Visible());
-		getDatabindingContext().bindValue(uiObservable, modelObservable);
+		return getDatabindingContext().bindValue(uiObservable, modelObservable);
 	}
 
 	@Override
-	public void bindEnabled(YEnable yEnable, AbstractComponent abstractComponent) {
+	public Binding bindEnabled(YEnable yEnable,
+			AbstractComponent abstractComponent) {
 		IVaadinComponentObservableValue uiObservable = VaadinObservables
 				.observeEnabled(abstractComponent);
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yEnable),
 				CoreModelPackage.eINSTANCE.getYEnable_Enabled());
-		getDatabindingContext().bindValue(uiObservable, modelObservable);
+		return getDatabindingContext().bindValue(uiObservable, modelObservable);
 	}
 
 	@Override
-	public void bindReadonly(YEditable yEditable,
+	public Binding bindReadonly(YEditable yEditable,
 			Property.ReadOnlyStatusChangeNotifier field) {
 		IVaadinModelObservableValue uiObservable = VaadinObservables
 				.observeReadonly(field);
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yEditable),
 				CoreModelPackage.eINSTANCE.getYEditable_Editable());
-		getDatabindingContext()
+		return getDatabindingContext()
 				.bindValue(
 						uiObservable,
 						modelObservable,
@@ -112,18 +113,18 @@ public class BindingManager extends
 	}
 
 	@Override
-	public void bindReadonlyOneway(YEditable yEditable, Component field) {
+	public Binding bindReadonlyOneway(YEditable yEditable, Component field) {
 		IObservableValue uiObservable = BeansObservables.observeValue(field,
 				"readOnly");
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yEditable),
 				CoreModelPackage.eINSTANCE.getYEditable_Editable());
-		getDatabindingContext()
+		return getDatabindingContext()
 				.bindValue(
 						uiObservable,
 						modelObservable,
 						new ECViewUpdateValueStrategy(
-								UpdateValueStrategy.POLICY_UPDATE)
+								UpdateValueStrategy.POLICY_NEVER)
 								.setConverter(new BoolNegator()),
 						new ECViewUpdateValueStrategy(
 								UpdateValueStrategy.POLICY_UPDATE)

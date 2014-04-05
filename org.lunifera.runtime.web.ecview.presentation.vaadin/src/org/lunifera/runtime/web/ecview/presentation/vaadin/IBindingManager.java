@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.ecview.presentation.vaadin;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
@@ -33,8 +34,10 @@ public interface IBindingManager extends
 	 * @param viewContext
 	 * @param yVisibleAble
 	 * @param field
+	 * 
+	 * @return Binding - the created binding
 	 */
-	public abstract void bindVisible(YVisibleable yVisibleAble,
+	public abstract Binding bindVisible(YVisibleable yVisibleAble,
 			AbstractComponent abstractComponent);
 
 	/**
@@ -43,8 +46,10 @@ public interface IBindingManager extends
 	 * @param viewContext
 	 * @param yEnable
 	 * @param field
+	 * 
+	 * @return Binding - the created binding
 	 */
-	public abstract void bindEnabled(YEnable yEnable,
+	public abstract Binding bindEnabled(YEnable yEnable,
 			AbstractComponent abstractComponent);
 
 	/**
@@ -53,8 +58,10 @@ public interface IBindingManager extends
 	 * @param viewContext
 	 * @param yEditable
 	 * @param field
+	 * 
+	 * @return Binding - the created binding
 	 */
-	public abstract void bindReadonly(YEditable yEditable,
+	public abstract Binding bindReadonly(YEditable yEditable,
 			Property.ReadOnlyStatusChangeNotifier field);
 
 	/**
@@ -65,7 +72,10 @@ public interface IBindingManager extends
 	 * @param viewContext
 	 * @param yEditable
 	 * @param field
+	 * 
+	 * @return Binding - the created binding
 	 */
-	public abstract void bindReadonlyOneway(YEditable yEditable, Component field);
+	public abstract Binding bindReadonlyOneway(YEditable yEditable,
+			Component field);
 
 }

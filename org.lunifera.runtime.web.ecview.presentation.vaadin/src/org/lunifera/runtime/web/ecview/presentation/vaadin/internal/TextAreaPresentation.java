@@ -102,7 +102,7 @@ public class TextAreaPresentation extends
 	protected IObservableValue internalGetValueEndpoint() {
 		// return the observable value for text
 		return EMFObservables.observeValue(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTEXT_FIELD__VALUE);
+				ExtensionModelPackage.Literals.YTEXT_AREA__VALUE);
 	}
 
 	/**
@@ -112,8 +112,8 @@ public class TextAreaPresentation extends
 	 * @param field
 	 */
 	protected void createBindings(YTextArea yField, TextArea field) {
-		createModelBinding(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTEXT_AREA__VALUE, textArea);
+		registerBinding(createBindings_Value(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YTEXT_AREA__VALUE, textArea));
 
 		super.createBindings(yField, field);
 	}
@@ -134,6 +134,10 @@ public class TextAreaPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {
@@ -149,8 +153,11 @@ public class TextAreaPresentation extends
 	 */
 	@Override
 	protected void internalDispose() {
-		// unrender the ui component
-		unrender();
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 	}
 
 	/**

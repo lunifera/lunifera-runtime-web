@@ -36,7 +36,8 @@ import com.vaadin.ui.HorizontalLayout;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class HorizontalLayoutPresentation extends AbstractLayoutPresenter<ComponentContainer> {
+public class HorizontalLayoutPresentation extends
+		AbstractLayoutPresenter<ComponentContainer> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(HorizontalLayoutPresentation.class);
@@ -368,12 +369,20 @@ public class HorizontalLayoutPresentation extends AbstractLayoutPresenter<Compon
 
 	@Override
 	protected void internalDispose() {
-		unrender();
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 	}
 
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+			
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {

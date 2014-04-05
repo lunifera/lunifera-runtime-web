@@ -229,7 +229,7 @@ public class GridLayoutPresentation extends
 		// add the element to the grid layout
 		//
 		if (col1 >= 0 && row1 >= 0 && (col1 < col2 || row1 < row2)) {
-			if(gridlayout.getRows() < row2 +1){
+			if (gridlayout.getRows() < row2 + 1) {
 				gridlayout.setRows(row2 + 1);
 			}
 			gridlayout.addComponent(child, col1, row1, col2, row2);
@@ -453,12 +453,22 @@ public class GridLayoutPresentation extends
 
 	@Override
 	protected void internalDispose() {
-		unrender();
+
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
+
 	}
 
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+			
+			// unbind all active bindings
+			unbind();
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {

@@ -88,6 +88,10 @@ public class LabelPresentation extends AbstractVaadinWidgetPresenter<Component> 
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+			
+			// unbind all active bindings
+			unbind();
+			
 			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
@@ -102,8 +106,11 @@ public class LabelPresentation extends AbstractVaadinWidgetPresenter<Component> 
 	 */
 	@Override
 	protected void internalDispose() {
-		// unrender the ui component
-		unrender();
+		try {
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
 	}
 
 	/**
