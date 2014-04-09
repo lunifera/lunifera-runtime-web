@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -310,7 +311,7 @@ public class CheckBoxPresentationTests {
 		bean.setBoolValue(false);
 		assertFalse(checkBox1.getValue());
 		assertFalse(yCheckBox1.isValue());
-		
+
 		checkBox1.setValue(true);
 		assertTrue(bean.isBoolValue());
 		assertTrue(yCheckBox1.isValue());
@@ -319,11 +320,36 @@ public class CheckBoxPresentationTests {
 		assertFalse(bean.isBoolValue());
 		assertFalse(checkBox1.getValue());
 	}
-	
+
+	/**
+	 * Test the automatic disposal of bindings
+	 * 
+	 * @throws ContextException
+	 */
 	@Test
-	public void testBindingIsDisposed(){
+	public void testBindingIsDisposed() throws ContextException {
 		// test that the binding is disposed if field is disposed
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YCheckBox yCheckBox = factory.createCheckBox();
+		yGridlayout.getElements().add(yCheckBox);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ICheckboxEditpart checkBoxEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yCheckBox);
+		IWidgetPresentation<Component> presentation = checkBoxEditpart
+				.getPresentation();
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
+		assertEquals(4, presentation.getUIBindings().size());
+
+		presentation.dispose();
+		assertFalse(presentation.isRendered());
+		assertTrue(presentation.isDisposed());
+		assertEquals(0, presentation.getUIBindings().size());
 	}
 
 	/**

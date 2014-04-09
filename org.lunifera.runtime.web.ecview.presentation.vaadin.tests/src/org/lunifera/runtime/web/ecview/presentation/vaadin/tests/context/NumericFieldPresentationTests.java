@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -27,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
@@ -325,20 +327,113 @@ public class NumericFieldPresentationTests {
 		assertEquals("778.899", field1.getValue());
 	}
 
+	/**
+	 * Test the automatic disposal of bindings
+	 * 
+	 * @throws ContextException
+	 */
 	@Test
-	public void testBindingIsDisposed() {
-		// test that the binding is disposed if field is disposed
-		Assert.fail();
+	public void testBindingIsDisposed() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YNumericField yText = factory.createNumericField();
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		INumericFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
+		assertEquals(4, presentation.getUIBindings().size());
+
+		presentation.dispose();
+		assertFalse(presentation.isRendered());
+		assertTrue(presentation.isDisposed());
+		assertEquals(0, presentation.getUIBindings().size());
 	}
 
 	@Test
-	public void testMarkNegative() {
-		Assert.fail("Implement");
+	public void testMarkNegative() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YNumericField yText = factory.createNumericField();
+		
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		INumericFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		NumberField field = (NumberField) unwrapText(baseComponentContainer);
+		
+
+		yText.setValue(99);
+		assertEquals("99", field.getValue());
+		assertFalse(field.getStyleName().contains("lun-negative-value"));
+		yText.setValue(-99);
+		assertEquals("-99", field.getValue());
+		assertTrue(field.getStyleName().contains("lun-negative-value"));
+
 	}
 
+	/** 
+	 *  Test grouping of decimals
+	 *  
+	 * @throws ContextException 
+	 */
 	@Test
-	public void testGrouping() {
-		Assert.fail("Implement");
+	public void testGrouping() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YNumericField yText1 = factory.createNumericField();
+		yLayout.getElements().add(yText1);
+		YDecimalDatatype dt1 = factory.createDecimalDatatype();
+		dt1.setGrouping(true);
+		yText1.setDatatype(dt1);
+		YNumericField yText2 = factory.createNumericField();
+		yLayout.getElements().add(yText2);
+		YDecimalDatatype dt2 = factory.createDecimalDatatype();
+		dt2.setGrouping(false);
+		yText2.setDatatype(dt2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		INumericFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText1);
+		INumericFieldEditpart text2Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText2);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> text2Presentation = text2Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
+				.getWidget();
+		NumberField text1 = (NumberField) unwrapText(text1BaseComponentContainer);
+		NumberField text2 = (NumberField) unwrapText(text2BaseComponentContainer);
+
+
+		yText1.setValue(112233);
+		assertEquals("112.233", text1.getValue());
+
+		yText2.setValue(332211);
+		assertEquals("332211", text2.getValue());
+
+
 	}
 
 	/**

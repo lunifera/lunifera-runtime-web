@@ -17,6 +17,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -86,8 +87,8 @@ public class ListPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IListEditpart listEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList);
+		IListEditpart listEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList);
 		IWidgetPresentation<Component> presentation = listEditpart
 				.getPresentation();
 		assertTrue(presentation.isRendered());
@@ -118,8 +119,8 @@ public class ListPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IListEditpart listEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList);
+		IListEditpart listEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList);
 		IWidgetPresentation<Component> presentation = listEditpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
@@ -157,10 +158,10 @@ public class ListPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IListEditpart list1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList1);
-		IListEditpart list2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList2);
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IListEditpart list2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList2);
 		IWidgetPresentation<Component> list1Presentation = list1Editpart
 				.getPresentation();
 		IWidgetPresentation<Component> list2Presentation = list2Editpart
@@ -186,11 +187,10 @@ public class ListPresentationTests {
 		// assert css id
 		assertEquals("ID_0815", list1BaseComponentContainer.getId());
 		assertNull(label1.getId());
-		assertEquals(list2Editpart.getId(),
-				list2BaseComponentContainer.getId());
+		assertEquals(list2Editpart.getId(), list2BaseComponentContainer.getId());
 		assertNull(label2.getId());
 	}
-	
+
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -214,10 +214,10 @@ public class ListPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IListEditpart label1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList1);
-		IListEditpart label2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList2);
+		IListEditpart label1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IListEditpart label2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList2);
 		IWidgetPresentation<Component> list1Presentation = label1Editpart
 				.getPresentation();
 		IWidgetPresentation<Component> list2Presentation = label2Editpart
@@ -234,23 +234,47 @@ public class ListPresentationTests {
 		assertTrue(label1.isVisible());
 		assertTrue(label1.isEnabled());
 		assertFalse(label1.isReadOnly());
-		
+
 		assertTrue(label2.isVisible());
 		assertTrue(label2.isEnabled());
 		assertFalse(label2.isReadOnly());
-		
+
 		yList1.setVisible(false);
 		assertFalse(label1.isVisible());
-		
+
 		yList1.setEnabled(false);
 		assertFalse(label1.isEnabled());
-		
+
 	}
-	
+
+	/**
+	 * Test the automatic disposal of bindings
+	 * 
+	 * @throws ContextException
+	 */
 	@Test
-	public void testBindingIsDisposed(){
-		// test that the binding is disposed if field is disposed
-		Assert.fail();
+	public void testBindingIsDisposed() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YList yList = factory.createList();
+		yGridlayout.getElements().add(yList);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart listEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList);
+		IWidgetPresentation<Component> presentation = listEditpart
+				.getPresentation();
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
+		assertEquals(3, presentation.getUIBindings().size());
+
+		presentation.dispose();
+		assertFalse(presentation.isRendered());
+		assertTrue(presentation.isDisposed());
+		assertEquals(0, presentation.getUIBindings().size());
 	}
 
 	/**
@@ -282,7 +306,8 @@ public class ListPresentationTests {
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart)
+					.getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

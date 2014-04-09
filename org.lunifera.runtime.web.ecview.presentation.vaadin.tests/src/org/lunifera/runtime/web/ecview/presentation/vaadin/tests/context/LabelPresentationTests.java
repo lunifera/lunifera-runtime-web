@@ -17,6 +17,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -247,10 +248,35 @@ public class LabelPresentationTests {
 		
 	}
 	
+	
+	/**
+	 * Test the automatic disposal of bindings
+	 * 
+	 * @throws ContextException
+	 */
 	@Test
-	public void testBindingIsDisposed(){
-		// test that the binding is disposed if field is disposed
-		Assert.fail();
+	public void testBindingIsDisposed() throws ContextException{
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YLabel yLabel = factory.createLabel();
+		yGridlayout.getElements().add(yLabel);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ILabelEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yLabel);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
+		assertEquals(3, presentation.getUIBindings().size());
+		
+		presentation.dispose();
+		assertFalse(presentation.isRendered());
+		assertTrue(presentation.isDisposed());
+		assertEquals(0, presentation.getUIBindings().size());
 	}
 
 	/**

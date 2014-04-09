@@ -36,8 +36,10 @@ import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,6 +49,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaad
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
+import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
@@ -391,9 +394,38 @@ public class DecimalFieldPresentationTests {
 		assertEquals("7.788,99", field1.getValue());
 	}
 
+	/**
+	 * Test whether negative values receive an additional CSS style
+	 * @throws ContextException 
+	 * 
+	 */
 	@Test
-	public void test_MarkNegative() {
-		Assert.fail("Implement");
+	public void test_MarkNegative() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YDecimalField yText = factory.createDecimalField();
+		
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDecimalFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		DecimalField field = (DecimalField) unwrapText(baseComponentContainer);
+		
+
+		yText.setValue(99);
+		assertEquals("99,00", field.getValue());
+		assertFalse(field.getStyleName().contains("lun-negative-value"));
+		yText.setValue(-99);
+		assertEquals("-99,00", field.getValue());
+		assertTrue(field.getStyleName().contains("lun-negative-value"));
 	}
 
 	@Test

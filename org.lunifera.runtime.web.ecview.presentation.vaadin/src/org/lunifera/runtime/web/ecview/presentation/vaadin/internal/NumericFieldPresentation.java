@@ -21,9 +21,11 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YValueBindable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
+import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -74,6 +76,7 @@ public class NumericFieldPresentation extends
 
 			numberField = new NumberField();
 			numberField.addStyleName(CSS_CLASS__CONTROL);
+			numberField.setMarkNegative(true); // arbitrary default
 			numberField.setSizeFull();
 
 			numberField
@@ -82,6 +85,13 @@ public class NumericFieldPresentation extends
 						public void valueChange(ValueChangeEvent event) {
 							if (binding_valueToUI != null) {
 								binding_valueToUI.updateTargetToModel();
+
+								Binding domainToEObjectBinding = ModelUtil
+										.getValueBinding((YValueBindable) getModel());
+								if (domainToEObjectBinding != null) {
+									domainToEObjectBinding
+											.updateTargetToModel();
+								}
 							}
 						}
 					});
@@ -98,6 +108,12 @@ public class NumericFieldPresentation extends
 			if (modelAccess.isLabelValid()) {
 				numberField.setCaption(modelAccess.getLabel());
 			}
+
+			numberField.setUseGrouping(modelAccess.isGrouping());
+
+			// send an event, that the content was rendered again
+			sendRenderedLifecycleEvent();
+
 		}
 		return componentBase;
 	}
@@ -139,7 +155,7 @@ public class NumericFieldPresentation extends
 		binding_valueToUI = createModelBinding(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YNUMERIC_FIELD__VALUE, field,
 				null, null);
-		
+
 		registerBinding(binding_valueToUI);
 
 		super.createBindings(yField, field);
@@ -180,7 +196,7 @@ public class NumericFieldPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			
+
 			// unbind all active bindings
 			unbind();
 
@@ -215,6 +231,11 @@ public class NumericFieldPresentation extends
 		public ModelAccess(YNumericField yNumericField) {
 			super();
 			this.yNumericField = yNumericField;
+		}
+
+		public boolean isGrouping() {
+			return yNumericField.getDatatype() != null ? yNumericField
+					.getDatatype().isGrouping() : true;
 		}
 
 		/**

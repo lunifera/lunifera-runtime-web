@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -253,10 +254,40 @@ public class BrowserPresentationTests {
 		assertFalse(yBrowser1.isEditable());
 	}
 	
+	
+	/**
+	 * Test the automatic disposal of bindings
+	 * 
+	 * @throws ContextException
+	 */
 	@Test
-	public void testBindingIsDisposed(){
+	public void testBindingIsDisposed() throws ContextException{
 		// test that the binding is disposed if field is disposed
-		Assert.fail();
+		YView yView = factory.createView();
+		YBrowser yBrowser = factory.createBrowser();
+		yView.setContent(yBrowser);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IBrowserEditpart textEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yBrowser);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+
+		BrowserFrame text = (BrowserFrame) unwrapText(baseComponentContainer);
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
+		assertEquals(1, baseComponentContainer.getComponentCount());
+		assertEquals(3, presentation.getUIBindings().size());
+		
+		presentation.dispose();
+		assertFalse(presentation.isRendered());
+		assertTrue(presentation.isDisposed());
+		assertEquals(0, presentation.getUIBindings().size());
+
 	}
 
 	/**

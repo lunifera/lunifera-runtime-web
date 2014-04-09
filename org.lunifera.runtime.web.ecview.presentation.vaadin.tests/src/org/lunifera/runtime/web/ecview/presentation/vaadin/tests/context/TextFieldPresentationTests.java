@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -316,7 +317,7 @@ public class TextFieldPresentationTests {
 		bean.setValue("Haha");
 		assertEquals("Haha", text1.getValue());
 		assertEquals("Haha", yText1.getValue());
-		
+
 		text1.setValue("Haha1");
 		assertEquals("Haha1", bean.getValue());
 		assertEquals("Haha1", yText1.getValue());
@@ -325,11 +326,35 @@ public class TextFieldPresentationTests {
 		assertEquals("Haha2", bean.getValue());
 		assertEquals("Haha2", text1.getValue());
 	}
-	
+
+	/**
+	 * Test the automatic disposal of bindings
+	 * 
+	 * @throws ContextException
+	 */
 	@Test
-	public void testBindingIsDisposed(){
-		// test that the binding is disposed if field is disposed
-		Assert.fail();
+	public void testBindingIsDisposed() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextField yText = factory.createTextField();
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = textEditpart
+				.getPresentation();
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
+		assertEquals(4, presentation.getUIBindings().size());
+
+		presentation.dispose();
+		assertFalse(presentation.isRendered());
+		assertTrue(presentation.isDisposed());
+		assertEquals(0, presentation.getUIBindings().size());
 	}
 
 	/**

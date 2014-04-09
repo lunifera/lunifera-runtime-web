@@ -15,6 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -194,7 +195,7 @@ public class TextAreaPresentationTests {
 				textArea2BaseComponentContainer.getId());
 		assertNull(textArea2.getId());
 	}
-	
+
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -238,26 +239,26 @@ public class TextAreaPresentationTests {
 		assertTrue(textArea1.isVisible());
 		assertTrue(textArea1.isEnabled());
 		assertFalse(textArea1.isReadOnly());
-		
+
 		assertTrue(textArea2.isVisible());
 		assertTrue(textArea2.isEnabled());
 		assertFalse(textArea2.isReadOnly());
-		
+
 		yTextArea1.setVisible(false);
 		assertFalse(textArea1.isVisible());
-		
+
 		yTextArea1.setEnabled(false);
 		assertFalse(textArea1.isEnabled());
-		
+
 		yTextArea1.setEditable(false);
 		assertTrue(textArea1.isReadOnly());
-		
+
 		// target to model
 		textArea1.setReadOnly(false);
 		assertTrue(yTextArea1.isEditable());
-		
+
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_ValueBinding() throws Exception {
@@ -307,7 +308,7 @@ public class TextAreaPresentationTests {
 		bean.setValue("Haha");
 		assertEquals("Haha", text1.getValue());
 		assertEquals("Haha", yText1.getValue());
-		
+
 		text1.setValue("Haha1");
 		assertEquals("Haha1", bean.getValue());
 		assertEquals("Haha1", yText1.getValue());
@@ -316,11 +317,35 @@ public class TextAreaPresentationTests {
 		assertEquals("Haha2", bean.getValue());
 		assertEquals("Haha2", text1.getValue());
 	}
-	
+
+	/**
+	 * Test the automatic disposal of bindings
+	 * 
+	 * @throws ContextException
+	 */
 	@Test
-	public void testBindingIsDisposed(){
-		// test that the binding is disposed if field is disposed
-		Assert.fail();
+	public void testBindingIsDisposed() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextArea yTextArea = factory.createTextArea();
+		yGridlayout.getElements().add(yTextArea);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITextAreaEditpart textAreaEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yTextArea);
+		IWidgetPresentation<Component> presentation = textAreaEditpart
+				.getPresentation();
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
+		assertEquals(4, presentation.getUIBindings().size());
+
+		presentation.dispose();
+		assertFalse(presentation.isRendered());
+		assertTrue(presentation.isDisposed());
+		assertEquals(0, presentation.getUIBindings().size());
 	}
 
 	/**
@@ -352,7 +377,8 @@ public class TextAreaPresentationTests {
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart)
+					.getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

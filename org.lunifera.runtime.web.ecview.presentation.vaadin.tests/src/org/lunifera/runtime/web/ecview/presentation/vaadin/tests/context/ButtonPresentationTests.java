@@ -17,6 +17,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -190,7 +191,7 @@ public class ButtonPresentationTests {
 				button2BaseComponentContainer.getId());
 		assertNull(button2.getId());
 	}
-	
+
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -234,23 +235,49 @@ public class ButtonPresentationTests {
 		assertTrue(button1.isVisible());
 		assertTrue(button1.isEnabled());
 		assertFalse(button1.isReadOnly());
-		
+
 		assertTrue(button2.isVisible());
 		assertTrue(button2.isEnabled());
 		assertFalse(button2.isReadOnly());
-		
+
 		yButton1.setVisible(false);
 		assertFalse(button1.isVisible());
-		
+
 		yButton1.setEnabled(false);
 		assertFalse(button1.isEnabled());
-		
+
 	}
-	
+
+	/**
+	 * Test the automatic disposal of bindings
+	 * 
+	 * @throws ContextException
+	 */
 	@Test
-	public void testBindingIsDisposed(){
+	public void testBindingIsDisposed() throws ContextException {
 		// test that the binding is disposed if field is disposed
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YButton yButton = factory.createButton();
+		yGridlayout.getElements().add(yButton);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IButtonEditpart buttonEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton);
+		IWidgetPresentation<Component> presentation = buttonEditpart
+				.getPresentation();
+		assertTrue(presentation.isRendered());
+		assertFalse(presentation.isDisposed());
+		assertEquals(2, presentation.getUIBindings().size());
+		
+		presentation.dispose();
+		assertFalse(presentation.isRendered());
+		assertTrue(presentation.isDisposed());
+		assertEquals(0, presentation.getUIBindings().size());
+		
 	}
 
 	/**
@@ -282,7 +309,8 @@ public class ButtonPresentationTests {
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart)
+					.getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

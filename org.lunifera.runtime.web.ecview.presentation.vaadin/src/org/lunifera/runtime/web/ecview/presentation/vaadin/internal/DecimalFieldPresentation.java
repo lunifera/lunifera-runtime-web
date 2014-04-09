@@ -75,6 +75,7 @@ public class DecimalFieldPresentation extends
 
 			decimalField = new DecimalField();
 			decimalField.addStyleName(CSS_CLASS__CONTROL);
+			decimalField.setMarkNegative(true); // arbitrary default
 			decimalField.setSizeFull();
 
 			decimalField
