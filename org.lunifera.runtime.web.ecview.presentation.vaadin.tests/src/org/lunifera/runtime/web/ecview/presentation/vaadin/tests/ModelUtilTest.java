@@ -1,22 +1,35 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager;
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.context.IViewSetContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableValueEndpointEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewSetEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingSetEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBinding;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
+import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.model.core.YViewSet;
+import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleService;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
@@ -38,6 +51,7 @@ public class ModelUtilTest {
 	private CssLayout rootLayout = new CssLayout();
 	private DecimalField text1;
 	private DecimalField text2;
+	private IEmbeddableEditpart layoutEditpart;
 	private IEmbeddableEditpart text1Editpart;
 	private IEmbeddableEditpart text2Editpart;
 	private YDecimalField yText1;
@@ -52,6 +66,8 @@ public class ModelUtilTest {
 	private YGridLayout yLayout;
 	private IViewSetContext viewSetContext;
 	private IViewContext viewContext;
+	private YEmbeddableValueEndpoint yText1ValueEndpoint;
+	private YBinding yText1ValueBinding;
 
 	@Before
 	public void initialize() throws ContextException {
@@ -73,6 +89,7 @@ public class ModelUtilTest {
 
 		viewSetEditpart = ModelUtil.getEditpart(yViewSet);
 		viewEditpart = ModelUtil.getEditpart(yView);
+		layoutEditpart = ModelUtil.getEditpart(yLayout);
 		text1Editpart = ModelUtil.getEditpart(yText1);
 		text2Editpart = ModelUtil.getEditpart(yText2);
 		viewSetContext = ModelUtil.getViewSetContext(yLayout);
@@ -94,7 +111,10 @@ public class ModelUtilTest {
 		bean1 = new ValueBean(9988.77);
 		beanBinding1.setPropertyPath("doubleValue");
 		beanBinding1.setBean(bean1);
-		yBindingSet.addBinding(yText1.createValueEndpoint(), beanBinding1);
+
+		yText1ValueEndpoint = yText1.createValueEndpoint();
+		yText1ValueBinding = yBindingSet.addBinding(yText1ValueEndpoint,
+				beanBinding1);
 
 		YBeanBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
 		bean2 = new ValueBean(9988.77);
@@ -141,7 +161,7 @@ public class ModelUtilTest {
 		testPart = ModelUtil.getViewEditpart(yLayout);
 		assertEquals(viewEditpart, testPart);
 	}
-	
+
 	@Test
 	public void test_getViewSetEditPart() {
 		IViewSetEditpart testPart = ModelUtil.getViewSetEditpart(yText1);
@@ -151,7 +171,7 @@ public class ModelUtilTest {
 		testPart = ModelUtil.getViewSetEditpart(yLayout);
 		assertEquals(viewSetEditpart, testPart);
 	}
-	
+
 	@Test
 	public void test_getViewSetContext() {
 		IViewSetContext testContext = ModelUtil.getViewSetContext(yText1);
@@ -161,7 +181,7 @@ public class ModelUtilTest {
 		testContext = ModelUtil.getViewSetContext(yLayout);
 		assertEquals(viewSetContext, testContext);
 	}
-	
+
 	@Test
 	public void test_getViewContext() {
 		IViewContext testContext = ModelUtil.getViewContext(yText1);
@@ -170,6 +190,126 @@ public class ModelUtilTest {
 		assertEquals(viewContext, testContext);
 		testContext = ModelUtil.getViewContext(yLayout);
 		assertEquals(viewContext, testContext);
+	}
+
+	@Test
+	public void test_addNewViewByEditpart() {
+		viewSetEditpart.removeView(viewEditpart);
+		assertEquals(0, viewSetEditpart.getViews().size());
+		IViewEditpart part = ModelUtil.addNewViewByEditpart(viewSetEditpart);
+		assertEquals(1, viewSetEditpart.getViews().size());
+		assertNotNull(part);
+	}
+
+	@Test
+	public void test_getWidget() {
+		Object layout_w = ModelUtil.getWidget(yLayout);
+		Object text1_w = ModelUtil.getWidget(yText1);
+		Object text2_w = ModelUtil.getWidget(yText2);
+		assertNotNull(layout_w);
+		assertNotNull(text1_w);
+		assertNotNull(text2_w);
+		assertEquals(layoutEditpart.getPresentation().getWidget(), layout_w);
+
+	}
+
+	@Test
+	public void test_getUIBindings() {
+		Set<Binding> uiBindings = text1Editpart.getPresentation()
+				.getUIBindings();
+		Set<Binding> uiBindings2 = ModelUtil.getUIBindings(yText1);
+		assertEquals(uiBindings2.size(), uiBindings.size());
+		for (Binding binding : uiBindings2) {
+			assertTrue(uiBindings.contains(binding));
+		}
+		for (Binding binding : uiBindings) {
+			assertTrue(uiBindings2.contains(binding));
+		}
+	}
+
+	@Test
+	public void test_getValueBinding() {
+		IBindingEditpart editpart = ModelUtil.getEditpart(yText1ValueBinding);
+		Binding valueBinding2 = ModelUtil.getValueBinding(yText1);
+		assertEquals(editpart.getBinding(), valueBinding2);
+	}
+
+	@Test
+	public void test_getValueBindingEditpart() {
+		IBindingEditpart editpart = ModelUtil.getEditpart(yText1ValueBinding);
+		YBinding yBinding = yText1.getValueBindingEndpoint().getBinding();
+		IBindingEditpart bindingEditpart = ModelUtil.getEditpart(yBinding);
+		assertEquals(editpart, bindingEditpart);
+	}
+
+	@Test
+	public void test_getValueEndpointEditpart() {
+		YEmbeddableValueEndpoint yBinding = yText1.getValueBindingEndpoint();
+		IEmbeddableValueEndpointEditpart editpart1 = ModelUtil
+				.getValueEndpointEditpart(yBinding);
+		IEmbeddableValueEndpointEditpart editpart2 = DelegatingEditPartManager
+				.getInstance().getEditpart(yBinding);
+
+		assertEquals(editpart1, editpart2);
+	}
+
+	@Test
+	public void test_getPresentation() {
+		IEmbeddableEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yText1);
+		IWidgetPresentation<?> presentation = editpart.getPresentation();
+		assertEquals(presentation, ModelUtil.getPresentation(yText1));
+	}
+	
+	@Test
+	public void test_getModelBindingEditparts() {
+		YBindingSet bindingset = yText1.getView().getBindingSet();
+		IBindingSetEditpart bindingSetEditpart = ModelUtil.getEditpart(bindingset);
+		List<IBindingEditpart> bindings = bindingSetEditpart.findBindings(yText1);
+		assertEquals(bindings, ModelUtil.getModelBindingEditparts(yText1));
+	}
+	
+	@Test
+	public void test_getLifecacleService() {
+		ILifecycleService service = viewContext.getService(ILifecycleService.class.getName());
+		assertEquals(service, ModelUtil.getLifecylceService(viewContext));
+	}
+	
+	@Test
+	public void test_getEditpart() {
+		IElementEditpart editpart = DelegatingEditPartManager.getInstance().getEditpart(yLayout);
+		assertEquals(editpart, ModelUtil.getEditpart(yLayout));
+	}
+	
+	@Test
+	public void test_getBindingManager() {
+		IECViewBindingManager manager = viewContext.getService(IECViewBindingManager.class.getName());
+		assertEquals(manager, ModelUtil.getBindingManager(viewContext));
+	}
+	
+	@Test
+	public void test_createViewSetByEditpart() {
+		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
+				.createEditpart(CoreModelPackage.eNS_URI,
+						IViewSetEditpart.class);
+		YViewSet set = (YViewSet) editpart.getModel();
+		assertNotNull(set);
+	}
+	
+	@Test
+	public void test_createViewByEditpart() {
+		IViewEditpart editpart = DelegatingEditPartManager.getInstance()
+				.createEditpart(CoreModelPackage.eNS_URI,
+						IViewEditpart.class);
+		YView view = (YView) editpart.getModel();
+		assertNotNull(view);
+	}
+	
+	
+
+	private void assertFalse(boolean contains) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
