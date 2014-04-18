@@ -12,7 +12,6 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests;
 
 import org.knowhowlab.osgi.testing.assertions.BundleAssert;
 import org.knowhowlab.osgi.testing.assertions.ServiceAssert;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context.BundleHelper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

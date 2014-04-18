@@ -8,26 +8,27 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
 
-import java.util.Iterator;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Iterator;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -254,6 +255,58 @@ public class ComboBoxPresentationTests {
 	}
 	
 	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_CollectionBinding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YComboBox yComboBox1 = factory.createComboBox();
+		yLayout.getElements().add(yComboBox1);
+		YComboBox yComboBox2 = factory.createComboBox();
+		yLayout.getElements().add(yComboBox2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IComboBoxEditpart comboBox1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yComboBox1);
+		IComboBoxEditpart comboBox2Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yComboBox2);
+		IWidgetPresentation<Component> comboBox1Presentation = comboBox1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> comboBox2Presentation = comboBox2Editpart
+				.getPresentation();
+		ComponentContainer comboBox1BaseComponentContainer = (ComponentContainer) comboBox1Presentation
+				.getWidget();
+		ComponentContainer comboBox2BaseComponentContainer = (ComponentContainer) comboBox2Presentation
+				.getWidget();
+		ComboBox comboBox1 = (ComboBox) unwrapText(comboBox1BaseComponentContainer);
+		ComboBox comboBox2 = (ComboBox) unwrapText(comboBox2BaseComponentContainer);
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		
+		// start tests
+		//
+		
+		YEmbeddableCollectionEndpoint endp1 = yComboBox1.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yComboBox1.createCollectionEndpoint();
+		yBindingSet.addBinding(endp1, endp2);
+		
+		System.out.println("huhu");
+		
+		
+	}
+	
+	/**
 	 * Test the automatic disposal of bindings
 	 * 
 	 * @throws ContextException
@@ -282,7 +335,7 @@ public class ComboBoxPresentationTests {
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
-
+	
 	/**
 	 * Unwraps the component from its parent composite.
 	 * 

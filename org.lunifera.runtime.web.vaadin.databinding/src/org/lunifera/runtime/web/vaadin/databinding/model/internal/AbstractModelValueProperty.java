@@ -23,14 +23,14 @@ import org.lunifera.runtime.web.vaadin.databinding.IVaadinModelObservableValue;
 
 /**
  */
-public abstract class AbstractModelProperty extends SimpleValueProperty
+public abstract class AbstractModelValueProperty extends SimpleValueProperty
 		implements IModelValueProperty {
 
 	/**
 	 * Constructs a ComponentValueProperty which does not listen for any vaadin
 	 * events.
 	 */
-	protected AbstractModelProperty() {
+	protected AbstractModelValueProperty() {
 
 	}
 

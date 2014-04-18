@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.databinding.Binding;
@@ -16,11 +17,12 @@ import org.eclipse.emf.ecp.ecview.common.context.IViewSetContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableValueEndpointEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableValueBindingEndpointEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewSetEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingSetEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.binding.IValueBindingEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBinding;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
@@ -71,6 +73,8 @@ public class ModelUtilTest {
 
 	@Before
 	public void initialize() throws ContextException {
+
+		Locale.setDefault(Locale.US);
 
 		yViewSet = factory.createViewSet();
 		yView = factory.createView();
@@ -229,25 +233,27 @@ public class ModelUtilTest {
 
 	@Test
 	public void test_getValueBinding() {
-		IBindingEditpart editpart = ModelUtil.getEditpart(yText1ValueBinding);
+		IValueBindingEditpart editpart = ModelUtil
+				.getEditpart(yText1ValueBinding);
 		Binding valueBinding2 = ModelUtil.getValueBinding(yText1);
 		assertEquals(editpart.getBinding(), valueBinding2);
 	}
 
 	@Test
 	public void test_getValueBindingEditpart() {
-		IBindingEditpart editpart = ModelUtil.getEditpart(yText1ValueBinding);
+		IValueBindingEditpart editpart = ModelUtil
+				.getEditpart(yText1ValueBinding);
 		YBinding yBinding = yText1.getValueBindingEndpoint().getBinding();
-		IBindingEditpart bindingEditpart = ModelUtil.getEditpart(yBinding);
+		IValueBindingEditpart bindingEditpart = ModelUtil.getEditpart(yBinding);
 		assertEquals(editpart, bindingEditpart);
 	}
 
 	@Test
 	public void test_getValueEndpointEditpart() {
 		YEmbeddableValueEndpoint yBinding = yText1.getValueBindingEndpoint();
-		IEmbeddableValueEndpointEditpart editpart1 = ModelUtil
+		IEmbeddableValueBindingEndpointEditpart editpart1 = ModelUtil
 				.getValueEndpointEditpart(yBinding);
-		IEmbeddableValueEndpointEditpart editpart2 = DelegatingEditPartManager
+		IEmbeddableValueBindingEndpointEditpart editpart2 = DelegatingEditPartManager
 				.getInstance().getEditpart(yBinding);
 
 		assertEquals(editpart1, editpart2);
@@ -260,33 +266,38 @@ public class ModelUtilTest {
 		IWidgetPresentation<?> presentation = editpart.getPresentation();
 		assertEquals(presentation, ModelUtil.getPresentation(yText1));
 	}
-	
+
 	@Test
 	public void test_getModelBindingEditparts() {
 		YBindingSet bindingset = yText1.getView().getBindingSet();
-		IBindingSetEditpart bindingSetEditpart = ModelUtil.getEditpart(bindingset);
-		List<IBindingEditpart> bindings = bindingSetEditpart.findBindings(yText1);
+		IBindingSetEditpart bindingSetEditpart = ModelUtil
+				.getEditpart(bindingset);
+		List<IBindingEditpart<?>> bindings = bindingSetEditpart
+				.findBindings(yText1);
 		assertEquals(bindings, ModelUtil.getModelBindingEditparts(yText1));
 	}
-	
+
 	@Test
 	public void test_getLifecacleService() {
-		ILifecycleService service = viewContext.getService(ILifecycleService.class.getName());
+		ILifecycleService service = viewContext
+				.getService(ILifecycleService.class.getName());
 		assertEquals(service, ModelUtil.getLifecylceService(viewContext));
 	}
-	
+
 	@Test
 	public void test_getEditpart() {
-		IElementEditpart editpart = DelegatingEditPartManager.getInstance().getEditpart(yLayout);
+		IElementEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLayout);
 		assertEquals(editpart, ModelUtil.getEditpart(yLayout));
 	}
-	
+
 	@Test
 	public void test_getBindingManager() {
-		IECViewBindingManager manager = viewContext.getService(IECViewBindingManager.class.getName());
+		IECViewBindingManager manager = viewContext
+				.getService(IECViewBindingManager.class.getName());
 		assertEquals(manager, ModelUtil.getBindingManager(viewContext));
 	}
-	
+
 	@Test
 	public void test_createViewSetByEditpart() {
 		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
@@ -295,21 +306,18 @@ public class ModelUtilTest {
 		YViewSet set = (YViewSet) editpart.getModel();
 		assertNotNull(set);
 	}
-	
+
 	@Test
 	public void test_createViewByEditpart() {
 		IViewEditpart editpart = DelegatingEditPartManager.getInstance()
-				.createEditpart(CoreModelPackage.eNS_URI,
-						IViewEditpart.class);
+				.createEditpart(CoreModelPackage.eNS_URI, IViewEditpart.class);
 		YView view = (YView) editpart.getModel();
 		assertNotNull(view);
 	}
-	
-	
 
 	private void assertFalse(boolean contains) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**

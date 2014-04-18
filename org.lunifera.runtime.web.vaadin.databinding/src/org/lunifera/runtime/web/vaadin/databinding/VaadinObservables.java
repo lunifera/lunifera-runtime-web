@@ -172,7 +172,7 @@ public class VaadinObservables {
 	 * @param notifier
 	 * @return
 	 */
-	public static IVaadinModelObservableValue observeContainerItemSetValue(
+	public static IVaadinModelObservableList observeContainerItemSetValue(
 			Container.ItemSetChangeNotifier notifier) {
 		return VaadinProperties.containerItemsetValue().observe(notifier);
 	}

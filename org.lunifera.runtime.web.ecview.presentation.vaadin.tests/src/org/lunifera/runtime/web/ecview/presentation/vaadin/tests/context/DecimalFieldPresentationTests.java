@@ -26,7 +26,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.binding.IValueBindingEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
@@ -36,10 +36,8 @@ import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -49,7 +47,6 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaad
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
-import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
@@ -715,7 +712,7 @@ public class DecimalFieldPresentationTests {
 		Assert.assertFalse(presentation.isDisposed());
 		Assert.assertTrue(presentation.isRendered());
 		Binding binding = ModelUtil.getValueBinding(yText);
-		IBindingEditpart bindingEditpart = ModelUtil
+		IValueBindingEditpart bindingEditpart = ModelUtil
 				.getValueBindingEditpart(yText);
 		Assert.assertFalse(binding.isDisposed());
 		Assert.assertFalse(bindingEditpart.isDisposed());
@@ -834,7 +831,7 @@ public class DecimalFieldPresentationTests {
 		Assert.assertFalse(presentation.isDisposed());
 		Assert.assertTrue(presentation.isRendered());
 		Binding binding = ModelUtil.getValueBinding(yText);
-		IBindingEditpart bindingEditpart = ModelUtil
+		IValueBindingEditpart bindingEditpart = ModelUtil
 				.getValueBindingEditpart(yText);
 		Assert.assertFalse(binding.isDisposed());
 		Assert.assertFalse(bindingEditpart.isDisposed());

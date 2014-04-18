@@ -12,13 +12,16 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.EMFUpdateListStrategy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
@@ -68,6 +71,13 @@ public class BindingManager extends
 				model,
 				new ECViewUpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE),
 				new ECViewUpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+	}
+
+	@Override
+	public Binding bindList(IObservableList target, IObservableList model) {
+		return getDatabindingContext().bindList(target, model,
+				new EMFUpdateListStrategy(UpdateListStrategy.POLICY_UPDATE),
+				new EMFUpdateListStrategy(UpdateListStrategy.POLICY_UPDATE));
 	}
 
 	@Override
@@ -153,4 +163,5 @@ public class BindingManager extends
 		}
 
 	}
+
 }

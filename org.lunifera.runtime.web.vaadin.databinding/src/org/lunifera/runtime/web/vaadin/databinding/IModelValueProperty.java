@@ -34,28 +34,4 @@ public interface IModelValueProperty extends IValueProperty {
 	 */
 	public IVaadinModelObservableValue observe(Object source);
 
-	// /**
-	// * Returns an {@link IVaadinObservableValue} observing this value property
-	// * on the given Component, which delays notification of value changes
-	// until
-	// * at least <code>delay</code> milliseconds have elapsed since that last
-	// * change event, or until a FocusOut event is received from the Component
-	// * (whichever happens first).
-	// * <p>
-	// * This method is equivalent to
-	// * <code>vaadinObservables.observeDelayedValue(delay,
-	// observe(Component))</code>.
-	// * <p>
-	// * Attention: Currently without functionality
-	// *
-	// * @param delay
-	// * the delay in milliseconds.
-	// * @param Component
-	// * the source Component
-	// * @return an observable value observing this value property on the given
-	// * Component, and which delays change notifications for
-	// * <code>delay</code> milliseconds.
-	// */
-	// public IVaadinObservableValue observeDelayed(int delay, Component
-	// component);
 }

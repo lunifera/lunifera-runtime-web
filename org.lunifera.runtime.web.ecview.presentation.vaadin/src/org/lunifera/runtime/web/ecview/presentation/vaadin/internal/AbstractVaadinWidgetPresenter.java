@@ -14,8 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -37,6 +39,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -238,6 +241,51 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			IObservableValue uiObservable = VaadinObservables
 					.observeValue(field);
 			return bindingManager.bindValue(uiObservable, modelObservable,
+					targetToModel, modelToTarget);
+		}
+		return null;
+	}
+	
+	/**
+	 * Creates a binding for the contents of the vaadin container from the ECView-UI-model to the
+	 * UI element.
+	 * 
+	 * @param model
+	 * @param modelFeature
+	 * @param field
+	 * @return binding
+	 * @@return Binding - the created binding
+	 */
+	protected Binding createBindings_ContainerContents(EObject model,
+			EStructuralFeature modelFeature, Container.ItemSetChangeNotifier field) {
+		return createBindings_ContainerContents(model, modelFeature, field, null, null);
+	}
+
+	/**
+	 * Creates a binding for the contents of the vaadin container from the ECView-UI-model to the
+	 * UI element.
+	 * 
+	 * @param model
+	 * @param modelFeature
+	 * @param field
+	 * @return binding
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindings_ContainerContents(EObject model,
+			EStructuralFeature modelFeature, Container.ItemSetChangeNotifier field,
+			UpdateListStrategy targetToModel, UpdateListStrategy modelToTarget) {
+		IBindingManager bindingManager = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		if (bindingManager != null) {
+			// bind the value of yText to textRidget
+			IObservableList modelObservable = EMFObservables.observeList(
+					model, modelFeature);
+			IObservableList uiObservable = VaadinObservables
+					.observeContainerItemSetValue(field);
+			return bindingManager.bindList(uiObservable, modelObservable,
 					targetToModel, modelToTarget);
 		}
 		return null;

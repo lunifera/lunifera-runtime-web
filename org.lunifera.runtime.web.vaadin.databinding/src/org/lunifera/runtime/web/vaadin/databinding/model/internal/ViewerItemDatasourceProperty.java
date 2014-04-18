@@ -22,7 +22,7 @@ import com.vaadin.data.Item;
 
 /**
  */
-public class ViewerItemDatasourceProperty extends AbstractModelProperty {
+public class ViewerItemDatasourceProperty extends AbstractModelValueProperty {
 	public ViewerItemDatasourceProperty() {
 		super();
 	}

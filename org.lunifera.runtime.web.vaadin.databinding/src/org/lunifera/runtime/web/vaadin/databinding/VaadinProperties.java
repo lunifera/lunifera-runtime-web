@@ -134,7 +134,7 @@ public class VaadinProperties {
 		return new ItemPropertySetInfoValueProperty();
 	}
 
-	public static IModelValueProperty containerItemsetValue() {
+	public static IModelListProperty containerItemsetValue() {
 		return new ContainerItemSetValueProperty();
 	}
 

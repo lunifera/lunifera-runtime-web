@@ -25,7 +25,7 @@ import com.vaadin.data.Item;
 
 /**
  */
-public class ItemPropertySetValueProperty extends AbstractModelProperty {
+public class ItemPropertySetValueProperty extends AbstractModelValueProperty {
 
 	public ItemPropertySetValueProperty() {
 

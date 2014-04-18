@@ -22,7 +22,7 @@ import com.vaadin.ui.AbstractField;
 
 /**
  */
-public class PropertyReadonlyProperty extends AbstractModelProperty {
+public class PropertyReadonlyProperty extends AbstractModelValueProperty {
 
 	public PropertyReadonlyProperty() {
 		super();

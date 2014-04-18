@@ -22,7 +22,7 @@ import com.vaadin.data.Property;
 
 /**
  */
-public class PropertyValueProperty extends AbstractModelProperty {
+public class PropertyValueProperty extends AbstractModelValueProperty {
 
 	public PropertyValueProperty() {
 
