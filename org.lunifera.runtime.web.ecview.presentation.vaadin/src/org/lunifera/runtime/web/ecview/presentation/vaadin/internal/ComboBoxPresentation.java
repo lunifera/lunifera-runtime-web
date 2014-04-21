@@ -14,20 +14,19 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextField;
 
 /**
  * This presenter is responsible to render a combo box on the given layout.
@@ -67,7 +66,7 @@ public class ComboBoxPresentation extends
 			combo = new ComboBox();
 			combo.addStyleName(CSS_CLASS__CONTROL);
 			combo.setSizeFull();
-
+			
 			// creates the binding for the field
 			createBindings(modelAccess.yCombo, combo);
 
@@ -107,8 +106,9 @@ public class ComboBoxPresentation extends
 	 */
 	protected IObservableList internalGetCollectionEndpoint() {
 		// return the observable value for text
-		return EMFObservables.observeList(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YCOMBO_BOX__COLLECTION);
+		return EMFProperties.list(
+				ExtensionModelPackage.Literals.YCOMBO_BOX__COLLECTION).observe(
+				getModel());
 	}
 
 	/**
@@ -130,7 +130,13 @@ public class ComboBoxPresentation extends
 	 */
 	protected void createBindings(YComboBox yField, ComboBox field) {
 		// create the model binding from ridget to ECView-model
-		registerBinding(createBindings_Value(castEObject(getModel()),
+		registerBinding(createBindings_ContainerContents(
+				castEObject(getModel()),
+				ExtensionModelPackage.Literals.YCOMBO_BOX__COLLECTION, field,
+				yField.getType()));
+
+		// create the model binding from ridget to ECView-model
+		registerBinding(createBinding_Selection(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YCOMBO_BOX__SELECTION, field));
 
 		super.createBindings(yField, field);

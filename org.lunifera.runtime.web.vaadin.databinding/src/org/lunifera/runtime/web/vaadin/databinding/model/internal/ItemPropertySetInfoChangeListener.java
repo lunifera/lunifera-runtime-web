@@ -20,7 +20,7 @@ import java.util.List;
 import org.eclipse.core.databinding.property.IProperty;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.NativePropertyListener;
-import org.lunifera.runtime.web.vaadin.databinding.PropertyInfo;
+import org.lunifera.runtime.web.vaadin.databinding.properties.PropertyInfo;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Item.PropertySetChangeEvent;

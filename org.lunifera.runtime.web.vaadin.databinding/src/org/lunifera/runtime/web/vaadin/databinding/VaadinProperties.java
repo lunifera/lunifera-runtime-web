@@ -31,7 +31,7 @@ import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanel
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelSplitPositionProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.SplitPanelSplitPositionUnitProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.TabSheetSelectedTabProperty;
-import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerItemSetValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerItemSetContentProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetInfoValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyReadonlyProperty;
@@ -39,6 +39,9 @@ import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyValueP
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerContainerDatasourceProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerItemDatasourceProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerPropertyDatasourceProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.IVaadinListProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.IVaadinValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.VaadinListPropertyDecorator;
 
 import com.vaadin.ui.Component;
 
@@ -49,7 +52,7 @@ import com.vaadin.ui.Component;
  */
 public class VaadinProperties {
 
-	public static IComponentValueProperty accessor(Class<?> componentClass,
+	public static IVaadinValueProperty accessor(Class<?> componentClass,
 			String property) {
 		return new SimpleAccessorProperty(componentClass, property);
 	}
@@ -62,99 +65,108 @@ public class VaadinProperties {
 	// *
 	// * @return a value property for observing the text of a {@link Field}.
 	// */
-	// public static IComponentValueProperty fieldValue(Class<?> type) {
+	// public static IVaadinValueProperty fieldValue(Class<?> type) {
 	// return new FieldValueProperty(type);
 	// }
 
-	public static IComponentValueProperty focus() {
+	public static IVaadinValueProperty focus() {
 		return new ComponentFocusedProperty();
 	}
 
-	public static IComponentValueProperty description() {
+	public static IVaadinValueProperty description() {
 		return new ComponentDescriptionProperty();
 	}
 
-	public static IComponentValueProperty maxSplitPosition() {
+	public static IVaadinValueProperty maxSplitPosition() {
 		return new SplitPanelMaxSplitPositionProperty();
 	}
 
-	public static IComponentValueProperty maxSplitPositionUnit() {
+	public static IVaadinValueProperty maxSplitPositionUnit() {
 		return new SplitPanelMaxSplitPositionUnitProperty();
 	}
 
-	public static IComponentValueProperty minSplitPosition() {
+	public static IVaadinValueProperty minSplitPosition() {
 		return new SplitPanelMinSplitPositionProperty();
 	}
 
-	public static IComponentValueProperty minSplitPositionUnit() {
+	public static IVaadinValueProperty minSplitPositionUnit() {
 		return new SplitPanelMinSplitPositionUnitProperty();
 	}
 
-	public static IComponentValueProperty splitPosition() {
+	public static IVaadinValueProperty splitPosition() {
 		return new SplitPanelSplitPositionProperty();
 	}
 
-	public static IComponentValueProperty splitPositionUnit() {
+	public static IVaadinValueProperty splitPositionUnit() {
 		return new SplitPanelSplitPositionUnitProperty();
 	}
 
-	public static IComponentValueProperty selectedTab() {
+	public static IVaadinValueProperty selectedTab() {
 		return new TabSheetSelectedTabProperty();
 	}
 
-	public static IComponentValueProperty color_ColorPickerGradient() {
+	public static IVaadinValueProperty color_ColorPickerGradient() {
 		return new ColorPickerGradientColorProperty();
 	}
 
-	public static IComponentValueProperty color_ColorPickerGrid() {
+	public static IVaadinValueProperty color_ColorPickerGrid() {
 		return new ColorPickerGridColorProperty();
 	}
 
-	public static IComponentValueProperty color_ColorPickerHistory() {
+	public static IVaadinValueProperty color_ColorPickerHistory() {
 		return new ColorPickerHistoryColorProperty();
 	}
 
-	public static IComponentValueProperty color_ColorPickerSelect() {
+	public static IVaadinValueProperty color_ColorPickerSelect() {
 		return new ColorPickerSelectColorProperty();
 	}
 
-	public static IComponentValueProperty height() {
+	public static IVaadinValueProperty height() {
 		return new SizeableHeightProperty();
 	}
 
-	public static IComponentValueProperty width() {
+	public static IVaadinValueProperty width() {
 		return new SizeableWidthProperty();
 	}
 
-	public static IModelValueProperty itemPropertysetValue() {
+	public static IVaadinValueProperty itemPropertysetValue() {
 		return new ItemPropertySetValueProperty();
 	}
 
-	public static IModelValueProperty itemPropertysetInfoValue() {
+	public static IVaadinValueProperty itemPropertysetInfoValue() {
 		return new ItemPropertySetInfoValueProperty();
 	}
 
-	public static IModelListProperty containerItemsetValue() {
-		return new ContainerItemSetValueProperty();
+	/**
+	 * Creates a list property that observes changes of item sets in container.
+	 * 
+	 * @param collectionType
+	 *            the types contained in the collection
+	 * @return listProperty
+	 */
+	public static IVaadinListProperty containerItemsetValue(
+			Class<?> collectionType) {
+		ContainerItemSetContentProperty property = new ContainerItemSetContentProperty(collectionType);
+		return new VaadinListPropertyDecorator(property);
 	}
 
-	public static IModelValueProperty containerDatasource() {
+	public static IVaadinValueProperty containerDatasource() {
 		return new ViewerContainerDatasourceProperty();
 	}
 
-	public static IModelValueProperty itemDatasource() {
+	public static IVaadinValueProperty itemDatasource() {
 		return new ViewerItemDatasourceProperty();
 	}
 
-	public static IModelValueProperty propertyDatasource() {
+	public static IVaadinValueProperty propertyDatasource() {
 		return new ViewerPropertyDatasourceProperty();
 	}
 
-	public static IModelValueProperty propertyValue() {
+	public static IVaadinValueProperty propertyValue() {
 		return new PropertyValueProperty();
 	}
 
-	public static IModelValueProperty readonly() {
+	public static IVaadinValueProperty readonly() {
 		return new PropertyReadonlyProperty();
 	}
 

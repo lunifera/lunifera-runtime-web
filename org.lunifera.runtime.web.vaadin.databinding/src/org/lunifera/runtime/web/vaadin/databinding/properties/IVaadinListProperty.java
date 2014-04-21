@@ -6,33 +6,33 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Original source based on org.eclipse.jface.databinding.swt.IWidgetListProperty (EPL)
+ * Original source based on org.eclipse.jface.databinding.swt.IWidgetValueProperty (EPL)
  * 
  * Contributor:
  * 		Florian Pirchner - porting swt databinding to support vaadin
  * 
  *******************************************************************************/
-
-package org.lunifera.runtime.web.vaadin.databinding;
+package org.lunifera.runtime.web.vaadin.databinding.properties;
 
 import org.eclipse.core.databinding.property.list.IListProperty;
-
-import com.vaadin.ui.Component;
+import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 
 /**
- * {@link IListProperty} for observing an Vaadin Component
+ * {@link IListProperty} for observing an vaadin Component
  * 
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface IComponentListProperty extends IListProperty {
+public interface IVaadinListProperty extends IListProperty {
+
 	/**
-	 * Returns an {@link IVaadinObservableList} observing this list property on
-	 * the given Component
+	 * Returns an observable list observing this list property on the given
+	 * property source.
 	 * 
-	 * @param component
-	 *            the source Component
-	 * @return an observable list observing this list property on the given
-	 *         Component
+	 * @param source
+	 *            the property source
+	 * @return an observable list observing this value property on the given
+	 *         property source
 	 */
-	public IVaadinObservableList observe(Component component);
+	public IVaadinObservableList observe(Object source);
+
 }

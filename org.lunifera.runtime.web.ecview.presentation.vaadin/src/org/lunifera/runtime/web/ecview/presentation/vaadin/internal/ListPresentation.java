@@ -10,7 +10,16 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 
@@ -31,7 +40,8 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 	/**
 	 * Constructor.
 	 * 
-	 * @param editpart The editpart of that presenter
+	 * @param editpart
+	 *            The editpart of that presenter
 	 */
 	public ListPresentation(IElementEditpart editpart) {
 		super((IListEditpart) editpart);
@@ -55,10 +65,10 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 			list = new ListSelect();
 			list.addStyleName(CSS_CLASS__CONTROL);
 			list.setSizeFull();
-			
+
 			// creates the binding for the field
 			createBindings(modelAccess.yList, list);
-			
+
 			componentBase.addComponent(list);
 
 			if (modelAccess.isCssClassValid()) {
@@ -70,6 +80,65 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 			}
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected IObservable internalGetObservableEndpoint(
+			YEmbeddableBindingEndpoint bindableValue) {
+		if (bindableValue == null) {
+			throw new NullPointerException("BindableValue must not be null!");
+		}
+
+		if (bindableValue instanceof YEmbeddableCollectionEndpoint) {
+			return internalGetCollectionEndpoint();
+		} else if (bindableValue instanceof YEmbeddableSelectionEndpoint) {
+			return internalGetSelectionEndpoint();
+		}
+		throw new IllegalArgumentException("Not a valid input: "
+				+ bindableValue);
+	}
+
+	/**
+	 * Returns the observable to observe the collection.
+	 * 
+	 * @return
+	 */
+	protected IObservableList internalGetCollectionEndpoint() {
+		// return the observable value for text
+		return EMFProperties.list(
+				ExtensionModelPackage.Literals.YLIST__COLLECTION).observe(
+				getModel());
+	}
+
+	/**
+	 * Returns the observable to observe the selection.
+	 * 
+	 * @return
+	 */
+	protected IObservableValue internalGetSelectionEndpoint() {
+		// return the observable value for text
+		return EMFObservables.observeValue(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YLIST__SELECTION);
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YList yField, ListSelect field) {
+		// create the model binding from ridget to ECView-model
+		registerBinding(createBindings_ContainerContents(
+				castEObject(getModel()),
+				ExtensionModelPackage.Literals.YLIST__COLLECTION, field,
+				yField.getType()));
+
+		// create the model binding from ridget to ECView-model
+		registerBinding(createBinding_Selection(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YLIST__SELECTION, field));
+
+		super.createBindings(yField, field);
 	}
 
 	@Override
@@ -88,11 +157,12 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			
+
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -164,7 +234,8 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 		 * @return
 		 */
 		public boolean isLabelValid() {
-			return yList.getDatadescription() != null && yList.getDatadescription().getLabel() != null;
+			return yList.getDatadescription() != null
+					&& yList.getDatadescription().getLabel() != null;
 		}
 
 		/**

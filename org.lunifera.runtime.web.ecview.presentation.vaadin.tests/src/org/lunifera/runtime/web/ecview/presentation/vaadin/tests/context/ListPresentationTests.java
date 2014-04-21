@@ -22,7 +22,10 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
@@ -37,6 +40,8 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ListPresenta
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
+import com.vaadin.data.Container;
+import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -247,6 +252,493 @@ public class ListPresentationTests {
 	}
 
 	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_CollectionBinding_Native() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList1 = factory.createList();
+		yLayout.getElements().add(yList1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IWidgetPresentation<Component> list1Presentation = list1Editpart
+				.getPresentation();
+		ComponentContainer list1BaseComponentContainer = (ComponentContainer) list1Presentation
+				.getWidget();
+		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
+
+		// start tests
+		//
+
+		Container.Indexed container = (Indexed) list1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		// add
+		container.addItem("Blabla");
+		assertEquals(1, yList1.getCollection().size());
+		assertEquals(1, container.size());
+
+		yList1.getCollection().add("Huhu");
+		assertEquals(2, yList1.getCollection().size());
+		assertEquals(2, container.size());
+
+		// add at index
+		yList1.getCollection().add(0, "First");
+		assertEquals("First", yList1.getCollection().get(0));
+		assertEquals("First", container.getItemIds(0, 1).get(0));
+
+		container.addItemAt(0, "Another First");
+		assertEquals("Another First", yList1.getCollection().get(0));
+		assertEquals("Another First", container.getItemIds(0, 1).get(0));
+
+		// move
+		yList1.getCollection().move(1, 0);
+		assertEquals("First", yList1.getCollection().get(0));
+		assertEquals("First", container.getItemIds(0, 1).get(0));
+
+		// remove all
+		container.removeAllItems();
+		assertEquals(0, yList1.getCollection().size());
+		assertEquals(0, container.size());
+
+	}
+
+	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_CollectionBinding_ListToList() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList1 = factory.createList();
+		yLayout.getElements().add(yList1);
+		YList yList2 = factory.createList();
+		yLayout.getElements().add(yList2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IListEditpart list2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList2);
+		IWidgetPresentation<Component> list1Presentation = list1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> list2Presentation = list2Editpart
+				.getPresentation();
+		ComponentContainer list1BaseComponentContainer = (ComponentContainer) list1Presentation
+				.getWidget();
+		ComponentContainer list2BaseComponentContainer = (ComponentContainer) list2Presentation
+				.getWidget();
+		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
+		ListSelect list2 = (ListSelect) unwrapList(list2BaseComponentContainer);
+
+		Container.Indexed indexedDs1 = (Indexed) list1.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) list2.getContainerDataSource();
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		// start tests
+		//
+
+		YEmbeddableCollectionEndpoint endp1 = yList1.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yList2.createCollectionEndpoint();
+		yBindingSet.addBinding(endp1, endp2);
+
+		assertEquals(0, yList1.getCollection().size());
+		assertEquals(0, yList2.getCollection().size());
+		assertEquals(0, indexedDs1.size());
+		assertEquals(0, indexedDs2.size());
+
+		// add to yList1
+		yList1.getCollection().add("Huhu");
+		assertEquals(1, yList2.getCollection().size());
+		assertEquals("Huhu", yList2.getCollection().get(0));
+		assertEquals("Huhu", indexedDs1.getItemIds(0, 1).get(0));
+		assertEquals("Huhu", indexedDs2.getItemIds(0, 1).get(0));
+		assertEquals(1, indexedDs1.size());
+		assertEquals(1, indexedDs2.size());
+
+		// add to yList1
+		yList1.getCollection().add("Huhu2");
+		assertEquals(2, yList2.getCollection().size());
+		assertEquals("Huhu", yList2.getCollection().get(0));
+		assertEquals("Huhu2", yList2.getCollection().get(1));
+		assertEquals("Huhu", yList1.getCollection().get(0));
+		assertEquals("Huhu2", yList1.getCollection().get(1));
+		assertEquals("Huhu", indexedDs1.getItemIds(0, 1).get(0));
+		assertEquals("Huhu2", indexedDs1.getItemIds(1, 1).get(0));
+		assertEquals("Huhu", indexedDs2.getItemIds(0, 1).get(0));
+		assertEquals("Huhu2", indexedDs2.getItemIds(1, 1).get(0));
+		assertEquals(2, indexedDs1.size());
+		assertEquals(2, indexedDs2.size());
+
+		// remove from yList2
+		yList2.getCollection().remove("Huhu");
+		assertEquals(1, yList1.getCollection().size());
+		assertEquals(1, yList2.getCollection().size());
+		assertEquals(1, indexedDs1.size());
+		assertEquals(1, indexedDs2.size());
+
+		// add another to yList2
+		yList2.getCollection().add("Blabla");
+		assertEquals(2, yList1.getCollection().size());
+		assertEquals(2, yList2.getCollection().size());
+		assertEquals("Huhu2", yList1.getCollection().get(0));
+		assertEquals("Blabla", yList1.getCollection().get(1));
+		assertEquals("Huhu2", yList2.getCollection().get(0));
+		assertEquals("Blabla", yList2.getCollection().get(1));
+		assertEquals("Huhu2", indexedDs1.getItemIds(0, 1).get(0));
+		assertEquals("Blabla", indexedDs1.getItemIds(1, 1).get(0));
+		assertEquals("Huhu2", indexedDs2.getItemIds(0, 1).get(0));
+		assertEquals("Blabla", indexedDs2.getItemIds(1, 1).get(0));
+		assertEquals(2, indexedDs1.size());
+		assertEquals(2, indexedDs2.size());
+
+		yList2.getCollection().move(0, 1);
+		assertEquals(2, yList1.getCollection().size());
+		assertEquals(2, yList2.getCollection().size());
+		assertEquals("Blabla", yList1.getCollection().get(0));
+		assertEquals("Huhu2", yList1.getCollection().get(1));
+		assertEquals("Blabla", yList2.getCollection().get(0));
+		assertEquals("Huhu2", yList2.getCollection().get(1));
+		assertEquals("Blabla", indexedDs1.getItemIds(0, 1).get(0));
+		assertEquals("Huhu2", indexedDs1.getItemIds(1, 1).get(0));
+		assertEquals("Blabla", indexedDs2.getItemIds(0, 1).get(0));
+		assertEquals("Huhu2", indexedDs2.getItemIds(1, 1).get(0));
+		assertEquals(2, indexedDs1.size());
+		assertEquals(2, indexedDs2.size());
+
+		yList2.getCollection().clear();
+		assertEquals(0, yList1.getCollection().size());
+		assertEquals(0, yList2.getCollection().size());
+		assertEquals(0, indexedDs1.size());
+		assertEquals(0, indexedDs2.size());
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Single_Native() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList1 = factory.createList();
+		yLayout.getElements().add(yList1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IWidgetPresentation<Component> list1Presentation = list1Editpart
+				.getPresentation();
+		ComponentContainer list1BaseComponentContainer = (ComponentContainer) list1Presentation
+				.getWidget();
+		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) list1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertNull(list1.getValue());
+		assertNull(yList1.getSelection());
+
+		// add
+		yList1.getCollection().add("Huhu");
+		yList1.getCollection().add("Haha");
+		assertEquals(2, container.size());
+
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+		// test set selection
+		yList1.setSelection("Huhu");
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", list1.getValue());
+
+		list1.setValue("Haha");
+		assertEquals("Haha", yList1.getSelection());
+		assertEquals("Haha", list1.getValue());
+
+		// test set selection null
+		list1.setValue(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+		list1.setValue("Haha");
+		assertEquals("Haha", yList1.getSelection());
+		assertEquals("Haha", list1.getValue());
+
+		yList1.setSelection(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+		// test remove element that is selected
+		// add
+		yList1.getCollection().add("Huhu");
+		yList1.getCollection().add("Haha");
+		assertEquals(2, container.size());
+
+		yList1.setSelection("Huhu");
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", list1.getValue());
+
+		yList1.getCollection().remove("Huhu");
+		assertNull(list1.getValue());
+		assertNull(yList1.getSelection());
+
+		// test remove element that is selected
+		// add
+		yList1.getCollection().add("Huhu");
+		assertEquals(2, container.size());
+
+		yList1.setSelection("Huhu");
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", list1.getValue());
+
+		list1.setValue(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Single_EmptyCollection() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList1 = factory.createList();
+		yLayout.getElements().add(yList1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IWidgetPresentation<Component> list1Presentation = list1Editpart
+				.getPresentation();
+		ComponentContainer list1BaseComponentContainer = (ComponentContainer) list1Presentation
+				.getWidget();
+		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) list1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertNull(list1.getValue());
+		assertNull(yList1.getSelection());
+
+		// add
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+		// test set selection
+		yList1.setSelection("Huhu");
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+	}
+
+	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_ListToList() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList1 = factory.createList();
+		yLayout.getElements().add(yList1);
+		YList yList2 = factory.createList();
+		yLayout.getElements().add(yList2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IListEditpart list2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList2);
+		IWidgetPresentation<Component> list1Presentation = list1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> list2Presentation = list2Editpart
+				.getPresentation();
+		ComponentContainer list1BaseComponentContainer = (ComponentContainer) list1Presentation
+				.getWidget();
+		ComponentContainer list2BaseComponentContainer = (ComponentContainer) list2Presentation
+				.getWidget();
+		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
+		ListSelect list2 = (ListSelect) unwrapList(list2BaseComponentContainer);
+
+		Container.Indexed indexedDs1 = (Indexed) list1.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) list2.getContainerDataSource();
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		// start tests
+		//
+
+		YEmbeddableCollectionEndpoint endp1 = yList1.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yList2.createCollectionEndpoint();
+		yBindingSet.addBinding(endp1, endp2);
+
+		YEmbeddableSelectionEndpoint endpSel1 = yList1
+				.createSelectionEndpoint();
+		YEmbeddableSelectionEndpoint endpSel2 = yList2
+				.createSelectionEndpoint();
+		yBindingSet.addBinding(endpSel1, endpSel2);
+
+		Container.Indexed container1 = (Indexed) list1.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) list2.getContainerDataSource();
+		assertEquals(0, container1.size());
+		assertEquals(0, container2.size());
+
+		assertNull(list1.getValue());
+		assertNull(yList1.getSelection());
+
+		// add
+		yList1.getCollection().add("Huhu");
+		yList2.getCollection().add("Haha");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+		assertNull(yList2.getSelection());
+		assertNull(list2.getValue());
+
+		// test set selection
+		yList1.setSelection("Huhu");
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", list1.getValue());
+		assertEquals("Huhu", yList2.getSelection());
+		assertEquals("Huhu", list2.getValue());
+
+		list1.setValue("Haha");
+		assertEquals("Haha", yList1.getSelection());
+		assertEquals("Haha", list1.getValue());
+		assertEquals("Haha", yList2.getSelection());
+		assertEquals("Haha", list2.getValue());
+
+		// test set selection null
+		list1.setValue(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+		assertNull(yList2.getSelection());
+		assertNull(list2.getValue());
+
+		list1.setValue("Haha");
+		assertEquals("Haha", yList1.getSelection());
+		assertEquals("Haha", list1.getValue());
+		assertEquals("Haha", yList2.getSelection());
+		assertEquals("Haha", list2.getValue());
+
+		list2.setValue(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+		assertNull(yList2.getSelection());
+		assertNull(list2.getValue());
+
+		list2.setValue("Haha");
+		assertEquals("Haha", yList1.getSelection());
+		assertEquals("Haha", list1.getValue());
+		assertEquals("Haha", yList2.getSelection());
+		assertEquals("Haha", list2.getValue());
+
+		yList1.setSelection(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+		assertNull(yList2.getSelection());
+		assertNull(list2.getValue());
+
+		list2.setValue("Haha");
+		assertEquals("Haha", yList1.getSelection());
+		assertEquals("Haha", list1.getValue());
+		assertEquals("Haha", yList2.getSelection());
+		assertEquals("Haha", list2.getValue());
+
+		yList2.setSelection(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+		assertNull(yList2.getSelection());
+		assertNull(list2.getValue());
+
+		// test remove element that is selected
+		// add
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		yList1.setSelection("Huhu");
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", yList2.getSelection());
+		assertEquals("Huhu", list1.getValue());
+		assertEquals("Huhu", list2.getValue());
+
+		yList1.getCollection().remove("Huhu");
+		assertNull(list1.getValue());
+		assertNull(list2.getValue());
+		assertNull(yList1.getSelection());
+		assertNull(yList2.getSelection());
+
+		// test remove element that is selected
+		// add
+		yList2.getCollection().add("Huhu");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		yList1.setSelection("Huhu");
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", list1.getValue());
+		assertEquals("Huhu", yList2.getSelection());
+		assertEquals("Huhu", list2.getValue());
+
+		list2.setValue(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+		assertNull(yList2.getSelection());
+		assertNull(list2.getValue());
+	}
+
+	/**
 	 * Test the automatic disposal of bindings
 	 * 
 	 * @throws ContextException
@@ -268,7 +760,7 @@ public class ListPresentationTests {
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
-		assertEquals(3, presentation.getUIBindings().size());
+		assertEquals(6, presentation.getUIBindings().size());
 
 		presentation.dispose();
 		assertFalse(presentation.isRendered());

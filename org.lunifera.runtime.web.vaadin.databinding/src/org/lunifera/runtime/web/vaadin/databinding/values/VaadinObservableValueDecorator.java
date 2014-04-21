@@ -13,38 +13,35 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding.model.internal;
+package org.lunifera.runtime.web.vaadin.databinding.values;
 
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.IObserving;
 import org.eclipse.core.databinding.observable.value.DecoratingObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.lunifera.runtime.web.vaadin.databinding.IVaadinModelObservableValue;
 
 /**
  */
-public class VaadinObservableModelValueDecorator extends
-		DecoratingObservableValue implements IVaadinModelObservableValue {
-	private Object source;
+public class VaadinObservableValueDecorator extends DecoratingObservableValue
+		implements IVaadinObservableValue {
 
 	/**
 	 * @param decorated
 	 * @param widget
 	 */
-	public VaadinObservableModelValueDecorator(IObservableValue decorated,
-			Object widget) {
+	public VaadinObservableValueDecorator(IObservableValue decorated) {
 		super(decorated, true);
-		this.source = widget;
+	}
+
+	public Object getObserved() {
+		IObservable decorated = getDecorated();
+		if (decorated instanceof IObserving)
+			return ((IObserving) decorated).getObserved();
+		return null;
 	}
 
 	public Object getSource() {
-		return source;
+		return getObserved();
 	}
 
-	public synchronized void dispose() {
-		if (source != null) {
-			// ComponentListenerUtil.asyncRemoveListener(widget, Vaadin.Dispose,
-			// this);
-			source = null;
-		}
-		super.dispose();
-	}
 }

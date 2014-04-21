@@ -15,14 +15,14 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.Sizeable.Unit;
 
 /**
  */
-public class SizeableHeightProperty extends AbstractComponentValueProperty {
+public class SizeableHeightProperty extends AbstractVaadinValueProperty {
 
 	public SizeableHeightProperty() {
 		super();

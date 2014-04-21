@@ -13,15 +13,17 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding;
+package org.lunifera.runtime.web.vaadin.databinding.properties;
 
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.value.SimpleValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentListener;
-import org.lunifera.runtime.web.vaadin.databinding.component.internal.VaadinObservableComponentValueDecorator;
+import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
+import org.lunifera.runtime.web.vaadin.databinding.values.VaadinObservableValueDecorator;
 
 import com.vaadin.ui.Component;
 
@@ -40,8 +42,8 @@ import com.vaadin.ui.Component;
  * (sub class of {@link Component.Event}) to the super constructor to indicate
  * which events signal a property change.
  */
-public abstract class AbstractComponentValueProperty extends
-		SimpleValueProperty implements IComponentValueProperty {
+public abstract class AbstractVaadinValueProperty extends
+		SimpleValueProperty implements IVaadinValueProperty {
 	private Class<? extends Component.Event>[] changeEvents;
 	private Class<? extends Component.Event>[] staleEvents;
 
@@ -49,7 +51,7 @@ public abstract class AbstractComponentValueProperty extends
 	 * Constructs a ComponentValueProperty which does not listen for any vaadin
 	 * events.
 	 */
-	protected AbstractComponentValueProperty() {
+	protected AbstractVaadinValueProperty() {
 		this(null, null);
 	}
 
@@ -61,7 +63,7 @@ public abstract class AbstractComponentValueProperty extends
 	 *            change.
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractComponentValueProperty(
+	protected AbstractVaadinValueProperty(
 			Class<? extends Component.Event> changeEvent) {
 		this(new Class[] { changeEvent }, null);
 	}
@@ -74,7 +76,7 @@ public abstract class AbstractComponentValueProperty extends
 	 *            array of vaadin event constants of the events that signify a
 	 *            property change.
 	 */
-	protected AbstractComponentValueProperty(
+	protected AbstractVaadinValueProperty(
 			Class<? extends Component.Event>[] changeEvents) {
 		this(changeEvents, null);
 	}
@@ -90,7 +92,7 @@ public abstract class AbstractComponentValueProperty extends
 	 *            array of vaadin event types of the events that signify a
 	 *            property became stale.
 	 */
-	public AbstractComponentValueProperty(
+	public AbstractVaadinValueProperty(
 			Class<? extends Component.Event>[] changeEvents,
 			Class<? extends Component.Event>[] staleEvents) {
 		this.changeEvents = changeEvents;
@@ -104,30 +106,34 @@ public abstract class AbstractComponentValueProperty extends
 		return new ComponentListener(this, listener, changeEvents, staleEvents);
 	}
 
-	public IVaadinComponentObservableValue observe(Object source) {
+	public IVaadinObservableValue observe(Object source) {
 		if (source instanceof Component) {
 			return observe((Component) source);
 		}
-		return (IVaadinComponentObservableValue) super.observe(source);
+		return (IVaadinObservableValue) super.observe(source);
 	}
 
 	public IObservableValue observe(Realm realm, Object source) {
-		return wrapObservable(super.observe(realm, source), (Component) source);
+		return wrapObservable(super.observe(realm, source));
 	}
 
-	protected IVaadinComponentObservableValue wrapObservable(
-			IObservableValue observable, Component widget) {
-		return new VaadinObservableComponentValueDecorator(observable, widget);
+	protected IVaadinObservableValue wrapObservable(
+			IObservableValue observable) {
+		return new VaadinObservableValueDecorator(observable);
 	}
 
-	public IVaadinComponentObservableValue observe(Component widget) {
-		return (IVaadinComponentObservableValue) observe(
+	public IVaadinObservableValue observe(Component widget) {
+		return (IVaadinObservableValue) observe(
 				VaadinObservables.getRealm(VaadinObservables.getUI(widget)),
 				widget);
 	}
 
-	public IVaadinComponentObservableValue observeDelayed(int delay,
-			Component widget) {
+	public IVaadinObservableValue observeDelayed(int delay, Component widget) {
 		throw new UnsupportedOperationException("Delayed not allowed");
+	}
+
+	@Override
+	public IVaadinObservableValue observeDelayed(int delay, Object component) {
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 }

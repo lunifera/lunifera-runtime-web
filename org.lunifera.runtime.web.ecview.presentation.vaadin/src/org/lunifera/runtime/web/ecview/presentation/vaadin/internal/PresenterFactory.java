@@ -29,6 +29,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditp
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IVerticalLayoutEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 
@@ -68,6 +69,8 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new ListPresentation(editpart);
 		} else if (editpart instanceof ITableEditpart) {
 			return (A) new TablePresentation(editpart);
+		} else if (editpart instanceof ITreeEditpart) {
+			return (A) new TreePresentation(editpart);
 		} else if (editpart instanceof IButtonEditpart) {
 			return (A) new ButtonPresentation(editpart);
 		} else if (editpart instanceof IGridLayoutEditpart) {

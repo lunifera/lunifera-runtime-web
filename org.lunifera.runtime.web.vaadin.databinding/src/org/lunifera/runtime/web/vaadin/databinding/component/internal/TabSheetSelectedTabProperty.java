@@ -15,7 +15,7 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
@@ -23,7 +23,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 
 /**
  */
-public class TabSheetSelectedTabProperty extends AbstractComponentValueProperty {
+public class TabSheetSelectedTabProperty extends AbstractVaadinValueProperty {
 
 	public TabSheetSelectedTabProperty() {
 		super(SelectedTabChangeEvent.class);

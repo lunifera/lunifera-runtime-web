@@ -17,12 +17,13 @@ package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
 import com.vaadin.ui.AbstractField;
 
 /**
  */
-public class PropertyReadonlyProperty extends AbstractModelValueProperty {
+public class PropertyReadonlyProperty extends AbstractVaadinValueProperty {
 
 	public PropertyReadonlyProperty() {
 		super();

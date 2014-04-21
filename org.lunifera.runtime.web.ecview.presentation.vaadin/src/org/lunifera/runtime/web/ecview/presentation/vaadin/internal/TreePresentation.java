@@ -20,31 +20,32 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Table;
+import com.vaadin.ui.Tree;
 
 /**
- * This presenter is responsible to render a table on the given layout.
+ * This presenter is responsible to render a tree on the given layout.
  */
-public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> {
+public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
-	private Table table;
+	private Tree tree;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param editpart The editpart of that presenter
+	 * @param editpart
+	 *            The editpart of that presenter
 	 */
-	public TablePresentation(IElementEditpart editpart) {
-		super((ITableEditpart) editpart);
-		this.modelAccess = new ModelAccess((YTable) editpart.getModel());
+	public TreePresentation(IElementEditpart editpart) {
+		super((ITreeEditpart) editpart);
+		this.modelAccess = new ModelAccess((YTree) editpart.getModel());
 	}
 
 	/**
@@ -61,21 +62,21 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 				componentBase.setId(getEditpart().getId());
 			}
 
-			table = new Table();
-			table.addStyleName(CSS_CLASS__CONTROL);
-			table.setSizeFull();
+			tree = new Tree();
+			tree.addStyleName(CSS_CLASS__CONTROL);
+			tree.setSizeFull();
 			
 			// creates the binding for the field
-						createBindings(modelAccess.yTable, table);
+						createBindings(modelAccess.yTree, tree);
 			
-			componentBase.addComponent(table);
+			componentBase.addComponent(tree);
 
 			if (modelAccess.isCssClassValid()) {
-				table.addStyleName(modelAccess.getCssClass());
+				tree.addStyleName(modelAccess.getCssClass());
 			}
 
 			if (modelAccess.isLabelValid()) {
-				table.setCaption(modelAccess.getLabel());
+				tree.setCaption(modelAccess.getLabel());
 			}
 		}
 		return componentBase;
@@ -105,7 +106,7 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 	protected IObservableList internalGetCollectionEndpoint() {
 		// return the observable value for text
 		return EMFProperties.list(
-				ExtensionModelPackage.Literals.YTABLE__COLLECTION).observe(
+				ExtensionModelPackage.Literals.YTREE__COLLECTION).observe(
 				getModel());
 	}
 
@@ -117,7 +118,7 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 	protected IObservableValue internalGetSelectionEndpoint() {
 		// return the observable value for text
 		return EMFObservables.observeValue(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTABLE__SELECTION);
+				ExtensionModelPackage.Literals.YTREE__SELECTION);
 	}
 
 	/**
@@ -126,16 +127,16 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 	 * @param yField
 	 * @param field
 	 */
-	protected void createBindings(YTable yField, Table field) {
+	protected void createBindings(YTree yField, Tree field) {
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBindings_ContainerContents(
 				castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTABLE__COLLECTION, field,
+				ExtensionModelPackage.Literals.YTREE__COLLECTION, field,
 				yField.getType()));
 
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBinding_Selection(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTABLE__SELECTION, field));
+				ExtensionModelPackage.Literals.YTREE__SELECTION, field));
 
 		super.createBindings(yField, field);
 	}
@@ -165,7 +166,7 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 				parent.removeComponent(componentBase);
 			}
 			componentBase = null;
-			table = null;
+			tree = null;
 		}
 	}
 
@@ -185,11 +186,11 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YTable yTable;
+		private final YTree yTree;
 
-		public ModelAccess(YTable yTable) {
+		public ModelAccess(YTree yTree) {
 			super();
-			this.yTable = yTable;
+			this.yTree = yTree;
 		}
 
 		/**
@@ -197,7 +198,7 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yTable.getCssClass();
+			return yTree.getCssClass();
 		}
 
 		/**
@@ -214,7 +215,7 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yTable.getCssID();
+			return yTree.getCssID();
 		}
 
 		/**
@@ -232,7 +233,7 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 		 * @return
 		 */
 		public boolean isLabelValid() {
-			return yTable.getDatadescription() != null && yTable.getDatadescription().getLabel() != null;
+			return yTree.getDatadescription() != null && yTree.getDatadescription().getLabel() != null;
 		}
 
 		/**
@@ -241,7 +242,7 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 		 * @return
 		 */
 		public String getLabel() {
-			return yTable.getDatadescription().getLabel();
+			return yTree.getDatadescription().getLabel();
 		}
 	}
 }

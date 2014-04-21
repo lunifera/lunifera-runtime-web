@@ -18,8 +18,14 @@ import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.internal.databinding.BindingStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
@@ -42,6 +48,7 @@ import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
@@ -245,25 +252,13 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		}
 		return null;
 	}
-	
-	/**
-	 * Creates a binding for the contents of the vaadin container from the ECView-UI-model to the
-	 * UI element.
-	 * 
-	 * @param model
-	 * @param modelFeature
-	 * @param field
-	 * @return binding
-	 * @@return Binding - the created binding
-	 */
-	protected Binding createBindings_ContainerContents(EObject model,
-			EStructuralFeature modelFeature, Container.ItemSetChangeNotifier field) {
-		return createBindings_ContainerContents(model, modelFeature, field, null, null);
-	}
 
 	/**
-	 * Creates a binding for the contents of the vaadin container from the ECView-UI-model to the
-	 * UI element.
+	 * Binds the selection of the selectable to the ECView model. It uses an
+	 * validator to detect problems setting a not allowed selection. In that
+	 * case, the current selection of the UI-model is passed to the ECView model
+	 * again.
+	 * 
 	 * 
 	 * @param model
 	 * @param modelFeature
@@ -272,8 +267,114 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return Binding - the created binding
 	 */
+	protected Binding createBinding_Selection(EObject model,
+			EStructuralFeature modelFeature, final AbstractSelect field) {
+		IBindingManager bindingManager = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		if (bindingManager != null) {
+			// bind the value of yText to textRidget
+			IObservableValue modelObservable = EMFObservables.observeValue(
+					model, modelFeature);
+			IObservableValue uiObservable = VaadinObservables
+					.observeValue(field);
+
+			// create a modelToTarget update strategy with a validator
+			//
+			ECViewUpdateValueStrategy modelToTarget = new ECViewUpdateValueStrategy(
+					ECViewUpdateValueStrategy.POLICY_UPDATE);
+			modelToTarget.setBeforeSetValidator(new IValidator() {
+				@Override
+				public IStatus validate(Object value) {
+					if (value != null && !field.containsId(value)) {
+						return Status.CANCEL_STATUS;
+					}
+
+					return Status.OK_STATUS;
+				}
+			});
+
+			final Binding binding = bindingManager.bindValue(uiObservable,
+					modelObservable, null, modelToTarget);
+			registerBinding(binding);
+
+			// now bind the validation state to an observable value. If the
+			// doSetValue is called, we check whether the set operation was
+			// successfully. Otherwise we send the target value back to the
+			// model.
+			Binding validationBinding = bindingManager.bindValue(
+					binding.getValidationStatus(),
+					new AbstractObservableValue() {
+
+						@Override
+						public Object getValueType() {
+							return null;
+						}
+
+						@Override
+						protected Object doGetValue() {
+							return null;
+						}
+
+						@SuppressWarnings("restriction")
+						@Override
+						protected void doSetValue(Object value) {
+							BindingStatus status = (BindingStatus) value;
+							if (status.getSeverity() == BindingStatus.CANCEL) {
+								binding.updateTargetToModel();
+							}
+						}
+					});
+			registerBinding(validationBinding);
+
+			return binding;
+		}
+		return null;
+	}
+
+	/**
+	 * Creates a binding for the contents of the vaadin container from the
+	 * ECView-UI-model to the UI element.
+	 * 
+	 * @param model
+	 *            the ECView model
+	 * @param modelFeature
+	 *            the eFeature of the model
+	 * @param field
+	 *            the ui field
+	 * @param collectionType
+	 *            the type of the collection contents
+	 * @return Binding - the created binding
+	 */
 	protected Binding createBindings_ContainerContents(EObject model,
-			EStructuralFeature modelFeature, Container.ItemSetChangeNotifier field,
+			EStructuralFeature modelFeature,
+			Container.ItemSetChangeNotifier field, Class<?> collectionType) {
+		return createBindings_ContainerContents(model, modelFeature, field,
+				collectionType, null, null);
+	}
+
+	/**
+	 * Creates a binding for the contents of the vaadin container from the
+	 * ECView-UI-model to the UI element.
+	 * 
+	 * @param model
+	 *            the ECView model
+	 * @param modelFeature
+	 *            the eFeature of the model
+	 * @param field
+	 *            the ui field
+	 * @param collectionType
+	 *            the type of the collection contents
+	 * @param targetToModel
+	 *            the update strategy
+	 * @param modelToTarget
+	 *            the update strategy
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindings_ContainerContents(EObject model,
+			EStructuralFeature modelFeature,
+			Container.ItemSetChangeNotifier field, Class<?> collectionType,
 			UpdateListStrategy targetToModel, UpdateListStrategy modelToTarget) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
@@ -281,10 +382,10 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget
-			IObservableList modelObservable = EMFObservables.observeList(
-					model, modelFeature);
+			IObservableList modelObservable = EMFProperties.list(modelFeature)
+					.observe(getModel());
 			IObservableList uiObservable = VaadinObservables
-					.observeContainerItemSetValue(field);
+					.observeContainerItemSetValue(field, collectionType);
 			return bindingManager.bindList(uiObservable, modelObservable,
 					targetToModel, modelToTarget);
 		}

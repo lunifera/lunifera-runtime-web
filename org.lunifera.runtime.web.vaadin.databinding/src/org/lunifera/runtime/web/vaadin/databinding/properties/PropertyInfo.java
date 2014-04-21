@@ -13,7 +13,7 @@
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding;
+package org.lunifera.runtime.web.vaadin.databinding.properties;
 
 import com.vaadin.data.Property;
 

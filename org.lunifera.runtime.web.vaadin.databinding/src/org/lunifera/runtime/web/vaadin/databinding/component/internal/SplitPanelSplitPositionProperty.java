@@ -15,7 +15,7 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.AbstractSplitPanel;
@@ -23,7 +23,7 @@ import com.vaadin.ui.AbstractSplitPanel;
 /**
  */
 public class SplitPanelSplitPositionProperty extends
-		AbstractComponentValueProperty {
+		AbstractVaadinValueProperty {
 
 	public SplitPanelSplitPositionProperty() {
 		super();

@@ -48,7 +48,7 @@ public class PropertyValueChangeListener extends NativePropertyListener
 
 	@Override
 	public void valueChange(ValueChangeEvent event) {
-		fireChange(event.getProperty().getValue(), null);
+		fireChange(event.getProperty(), null);
 	}
 
 }

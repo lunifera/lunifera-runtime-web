@@ -12,9 +12,10 @@
  * 		Florian Pirchner - porting swt databinding to support vaadin
  * 
  *******************************************************************************/
-package org.lunifera.runtime.web.vaadin.databinding;
+package org.lunifera.runtime.web.vaadin.databinding.properties;
 
 import org.eclipse.core.databinding.property.value.IValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
 
 import com.vaadin.ui.Component;
 
@@ -23,17 +24,7 @@ import com.vaadin.ui.Component;
  * 
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface IComponentValueProperty extends IValueProperty {
-	/**
-	 * Returns an {@link IVaadinComponentObservableValue} observing this value property
-	 * on the given Component
-	 * 
-	 * @param Component
-	 *            the source Component
-	 * @return an observable value observing this value property on the given
-	 *         Component
-	 */
-	public IVaadinComponentObservableValue observe(Component component);
+public interface IVaadinValueProperty extends IValueProperty {
 
 	/**
 	 * Returns an observable value observing this value property on the given
@@ -44,14 +35,14 @@ public interface IComponentValueProperty extends IValueProperty {
 	 * @return an observable value observing this value property on the given
 	 *         property source
 	 */
-	public IVaadinComponentObservableValue observe(Object source);
-
+	public IVaadinObservableValue observe(Object source);
+	
 	/**
-	 * Returns an {@link IVaadinComponentObservableValue} observing this value property
-	 * on the given Component, which delays notification of value changes until
-	 * at least <code>delay</code> milliseconds have elapsed since that last
-	 * change event, or until a FocusOut event is received from the Component
-	 * (whichever happens first).
+	 * Returns an {@link IVaadinComponentObservableValue} observing this value
+	 * property on the given Component, which delays notification of value
+	 * changes until at least <code>delay</code> milliseconds have elapsed since
+	 * that last change event, or until a FocusOut event is received from the
+	 * Component (whichever happens first).
 	 * <p>
 	 * This method is equivalent to
 	 * <code>vaadinObservables.observeDelayedValue(delay, observe(Component))</code>.
@@ -66,5 +57,6 @@ public interface IComponentValueProperty extends IValueProperty {
 	 *         Component, and which delays change notifications for
 	 *         <code>delay</code> milliseconds.
 	 */
-	public IVaadinComponentObservableValue observeDelayed(int delay, Component component);
+	public IVaadinObservableValue observeDelayed(int delay, Object component);
+
 }

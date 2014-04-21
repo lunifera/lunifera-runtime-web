@@ -20,12 +20,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
 /**
  * Uses reflection to access getter and setter method.
  */
-public class SimpleAccessorProperty extends AbstractComponentValueProperty {
+public class SimpleAccessorProperty extends AbstractVaadinValueProperty {
 
 	private Class<?> type;
 	private Method getter;

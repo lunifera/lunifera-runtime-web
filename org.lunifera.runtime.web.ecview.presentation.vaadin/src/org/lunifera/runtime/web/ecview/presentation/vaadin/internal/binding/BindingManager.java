@@ -30,9 +30,8 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ECViewUpdateValueStrategy;
-import org.lunifera.runtime.web.vaadin.databinding.IVaadinComponentObservableValue;
-import org.lunifera.runtime.web.vaadin.databinding.IVaadinModelObservableValue;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
+import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
@@ -83,7 +82,7 @@ public class BindingManager extends
 	@Override
 	public Binding bindVisible(YVisibleable yVisibleAble,
 			AbstractComponent abstractComponent) {
-		IVaadinComponentObservableValue uiObservable = VaadinObservables
+		IVaadinObservableValue uiObservable = VaadinObservables
 				.observeVisible(abstractComponent);
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yVisibleAble),
@@ -94,7 +93,7 @@ public class BindingManager extends
 	@Override
 	public Binding bindEnabled(YEnable yEnable,
 			AbstractComponent abstractComponent) {
-		IVaadinComponentObservableValue uiObservable = VaadinObservables
+		IVaadinObservableValue uiObservable = VaadinObservables
 				.observeEnabled(abstractComponent);
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yEnable),
@@ -105,7 +104,7 @@ public class BindingManager extends
 	@Override
 	public Binding bindReadonly(YEditable yEditable,
 			Property.ReadOnlyStatusChangeNotifier field) {
-		IVaadinModelObservableValue uiObservable = VaadinObservables
+		IVaadinObservableValue uiObservable = VaadinObservables
 				.observeReadonly(field);
 		IObservableValue modelObservable = EMFObservables.observeValue(
 				castEObject(yEditable),

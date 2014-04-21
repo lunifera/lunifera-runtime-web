@@ -14,12 +14,12 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.ui.Field;
 
-public class ComponentFocusedProperty extends AbstractComponentValueProperty {
+public class ComponentFocusedProperty extends AbstractVaadinValueProperty {
 
 	public String toString() {
 		return "ComponentFocusedProperty"; //$NON-NLS-1$

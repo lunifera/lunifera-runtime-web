@@ -6,28 +6,29 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Original source based on org.eclipse.jface.databinding.swt.ISWTObservableValue (EPL)
+ * Original source based on org.eclipse.jface.databinding.swt.ISWTObservableList (EPL)
  * 
  * Contributor:
  * 		Florian Pirchner - porting swt databinding to support vaadin
  * 
  *******************************************************************************/
 
-package org.lunifera.runtime.web.vaadin.databinding;
+package org.lunifera.runtime.web.vaadin.databinding.values;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-
-import com.vaadin.ui.Component;
+import org.lunifera.runtime.web.vaadin.databinding.IVaadinObservable;
 
 /**
- * {@link IObservableValue} observing an vaadin Component.
+ * {@link IObservableValue} observing a vaadin component.
  */
-public interface IVaadinComponentObservableValue extends IVaadinObservable, IObservableValue {
+public interface IVaadinObservableValue extends IVaadinObservable,
+		IObservableValue {
 
 	/**
-	 * Returns the Component of this observable
+	 * Returns the model element that is observed.
 	 * 
-	 * @return the Component
+	 * @return the model source object
 	 */
-	public Component getComponent();
+	public Object getSource();
+
 }

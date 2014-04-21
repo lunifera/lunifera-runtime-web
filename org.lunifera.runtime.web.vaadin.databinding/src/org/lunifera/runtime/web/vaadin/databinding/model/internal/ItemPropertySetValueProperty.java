@@ -20,12 +20,13 @@ import java.util.Collection;
 
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
 import com.vaadin.data.Item;
 
 /**
  */
-public class ItemPropertySetValueProperty extends AbstractModelValueProperty {
+public class ItemPropertySetValueProperty extends AbstractVaadinValueProperty {
 
 	public ItemPropertySetValueProperty() {
 

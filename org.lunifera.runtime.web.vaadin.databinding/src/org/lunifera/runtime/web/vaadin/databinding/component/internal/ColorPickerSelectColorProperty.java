@@ -15,7 +15,7 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
-import org.lunifera.runtime.web.vaadin.databinding.AbstractComponentValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.components.colorpicker.ColorChangeEvent;
@@ -24,7 +24,7 @@ import com.vaadin.ui.components.colorpicker.ColorPickerSelect;
 /**
  */
 public class ColorPickerSelectColorProperty extends
-		AbstractComponentValueProperty {
+		AbstractVaadinValueProperty {
 
 	public ColorPickerSelectColorProperty() {
 		super(ColorChangeEvent.class);
