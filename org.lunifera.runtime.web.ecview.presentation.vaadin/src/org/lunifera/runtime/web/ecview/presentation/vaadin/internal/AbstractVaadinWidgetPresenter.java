@@ -44,6 +44,7 @@ import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
+import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
@@ -267,7 +268,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return Binding - the created binding
 	 */
-	protected Binding createBinding_Selection(EObject model,
+	protected Binding createBindings_Selection(EObject model,
 			EStructuralFeature modelFeature, final AbstractSelect field) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
@@ -327,6 +328,88 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 						}
 					});
 			registerBinding(validationBinding);
+
+			return binding;
+		}
+		return null;
+	}
+
+	/**
+	 * Binds the multi selection of the selectable to the ECView model. It uses
+	 * an validator to detect problems setting a not allowed selection. In that
+	 * case, the current selection of the UI-model is passed to the ECView model
+	 * again.
+	 * 
+	 * @param model
+	 * @param modelFeature
+	 * @param field
+	 * @param collectionType
+	 *            the type contained in the selection result
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindings_MultiSelection(EObject model,
+			EStructuralFeature modelFeature, final AbstractSelect field,
+			Class<?> collectionType) {
+		IBindingManager bindingManager = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		if (bindingManager != null) {
+			// bind the value of yText to textRidget
+			IObservableList modelObservable = EMFObservables.observeList(model,
+					modelFeature);
+			IVaadinObservableList uiObservable = VaadinObservables
+					.observeMultiSelection(field, collectionType);
+
+			// // create a modelToTarget update strategy with a validator
+			// //
+			// ECViewUpdateListStrategy modelToTarget = new
+			// ECViewUpdateListStrategy(
+			// ECViewUpdateValueStrategy.POLICY_UPDATE);
+			// modelToTarget.setBeforeSetValidator(new IValidator() {
+			// @Override
+			// public IStatus validate(Object value) {
+			// if (value != null && !field.containsId(value)) {
+			// return Status.CANCEL_STATUS;
+			// }
+			//
+			// return Status.OK_STATUS;
+			// }
+			// });
+
+			final Binding binding = bindingManager.bindList(uiObservable,
+					modelObservable, null, null);
+			registerBinding(binding);
+
+			// // now bind the validation state to an observable value. If the
+			// // doSetValue is called, we check whether the set operation was
+			// // successfully. Otherwise we send the target value back to the
+			// // model.
+			// Binding validationBinding = bindingManager.bindValue(
+			// binding.getValidationStatus(),
+			// new AbstractObservableValue() {
+			//
+			// @Override
+			// public Object getValueType() {
+			// return null;
+			// }
+			//
+			// @Override
+			// protected Object doGetValue() {
+			// return null;
+			// }
+			//
+			// @SuppressWarnings("restriction")
+			// @Override
+			// protected void doSetValue(Object value) {
+			// BindingStatus status = (BindingStatus) value;
+			// if (status.getSeverity() == BindingStatus.CANCEL) {
+			// binding.updateTargetToModel();
+			// }
+			// }
+			// });
+			// registerBinding(validationBinding);
 
 			return binding;
 		}

@@ -217,7 +217,33 @@ public class VaadinObservables {
 	}
 
 	/**
-	 * Returns an observable value tracking the container of the given viewer.
+	 * Returns an observable value tracking the selection of the given viewer.
+	 * 
+	 * @param notifier
+	 * @return
+	 */
+	public static IVaadinObservableValue observeSelection(
+			Property.ValueChangeNotifier notifier) {
+		return VaadinProperties.propertyValue().observe(notifier);
+	}
+
+	/**
+	 * Returns an observable list tracking the multi selection of the given
+	 * viewer.
+	 * 
+	 * @param notifier
+	 * @param collectionType
+	 *            the type contained in the multi selection
+	 * @return
+	 */
+	public static IVaadinObservableList observeMultiSelection(
+			Property.ValueChangeNotifier notifier, Class<?> collectionType) {
+		return VaadinProperties.propertyMultiSelection(collectionType).observe(
+				notifier);
+	}
+
+	/**
+	 * Returns an observable value tracking the value of the given viewer.
 	 * 
 	 * @param notifier
 	 * @return
@@ -399,7 +425,7 @@ public class VaadinObservables {
 				"itemIconPropertyId").observe(component);
 	}
 
-	public static IVaadinObservableValue observeMultiSelect(
+	public static IVaadinObservableValue observeMultiSelectMode(
 			AbstractSelect component) {
 		return VaadinProperties.accessor(AbstractSelect.class, "multiSelect")
 				.observe(component);

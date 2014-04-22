@@ -21,6 +21,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoin
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 
 import com.vaadin.ui.Component;
@@ -65,6 +66,7 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 			list = new ListSelect();
 			list.addStyleName(CSS_CLASS__CONTROL);
 			list.setSizeFull();
+			list.setMultiSelect(modelAccess.yList.getSelectionType() == YSelectionType.MULTI);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yList, list);
@@ -134,9 +136,18 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 				ExtensionModelPackage.Literals.YLIST__COLLECTION, field,
 				yField.getType()));
 
-		// create the model binding from ridget to ECView-model
-		registerBinding(createBinding_Selection(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YLIST__SELECTION, field));
+		if (modelAccess.yList.getSelectionType() == YSelectionType.MULTI) {
+			// create the model binding from ridget to ECView-model
+			registerBinding(createBindings_MultiSelection(
+					castEObject(getModel()),
+					ExtensionModelPackage.Literals.YLIST__MULTI_SELECTION,
+					field, yField.getType()));
+		} else {
+			// create the model binding from ridget to ECView-model
+			registerBinding(createBindings_Selection(castEObject(getModel()),
+					ExtensionModelPackage.Literals.YLIST__SELECTION, field));
+
+		}
 
 		super.createBindings(yField, field);
 	}

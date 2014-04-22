@@ -136,7 +136,7 @@ public class ComboBoxPresentation extends
 				yField.getType()));
 
 		// create the model binding from ridget to ECView-model
-		registerBinding(createBinding_Selection(castEObject(getModel()),
+		registerBinding(createBindings_Selection(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YCOMBO_BOX__SELECTION, field));
 
 		super.createBindings(yField, field);

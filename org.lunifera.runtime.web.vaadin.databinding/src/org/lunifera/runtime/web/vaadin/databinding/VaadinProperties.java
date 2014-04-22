@@ -34,6 +34,7 @@ import org.lunifera.runtime.web.vaadin.databinding.component.internal.TabSheetSe
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerItemSetContentProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetInfoValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.MultiSelectionProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyReadonlyProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerContainerDatasourceProperty;
@@ -138,6 +139,19 @@ public class VaadinProperties {
 	}
 
 	/**
+	 * Creates a list property that observes changes of multi selections.
+	 * 
+	 * @param collectionType
+	 *            the types contained in the collection
+	 * @return listProperty
+	 */
+	public static IVaadinListProperty propertyMultiSelection(Class<?> collectionType) {
+		MultiSelectionProperty property = new MultiSelectionProperty(
+				collectionType);
+		return new VaadinListPropertyDecorator(property);
+	}
+
+	/**
 	 * Creates a list property that observes changes of item sets in container.
 	 * 
 	 * @param collectionType
@@ -146,7 +160,8 @@ public class VaadinProperties {
 	 */
 	public static IVaadinListProperty containerItemsetValue(
 			Class<?> collectionType) {
-		ContainerItemSetContentProperty property = new ContainerItemSetContentProperty(collectionType);
+		ContainerItemSetContentProperty property = new ContainerItemSetContentProperty(
+				collectionType);
 		return new VaadinListPropertyDecorator(property);
 	}
 

@@ -135,7 +135,7 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 				yField.getType()));
 
 		// create the model binding from ridget to ECView-model
-		registerBinding(createBinding_Selection(castEObject(getModel()),
+		registerBinding(createBindings_Selection(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YTREE__SELECTION, field));
 
 		super.createBindings(yField, field);
