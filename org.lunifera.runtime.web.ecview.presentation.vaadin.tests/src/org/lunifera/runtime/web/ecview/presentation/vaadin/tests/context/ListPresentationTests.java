@@ -28,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
@@ -471,36 +472,36 @@ public class ListPresentationTests {
 		assertEquals(0, container.size());
 
 		assertNull(list1.getValue());
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 
 		// add
 		yList1.getCollection().add("Huhu");
 		yList1.getCollection().add("Haha");
 		assertEquals(2, container.size());
 
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
 
 		// test set selection
 		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getMultiSelection());
+		assertEquals("Huhu", yList1.getSelection());
 		assertEquals("Huhu", list1.getValue());
 
 		list1.setValue("Haha");
-		assertEquals("Haha", yList1.getMultiSelection());
+		assertEquals("Haha", yList1.getSelection());
 		assertEquals("Haha", list1.getValue());
 
 		// test set selection null
 		list1.setValue(null);
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
 
 		list1.setValue("Haha");
-		assertEquals("Haha", yList1.getMultiSelection());
+		assertEquals("Haha", yList1.getSelection());
 		assertEquals("Haha", list1.getValue());
 
 		yList1.setSelection(null);
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
 
 		// test remove element that is selected
@@ -510,12 +511,12 @@ public class ListPresentationTests {
 		assertEquals(2, container.size());
 
 		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getMultiSelection());
+		assertEquals("Huhu", yList1.getSelection());
 		assertEquals("Huhu", list1.getValue());
 
 		yList1.getCollection().remove("Huhu");
 		assertNull(list1.getValue());
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 
 		// test remove element that is selected
 		// add
@@ -523,11 +524,11 @@ public class ListPresentationTests {
 		assertEquals(2, container.size());
 
 		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getMultiSelection());
+		assertEquals("Huhu", yList1.getSelection());
 		assertEquals("Huhu", list1.getValue());
 
 		list1.setValue(null);
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
 
 	}
@@ -573,54 +574,64 @@ public class ListPresentationTests {
 		assertTrue(yList1.getMultiSelection().isEmpty());
 		assertTrue(asList(list1.getValue()).isEmpty());
 
-		// test set selection
+		// test set selection by model
 		yList1.getMultiSelection().add("Huhu");
-		assertEquals("Huhu", asList(yList1.getMultiSelection()).get(0));
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
 		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
 
-		list1.setValue("Haha");
-		assertEquals("Haha", yList1.getMultiSelection());
-		assertEquals("Haha", list1.getValue());
+		yList1.getMultiSelection().add("Haha");
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", yList1.getMultiSelection().get(1));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(1));
+		assertEquals(2, yList1.getMultiSelection().size());
+		assertEquals(2, asList(list1.getValue()).size());
 
-		// test set selection null
-		list1.setValue(null);
-		assertNull(yList1.getMultiSelection());
-		assertNull(list1.getValue());
+		// remove selection
+		yList1.getMultiSelection().remove("Huhu");
+		assertEquals("Haha", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
 
-		list1.setValue("Haha");
-		assertEquals("Haha", yList1.getMultiSelection());
-		assertEquals("Haha", list1.getValue());
+		yList1.getMultiSelection().clear();
+		assertEquals(0, yList1.getMultiSelection().size());
+		assertEquals(0, asList(list1.getValue()).size());
 
-		yList1.setSelection(null);
-		assertNull(yList1.getMultiSelection());
-		assertNull(list1.getValue());
+		// test set selection by widget
+		List<String> selection = new ArrayList<String>();
+		selection.add("Huhu");
+		list1.setValue(selection);
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
 
-		// test remove element that is selected
-		// add
-		yList1.getCollection().add("Huhu");
-		yList1.getCollection().add("Haha");
-		assertEquals(2, container.size());
+		selection = new ArrayList<String>();
+		selection.add("Huhu");
+		selection.add("Haha");
+		list1.setValue(selection);
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", yList1.getMultiSelection().get(1));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(1));
+		assertEquals(2, yList1.getMultiSelection().size());
+		assertEquals(2, asList(list1.getValue()).size());
 
-		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getMultiSelection());
-		assertEquals("Huhu", list1.getValue());
+		selection = new ArrayList<String>();
+		selection.add("Haha");
+		list1.setValue(selection);
+		assertEquals("Haha", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
 
-		yList1.getCollection().remove("Huhu");
-		assertNull(list1.getValue());
-		assertNull(yList1.getMultiSelection());
-
-		// test remove element that is selected
-		// add
-		yList1.getCollection().add("Huhu");
-		assertEquals(2, container.size());
-
-		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getMultiSelection());
-		assertEquals("Huhu", list1.getValue());
-
-		list1.setValue(null);
-		assertNull(yList1.getMultiSelection());
-		assertNull(list1.getValue());
+		selection = new ArrayList<String>();
+		list1.setValue(selection);
+		assertEquals(0, yList1.getMultiSelection().size());
+		assertEquals(0, asList(list1.getValue()).size());
 
 	}
 
@@ -662,17 +673,109 @@ public class ListPresentationTests {
 		assertEquals(0, container.size());
 
 		assertNull(list1.getValue());
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 
 		// add
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
 
 		// test set selection
 		yList1.setSelection("Huhu");
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
+	}
 
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Multi_EmptyCollection() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList1 = factory.createList();
+		yList1.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yList1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IWidgetPresentation<Component> list1Presentation = list1Editpart
+				.getPresentation();
+		ComponentContainer list1BaseComponentContainer = (ComponentContainer) list1Presentation
+				.getWidget();
+		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) list1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertTrue(asList(list1.getValue()).isEmpty());
+		assertTrue(yList1.getMultiSelection().isEmpty());
+
+		// test set selection by model
+		yList1.getMultiSelection().add("Huhu");
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
+
+		yList1.getMultiSelection().add("Haha");
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", yList1.getMultiSelection().get(1));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(1));
+		assertEquals(2, yList1.getMultiSelection().size());
+		assertEquals(2, asList(list1.getValue()).size());
+
+		// remove selection
+		yList1.getMultiSelection().remove("Huhu");
+		assertEquals("Haha", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
+
+		yList1.getMultiSelection().clear();
+		assertEquals(0, yList1.getMultiSelection().size());
+		assertEquals(0, asList(list1.getValue()).size());
+
+		// test set selection by widget
+		List<String> selection = new ArrayList<String>();
+		selection.add("Huhu");
+		list1.setValue(selection);
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		selection.add("Huhu");
+		selection.add("Haha");
+		list1.setValue(selection);
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", yList1.getMultiSelection().get(1));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(1));
+		assertEquals(2, yList1.getMultiSelection().size());
+		assertEquals(2, asList(list1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		selection.add("Haha");
+		list1.setValue(selection);
+		assertEquals("Haha", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		list1.setValue(selection);
+		assertEquals(0, yList1.getMultiSelection().size());
+		assertEquals(0, asList(list1.getValue()).size());
 	}
 
 	/**
@@ -682,7 +785,164 @@ public class ListPresentationTests {
 	 */
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_ListToList() throws Exception {
+	public void test_SelectionBinding_Multi_ListToList() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList1 = factory.createList();
+		yList1.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yList1);
+		YList yList2 = factory.createList();
+		yList2.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yList2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IListEditpart list2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList2);
+		IWidgetPresentation<Component> list1Presentation = list1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> list2Presentation = list2Editpart
+				.getPresentation();
+		ComponentContainer list1BaseComponentContainer = (ComponentContainer) list1Presentation
+				.getWidget();
+		ComponentContainer list2BaseComponentContainer = (ComponentContainer) list2Presentation
+				.getWidget();
+		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
+		ListSelect list2 = (ListSelect) unwrapList(list2BaseComponentContainer);
+
+		Container.Indexed indexedDs1 = (Indexed) list1.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) list2.getContainerDataSource();
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		// start tests
+		//
+
+		YEmbeddableCollectionEndpoint endp1 = yList1.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yList2.createCollectionEndpoint();
+		yBindingSet.addBinding(endp1, endp2);
+
+		YEmbeddableMultiSelectionEndpoint endpSel1 = yList1
+				.createMultiSelectionEndpoint();
+		YEmbeddableMultiSelectionEndpoint endpSel2 = yList2
+				.createMultiSelectionEndpoint();
+		yBindingSet.addBinding(endpSel1, endpSel2);
+
+		Container.Indexed container1 = (Indexed) list1.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) list2.getContainerDataSource();
+		assertEquals(0, container1.size());
+		assertEquals(0, container2.size());
+
+		assertTrue(asList(list1.getValue()).isEmpty());
+		assertTrue(yList1.getMultiSelection().isEmpty());
+		assertTrue(asList(list2.getValue()).isEmpty());
+		assertTrue(yList2.getMultiSelection().isEmpty());
+
+		// add
+		yList1.getCollection().add("Huhu");
+		yList2.getCollection().add("Haha");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		assertTrue(asList(list1.getValue()).isEmpty());
+		assertTrue(yList1.getMultiSelection().isEmpty());
+		assertTrue(asList(list2.getValue()).isEmpty());
+		assertTrue(yList2.getMultiSelection().isEmpty());
+
+		// test set selection
+		yList1.getMultiSelection().add("Huhu");
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
+		assertEquals("Huhu", yList2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list2.getValue()).get(0));
+		assertEquals(1, yList2.getMultiSelection().size());
+		assertEquals(1, asList(list2.getValue()).size());
+
+		yList2.getMultiSelection().add("Haha");
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals("Haha", yList1.getMultiSelection().get(1));
+		assertEquals("Haha", asList(list1.getValue()).get(1));
+		assertEquals(2, yList1.getMultiSelection().size());
+		assertEquals(2, asList(list1.getValue()).size());
+		assertEquals("Huhu", yList2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list2.getValue()).get(0));
+		assertEquals("Haha", yList2.getMultiSelection().get(1));
+		assertEquals("Haha", asList(list2.getValue()).get(1));
+		assertEquals(2, yList2.getMultiSelection().size());
+		assertEquals(2, asList(list2.getValue()).size());
+
+		yList1.getMultiSelection().remove("Huhu");
+		assertEquals("Haha", yList1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
+		assertEquals("Haha", yList2.getMultiSelection().get(0));
+		assertEquals("Haha", asList(list2.getValue()).get(0));
+		assertEquals(1, yList2.getMultiSelection().size());
+		assertEquals(1, asList(list2.getValue()).size());
+		
+		// clear
+		yList2.getMultiSelection().clear();
+		assertTrue(asList(list1.getValue()).isEmpty());
+		assertTrue(yList1.getMultiSelection().isEmpty());
+		assertTrue(asList(list2.getValue()).isEmpty());
+		assertTrue(yList2.getMultiSelection().isEmpty());
+		
+		
+		// test set selection null
+		List<String> selection = new ArrayList<String>();
+		selection.add("Huhu");
+		list1.setValue(selection);
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals(1, yList1.getMultiSelection().size());
+		assertEquals(1, asList(list1.getValue()).size());
+		assertEquals("Huhu", yList2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list2.getValue()).get(0));
+		assertEquals(1, yList2.getMultiSelection().size());
+		assertEquals(1, asList(list2.getValue()).size());
+
+		selection.add("Haha");
+		list2.setValue(selection);
+		assertEquals("Huhu", yList1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list1.getValue()).get(0));
+		assertEquals("Haha", yList1.getMultiSelection().get(1));
+		assertEquals("Haha", asList(list1.getValue()).get(1));
+		assertEquals(2, yList1.getMultiSelection().size());
+		assertEquals(2, asList(list1.getValue()).size());
+		assertEquals("Huhu", yList2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(list2.getValue()).get(0));
+		assertEquals("Haha", yList2.getMultiSelection().get(1));
+		assertEquals("Haha", asList(list2.getValue()).get(1));
+		assertEquals(2, yList2.getMultiSelection().size());
+		assertEquals(2, asList(list2.getValue()).size());
+
+		list2.setValue(new ArrayList<String>());
+		assertTrue(asList(list2.getValue()).isEmpty());
+		assertTrue(yList2.getMultiSelection().isEmpty());
+		assertTrue(asList(list1.getValue()).isEmpty());
+		assertTrue(yList1.getMultiSelection().isEmpty());
+	}
+
+	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Single_ListToList() throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -737,7 +997,7 @@ public class ListPresentationTests {
 		assertEquals(0, container2.size());
 
 		assertNull(list1.getValue());
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 
 		// add
 		yList1.getCollection().add("Huhu");
@@ -745,65 +1005,65 @@ public class ListPresentationTests {
 		assertEquals(2, container1.size());
 		assertEquals(2, container2.size());
 
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
-		assertNull(yList2.getMultiSelection());
+		assertNull(yList2.getSelection());
 		assertNull(list2.getValue());
 
 		// test set selection
 		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getMultiSelection());
+		assertEquals("Huhu", yList1.getSelection());
 		assertEquals("Huhu", list1.getValue());
-		assertEquals("Huhu", yList2.getMultiSelection());
+		assertEquals("Huhu", yList2.getSelection());
 		assertEquals("Huhu", list2.getValue());
 
 		list1.setValue("Haha");
-		assertEquals("Haha", yList1.getMultiSelection());
+		assertEquals("Haha", yList1.getSelection());
 		assertEquals("Haha", list1.getValue());
-		assertEquals("Haha", yList2.getMultiSelection());
+		assertEquals("Haha", yList2.getSelection());
 		assertEquals("Haha", list2.getValue());
 
 		// test set selection null
 		list1.setValue(null);
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
-		assertNull(yList2.getMultiSelection());
+		assertNull(yList2.getSelection());
 		assertNull(list2.getValue());
 
 		list1.setValue("Haha");
-		assertEquals("Haha", yList1.getMultiSelection());
+		assertEquals("Haha", yList1.getSelection());
 		assertEquals("Haha", list1.getValue());
-		assertEquals("Haha", yList2.getMultiSelection());
+		assertEquals("Haha", yList2.getSelection());
 		assertEquals("Haha", list2.getValue());
 
 		list2.setValue(null);
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
-		assertNull(yList2.getMultiSelection());
+		assertNull(yList2.getSelection());
 		assertNull(list2.getValue());
 
 		list2.setValue("Haha");
-		assertEquals("Haha", yList1.getMultiSelection());
+		assertEquals("Haha", yList1.getSelection());
 		assertEquals("Haha", list1.getValue());
-		assertEquals("Haha", yList2.getMultiSelection());
+		assertEquals("Haha", yList2.getSelection());
 		assertEquals("Haha", list2.getValue());
 
 		yList1.setSelection(null);
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
-		assertNull(yList2.getMultiSelection());
+		assertNull(yList2.getSelection());
 		assertNull(list2.getValue());
 
 		list2.setValue("Haha");
-		assertEquals("Haha", yList1.getMultiSelection());
+		assertEquals("Haha", yList1.getSelection());
 		assertEquals("Haha", list1.getValue());
-		assertEquals("Haha", yList2.getMultiSelection());
+		assertEquals("Haha", yList2.getSelection());
 		assertEquals("Haha", list2.getValue());
 
 		yList2.setSelection(null);
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
-		assertNull(yList2.getMultiSelection());
+		assertNull(yList2.getSelection());
 		assertNull(list2.getValue());
 
 		// test remove element that is selected
@@ -812,16 +1072,16 @@ public class ListPresentationTests {
 		assertEquals(2, container2.size());
 
 		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getMultiSelection());
-		assertEquals("Huhu", yList2.getMultiSelection());
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", yList2.getSelection());
 		assertEquals("Huhu", list1.getValue());
 		assertEquals("Huhu", list2.getValue());
 
 		yList1.getCollection().remove("Huhu");
 		assertNull(list1.getValue());
 		assertNull(list2.getValue());
-		assertNull(yList1.getMultiSelection());
-		assertNull(yList2.getMultiSelection());
+		assertNull(yList1.getSelection());
+		assertNull(yList2.getSelection());
 
 		// test remove element that is selected
 		// add
@@ -830,15 +1090,15 @@ public class ListPresentationTests {
 		assertEquals(2, container2.size());
 
 		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getMultiSelection());
+		assertEquals("Huhu", yList1.getSelection());
 		assertEquals("Huhu", list1.getValue());
-		assertEquals("Huhu", yList2.getMultiSelection());
+		assertEquals("Huhu", yList2.getSelection());
 		assertEquals("Huhu", list2.getValue());
 
 		list2.setValue(null);
-		assertNull(yList1.getMultiSelection());
+		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
-		assertNull(yList2.getMultiSelection());
+		assertNull(yList2.getSelection());
 		assertNull(list2.getValue());
 	}
 

@@ -20,14 +20,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.databinding.observable.list.ListDiff;
-import org.eclipse.core.databinding.observable.list.ListDiffVisitor;
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinListProperty;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.Container.Viewer;
 import com.vaadin.ui.AbstractSelect;
 
 /**
@@ -43,7 +39,7 @@ public class MultiSelectionProperty extends AbstractVaadinListProperty {
 	@Override
 	public INativePropertyListener adaptListener(
 			ISimplePropertyListener listener) {
-		return new ContainerItemSetChangeListener(this, listener);
+		return new MultiSelectionChangeListener(this, listener);
 	}
 
 	public Object getElementType() {
@@ -63,7 +59,7 @@ public class MultiSelectionProperty extends AbstractVaadinListProperty {
 	protected void doSetList(final Object source, List list, ListDiff diff) {
 		AbstractSelect select = (AbstractSelect) source;
 		Collection<?> values = (Collection<?>) select.getValue();
-		
+
 		List<?> newValues = new ArrayList<Object>(values);
 		diff.applyTo(newValues);
 		select.setValue(newValues);

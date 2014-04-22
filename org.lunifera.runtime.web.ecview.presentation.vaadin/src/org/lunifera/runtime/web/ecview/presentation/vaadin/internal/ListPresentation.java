@@ -18,6 +18,7 @@ import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
@@ -95,6 +96,8 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 			return internalGetCollectionEndpoint();
 		} else if (bindableValue instanceof YEmbeddableSelectionEndpoint) {
 			return internalGetSelectionEndpoint();
+		} else if (bindableValue instanceof YEmbeddableMultiSelectionEndpoint) {
+			return internalGetMultiSelectionEndpoint();
 		}
 		throw new IllegalArgumentException("Not a valid input: "
 				+ bindableValue);
@@ -121,6 +124,18 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 		// return the observable value for text
 		return EMFObservables.observeValue(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YLIST__SELECTION);
+	}
+
+	/**
+	 * Returns the observable to observe the selection.
+	 * 
+	 * @return
+	 */
+	protected IObservableList internalGetMultiSelectionEndpoint() {
+		// return the observable value for text
+		return EMFProperties.list(
+				ExtensionModelPackage.Literals.YLIST__MULTI_SELECTION).observe(
+				getModel());
 	}
 
 	/**
