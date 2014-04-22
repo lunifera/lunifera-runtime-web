@@ -41,6 +41,7 @@ import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleEvent;
 import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleService;
 import org.eclipse.emf.ecp.ecview.common.notification.LifecycleEvent;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;

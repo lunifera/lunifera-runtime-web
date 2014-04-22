@@ -28,8 +28,8 @@ import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
+import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
 
