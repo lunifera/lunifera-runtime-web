@@ -37,6 +37,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -891,15 +892,14 @@ public class ListPresentationTests {
 		assertEquals("Haha", asList(list2.getValue()).get(0));
 		assertEquals(1, yList2.getMultiSelection().size());
 		assertEquals(1, asList(list2.getValue()).size());
-		
+
 		// clear
 		yList2.getMultiSelection().clear();
 		assertTrue(asList(list1.getValue()).isEmpty());
 		assertTrue(yList1.getMultiSelection().isEmpty());
 		assertTrue(asList(list2.getValue()).isEmpty());
 		assertTrue(yList2.getMultiSelection().isEmpty());
-		
-		
+
 		// test set selection null
 		List<String> selection = new ArrayList<String>();
 		selection.add("Huhu");
@@ -933,6 +933,8 @@ public class ListPresentationTests {
 		assertTrue(yList2.getMultiSelection().isEmpty());
 		assertTrue(asList(list1.getValue()).isEmpty());
 		assertTrue(yList1.getMultiSelection().isEmpty());
+
+		Assert.fail("Add 7 elements into list and ensure that set can not bind properly and mixes selections up");
 	}
 
 	/**

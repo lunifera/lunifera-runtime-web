@@ -18,6 +18,7 @@ package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.Util;
 
 import com.vaadin.data.Property;
 
@@ -41,14 +42,13 @@ public class PropertyValueProperty extends AbstractVaadinValueProperty {
 
 	@Override
 	protected Object doGetValue(Object source) {
-		Property<?> property = (Property<?>) source;
+		Property<?> property = Util.getProperty(source);
 		return property.getValue();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected void doSetValue(Object source, Object value) {
-		Property property = (Property) source;
+		Property<Object> property = Util.getProperty(source);
 		property.setValue(value);
 	}
 

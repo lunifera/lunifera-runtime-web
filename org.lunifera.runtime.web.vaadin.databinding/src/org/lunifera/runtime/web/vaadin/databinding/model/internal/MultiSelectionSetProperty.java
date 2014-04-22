@@ -15,53 +15,48 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
-import org.eclipse.core.databinding.observable.list.ListDiff;
+import org.eclipse.core.databinding.observable.set.SetDiff;
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
-import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinListProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinSetProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.Util;
 
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.data.Property;
 
 /**
  */
-public class MultiSelectionProperty extends AbstractVaadinListProperty {
+public class MultiSelectionSetProperty extends AbstractVaadinSetProperty {
 
 	private Class<?> collectionType;
 
-	public MultiSelectionProperty(Class<?> collectionType) {
+	public MultiSelectionSetProperty(Class<?> collectionType) {
 		this.collectionType = collectionType;
 	}
 
 	@Override
 	public INativePropertyListener adaptListener(
 			ISimplePropertyListener listener) {
-		return new MultiSelectionChangeListener(this, listener);
+		return new MultiSelectionSetChangeListener(this, listener);
 	}
 
 	public Object getElementType() {
 		return collectionType;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	protected List<?> doGetList(Object source) {
-		AbstractSelect select = (AbstractSelect) source;
-		Collection<?> values = (Collection<?>) select.getValue();
-		return (List<?>) ((values instanceof List) ? values
-				: new ArrayList<Object>(values));
+	protected Set doGetSet(Object source) {
+		return (Set) Util.getProperty(source).getValue();
 	}
 
-	@Override
 	@SuppressWarnings("rawtypes")
-	protected void doSetList(final Object source, List list, ListDiff diff) {
-		AbstractSelect select = (AbstractSelect) source;
-		Collection<?> values = (Collection<?>) select.getValue();
-
-		List<?> newValues = new ArrayList<Object>(values);
-		diff.applyTo(newValues);
-		select.setValue(newValues);
+	@Override
+	protected void doSetSet(Object source, Set set, SetDiff diff) {
+		Property<Object> property = Util.getProperty(source);
+		Set<?> values = (Set<?>) property.getValue();
+		diff.applyTo(values);
+		property.setValue(values);
 	}
 }

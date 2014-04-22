@@ -361,7 +361,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			IObservableList modelObservable = EMFObservables.observeList(model,
 					modelFeature);
 			IVaadinObservableList uiObservable = VaadinObservables
-					.observeMultiSelection(field, collectionType);
+					.observeMultiSelectionAsList(field, collectionType);
 
 			// // create a modelToTarget update strategy with a validator
 			// //
@@ -469,7 +469,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			IObservableList modelObservable = EMFProperties.list(modelFeature)
 					.observe(getModel());
 			IObservableList uiObservable = VaadinObservables
-					.observeContainerItemSetValue(field, collectionType);
+					.observeContainerItemSetContents(field, collectionType);
 			return bindingManager.bindList(uiObservable, modelObservable,
 					targetToModel, modelToTarget);
 		}

@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.databinding.observable.Realm;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
+import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableSet;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
 
 import com.vaadin.data.Buffered;
@@ -168,7 +169,7 @@ public class VaadinObservables {
 	}
 
 	/**
-	 * Returns an observable value tracking the item set of the given item
+	 * Returns an observable list tracking the item set of the given item
 	 * notifier.
 	 * 
 	 * @param notifier
@@ -177,7 +178,7 @@ public class VaadinObservables {
 	 *            the type contained in the collection
 	 * @return
 	 */
-	public static IVaadinObservableList observeContainerItemSetValue(
+	public static IVaadinObservableList observeContainerItemSetContents(
 			Container.ItemSetChangeNotifier notifier, Class<?> collectionType) {
 		return VaadinProperties.containerItemsetValue(collectionType).observe(
 				notifier);
@@ -236,10 +237,25 @@ public class VaadinObservables {
 	 *            the type contained in the multi selection
 	 * @return
 	 */
-	public static IVaadinObservableList observeMultiSelection(
+	public static IVaadinObservableList observeMultiSelectionAsList(
 			Property.ValueChangeNotifier notifier, Class<?> collectionType) {
-		return VaadinProperties.propertyMultiSelection(collectionType).observe(
-				notifier);
+		return VaadinProperties.propertyMultiSelectionAsList(collectionType)
+				.observe(notifier);
+	}
+
+	/**
+	 * Returns an observable set tracking the multi selection of the given
+	 * viewer.
+	 * 
+	 * @param notifier
+	 * @param collectionType
+	 *            the type contained in the multi selection
+	 * @return
+	 */
+	public static IVaadinObservableSet observeMultiSelectionAsSet(
+			Property.ValueChangeNotifier notifier, Class<?> collectionType) {
+		return VaadinProperties.propertyMultiSelectionAsSet(collectionType)
+				.observe(notifier);
 	}
 
 	/**

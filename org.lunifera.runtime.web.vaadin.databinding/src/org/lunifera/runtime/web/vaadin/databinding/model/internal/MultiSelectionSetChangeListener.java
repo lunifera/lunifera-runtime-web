@@ -14,12 +14,10 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.databinding.observable.Diffs;
-import org.eclipse.core.databinding.observable.list.ListDiff;
+import org.eclipse.core.databinding.observable.set.SetDiff;
 import org.eclipse.core.databinding.property.IProperty;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.NativePropertyListener;
@@ -34,13 +32,13 @@ import com.vaadin.ui.AbstractSelect;
 /**
  */
 @SuppressWarnings("serial")
-public class MultiSelectionChangeListener extends NativePropertyListener
+public class MultiSelectionSetChangeListener extends NativePropertyListener
 		implements Property.ValueChangeListener {
 
-	private ArrayList<Object> oldItems;
+	private Set<Object> oldItems;
 	private Object source;
 
-	public MultiSelectionChangeListener(IProperty property,
+	public MultiSelectionSetChangeListener(IProperty property,
 			ISimplePropertyListener listener) {
 		super(property, listener);
 	}
@@ -52,9 +50,9 @@ public class MultiSelectionChangeListener extends NativePropertyListener
 		cacheOldValues(source);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void cacheOldValues(Object source) {
-		Collection<?> oldValues = (Collection<?>) getWidget(source).getValue();
-		oldItems = new ArrayList<Object>(oldValues);
+		oldItems = (Set<Object>) getWidget(source).getValue();
 	}
 
 	protected Property.ValueChangeNotifier getNotifier(Object source) {
@@ -75,19 +73,13 @@ public class MultiSelectionChangeListener extends NativePropertyListener
 		getNotifier(source).removeValueChangeListener(this);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void valueChange(ValueChangeEvent event) {
-		List<?> oldValues = oldItems;
-		ListDiff diffs = Diffs.computeListDiff(oldValues,
-				convertToList((Collection<?>) event.getProperty().getValue()));
+		SetDiff diffs = Diffs.computeSetDiff(oldItems, (Set) event
+				.getProperty().getValue());
 		cacheOldValues(source);
 
 		fireChange(source, diffs);
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<Object> convertToList(Collection<?> itemIds) {
-		return (List<Object>) ((itemIds instanceof List) ? itemIds
-				: new ArrayList<Object>(itemIds));
 	}
 }

@@ -34,15 +34,18 @@ import org.lunifera.runtime.web.vaadin.databinding.component.internal.TabSheetSe
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ContainerItemSetContentProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetInfoValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ItemPropertySetValueProperty;
-import org.lunifera.runtime.web.vaadin.databinding.model.internal.MultiSelectionProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.MultiSelectionListProperty;
+import org.lunifera.runtime.web.vaadin.databinding.model.internal.MultiSelectionSetProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyReadonlyProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.PropertyValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerContainerDatasourceProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerItemDatasourceProperty;
 import org.lunifera.runtime.web.vaadin.databinding.model.internal.ViewerPropertyDatasourceProperty;
 import org.lunifera.runtime.web.vaadin.databinding.properties.IVaadinListProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.IVaadinSetProperty;
 import org.lunifera.runtime.web.vaadin.databinding.properties.IVaadinValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.properties.VaadinListPropertyDecorator;
+import org.lunifera.runtime.web.vaadin.databinding.properties.VaadinSetPropertyDecorator;
 
 import com.vaadin.ui.Component;
 
@@ -145,10 +148,25 @@ public class VaadinProperties {
 	 *            the types contained in the collection
 	 * @return listProperty
 	 */
-	public static IVaadinListProperty propertyMultiSelection(Class<?> collectionType) {
-		MultiSelectionProperty property = new MultiSelectionProperty(
+	public static IVaadinListProperty propertyMultiSelectionAsList(
+			Class<?> collectionType) {
+		MultiSelectionListProperty property = new MultiSelectionListProperty(
 				collectionType);
 		return new VaadinListPropertyDecorator(property);
+	}
+
+	/**
+	 * Creates a set property that observes changes of multi selections.
+	 * 
+	 * @param collectionType
+	 *            the types contained in the collection
+	 * @return setProperty
+	 */
+	public static IVaadinSetProperty propertyMultiSelectionAsSet(
+			Class<?> collectionType) {
+		MultiSelectionSetProperty property = new MultiSelectionSetProperty(
+				collectionType);
+		return new VaadinSetPropertyDecorator(property);
 	}
 
 	/**
