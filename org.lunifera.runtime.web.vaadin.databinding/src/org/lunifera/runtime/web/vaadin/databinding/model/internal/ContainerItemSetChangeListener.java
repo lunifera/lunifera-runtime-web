@@ -23,10 +23,10 @@ import org.eclipse.core.databinding.observable.list.ListDiff;
 import org.eclipse.core.databinding.property.IProperty;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.NativePropertyListener;
+import org.lunifera.runtime.web.vaadin.databinding.properties.Util;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
-import com.vaadin.data.Container.Viewer;
 
 /**
  */
@@ -34,7 +34,7 @@ import com.vaadin.data.Container.Viewer;
 public class ContainerItemSetChangeListener extends NativePropertyListener
 		implements Container.ItemSetChangeListener {
 
-	private ArrayList<Object> oldItems;
+	private ArrayList<Object> oldItems = new ArrayList<Object>();
 	private Object source;
 
 	public ContainerItemSetChangeListener(IProperty property,
@@ -68,8 +68,7 @@ public class ContainerItemSetChangeListener extends NativePropertyListener
 	}
 
 	protected Container getContainer(Object source) {
-		Container.Viewer viewer = (Viewer) source;
-		Container ds = viewer.getContainerDataSource();
+		Container ds = Util.getContainer(source);
 		return ds;
 	}
 

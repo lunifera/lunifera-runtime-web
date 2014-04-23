@@ -84,7 +84,7 @@ public abstract class AbstractVaadinListProperty extends SimpleListProperty {
 	}
 
 	public IObservableList observe(Realm realm, Object source) {
-		return wrapObservable(super.observe(realm, source), (Component) source);
+		return wrapObservable(super.observe(realm, source), source);
 	}
 
 	protected IVaadinObservableList wrapObservable(IObservableList observable,

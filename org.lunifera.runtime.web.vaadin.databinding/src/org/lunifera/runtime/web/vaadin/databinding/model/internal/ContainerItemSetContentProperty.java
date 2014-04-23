@@ -24,10 +24,10 @@ import org.eclipse.core.databinding.observable.list.ListDiffVisitor;
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinListProperty;
+import org.lunifera.runtime.web.vaadin.databinding.properties.Util;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.Container.Viewer;
 import com.vaadin.ui.AbstractSelect;
 
 /**
@@ -54,8 +54,7 @@ public class ContainerItemSetContentProperty extends AbstractVaadinListProperty 
 	@Override
 	protected List<?> doGetList(Object source) {
 
-		Container.Viewer viewer = (Viewer) source;
-		Container ds = viewer.getContainerDataSource();
+		Container ds = Util.getContainer(source);
 		Collection<?> result = ds.getItemIds();
 		return (List<?>) ((result instanceof List) ? result : new ArrayList(
 				result));
@@ -64,49 +63,29 @@ public class ContainerItemSetContentProperty extends AbstractVaadinListProperty 
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected void doSetList(final Object source, List list, ListDiff diff) {
-		Container.Viewer viewer = (Viewer) source;
-		final Container ds = viewer.getContainerDataSource();
-		if (ds instanceof Container.ItemSetChangeNotifier) {
-			// set changes on datasource. It will notify listener - BUT ensure
-			// that selection is unset. Vaadin does not!
-			diff.accept(new ListDiffVisitor() {
-				@Override
-				public void handleRemove(int index, Object element) {
-					//
-					if (source instanceof AbstractSelect) {
-						AbstractSelect select = (AbstractSelect) source;
-						select.unselect(element);
-					}
-					ds.removeItem(element);
-				}
-
-				@Override
-				public void handleAdd(int index, Object element) {
-					if (ds instanceof Container.Indexed) {
-						Container.Indexed indexedDs = (Indexed) ds;
-						indexedDs.addItemAt(index, element);
-					} else {
-						ds.addItem(element);
-					}
-				}
-			});
-		} else {
-			// set changes on the abstract select if available. It will notify
-			// listener.
-			diff.accept(new ListDiffVisitor() {
-				@Override
-				public void handleRemove(int index, Object element) {
+		final Container ds = Util.getContainer(source);
+		// set changes on datasource. It will notify listener - BUT ensure
+		// that selection is unset. Vaadin does not!
+		diff.accept(new ListDiffVisitor() {
+			@Override
+			public void handleRemove(int index, Object element) {
+				//
+				if (source instanceof AbstractSelect) {
 					AbstractSelect select = (AbstractSelect) source;
-					select.removeItem(element);
+					select.unselect(element);
 				}
+				ds.removeItem(element);
+			}
 
-				@Override
-				public void handleAdd(int index, Object element) {
-					AbstractSelect select = (AbstractSelect) source;
-					// ordering is handeld by container
-					select.addItem(element);
+			@Override
+			public void handleAdd(int index, Object element) {
+				if (ds instanceof Container.Indexed) {
+					Container.Indexed indexedDs = (Indexed) ds;
+					indexedDs.addItemAt(index, element);
+				} else {
+					ds.addItem(element);
 				}
-			});
-		}
+			}
+		});
 	}
 }

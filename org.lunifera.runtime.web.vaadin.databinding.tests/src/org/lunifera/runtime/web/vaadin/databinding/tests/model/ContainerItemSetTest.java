@@ -12,11 +12,8 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.databinding.tests.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.observable.list.WritableList;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,44 +28,37 @@ public class ContainerItemSetTest {
 		VaadinObservables.getRealm(null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void test_containerItemSet() {
 		// Binded
 		// VaadinObservables.observeItemSet(Container.ItemSetChangeNotifier)
 		// Am besten IndexedContainer verwenden und manuell item hinzuf��gen
 		IndexedContainer container = new IndexedContainer();
-		WritableValue value = new WritableValue();
-		Assert.assertNotNull(value);
+		WritableList itemIds = new WritableList();
 
 		DataBindingContext dbc = new DataBindingContext();
-		dbc.bindValue(value,
-				VaadinObservables.observeContainerItemSetValue(container));
+		dbc.bindList(itemIds, VaadinObservables
+				.observeContainerItemSetContents(container, String.class));
 
-		Collection<Object> itemIds = (Collection<Object>) value.getValue();
 		Assert.assertEquals(0, itemIds.size());
 		container.addItem("1");
-		itemIds = (Collection<Object>) value.getValue();
 		Assert.assertEquals(1, itemIds.size());
 	}
-	
+
 	@Test
 	public void test_targetToModel() {
 		// Binded
 		// VaadinObservables.observeItemSet(Container.ItemSetChangeNotifier)
 		// Am besten IndexedContainer verwenden und manuell item hinzuf��gen
 		IndexedContainer container = new IndexedContainer();
-		WritableValue value = new WritableValue();
-		Assert.assertNotNull(value);
-		
+		WritableList itemIds = new WritableList();
+
 		DataBindingContext dbc = new DataBindingContext();
-		dbc.bindValue(value,
-				VaadinObservables.observeContainerItemSetValue(container));
-		
+		dbc.bindList(itemIds, VaadinObservables
+				.observeContainerItemSetContents(container, String.class));
+
 		Assert.assertEquals(0, container.size());
-		Collection<Object> itemIds = new ArrayList<Object>();
 		itemIds.add("1");
-		value.setValue(itemIds);
 		Assert.assertEquals(1, container.size());
 	}
 

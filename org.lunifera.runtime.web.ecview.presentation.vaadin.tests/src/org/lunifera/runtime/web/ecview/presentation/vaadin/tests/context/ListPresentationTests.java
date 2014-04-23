@@ -43,6 +43,8 @@ import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ListPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.Bar;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.Foo;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
@@ -533,6 +535,112 @@ public class ListPresentationTests {
 		assertNull(list1.getValue());
 
 	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Single_DetailBinding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList1 = factory.createList();
+		yList1.setType(Bar.class);
+		yLayout.getElements().add(yList1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart list1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList1);
+		IWidgetPresentation<Component> list1Presentation = list1Editpart
+				.getPresentation();
+		ComponentContainer list1BaseComponentContainer = (ComponentContainer) list1Presentation
+				.getWidget();
+		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) list1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertNull(list1.getValue());
+		assertNull(yList1.getSelection());
+
+		// add
+		Bar bar1 = new Bar();
+		bar1.setName("Bar1");
+		Foo foo1 = new Foo();
+		foo1.setName("Foo1");
+		bar1.setMyfoo(foo1);
+		
+		Bar bar2 = new Bar();
+		bar2.setName("Bar2");
+		Foo foo2 = new Foo();
+		foo2.setName("Foo2");
+		bar2.setMyfoo(foo2);
+		
+		Assert.fail("Finish tests");
+		
+		yList1.getCollection().add(bar1);
+		yList1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+		// test set selection
+		yList1.setSelection(bar1);
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", list1.getValue());
+
+		list1.setValue("Haha");
+		assertEquals("Haha", yList1.getSelection());
+		assertEquals("Haha", list1.getValue());
+
+		// test set selection null
+		list1.setValue(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+		list1.setValue("Haha");
+		assertEquals("Haha", yList1.getSelection());
+		assertEquals("Haha", list1.getValue());
+
+		yList1.setSelection(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+		// test remove element that is selected
+		// add
+		yList1.getCollection().add("Huhu");
+		yList1.getCollection().add("Haha");
+		assertEquals(2, container.size());
+
+		yList1.setSelection("Huhu");
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", list1.getValue());
+
+		yList1.getCollection().remove("Huhu");
+		assertNull(list1.getValue());
+		assertNull(yList1.getSelection());
+
+		// test remove element that is selected
+		// add
+		yList1.getCollection().add("Huhu");
+		assertEquals(2, container.size());
+
+		yList1.setSelection("Huhu");
+		assertEquals("Huhu", yList1.getSelection());
+		assertEquals("Huhu", list1.getValue());
+
+		list1.setValue(null);
+		assertNull(yList1.getSelection());
+		assertNull(list1.getValue());
+
+	}
 
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
@@ -933,8 +1041,6 @@ public class ListPresentationTests {
 		assertTrue(yList2.getMultiSelection().isEmpty());
 		assertTrue(asList(list1.getValue()).isEmpty());
 		assertTrue(yList1.getMultiSelection().isEmpty());
-
-		Assert.fail("Add 7 elements into list and ensure that set can not bind properly and mixes selections up");
 	}
 
 	/**

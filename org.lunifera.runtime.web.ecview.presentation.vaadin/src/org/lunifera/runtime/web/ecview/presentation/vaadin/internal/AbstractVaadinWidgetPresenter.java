@@ -18,8 +18,6 @@ import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.set.IObservableSet;
-import org.eclipse.core.databinding.observable.set.ListToSetAdapter;
 import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -47,7 +45,7 @@ import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewUpdateValueStrate
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
-import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableSet;
+import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
@@ -362,10 +360,10 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget
-			IObservableSet modelObservable = new ListToSetAdapter(
-					EMFObservables.observeList(model, modelFeature));
-			IVaadinObservableSet uiObservable = VaadinObservables
-					.observeMultiSelectionAsSet(field, collectionType);
+			IObservableList modelObservable = EMFProperties.list(modelFeature)
+					.observe(getModel());
+			IVaadinObservableList uiObservable = VaadinObservables
+					.observeMultiSelectionAsList(field, collectionType);
 
 			// // create a modelToTarget update strategy with a validator
 			// //
@@ -383,7 +381,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			// }
 			// });
 
-			final Binding binding = bindingManager.bindSet(uiObservable,
+			final Binding binding = bindingManager.bindList(uiObservable,
 					modelObservable, null, null);
 			registerBinding(binding);
 

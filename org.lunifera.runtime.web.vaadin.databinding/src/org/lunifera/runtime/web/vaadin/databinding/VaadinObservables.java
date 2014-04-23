@@ -243,7 +243,7 @@ public class VaadinObservables {
 	public static IVaadinObservableList observeMultiSelectionAsList(
 			Property.ValueChangeNotifier notifier, Class<?> collectionType) {
 		return new SetToListAdapter(observeMultiSelectionAsSet(notifier,
-				collectionType));
+				collectionType), notifier);
 	}
 
 	/**

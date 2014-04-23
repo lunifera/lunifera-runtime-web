@@ -55,8 +55,6 @@ public class MultiSelectionSetProperty extends AbstractVaadinSetProperty {
 	@Override
 	protected void doSetSet(Object source, Set set, SetDiff diff) {
 		Property<Object> property = Util.getProperty(source);
-		Set<?> values = (Set<?>) property.getValue();
-		diff.applyTo(values);
-		property.setValue(values);
+		property.setValue(set);
 	}
 }

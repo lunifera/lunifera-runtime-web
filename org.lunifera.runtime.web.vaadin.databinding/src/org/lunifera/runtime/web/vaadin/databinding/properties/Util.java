@@ -1,6 +1,8 @@
 package org.lunifera.runtime.web.vaadin.databinding.properties;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Property;
+import com.vaadin.ui.AbstractSelect;
 
 public class Util {
 
@@ -21,6 +23,25 @@ public class Util {
 		if (result == null && source instanceof Property<?>) {
 			result = (Property<Object>) source;
 		}
+		return result;
+	}
+
+	/**
+	 * Returns the container datasource for the given element.
+	 * 
+	 * @param source
+	 * @return
+	 */
+	public static Container getContainer(Object source) {
+		// if source is AbstractSelect, then access the container by #getContainerDataSource
+		if (source instanceof Container && !(source instanceof AbstractSelect)) {
+			return (Container) source;
+		}
+		Container result = null;
+		if (source instanceof Container.Viewer) {
+			result = ((Container.Viewer) source).getContainerDataSource();
+		}
+
 		return result;
 	}
 
