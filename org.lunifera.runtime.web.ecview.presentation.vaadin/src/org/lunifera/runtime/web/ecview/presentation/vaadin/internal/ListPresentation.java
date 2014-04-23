@@ -160,7 +160,8 @@ public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
 		} else {
 			// create the model binding from ridget to ECView-model
 			registerBinding(createBindings_Selection(castEObject(getModel()),
-					ExtensionModelPackage.Literals.YLIST__SELECTION, field));
+					ExtensionModelPackage.Literals.YLIST__SELECTION, field,
+					yField.getType()));
 
 		}
 

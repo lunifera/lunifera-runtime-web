@@ -65,10 +65,10 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 			tree = new Tree();
 			tree.addStyleName(CSS_CLASS__CONTROL);
 			tree.setSizeFull();
-			
+
 			// creates the binding for the field
-						createBindings(modelAccess.yTree, tree);
-			
+			createBindings(modelAccess.yTree, tree);
+
 			componentBase.addComponent(tree);
 
 			if (modelAccess.isCssClassValid()) {
@@ -136,11 +136,12 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBindings_Selection(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTREE__SELECTION, field));
+				ExtensionModelPackage.Literals.YTREE__SELECTION, field,
+				yField.getType()));
 
 		super.createBindings(yField, field);
 	}
-	
+
 	@Override
 	public Component getWidget() {
 		return componentBase;
@@ -161,7 +162,8 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -233,7 +235,8 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 		 * @return
 		 */
 		public boolean isLabelValid() {
-			return yTree.getDatadescription() != null && yTree.getDatadescription().getLabel() != null;
+			return yTree.getDatadescription() != null
+					&& yTree.getDatadescription().getLabel() != null;
 		}
 
 		/**

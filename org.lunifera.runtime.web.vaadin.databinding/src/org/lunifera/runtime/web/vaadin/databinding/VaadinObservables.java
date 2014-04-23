@@ -21,6 +21,7 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableSet;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
+import org.lunifera.runtime.web.vaadin.databinding.values.SetToListAdapter;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.BufferedValidatable;
@@ -180,7 +181,7 @@ public class VaadinObservables {
 	 */
 	public static IVaadinObservableList observeContainerItemSetContents(
 			Container.ItemSetChangeNotifier notifier, Class<?> collectionType) {
-		return VaadinProperties.containerItemsetValue(collectionType).observe(
+		return VaadinProperties.containerItemsetAsList(collectionType).observe(
 				notifier);
 	}
 
@@ -214,18 +215,20 @@ public class VaadinObservables {
 	 */
 	public static IVaadinObservableValue observeItemDatasource(
 			Property.Viewer viewer) {
-		return VaadinProperties.propertyDatasource().observe(viewer);
+		return VaadinProperties.datasource().observe(viewer);
 	}
 
 	/**
 	 * Returns an observable value tracking the selection of the given viewer.
 	 * 
 	 * @param notifier
+	 * @param type
+	 *            - the type of the selection object
 	 * @return
 	 */
 	public static IVaadinObservableValue observeSelection(
-			Property.ValueChangeNotifier notifier) {
-		return VaadinProperties.propertyValue().observe(notifier);
+			Property.ValueChangeNotifier notifier, Class<?> type) {
+		return VaadinProperties.singleSelection(type).observe(notifier);
 	}
 
 	/**
@@ -239,8 +242,8 @@ public class VaadinObservables {
 	 */
 	public static IVaadinObservableList observeMultiSelectionAsList(
 			Property.ValueChangeNotifier notifier, Class<?> collectionType) {
-		return VaadinProperties.propertyMultiSelectionAsList(collectionType)
-				.observe(notifier);
+		return new SetToListAdapter(observeMultiSelectionAsSet(notifier,
+				collectionType));
 	}
 
 	/**
@@ -266,7 +269,7 @@ public class VaadinObservables {
 	 */
 	public static IVaadinObservableValue observeValue(
 			Property.ValueChangeNotifier notifier) {
-		return VaadinProperties.propertyValue().observe(notifier);
+		return VaadinProperties.value().observe(notifier);
 	}
 
 	/**

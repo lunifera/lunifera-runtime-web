@@ -66,7 +66,7 @@ public class ComboBoxPresentation extends
 			combo = new ComboBox();
 			combo.addStyleName(CSS_CLASS__CONTROL);
 			combo.setSizeFull();
-			
+
 			// creates the binding for the field
 			createBindings(modelAccess.yCombo, combo);
 
@@ -137,7 +137,8 @@ public class ComboBoxPresentation extends
 
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBindings_Selection(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YCOMBO_BOX__SELECTION, field));
+				ExtensionModelPackage.Literals.YCOMBO_BOX__SELECTION, field,
+				yField.getType()));
 
 		super.createBindings(yField, field);
 	}

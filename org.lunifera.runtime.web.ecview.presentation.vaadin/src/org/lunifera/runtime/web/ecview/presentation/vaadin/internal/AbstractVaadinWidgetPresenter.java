@@ -18,6 +18,8 @@ import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.set.ListToSetAdapter;
 import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -45,7 +47,7 @@ import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewUpdateValueStrate
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
-import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
+import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableSet;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
@@ -265,12 +267,14 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * @param model
 	 * @param modelFeature
 	 * @param field
-	 * @return binding
+	 * @param type
+	 *            the type of selected object
 	 * 
 	 * @return Binding - the created binding
 	 */
 	protected Binding createBindings_Selection(EObject model,
-			EStructuralFeature modelFeature, final AbstractSelect field) {
+			EStructuralFeature modelFeature, final AbstractSelect field,
+			Class<?> type) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
 						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
@@ -279,8 +283,8 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			// bind the value of yText to textRidget
 			IObservableValue modelObservable = EMFObservables.observeValue(
 					model, modelFeature);
-			IObservableValue uiObservable = VaadinObservables
-					.observeValue(field);
+			IObservableValue uiObservable = VaadinObservables.observeSelection(
+					field, type);
 
 			// create a modelToTarget update strategy with a validator
 			//
@@ -358,10 +362,10 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget
-			IObservableList modelObservable = EMFObservables.observeList(model,
-					modelFeature);
-			IVaadinObservableList uiObservable = VaadinObservables
-					.observeMultiSelectionAsList(field, collectionType);
+			IObservableSet modelObservable = new ListToSetAdapter(
+					EMFObservables.observeList(model, modelFeature));
+			IVaadinObservableSet uiObservable = VaadinObservables
+					.observeMultiSelectionAsSet(field, collectionType);
 
 			// // create a modelToTarget update strategy with a validator
 			// //
@@ -379,7 +383,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			// }
 			// });
 
-			final Binding binding = bindingManager.bindList(uiObservable,
+			final Binding binding = bindingManager.bindSet(uiObservable,
 					modelObservable, null, null);
 			registerBinding(binding);
 

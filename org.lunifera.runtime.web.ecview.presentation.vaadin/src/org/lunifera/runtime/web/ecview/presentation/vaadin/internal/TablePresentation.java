@@ -40,7 +40,8 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 	/**
 	 * Constructor.
 	 * 
-	 * @param editpart The editpart of that presenter
+	 * @param editpart
+	 *            The editpart of that presenter
 	 */
 	public TablePresentation(IElementEditpart editpart) {
 		super((ITableEditpart) editpart);
@@ -64,10 +65,10 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 			table = new Table();
 			table.addStyleName(CSS_CLASS__CONTROL);
 			table.setSizeFull();
-			
+
 			// creates the binding for the field
-						createBindings(modelAccess.yTable, table);
-			
+			createBindings(modelAccess.yTable, table);
+
 			componentBase.addComponent(table);
 
 			if (modelAccess.isCssClassValid()) {
@@ -135,11 +136,12 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBindings_Selection(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTABLE__SELECTION, field));
+				ExtensionModelPackage.Literals.YTABLE__SELECTION, field,
+				yField.getType()));
 
 		super.createBindings(yField, field);
 	}
-	
+
 	@Override
 	public Component getWidget() {
 		return componentBase;
@@ -160,7 +162,8 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -232,7 +235,8 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 		 * @return
 		 */
 		public boolean isLabelValid() {
-			return yTable.getDatadescription() != null && yTable.getDatadescription().getLabel() != null;
+			return yTable.getDatadescription() != null
+					&& yTable.getDatadescription().getLabel() != null;
 		}
 
 		/**
