@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class Foo implements Serializable {
 	  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	  

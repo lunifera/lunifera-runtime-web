@@ -14,10 +14,15 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.databinding;
 
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableSet;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
@@ -226,9 +231,70 @@ public class VaadinObservables {
 	 *            - the type of the selection object
 	 * @return
 	 */
-	public static IVaadinObservableValue observeSelection(
+	public static IVaadinObservableValue observeSingleSelection(
 			Property.ValueChangeNotifier notifier, Class<?> type) {
 		return VaadinProperties.singleSelection(type).observe(notifier);
+	}
+
+	/**
+	 * Returns an observable value tracking nested attribute in the selected
+	 * element.
+	 * <p>
+	 * For instance:<br>
+	 * Given a list with Bar-beans. Bar has a relation to Foo-bean by
+	 * myfoo-reference.<br>
+	 * Then "myFoo.name" can be used as nestedPath to observe the foo#name
+	 * attribute of the selected bean in the list.
+	 * <p>
+	 * This implementation supports pojos and beans. EObjects are not supported.
+	 * 
+	 * @param notifier
+	 * @param type
+	 *            - the type of the selection object
+	 * @param nestedPath
+	 *            - the path from the selected element to the observed value.
+	 *            For instance "myFoo.name".
+	 * @return
+	 */
+	public static IObservableValue observeSingleSelectionDetailValue(
+			Property.ValueChangeNotifier notifier, Class<?> type,
+			String nestedPath) {
+		IVaadinObservableValue masterObservable = VaadinProperties
+				.singleSelection(type).observe(notifier);
+
+		if (hasPropertyChangeSupport(type)) {
+			return BeansObservables.observeDetailValue(masterObservable, type,
+					nestedPath, null);
+		} else {
+			return PojoObservables.observeDetailValue(masterObservable,
+					nestedPath, null);
+		}
+	}
+
+	/**
+	 * Returns true, if the bean has property change support.
+	 * 
+	 * @param valueType
+	 * @return
+	 */
+	private static boolean hasPropertyChangeSupport(Class<?> valueType) {
+		@SuppressWarnings("unused")
+		Method method = null;
+		try {
+			try {
+				method = valueType.getMethod("addPropertyChangeListener",
+						new Class[] { String.class,
+								PropertyChangeListener.class });
+				return true;
+			} catch (NoSuchMethodException e) {
+				method = valueType.getMethod("addPropertyChangeListener",
+						new Class[] { PropertyChangeListener.class });
+				return true;
+			}
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
+		}
+		return false;
 	}
 
 	/**

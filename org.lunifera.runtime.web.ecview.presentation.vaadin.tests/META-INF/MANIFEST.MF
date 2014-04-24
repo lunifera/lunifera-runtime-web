@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Shiro
-Bundle-SymbolicName: org.lunifera.runtime.web.ecview.presentation.vaadin.tests
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.lunifera.runtime.web.ecview.presentation.vaadin.tests;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Require-Bundle: 
- org.junit;bundle-version="4.10.0",
+Bundle-ClassPath: .
+Require-Bundle: org.junit;bundle-version="4.10.0",
  org.knowhowlab.osgi.testing.assertions;bundle-version="1.1.0",
  org.knowhowlab.osgi.testing.utils;bundle-version="1.1.0",
  com.vaadin.shared;bundle-version="7.0.1",
@@ -18,9 +18,15 @@ Require-Bundle:
  org.lunifera.runtime.web.vaadin.components,
  org.eclipse.emf.ecp.ecview.util.emf,
  org.eclipse.emf.databinding;bundle-version="1.3.0",
- org.eclipse.emf.ecp.ecview.databinding.emf;bundle-version="0.0.1"
+ org.eclipse.emf.ecp.ecview.databinding.emf;bundle-version="0.0.1",
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: lunifera.org
+Export-Package: org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model,
+ org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.impl,
+ org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.util
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Import-Package: javax.servlet;version="2.6.0",
  javax.servlet.http;version="2.6.0",
  org.osgi.framework;version="1.7.0",

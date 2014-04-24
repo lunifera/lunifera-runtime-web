@@ -281,7 +281,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			// bind the value of yText to textRidget
 			IObservableValue modelObservable = EMFObservables.observeValue(
 					model, modelFeature);
-			IObservableValue uiObservable = VaadinObservables.observeSelection(
+			IObservableValue uiObservable = VaadinObservables.observeSingleSelection(
 					field, type);
 
 			// create a modelToTarget update strategy with a validator

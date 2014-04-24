@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Bar implements Serializable {
 	  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	  
