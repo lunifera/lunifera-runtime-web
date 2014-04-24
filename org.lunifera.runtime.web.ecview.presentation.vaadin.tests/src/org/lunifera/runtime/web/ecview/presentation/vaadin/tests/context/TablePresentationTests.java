@@ -15,7 +15,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
@@ -25,12 +28,16 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +52,7 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 
@@ -767,6 +775,422 @@ public class TablePresentationTests {
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Multi_EmptyCollection() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTable yTable = factory.createTable();
+		yTable.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yTable);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITableEditpart tableEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable);
+		IWidgetPresentation<Component> tablePresentation = tableEditpart
+				.getPresentation();
+		ComponentContainer tableBaseComponentContainer = (ComponentContainer) tablePresentation
+				.getWidget();
+		Table table1 = (Table) unwrapTable(tableBaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) table1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertTrue(asList(table1.getValue()).isEmpty());
+		assertTrue(yTable.getMultiSelection().isEmpty());
+
+		// test set selection by model
+		yTable.getMultiSelection().add("Huhu");
+		assertEquals("Huhu", yTable.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table1.getValue()).get(0));
+		assertEquals(1, yTable.getMultiSelection().size());
+		assertEquals(1, asList(table1.getValue()).size());
+
+		yTable.getMultiSelection().add("Haha");
+		assertEquals("Huhu", yTable.getMultiSelection().get(0));
+		assertEquals("Haha", yTable.getMultiSelection().get(1));
+		assertEquals("Huhu", asList(table1.getValue()).get(0));
+		assertEquals("Haha", asList(table1.getValue()).get(1));
+		assertEquals(2, yTable.getMultiSelection().size());
+		assertEquals(2, asList(table1.getValue()).size());
+
+		// remove selection
+		yTable.getMultiSelection().remove("Huhu");
+		assertEquals("Haha", yTable.getMultiSelection().get(0));
+		assertEquals("Haha", asList(table1.getValue()).get(0));
+		assertEquals(1, yTable.getMultiSelection().size());
+		assertEquals(1, asList(table1.getValue()).size());
+
+		yTable.getMultiSelection().clear();
+		assertEquals(0, yTable.getMultiSelection().size());
+		assertEquals(0, asList(table1.getValue()).size());
+
+		// test set selection by widget
+		List<String> selection = new ArrayList<String>();
+		selection.add("Huhu");
+		table1.setValue(selection);
+		assertEquals("Huhu", yTable.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table1.getValue()).get(0));
+		assertEquals(1, yTable.getMultiSelection().size());
+		assertEquals(1, asList(table1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		selection.add("Huhu");
+		selection.add("Haha");
+		table1.setValue(selection);
+		assertEquals("Huhu", yTable.getMultiSelection().get(0));
+		assertEquals("Haha", yTable.getMultiSelection().get(1));
+		assertEquals("Huhu", asList(table1.getValue()).get(0));
+		assertEquals("Haha", asList(table1.getValue()).get(1));
+		assertEquals(2, yTable.getMultiSelection().size());
+		assertEquals(2, asList(table1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		selection.add("Haha");
+		table1.setValue(selection);
+		assertEquals("Haha", yTable.getMultiSelection().get(0));
+		assertEquals("Haha", asList(table1.getValue()).get(0));
+		assertEquals(1, yTable.getMultiSelection().size());
+		assertEquals(1, asList(table1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		table1.setValue(selection);
+		assertEquals(0, yTable.getMultiSelection().size());
+		assertEquals(0, asList(table1.getValue()).size());
+	}
+
+	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Multi_ListToList() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTable yTable1 = factory.createTable();
+		yTable1.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yTable1);
+		YTable yTable2 = factory.createTable();
+		yTable2.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yTable2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITableEditpart table1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable1);
+		ITableEditpart table2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable2);
+		IWidgetPresentation<Component> table1Presentation = table1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> table2Presentation = table2Editpart
+				.getPresentation();
+		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
+				.getWidget();
+		ComponentContainer table2BaseComponentContainer = (ComponentContainer) table2Presentation
+				.getWidget();
+		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
+
+		Container.Indexed indexedDs1 = (Indexed) table1.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) table2.getContainerDataSource();
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		// start tests
+		//
+
+		YEmbeddableCollectionEndpoint endp1 = yTable1.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yTable2.createCollectionEndpoint();
+		yBindingSet.addBinding(endp1, endp2);
+
+		YEmbeddableMultiSelectionEndpoint endpSel1 = yTable1
+				.createMultiSelectionEndpoint();
+		YEmbeddableMultiSelectionEndpoint endpSel2 = yTable2
+				.createMultiSelectionEndpoint();
+		yBindingSet.addBinding(endpSel1, endpSel2);
+
+		Container.Indexed container1 = (Indexed) table1.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) table2.getContainerDataSource();
+		assertEquals(0, container1.size());
+		assertEquals(0, container2.size());
+
+		assertTrue(asList(table1.getValue()).isEmpty());
+		assertTrue(yTable1.getMultiSelection().isEmpty());
+		assertTrue(asList(table2.getValue()).isEmpty());
+		assertTrue(yTable2.getMultiSelection().isEmpty());
+
+		// add
+		yTable1.getCollection().add("Huhu");
+		yTable2.getCollection().add("Haha");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		assertTrue(asList(table1.getValue()).isEmpty());
+		assertTrue(yTable1.getMultiSelection().isEmpty());
+		assertTrue(asList(table2.getValue()).isEmpty());
+		assertTrue(yTable2.getMultiSelection().isEmpty());
+
+		// test set selection
+		yTable1.getMultiSelection().add("Huhu");
+		assertEquals("Huhu", yTable1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table1.getValue()).get(0));
+		assertEquals(1, yTable1.getMultiSelection().size());
+		assertEquals(1, asList(table1.getValue()).size());
+		assertEquals("Huhu", yTable2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table2.getValue()).get(0));
+		assertEquals(1, yTable2.getMultiSelection().size());
+		assertEquals(1, asList(table2.getValue()).size());
+
+		yTable2.getMultiSelection().add("Haha");
+		assertEquals("Huhu", yTable1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table1.getValue()).get(0));
+		assertEquals("Haha", yTable1.getMultiSelection().get(1));
+		assertEquals("Haha", asList(table1.getValue()).get(1));
+		assertEquals(2, yTable1.getMultiSelection().size());
+		assertEquals(2, asList(table1.getValue()).size());
+		assertEquals("Huhu", yTable2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table2.getValue()).get(0));
+		assertEquals("Haha", yTable2.getMultiSelection().get(1));
+		assertEquals("Haha", asList(table2.getValue()).get(1));
+		assertEquals(2, yTable2.getMultiSelection().size());
+		assertEquals(2, asList(table2.getValue()).size());
+
+		yTable1.getMultiSelection().remove("Huhu");
+		assertEquals("Haha", yTable1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(table1.getValue()).get(0));
+		assertEquals(1, yTable1.getMultiSelection().size());
+		assertEquals(1, asList(table1.getValue()).size());
+		assertEquals("Haha", yTable2.getMultiSelection().get(0));
+		assertEquals("Haha", asList(table2.getValue()).get(0));
+		assertEquals(1, yTable2.getMultiSelection().size());
+		assertEquals(1, asList(table2.getValue()).size());
+
+		// clear
+		yTable2.getMultiSelection().clear();
+		assertTrue(asList(table1.getValue()).isEmpty());
+		assertTrue(yTable1.getMultiSelection().isEmpty());
+		assertTrue(asList(table2.getValue()).isEmpty());
+		assertTrue(yTable2.getMultiSelection().isEmpty());
+
+		// test set selection null
+		List<String> selection = new ArrayList<String>();
+		selection.add("Huhu");
+		table1.setValue(selection);
+		assertEquals("Huhu", yTable1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table1.getValue()).get(0));
+		assertEquals(1, yTable1.getMultiSelection().size());
+		assertEquals(1, asList(table1.getValue()).size());
+		assertEquals("Huhu", yTable2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table2.getValue()).get(0));
+		assertEquals(1, yTable2.getMultiSelection().size());
+		assertEquals(1, asList(table2.getValue()).size());
+
+		selection.add("Haha");
+		table2.setValue(selection);
+		assertEquals("Huhu", yTable1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table1.getValue()).get(0));
+		assertEquals("Haha", yTable1.getMultiSelection().get(1));
+		assertEquals("Haha", asList(table1.getValue()).get(1));
+		assertEquals(2, yTable1.getMultiSelection().size());
+		assertEquals(2, asList(table1.getValue()).size());
+		assertEquals("Huhu", yTable2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(table2.getValue()).get(0));
+		assertEquals("Haha", yTable2.getMultiSelection().get(1));
+		assertEquals("Haha", asList(table2.getValue()).get(1));
+		assertEquals(2, yTable2.getMultiSelection().size());
+		assertEquals(2, asList(table2.getValue()).size());
+
+		table2.setValue(new ArrayList<String>());
+		assertTrue(asList(table2.getValue()).isEmpty());
+		assertTrue(yTable2.getMultiSelection().isEmpty());
+		assertTrue(asList(table1.getValue()).isEmpty());
+		assertTrue(yTable1.getMultiSelection().isEmpty());
+	}
+
+	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Single_ListToList() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTable yTable1 = factory.createTable();
+		yLayout.getElements().add(yTable1);
+		YTable yTable2 = factory.createTable();
+		yLayout.getElements().add(yTable2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITableEditpart table1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable1);
+		ITableEditpart table2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable2);
+		IWidgetPresentation<Component> table1Presentation = table1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> table2Presentation = table2Editpart
+				.getPresentation();
+		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
+				.getWidget();
+		ComponentContainer table2BaseComponentContainer = (ComponentContainer) table2Presentation
+				.getWidget();
+		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
+
+		Container.Indexed indexedDs1 = (Indexed) table1.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) table2.getContainerDataSource();
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		// start tests
+		//
+
+		YEmbeddableCollectionEndpoint endp1 = yTable1.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yTable2.createCollectionEndpoint();
+		yBindingSet.addBinding(endp1, endp2);
+
+		YEmbeddableSelectionEndpoint endpSel1 = yTable1
+				.createSelectionEndpoint();
+		YEmbeddableSelectionEndpoint endpSel2 = yTable2
+				.createSelectionEndpoint();
+		yBindingSet.addBinding(endpSel1, endpSel2);
+
+		Container.Indexed container1 = (Indexed) table1.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) table2.getContainerDataSource();
+		assertEquals(0, container1.size());
+		assertEquals(0, container2.size());
+
+		assertNull(table1.getValue());
+		assertNull(yTable1.getSelection());
+
+		// add
+		yTable1.getCollection().add("Huhu");
+		yTable2.getCollection().add("Haha");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		assertNull(yTable1.getSelection());
+		assertNull(table1.getValue());
+		assertNull(yTable2.getSelection());
+		assertNull(table2.getValue());
+
+		// test set selection
+		yTable1.setSelection("Huhu");
+		assertEquals("Huhu", yTable1.getSelection());
+		assertEquals("Huhu", table1.getValue());
+		assertEquals("Huhu", yTable2.getSelection());
+		assertEquals("Huhu", table2.getValue());
+
+		table1.setValue("Haha");
+		assertEquals("Haha", yTable1.getSelection());
+		assertEquals("Haha", table1.getValue());
+		assertEquals("Haha", yTable2.getSelection());
+		assertEquals("Haha", table2.getValue());
+
+		// test set selection null
+		table1.setValue(null);
+		assertNull(yTable1.getSelection());
+		assertNull(table1.getValue());
+		assertNull(yTable2.getSelection());
+		assertNull(table2.getValue());
+
+		table1.setValue("Haha");
+		assertEquals("Haha", yTable1.getSelection());
+		assertEquals("Haha", table1.getValue());
+		assertEquals("Haha", yTable2.getSelection());
+		assertEquals("Haha", table2.getValue());
+
+		table2.setValue(null);
+		assertNull(yTable1.getSelection());
+		assertNull(table1.getValue());
+		assertNull(yTable2.getSelection());
+		assertNull(table2.getValue());
+
+		table2.setValue("Haha");
+		assertEquals("Haha", yTable1.getSelection());
+		assertEquals("Haha", table1.getValue());
+		assertEquals("Haha", yTable2.getSelection());
+		assertEquals("Haha", table2.getValue());
+
+		yTable1.setSelection(null);
+		assertNull(yTable1.getSelection());
+		assertNull(table1.getValue());
+		assertNull(yTable2.getSelection());
+		assertNull(table2.getValue());
+
+		table2.setValue("Haha");
+		assertEquals("Haha", yTable1.getSelection());
+		assertEquals("Haha", table1.getValue());
+		assertEquals("Haha", yTable2.getSelection());
+		assertEquals("Haha", table2.getValue());
+
+		yTable2.setSelection(null);
+		assertNull(yTable1.getSelection());
+		assertNull(table1.getValue());
+		assertNull(yTable2.getSelection());
+		assertNull(table2.getValue());
+
+		// test remove element that is selected
+		// add
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		yTable1.setSelection("Huhu");
+		assertEquals("Huhu", yTable1.getSelection());
+		assertEquals("Huhu", yTable2.getSelection());
+		assertEquals("Huhu", table1.getValue());
+		assertEquals("Huhu", table2.getValue());
+
+		yTable1.getCollection().remove("Huhu");
+		assertNull(table1.getValue());
+		assertNull(table2.getValue());
+		assertNull(yTable1.getSelection());
+		assertNull(yTable2.getSelection());
+
+		// test remove element that is selected
+		// add
+		yTable2.getCollection().add("Huhu");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		yTable1.setSelection("Huhu");
+		assertEquals("Huhu", yTable1.getSelection());
+		assertEquals("Huhu", table1.getValue());
+		assertEquals("Huhu", yTable2.getSelection());
+		assertEquals("Huhu", table2.getValue());
+
+		table2.setValue(null);
+		assertNull(yTable1.getSelection());
+		assertNull(table1.getValue());
+		assertNull(yTable2.getSelection());
+		assertNull(table2.getValue());
+	}
 
 	/**
 	 * Unwraps the component from its parent composite.
@@ -782,6 +1206,7 @@ public class TablePresentationTests {
 		}
 		return component;
 	}
+	
 
 	/**
 	 * Returns the component for the given model element.
@@ -804,5 +1229,13 @@ public class TablePresentationTests {
 		}
 		Component widget = presentation.getWidget();
 		return widget;
+	}
+	
+	private Collection<?> castCollection(Object value) {
+		return (Collection<?>) value;
+	}
+	
+	private List<?> asList(Object value) {
+		return value != null ? new ArrayList<Object>(castCollection(value)) : new ArrayList<Object>();
 	}
 }

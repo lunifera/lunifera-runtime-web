@@ -18,8 +18,10 @@ import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 
@@ -65,6 +67,7 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 			table = new Table();
 			table.addStyleName(CSS_CLASS__CONTROL);
 			table.setSizeFull();
+			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTable, table);
@@ -93,6 +96,8 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 			return internalGetCollectionEndpoint();
 		} else if (bindableValue instanceof YEmbeddableSelectionEndpoint) {
 			return internalGetSelectionEndpoint();
+		} else if (bindableValue instanceof YEmbeddableMultiSelectionEndpoint) {
+			return internalGetMultiSelectionEndpoint();
 		}
 		throw new IllegalArgumentException("Not a valid input: "
 				+ bindableValue);
@@ -122,6 +127,18 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 	}
 
 	/**
+	 * Returns the observable to observe the selection.
+	 * 
+	 * @return
+	 */
+	protected IObservableList internalGetMultiSelectionEndpoint() {
+		// return the observable value for text
+		return EMFProperties.list(
+				ExtensionModelPackage.Literals.YTABLE__MULTI_SELECTION)
+				.observe(getModel());
+	}
+
+	/**
 	 * Creates the bindings for the given values.
 	 * 
 	 * @param yField
@@ -135,9 +152,19 @@ public class TablePresentation extends AbstractVaadinWidgetPresenter<Component> 
 				yField.getType()));
 
 		// create the model binding from ridget to ECView-model
-		registerBinding(createBindings_Selection(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTABLE__SELECTION, field,
-				yField.getType()));
+		if (modelAccess.yTable.getSelectionType() == YSelectionType.MULTI) {
+			// create the model binding from ridget to ECView-model
+			registerBinding(createBindings_MultiSelection(
+					castEObject(getModel()),
+					ExtensionModelPackage.Literals.YTABLE__MULTI_SELECTION,
+					field, yField.getType()));
+		} else {
+			// create the model binding from ridget to ECView-model
+			registerBinding(createBindings_Selection(castEObject(getModel()),
+					ExtensionModelPackage.Literals.YTABLE__SELECTION, field,
+					yField.getType()));
+
+		}
 
 		super.createBindings(yField, field);
 	}

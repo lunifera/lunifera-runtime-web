@@ -15,7 +15,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
@@ -25,12 +28,16 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +52,7 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;
 
@@ -767,6 +775,422 @@ public class TreePresentationTests {
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Multi_EmptyCollection() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTree yTree1 = factory.createTree();
+		yTree1.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yTree1);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITreeEditpart tree1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTree1);
+		IWidgetPresentation<Component> tree1Presentation = tree1Editpart
+				.getPresentation();
+		ComponentContainer tree1BaseComponentContainer = (ComponentContainer) tree1Presentation
+				.getWidget();
+		Tree tree1 = (Tree) unwrapTree(tree1BaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) tree1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertTrue(asList(tree1.getValue()).isEmpty());
+		assertTrue(yTree1.getMultiSelection().isEmpty());
+
+		// test set selection by model
+		yTree1.getMultiSelection().add("Huhu");
+		assertEquals("Huhu", yTree1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree1.getValue()).get(0));
+		assertEquals(1, yTree1.getMultiSelection().size());
+		assertEquals(1, asList(tree1.getValue()).size());
+
+		yTree1.getMultiSelection().add("Haha");
+		assertEquals("Huhu", yTree1.getMultiSelection().get(0));
+		assertEquals("Haha", yTree1.getMultiSelection().get(1));
+		assertEquals("Huhu", asList(tree1.getValue()).get(0));
+		assertEquals("Haha", asList(tree1.getValue()).get(1));
+		assertEquals(2, yTree1.getMultiSelection().size());
+		assertEquals(2, asList(tree1.getValue()).size());
+
+		// remove selection
+		yTree1.getMultiSelection().remove("Huhu");
+		assertEquals("Haha", yTree1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(tree1.getValue()).get(0));
+		assertEquals(1, yTree1.getMultiSelection().size());
+		assertEquals(1, asList(tree1.getValue()).size());
+
+		yTree1.getMultiSelection().clear();
+		assertEquals(0, yTree1.getMultiSelection().size());
+		assertEquals(0, asList(tree1.getValue()).size());
+
+		// test set selection by widget
+		List<String> selection = new ArrayList<String>();
+		selection.add("Huhu");
+		tree1.setValue(selection);
+		assertEquals("Huhu", yTree1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree1.getValue()).get(0));
+		assertEquals(1, yTree1.getMultiSelection().size());
+		assertEquals(1, asList(tree1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		selection.add("Huhu");
+		selection.add("Haha");
+		tree1.setValue(selection);
+		assertEquals("Huhu", yTree1.getMultiSelection().get(0));
+		assertEquals("Haha", yTree1.getMultiSelection().get(1));
+		assertEquals("Huhu", asList(tree1.getValue()).get(0));
+		assertEquals("Haha", asList(tree1.getValue()).get(1));
+		assertEquals(2, yTree1.getMultiSelection().size());
+		assertEquals(2, asList(tree1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		selection.add("Haha");
+		tree1.setValue(selection);
+		assertEquals("Haha", yTree1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(tree1.getValue()).get(0));
+		assertEquals(1, yTree1.getMultiSelection().size());
+		assertEquals(1, asList(tree1.getValue()).size());
+
+		selection = new ArrayList<String>();
+		tree1.setValue(selection);
+		assertEquals(0, yTree1.getMultiSelection().size());
+		assertEquals(0, asList(tree1.getValue()).size());
+	}
+
+	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Multi_ListToList() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTree yTree1 = factory.createTree();
+		yTree1.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yTree1);
+		YTree yTree2 = factory.createTree();
+		yTree2.setSelectionType(YSelectionType.MULTI);
+		yLayout.getElements().add(yTree2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITreeEditpart tree1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTree1);
+		ITreeEditpart tree2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTree2);
+		IWidgetPresentation<Component> tree1Presentation = tree1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> tree2Presentation = tree2Editpart
+				.getPresentation();
+		ComponentContainer tree1BaseComponentContainer = (ComponentContainer) tree1Presentation
+				.getWidget();
+		ComponentContainer tree2BaseComponentContainer = (ComponentContainer) tree2Presentation
+				.getWidget();
+		Tree tree1 = (Tree) unwrapTree(tree1BaseComponentContainer);
+		Tree tree2 = (Tree) unwrapTree(tree2BaseComponentContainer);
+
+		Container.Indexed indexedDs1 = (Indexed) tree1.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) tree2.getContainerDataSource();
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		// start tests
+		//
+
+		YEmbeddableCollectionEndpoint endp1 = yTree1.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yTree2.createCollectionEndpoint();
+		yBindingSet.addBinding(endp1, endp2);
+
+		YEmbeddableMultiSelectionEndpoint endpSel1 = yTree1
+				.createMultiSelectionEndpoint();
+		YEmbeddableMultiSelectionEndpoint endpSel2 = yTree2
+				.createMultiSelectionEndpoint();
+		yBindingSet.addBinding(endpSel1, endpSel2);
+
+		Container.Indexed container1 = (Indexed) tree1.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) tree2.getContainerDataSource();
+		assertEquals(0, container1.size());
+		assertEquals(0, container2.size());
+
+		assertTrue(asList(tree1.getValue()).isEmpty());
+		assertTrue(yTree1.getMultiSelection().isEmpty());
+		assertTrue(asList(tree2.getValue()).isEmpty());
+		assertTrue(yTree2.getMultiSelection().isEmpty());
+
+		// add
+		yTree1.getCollection().add("Huhu");
+		yTree2.getCollection().add("Haha");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		assertTrue(asList(tree1.getValue()).isEmpty());
+		assertTrue(yTree1.getMultiSelection().isEmpty());
+		assertTrue(asList(tree2.getValue()).isEmpty());
+		assertTrue(yTree2.getMultiSelection().isEmpty());
+
+		// test set selection
+		yTree1.getMultiSelection().add("Huhu");
+		assertEquals("Huhu", yTree1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree1.getValue()).get(0));
+		assertEquals(1, yTree1.getMultiSelection().size());
+		assertEquals(1, asList(tree1.getValue()).size());
+		assertEquals("Huhu", yTree2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree2.getValue()).get(0));
+		assertEquals(1, yTree2.getMultiSelection().size());
+		assertEquals(1, asList(tree2.getValue()).size());
+
+		yTree2.getMultiSelection().add("Haha");
+		assertEquals("Huhu", yTree1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree1.getValue()).get(0));
+		assertEquals("Haha", yTree1.getMultiSelection().get(1));
+		assertEquals("Haha", asList(tree1.getValue()).get(1));
+		assertEquals(2, yTree1.getMultiSelection().size());
+		assertEquals(2, asList(tree1.getValue()).size());
+		assertEquals("Huhu", yTree2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree2.getValue()).get(0));
+		assertEquals("Haha", yTree2.getMultiSelection().get(1));
+		assertEquals("Haha", asList(tree2.getValue()).get(1));
+		assertEquals(2, yTree2.getMultiSelection().size());
+		assertEquals(2, asList(tree2.getValue()).size());
+
+		yTree1.getMultiSelection().remove("Huhu");
+		assertEquals("Haha", yTree1.getMultiSelection().get(0));
+		assertEquals("Haha", asList(tree1.getValue()).get(0));
+		assertEquals(1, yTree1.getMultiSelection().size());
+		assertEquals(1, asList(tree1.getValue()).size());
+		assertEquals("Haha", yTree2.getMultiSelection().get(0));
+		assertEquals("Haha", asList(tree2.getValue()).get(0));
+		assertEquals(1, yTree2.getMultiSelection().size());
+		assertEquals(1, asList(tree2.getValue()).size());
+
+		// clear
+		yTree2.getMultiSelection().clear();
+		assertTrue(asList(tree1.getValue()).isEmpty());
+		assertTrue(yTree1.getMultiSelection().isEmpty());
+		assertTrue(asList(tree2.getValue()).isEmpty());
+		assertTrue(yTree2.getMultiSelection().isEmpty());
+
+		// test set selection null
+		List<String> selection = new ArrayList<String>();
+		selection.add("Huhu");
+		tree1.setValue(selection);
+		assertEquals("Huhu", yTree1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree1.getValue()).get(0));
+		assertEquals(1, yTree1.getMultiSelection().size());
+		assertEquals(1, asList(tree1.getValue()).size());
+		assertEquals("Huhu", yTree2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree2.getValue()).get(0));
+		assertEquals(1, yTree2.getMultiSelection().size());
+		assertEquals(1, asList(tree2.getValue()).size());
+
+		selection.add("Haha");
+		tree2.setValue(selection);
+		assertEquals("Huhu", yTree1.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree1.getValue()).get(0));
+		assertEquals("Haha", yTree1.getMultiSelection().get(1));
+		assertEquals("Haha", asList(tree1.getValue()).get(1));
+		assertEquals(2, yTree1.getMultiSelection().size());
+		assertEquals(2, asList(tree1.getValue()).size());
+		assertEquals("Huhu", yTree2.getMultiSelection().get(0));
+		assertEquals("Huhu", asList(tree2.getValue()).get(0));
+		assertEquals("Haha", yTree2.getMultiSelection().get(1));
+		assertEquals("Haha", asList(tree2.getValue()).get(1));
+		assertEquals(2, yTree2.getMultiSelection().size());
+		assertEquals(2, asList(tree2.getValue()).size());
+
+		tree2.setValue(new ArrayList<String>());
+		assertTrue(asList(tree2.getValue()).isEmpty());
+		assertTrue(yTree2.getMultiSelection().isEmpty());
+		assertTrue(asList(tree1.getValue()).isEmpty());
+		assertTrue(yTree1.getMultiSelection().isEmpty());
+	}
+
+	/**
+	 * Test the internal structure based on CSS.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_SelectionBinding_Single_ListToList() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTree yTree1 = factory.createTree();
+		yLayout.getElements().add(yTree1);
+		YTree yTree2 = factory.createTree();
+		yLayout.getElements().add(yTree2);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITreeEditpart tree1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTree1);
+		ITreeEditpart tree2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTree2);
+		IWidgetPresentation<Component> tree1Presentation = tree1Editpart
+				.getPresentation();
+		IWidgetPresentation<Component> tree2Presentation = tree2Editpart
+				.getPresentation();
+		ComponentContainer tree1BaseComponentContainer = (ComponentContainer) tree1Presentation
+				.getWidget();
+		ComponentContainer tree2BaseComponentContainer = (ComponentContainer) tree2Presentation
+				.getWidget();
+		Tree tree1 = (Tree) unwrapTree(tree1BaseComponentContainer);
+		Tree tree2 = (Tree) unwrapTree(tree2BaseComponentContainer);
+
+		Container.Indexed indexedDs1 = (Indexed) tree1.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) tree2.getContainerDataSource();
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+
+		// start tests
+		//
+
+		YEmbeddableCollectionEndpoint endp1 = yTree1.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yTree2.createCollectionEndpoint();
+		yBindingSet.addBinding(endp1, endp2);
+
+		YEmbeddableSelectionEndpoint endpSel1 = yTree1
+				.createSelectionEndpoint();
+		YEmbeddableSelectionEndpoint endpSel2 = yTree2
+				.createSelectionEndpoint();
+		yBindingSet.addBinding(endpSel1, endpSel2);
+
+		Container.Indexed container1 = (Indexed) tree1.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) tree2.getContainerDataSource();
+		assertEquals(0, container1.size());
+		assertEquals(0, container2.size());
+
+		assertNull(tree1.getValue());
+		assertNull(yTree1.getSelection());
+
+		// add
+		yTree1.getCollection().add("Huhu");
+		yTree2.getCollection().add("Haha");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+		assertNull(yTree2.getSelection());
+		assertNull(tree2.getValue());
+
+		// test set selection
+		yTree1.setSelection("Huhu");
+		assertEquals("Huhu", yTree1.getSelection());
+		assertEquals("Huhu", tree1.getValue());
+		assertEquals("Huhu", yTree2.getSelection());
+		assertEquals("Huhu", tree2.getValue());
+
+		tree1.setValue("Haha");
+		assertEquals("Haha", yTree1.getSelection());
+		assertEquals("Haha", tree1.getValue());
+		assertEquals("Haha", yTree2.getSelection());
+		assertEquals("Haha", tree2.getValue());
+
+		// test set selection null
+		tree1.setValue(null);
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+		assertNull(yTree2.getSelection());
+		assertNull(tree2.getValue());
+
+		tree1.setValue("Haha");
+		assertEquals("Haha", yTree1.getSelection());
+		assertEquals("Haha", tree1.getValue());
+		assertEquals("Haha", yTree2.getSelection());
+		assertEquals("Haha", tree2.getValue());
+
+		tree2.setValue(null);
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+		assertNull(yTree2.getSelection());
+		assertNull(tree2.getValue());
+
+		tree2.setValue("Haha");
+		assertEquals("Haha", yTree1.getSelection());
+		assertEquals("Haha", tree1.getValue());
+		assertEquals("Haha", yTree2.getSelection());
+		assertEquals("Haha", tree2.getValue());
+
+		yTree1.setSelection(null);
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+		assertNull(yTree2.getSelection());
+		assertNull(tree2.getValue());
+
+		tree2.setValue("Haha");
+		assertEquals("Haha", yTree1.getSelection());
+		assertEquals("Haha", tree1.getValue());
+		assertEquals("Haha", yTree2.getSelection());
+		assertEquals("Haha", tree2.getValue());
+
+		yTree2.setSelection(null);
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+		assertNull(yTree2.getSelection());
+		assertNull(tree2.getValue());
+
+		// test remove element that is selected
+		// add
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		yTree1.setSelection("Huhu");
+		assertEquals("Huhu", yTree1.getSelection());
+		assertEquals("Huhu", yTree2.getSelection());
+		assertEquals("Huhu", tree1.getValue());
+		assertEquals("Huhu", tree2.getValue());
+
+		yTree1.getCollection().remove("Huhu");
+		assertNull(tree1.getValue());
+		assertNull(tree2.getValue());
+		assertNull(yTree1.getSelection());
+		assertNull(yTree2.getSelection());
+
+		// test remove element that is selected
+		// add
+		yTree2.getCollection().add("Huhu");
+		assertEquals(2, container1.size());
+		assertEquals(2, container2.size());
+
+		yTree1.setSelection("Huhu");
+		assertEquals("Huhu", yTree1.getSelection());
+		assertEquals("Huhu", tree1.getValue());
+		assertEquals("Huhu", yTree2.getSelection());
+		assertEquals("Huhu", tree2.getValue());
+
+		tree2.setValue(null);
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+		assertNull(yTree2.getSelection());
+		assertNull(tree2.getValue());
+	}
 
 	/**
 	 * Unwraps the component from its parent composite.
@@ -804,5 +1228,13 @@ public class TreePresentationTests {
 		}
 		Component widget = presentation.getWidget();
 		return widget;
+	}
+	
+	private Collection<?> castCollection(Object value) {
+		return (Collection<?>) value;
+	}
+
+	private List<?> asList(Object value) {
+		return value != null ? new ArrayList<Object>(castCollection(value)) : new ArrayList<Object>();
 	}
 }

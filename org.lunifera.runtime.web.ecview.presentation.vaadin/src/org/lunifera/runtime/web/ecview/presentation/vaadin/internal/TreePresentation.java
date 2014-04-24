@@ -18,8 +18,10 @@ import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 
@@ -65,6 +67,8 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 			tree = new Tree();
 			tree.addStyleName(CSS_CLASS__CONTROL);
 			tree.setSizeFull();
+			tree.setMultiSelect(modelAccess.yTree.getSelectionType() == YSelectionType.MULTI);
+
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTree, tree);
@@ -93,6 +97,8 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 			return internalGetCollectionEndpoint();
 		} else if (bindableValue instanceof YEmbeddableSelectionEndpoint) {
 			return internalGetSelectionEndpoint();
+		} else if (bindableValue instanceof YEmbeddableMultiSelectionEndpoint) {
+			return internalGetMultiSelectionEndpoint();
 		}
 		throw new IllegalArgumentException("Not a valid input: "
 				+ bindableValue);
@@ -108,6 +114,19 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 		return EMFProperties.list(
 				ExtensionModelPackage.Literals.YTREE__COLLECTION).observe(
 				getModel());
+	}
+	
+	
+	/**
+	 * Returns the observable to observe the selection.
+	 * 
+	 * @return
+	 */
+	protected IObservableList internalGetMultiSelectionEndpoint() {
+		// return the observable value for text
+		return EMFProperties.list(
+				ExtensionModelPackage.Literals.YTREE__MULTI_SELECTION)
+				.observe(getModel());
 	}
 
 	/**
@@ -135,9 +154,19 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 				yField.getType()));
 
 		// create the model binding from ridget to ECView-model
-		registerBinding(createBindings_Selection(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTREE__SELECTION, field,
-				yField.getType()));
+		if (modelAccess.yTree.getSelectionType() == YSelectionType.MULTI) {
+			// create the model binding from ridget to ECView-model
+			registerBinding(createBindings_MultiSelection(
+					castEObject(getModel()),
+					ExtensionModelPackage.Literals.YTREE__MULTI_SELECTION,
+					field, yField.getType()));
+		} else {
+			// create the model binding from ridget to ECView-model
+			registerBinding(createBindings_Selection(castEObject(getModel()),
+					ExtensionModelPackage.Literals.YTREE__SELECTION, field,
+					yField.getType()));
+
+		}
 
 		super.createBindings(yField, field);
 	}

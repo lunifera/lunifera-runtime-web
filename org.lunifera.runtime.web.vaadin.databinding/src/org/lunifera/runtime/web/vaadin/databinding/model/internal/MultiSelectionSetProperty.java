@@ -15,6 +15,7 @@
 
 package org.lunifera.runtime.web.vaadin.databinding.model.internal;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.databinding.observable.set.SetDiff;
@@ -48,7 +49,8 @@ public class MultiSelectionSetProperty extends AbstractVaadinSetProperty {
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected Set doGetSet(Object source) {
-		return (Set) Util.getProperty(source).getValue();
+		Set result = (Set) Util.getProperty(source).getValue();
+		return result != null ? result : new HashSet();
 	}
 
 	@SuppressWarnings("rawtypes")
