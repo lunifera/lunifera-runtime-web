@@ -26,6 +26,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YDetailValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
@@ -35,9 +36,10 @@ import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
-import org.junit.Assert;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -54,6 +56,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 /**
@@ -535,7 +538,7 @@ public class ListPresentationTests {
 		assertNull(list1.getValue());
 
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_SelectionBinding_Single_DetailBinding() throws Exception {
@@ -549,6 +552,15 @@ public class ListPresentationTests {
 		YList yList1 = factory.createList();
 		yList1.setType(Bar.class);
 		yLayout.getElements().add(yList1);
+		YTextField yText = factory.createTextField();
+		yLayout.getElements().add(yText);
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		YDetailValueBindingEndpoint yDetailEndpoint = yList1
+				.createSelectionEndpoint().createDetailValueEndpoint();
+		yDetailEndpoint.setPropertyPath("myfoo.name");
+		yDetailEndpoint.setType(Bar.class);
+		yBindingSet.addBinding(yText.createValueEndpoint(), yDetailEndpoint);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
@@ -561,6 +573,14 @@ public class ListPresentationTests {
 				.getWidget();
 		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
 
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> textPresentation = textEditpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+				.getWidget();
+		TextField text = (TextField) unwrapList(textBaseComponentContainer);
+
 		// start tests
 		//
 		Container.Indexed container = (Indexed) list1.getContainerDataSource();
@@ -568,6 +588,8 @@ public class ListPresentationTests {
 
 		assertNull(list1.getValue());
 		assertNull(yList1.getSelection());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
 
 		// add
 		Bar bar1 = new Bar();
@@ -575,71 +597,89 @@ public class ListPresentationTests {
 		Foo foo1 = new Foo();
 		foo1.setName("Foo1");
 		bar1.setMyfoo(foo1);
-		
+
 		Bar bar2 = new Bar();
 		bar2.setName("Bar2");
 		Foo foo2 = new Foo();
 		foo2.setName("Foo2");
 		bar2.setMyfoo(foo2);
-		
-		Assert.fail("Finish tests");
-		
+
 		yList1.getCollection().add(bar1);
 		yList1.getCollection().add(bar2);
 		assertEquals(2, container.size());
 
 		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
 
 		// test set selection
 		yList1.setSelection(bar1);
-		assertEquals("Huhu", yList1.getSelection());
-		assertEquals("Huhu", list1.getValue());
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
 
-		list1.setValue("Haha");
-		assertEquals("Haha", yList1.getSelection());
-		assertEquals("Haha", list1.getValue());
+		yList1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		yList1.setSelection(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		list1.setValue(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		list1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
 
 		// test set selection null
 		list1.setValue(null);
-		assertNull(yList1.getSelection());
-		assertNull(list1.getValue());
-
-		list1.setValue("Haha");
-		assertEquals("Haha", yList1.getSelection());
-		assertEquals("Haha", list1.getValue());
-
-		yList1.setSelection(null);
-		assertNull(yList1.getSelection());
-		assertNull(list1.getValue());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
 
 		// test remove element that is selected
 		// add
-		yList1.getCollection().add("Huhu");
-		yList1.getCollection().add("Haha");
-		assertEquals(2, container.size());
+		list1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
 
-		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getSelection());
-		assertEquals("Huhu", list1.getValue());
+		yList1.getCollection().clear();
 
-		yList1.getCollection().remove("Huhu");
-		assertNull(list1.getValue());
-		assertNull(yList1.getSelection());
-
-		// test remove element that is selected
-		// add
-		yList1.getCollection().add("Huhu");
-		assertEquals(2, container.size());
-
-		yList1.setSelection("Huhu");
-		assertEquals("Huhu", yList1.getSelection());
-		assertEquals("Huhu", list1.getValue());
-
-		list1.setValue(null);
 		assertNull(yList1.getSelection());
 		assertNull(list1.getValue());
 
+		// test setValue to textfield
+		yList1.getCollection().add(bar1);
+		yList1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+		
+		yList1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+		
+		yText.setValue("Foo2_1");
+		assertEquals("Foo2_1", foo2.getName());
+		assertEquals("Foo2_1", text.getValue());
+		
+		text.setValue("Foo2_2");
+		assertEquals("Foo2_2", foo2.getName());
+		assertEquals("Foo2_2", yText.getValue());
+		
+		yList1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+		
+		yText.setValue("Foo1_1");
+		assertEquals("Foo1_1", foo1.getName());
+		assertEquals("Foo1_1", text.getValue());
+		
+		text.setValue("Foo1_2");
+		assertEquals("Foo1_2", foo1.getName());
+		assertEquals("Foo1_2", yText.getValue());
+		
 	}
 
 	@Test
