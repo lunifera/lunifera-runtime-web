@@ -16,9 +16,11 @@ import java.util.List;
 
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
 import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabSheetPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.ComponentContainer;
@@ -26,13 +28,13 @@ import com.vaadin.ui.ComponentContainer;
 /**
  * An abstract base class implementing {@link ILayoutPresentation}.
  */
-public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
+public abstract class AbstractTabSheetPresenter<A extends ComponentContainer>
 		extends AbstractVaadinWidgetPresenter<A> implements
-		ILayoutPresentation<A> {
+		ITabSheetPresentation<A> {
 
-	private List<IWidgetPresentation<?>> children;
+	private List<ITabPresentation<?>> tabs;
 
-	public AbstractLayoutPresenter(ILayoutEditpart editpart) {
+	public AbstractTabSheetPresenter(ITabSheetEditpart editpart) {
 		super(editpart);
 	}
 
@@ -41,13 +43,13 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	 * 
 	 * @return the editpart
 	 */
-	protected ILayoutEditpart getEditpart() {
-		return (ILayoutEditpart) super.getEditpart();
+	protected ITabSheetEditpart getEditpart() {
+		return (ITabSheetEditpart) super.getEditpart();
 	}
 
 	@Override
-	public YLayout getModel() {
-		return (YLayout) getEditpart().getModel();
+	public YTabSheet getModel() {
+		return (YTabSheet) getEditpart().getModel();
 	}
 
 	/**
@@ -60,22 +62,22 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	}
 
 	@Override
-	public List<IWidgetPresentation<?>> getChildren() {
-		return children != null ? Collections.unmodifiableList(children)
-				: Collections.<IWidgetPresentation<?>> emptyList();
+	public List<ITabPresentation<?>> getTabs() {
+		return tabs != null ? Collections.unmodifiableList(tabs)
+				: Collections.<ITabPresentation<?>> emptyList();
 	}
 
 	@Override
-	public boolean contains(IWidgetPresentation<?> presentation) {
-		return children != null && children.contains(presentation);
+	public boolean contains(ITabPresentation<?> presentation) {
+		return tabs != null && tabs.contains(presentation);
 	}
 
 	@Override
-	public void add(IWidgetPresentation<?> presentation) {
+	public void add(ITabPresentation<?> presentation) {
 		ensureChildren();
 
-		if (!children.contains(presentation)) {
-			children.add(presentation);
+		if (!tabs.contains(presentation)) {
+			tabs.add(presentation);
 
 			internalAdd(presentation);
 		}
@@ -89,17 +91,17 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	 * @param presentation
 	 *            The presentation to be added
 	 */
-	protected void internalAdd(IWidgetPresentation<?> presentation) {
+	protected void internalAdd(ITabPresentation<?> presentation) {
 
 	}
 
 	@Override
-	public void remove(IWidgetPresentation<?> presentation) {
-		if (children == null) {
+	public void remove(ITabPresentation<?> presentation) {
+		if (tabs == null) {
 			return;
 		}
 
-		if (children.remove(presentation)) {
+		if (tabs.remove(presentation)) {
 			internalRemove(presentation);
 		}
 	}
@@ -113,15 +115,15 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	 * @param presentation
 	 *            The presentation to be removed
 	 */
-	protected void internalRemove(IWidgetPresentation<?> presentation) {
+	protected void internalRemove(ITabPresentation<?> presentation) {
 
 	}
 
 	@Override
-	public void insert(IWidgetPresentation<?> presentation, int index) {
+	public void insert(ITabPresentation<?> presentation, int index) {
 		ensureChildren();
 
-		int currentIndex = children.indexOf(presentation);
+		int currentIndex = tabs.indexOf(presentation);
 		if (currentIndex > -1 && currentIndex != index) {
 			throw new RuntimeException(
 					String.format(
@@ -129,7 +131,7 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 							index, currentIndex));
 		}
 
-		children.add(index, presentation);
+		tabs.add(index, presentation);
 		internalInsert(presentation, index);
 	}
 
@@ -143,27 +145,27 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	 * @param index
 	 *            The index where the presentation should be inserted
 	 */
-	protected void internalInsert(IWidgetPresentation<?> presentation, int index) {
+	protected void internalInsert(ITabPresentation<?> presentation, int index) {
 
 	}
 
 	@Override
-	public void move(IWidgetPresentation<?> presentation, int index) {
-		if (children == null) {
+	public void move(ITabPresentation<?> presentation, int index) {
+		if (tabs == null) {
 			throw new RuntimeException(
 					"Move not possible. No children present.");
 		}
 
-		if (!children.contains(presentation)) {
+		if (!tabs.contains(presentation)) {
 			throw new RuntimeException(
 					String.format(
 							"Move to index %d not possible since presentation not added yet!",
 							index));
 		}
 
-		int currentIndex = children.indexOf(presentation);
-		children.remove(presentation);
-		children.add(index, presentation);
+		int currentIndex = tabs.indexOf(presentation);
+		tabs.remove(presentation);
+		tabs.add(index, presentation);
 
 		internalMove(presentation, currentIndex, index);
 	}
@@ -181,7 +183,7 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	 *            The new index where the control should be located after the
 	 *            move operation.
 	 */
-	protected void internalMove(IWidgetPresentation<?> presentation,
+	protected void internalMove(ITabPresentation<?> presentation,
 			int oldIndex, int newIndex) {
 
 	}
@@ -190,17 +192,17 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	 * Ensures, that the children collection exists.
 	 */
 	protected void ensureChildren() {
-		if (children == null) {
-			children = new ArrayList<IWidgetPresentation<?>>();
+		if (tabs == null) {
+			tabs = new ArrayList<ITabPresentation<?>>();
 		}
 	}
 
 	@Override
 	protected void internalDispose() {
 		try {
-			if (children != null) {
-				children.clear();
-				children = null;
+			if (tabs != null) {
+				tabs.clear();
+				tabs = null;
 			}
 		} finally {
 

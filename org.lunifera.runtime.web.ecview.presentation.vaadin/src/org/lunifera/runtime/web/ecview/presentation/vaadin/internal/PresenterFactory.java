@@ -28,6 +28,8 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
@@ -93,6 +95,10 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new BrowserPresentation(editpart);
 		} else if (editpart instanceof IProgressBarEditpart) {
 			return (A) new ProgressBarPresentation(editpart);
+		} else if (editpart instanceof ITabSheetEditpart) {
+			return (A) new TabSheetPresentation(editpart);
+		} else if (editpart instanceof ITabEditpart) {
+			return (A) new TabPresentation(editpart);
 		}
  
 		throw new IllegalArgumentException(String.format(
