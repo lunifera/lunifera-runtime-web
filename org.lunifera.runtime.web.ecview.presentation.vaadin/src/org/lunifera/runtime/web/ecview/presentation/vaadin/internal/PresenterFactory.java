@@ -26,6 +26,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IHorizontalLayoutE
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
@@ -71,6 +72,8 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new TablePresentation(editpart);
 		} else if (editpart instanceof ITreeEditpart) {
 			return (A) new TreePresentation(editpart);
+		} else if (editpart instanceof IOptionsGroupEditpart) {
+			return (A) new OptionsGroupPresentation(editpart);
 		} else if (editpart instanceof IButtonEditpart) {
 			return (A) new ButtonPresentation(editpart);
 		} else if (editpart instanceof IGridLayoutEditpart) {
