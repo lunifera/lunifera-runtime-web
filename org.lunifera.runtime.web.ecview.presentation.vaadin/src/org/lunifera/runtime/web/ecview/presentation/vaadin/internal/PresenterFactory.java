@@ -27,6 +27,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
@@ -90,8 +91,10 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new DateTimePresentation(editpart);
 		} else if (editpart instanceof IBrowserEditpart) {
 			return (A) new BrowserPresentation(editpart);
+		} else if (editpart instanceof IProgressBarEditpart) {
+			return (A) new ProgressBarPresentation(editpart);
 		}
-
+ 
 		throw new IllegalArgumentException(String.format(
 				"No presenter available for editpart %s[%s]", editpart
 						.getClass().getName(), editpart.getId()));

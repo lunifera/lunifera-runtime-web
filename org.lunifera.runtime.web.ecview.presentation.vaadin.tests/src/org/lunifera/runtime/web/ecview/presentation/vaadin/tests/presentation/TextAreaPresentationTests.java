@@ -6,7 +6,7 @@
  * 
  * Contributors: Jose C. Dominguez - initial API and implementation
  */
-package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

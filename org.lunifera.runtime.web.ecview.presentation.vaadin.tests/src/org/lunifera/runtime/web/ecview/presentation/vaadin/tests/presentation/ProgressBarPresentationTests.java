@@ -8,14 +8,13 @@
  * Contributors:
  * Florian Pirchner - initial API and implementation
  */
-package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Date;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
@@ -28,15 +27,15 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YProgressBar;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ProgressBarPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
@@ -44,14 +43,14 @@ import org.osgi.service.cm.ConfigurationException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.UI;
 
 /**
- * Tests the {@link TextFieldPresentation}.
+ * Tests the {@link ProgressBarPresentation}.
  */
 @SuppressWarnings("restriction")
-public class DateTimePresentationTests {
+public class ProgressBarPresentationTests {
 
 	private SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 	private CssLayout rootLayout = new CssLayout();
@@ -80,24 +79,24 @@ public class DateTimePresentationTests {
 		// build the view model
 		// ...> yView
 		// ......> yGridLayout
-		// .........> yText
+		// .........> yProgressBar
 		YView yView = factory.createView();
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
-		YDateTime yText = factory.createDateTime();
-		yGridlayout.getElements().add(yText);
+		YProgressBar yProgressBar = factory.createProgressBar();
+		yGridlayout.getElements().add(yProgressBar);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IDateTimeEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yText);
-		IWidgetPresentation<Component> presentation = textEditpart
+		IProgressBarEditpart progressBarEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yProgressBar);
+		IWidgetPresentation<Component> presentation = progressBarEditpart
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 
-		yGridlayout.getElements().remove(yText);
+		yGridlayout.getElements().remove(yProgressBar);
 		assertFalse(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 	}
@@ -114,22 +113,22 @@ public class DateTimePresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yText
+		// ......> yProgressBar
 		YView yView = factory.createView();
-		YDateTime yText = factory.createDateTime();
-		yView.setContent(yText);
+		YProgressBar yProgressBar = factory.createProgressBar();
+		yView.setContent(yProgressBar);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IDateTimeEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yText);
-		IWidgetPresentation<Component> presentation = textEditpart
+		IProgressBarEditpart progressBarEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yProgressBar);
+		IWidgetPresentation<Component> presentation = progressBarEditpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
 
-		DateField text = (DateField) unwrapText(baseComponentContainer);
+		ProgressBar text = (ProgressBar) unwrapText(baseComponentContainer);
 		assertEquals(1, baseComponentContainer.getComponentCount());
 
 		// assert layout
@@ -147,51 +146,52 @@ public class DateTimePresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yText
+		// ......> yProgressBar
 		YView yView = factory.createView();
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
-		YDateTime yText1 = factory.createDateTime();
-		yText1.setCssID("ID_0815");
-		yText1.setCssClass("anyOtherClass");
-		yLayout.getElements().add(yText1);
-		YDateTime yText2 = factory.createDateTime();
-		yLayout.getElements().add(yText2);
+		YProgressBar yProgressBar1 = factory.createProgressBar();
+		yProgressBar1.setCssID("ID_0815");
+		yProgressBar1.setCssClass("anyOtherClass");
+		yLayout.getElements().add(yProgressBar1);
+		YProgressBar yProgressBar2 = factory.createProgressBar();
+		yLayout.getElements().add(yProgressBar2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IDateTimeEditpart text1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yText1);
-		IDateTimeEditpart text2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yText2);
-		IWidgetPresentation<Component> text1Presentation = text1Editpart
+		IProgressBarEditpart progressBar1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yProgressBar1);
+		IProgressBarEditpart progressBar2Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yProgressBar2);
+		IWidgetPresentation<Component> progressBar1Presentation = progressBar1Editpart
 				.getPresentation();
-		IWidgetPresentation<Component> text2Presentation = text2Editpart
+		IWidgetPresentation<Component> progressBar2Presentation = progressBar2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+		ComponentContainer progressBar1BaseComponentContainer = (ComponentContainer) progressBar1Presentation
 				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
+		ComponentContainer progressBar2BaseComponentContainer = (ComponentContainer) progressBar2Presentation
 				.getWidget();
 
-		DateField text1 = (DateField) unwrapText(text1BaseComponentContainer);
-		DateField text2 = (DateField) unwrapText(text2BaseComponentContainer);
+		ProgressBar progressBar1 = (ProgressBar) unwrapText(progressBar1BaseComponentContainer);
+		ProgressBar progressBar2 = (ProgressBar) unwrapText(progressBar2BaseComponentContainer);
 
 		// assert css class
-		assertTrue(text1BaseComponentContainer.getStyleName().contains(
+		assertTrue(progressBar1BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
-		assertTrue(text2BaseComponentContainer.getStyleName().contains(
+		assertTrue(progressBar2BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
 
-		assertTrue(text1.getStyleName().contains("anyOtherClass"));
-		assertTrue(text2.getStyleName().contains(
+		assertTrue(progressBar1.getStyleName().contains("anyOtherClass"));
+		assertTrue(progressBar2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", text1BaseComponentContainer.getId());
-		assertNull(text1.getId());
-		assertEquals(text2Editpart.getId(), text2BaseComponentContainer.getId());
-		assertNull(text2.getId());
+		assertEquals("ID_0815", progressBar1BaseComponentContainer.getId());
+		assertNull(progressBar1.getId());
+		assertEquals(progressBar2Editpart.getId(),
+				progressBar2BaseComponentContainer.getId());
+		assertNull(progressBar2.getId());
 	}
 
 	/**
@@ -205,63 +205,66 @@ public class DateTimePresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yText
+		// ......> yProgressBar
 		YView yView = factory.createView();
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
-		YDateTime yText1 = factory.createDateTime();
-		yLayout.getElements().add(yText1);
-		YDateTime yText2 = factory.createDateTime();
-		yLayout.getElements().add(yText2);
+		YProgressBar yProgressBar1 = factory.createProgressBar();
+		yLayout.getElements().add(yProgressBar1);
+		YProgressBar yProgressBar2 = factory.createProgressBar();
+		yLayout.getElements().add(yProgressBar2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IDateTimeEditpart text1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yText1);
-		IDateTimeEditpart text2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yText2);
-		IWidgetPresentation<Component> text1Presentation = text1Editpart
+		IProgressBarEditpart progressBar1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yProgressBar1);
+		IProgressBarEditpart progressBar2Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yProgressBar2);
+		IWidgetPresentation<Component> progressBar1Presentation = progressBar1Editpart
 				.getPresentation();
-		IWidgetPresentation<Component> text2Presentation = text2Editpart
+		IWidgetPresentation<Component> progressBar2Presentation = progressBar2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+		ComponentContainer progressBar1BaseComponentContainer = (ComponentContainer) progressBar1Presentation
 				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
+		ComponentContainer progressBar2BaseComponentContainer = (ComponentContainer) progressBar2Presentation
 				.getWidget();
-		DateField text1 = (DateField) unwrapText(text1BaseComponentContainer);
-		DateField text2 = (DateField) unwrapText(text2BaseComponentContainer);
+		ProgressBar progressBar1 = (ProgressBar) unwrapText(progressBar1BaseComponentContainer);
+		ProgressBar progressBar2 = (ProgressBar) unwrapText(progressBar2BaseComponentContainer);
 
 		// start tests
 		//
-		assertTrue(text1.isVisible());
-		assertTrue(text1.isEnabled());
-		assertFalse(text1.isReadOnly());
+		yProgressBar1.setValue(0.0f);
+		yProgressBar2.setValue(0.0f);
 
-		assertTrue(text2.isVisible());
-		assertTrue(text2.isEnabled());
-		assertFalse(text2.isReadOnly());
+		assertTrue(progressBar1.isVisible());
+		assertTrue(progressBar1.isEnabled());
+		assertFalse(progressBar1.isReadOnly());
+		assertEquals(0.0f, progressBar1.getValue(), 0);
 
-		yText1.setVisible(false);
-		assertFalse(text1.isVisible());
+		assertTrue(progressBar2.isVisible());
+		assertTrue(progressBar2.isEnabled());
+		assertFalse(progressBar2.isReadOnly());
+		assertEquals(0.0f, progressBar2.getValue(), 0);
 
-		yText1.setEnabled(false);
-		assertFalse(text1.isEnabled());
+		yProgressBar1.setVisible(false);
+		assertFalse(progressBar1.isVisible());
 
-		yText1.setEditable(false);
-		assertTrue(text1.isReadOnly());
+		yProgressBar1.setEnabled(false);
+		assertFalse(progressBar1.isEnabled());
+
+		yProgressBar1.setEditable(false);
+		assertTrue(progressBar1.isReadOnly());
 
 		// target to model
-		text1.setReadOnly(false);
-		assertTrue(yText1.isEditable());
+		progressBar1.setReadOnly(false);
+		assertTrue(yProgressBar1.isEditable());
 
-		Date date = new Date();
-		yText1.setValue(date);
-		assertEquals(date, text1.getValue());
+		yProgressBar1.setValue(0.30f);
+		yProgressBar2.setValue(0.60f);
+		assertEquals(0.30f, progressBar1.getValue(), 0);
+		assertEquals(0.60f, progressBar2.getValue(), 0);
 
-		date = new Date();
-		text1.setValue(date);
-		assertEquals(date, yText1.getValue());
 	}
 
 	@Test
@@ -270,60 +273,49 @@ public class DateTimePresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yText
+		// ......> yProgressBar
 		YView yView = factory.createView();
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
-		YDateTime yText1 = factory.createDateTime();
-		yLayout.getElements().add(yText1);
+		YProgressBar yProgressBar1 = factory.createProgressBar();
+		yLayout.getElements().add(yProgressBar1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IDateTimeEditpart text1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yText1);
-		IWidgetPresentation<Component> text1Presentation = text1Editpart
+		IProgressBarEditpart progressBar1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yProgressBar1);
+		IWidgetPresentation<Component> progressBar1Presentation = progressBar1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+		ComponentContainer progressBar1BaseComponentContainer = (ComponentContainer) progressBar1Presentation
 				.getWidget();
-		DateField text1 = (DateField) unwrapText(text1BaseComponentContainer);
+		ProgressBar progressBar1 = (ProgressBar) unwrapText(progressBar1BaseComponentContainer);
 
 		// start tests
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
+		yProgressBar1.setValue(0.0f);
 		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
-		ValueBean bean = new ValueBean(new Date());
-		beanBinding.setPropertyPath("dateValue");
+		ValueBean bean = new ValueBean(0.30f);
+		beanBinding.setPropertyPath("floatValue");
 		beanBinding.setBean(bean);
+		yBindingSet
+				.addBinding(yProgressBar1.createValueEndpoint(), beanBinding);
+		assertEquals(0.30f, progressBar1.getValue(), 0);
+		assertEquals(0.30f, yProgressBar1.getValue(), 0);
 
-		yBindingSet.addBinding(yText1.createValueEndpoint(), beanBinding);
-		bean.setDateValue(new Date(100000));
-		assertEquals(bean.getDateValue(), text1.getValue());
-		assertEquals(bean.getDateValue(), yText1.getValue());
+		bean.setFloatValue(0.60f);
+		assertEquals(0.60f, progressBar1.getValue(), 0);
+		assertEquals(0.60f, yProgressBar1.getValue(), 0);
 
-		// bean = new ValueBean("Huhu11");
-		// beanBinding.setPropertyPath("value");
-		// TODO Setting a bean later does not cause any sideeffects. See
-		// BeanBindingEndpointEditpart. The binding for the bean is not
-		// refreshed.
-		// beanBinding.setBean(bean);
-		// assertEquals("Huhu11", text1.getValue());
-		// assertEquals("Huhu11", yText1.getValue());
+		progressBar1.setValue(0.70f);
+		assertEquals(0.70f, bean.getFloatValue(), 0);
+		assertEquals(0.70f, yProgressBar1.getValue(), 0);
 
-		bean.setDateValue(new Date(100001));
-		assertEquals(bean.getDateValue(), text1.getValue());
-		assertEquals(bean.getDateValue().getTime(), yText1.getValue().getTime());
-
-		Date date = new Date(100002);
-		text1.setValue(date);
-		assertEquals(date, bean.getDateValue());
-		assertEquals(date, yText1.getValue());
-
-		date = new Date(100003);
-		yText1.setValue(date);
-		assertEquals(date, bean.getDateValue());
-		assertEquals(date, text1.getValue());
+		yProgressBar1.setValue(0.80f);
+		assertEquals(0.80f, bean.getFloatValue(), 0);
+		assertEquals(0.80f, progressBar1.getValue(), 0);
 	}
 
 	/**
@@ -336,15 +328,15 @@ public class DateTimePresentationTests {
 		YView yView = factory.createView();
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
-		YDateTime yText = factory.createDateTime();
-		yGridlayout.getElements().add(yText);
+		YProgressBar yProgressBar = factory.createProgressBar();
+		yGridlayout.getElements().add(yProgressBar);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IDateTimeEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yText);
-		IWidgetPresentation<Component> presentation = textEditpart
+		IProgressBarEditpart progressBarEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yProgressBar);
+		IWidgetPresentation<Component> presentation = progressBarEditpart
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());

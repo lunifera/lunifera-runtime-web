@@ -10,6 +10,7 @@ public class ValueBean extends AbstractBean {
 	private int intValue;
 	private long longValue;
 	private double doubleValue;
+	private float floatValue;
 
 	public ValueBean(String value) {
 		super();
@@ -39,6 +40,11 @@ public class ValueBean extends AbstractBean {
 	public ValueBean(double value) {
 		super();
 		this.doubleValue = value;
+	}
+	
+	public ValueBean(float value) {
+		super();
+		this.floatValue = value;
 	}
 
 	/**
@@ -98,6 +104,15 @@ public class ValueBean extends AbstractBean {
 	public void setDoubleValue(double doubleValue) {
 		firePropertyChanged("doubleValue", this.doubleValue,
 				this.doubleValue = doubleValue);
+	}
+	
+	public float getFloatValue() {
+		return floatValue;
+	}
+
+	public void setFloatValue(float floatValue) {
+		firePropertyChanged("floatValue", this.floatValue,
+				this.floatValue = floatValue);
 	}
 
 }

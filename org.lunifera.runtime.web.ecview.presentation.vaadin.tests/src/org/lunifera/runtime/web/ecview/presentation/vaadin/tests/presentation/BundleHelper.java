@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Pirchner - initial API and implementation
  */
-package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.knowhowlab.osgi.testing.assertions.BundleAssert.assertBundleAvailable;
 import static org.knowhowlab.osgi.testing.assertions.ServiceAssert.assertServiceAvailable;

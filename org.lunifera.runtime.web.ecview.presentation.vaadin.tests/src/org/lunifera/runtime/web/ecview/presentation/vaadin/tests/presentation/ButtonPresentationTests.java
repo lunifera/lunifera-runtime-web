@@ -8,7 +8,7 @@
  * Contributors:
  * Florian Pirchner - initial API and implementation
  */
-package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.context;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -25,29 +25,29 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.LabelPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ButtonPresentation;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 /**
- * Tests the {@link LabelPresentation}.
+ * Tests the {@link ButtonPresentation}.
  */
 @SuppressWarnings("restriction")
-public class LabelPresentationTests {
+public class ButtonPresentationTests {
 
 	private SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 	private CssLayout rootLayout = new CssLayout();
@@ -76,24 +76,24 @@ public class LabelPresentationTests {
 		// build the view model
 		// ...> yView
 		// ......> yGridLayout
-		// .........> yLabel
+		// .........> yButton
 		YView yView = factory.createView();
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
-		YLabel yLabel = factory.createLabel();
-		yGridlayout.getElements().add(yLabel);
+		YButton yButton = factory.createButton();
+		yGridlayout.getElements().add(yButton);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
-		IWidgetPresentation<Component> presentation = textEditpart
+		IButtonEditpart buttonEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton);
+		IWidgetPresentation<Component> presentation = buttonEditpart
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 
-		yGridlayout.getElements().remove(yLabel);
+		yGridlayout.getElements().remove(yButton);
 		assertFalse(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 	}
@@ -110,22 +110,22 @@ public class LabelPresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yLabel
+		// ......> yButton
 		YView yView = factory.createView();
-		YLabel yLabel = factory.createLabel();
-		yView.setContent(yLabel);
+		YButton yButton = factory.createButton();
+		yView.setContent(yButton);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
-		IWidgetPresentation<Component> presentation = textEditpart
+		IButtonEditpart buttonEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton);
+		IWidgetPresentation<Component> presentation = buttonEditpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
 
-		Label label = (Label) unwrapLabel(baseComponentContainer);
+		Button button = (Button) unwrapButton(baseComponentContainer);
 		assertEquals(1, baseComponentContainer.getComponentCount());
 
 		// assert layout
@@ -143,54 +143,54 @@ public class LabelPresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yLabel
+		// ......> yButton
 		YView yView = factory.createView();
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
-		YLabel yLabel1 = factory.createLabel();
-		yLabel1.setCssID("ID_0815");
-		yLabel1.setCssClass("anyOtherClass");
-		yLayout.getElements().add(yLabel1);
-		YLabel yLabel2 = factory.createLabel();
-		yLayout.getElements().add(yLabel2);
+		YButton yButton1 = factory.createButton();
+		yButton1.setCssID("ID_0815");
+		yButton1.setCssClass("anyOtherClass");
+		yLayout.getElements().add(yButton1);
+		YButton yButton2 = factory.createButton();
+		yLayout.getElements().add(yButton2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart text1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel1);
-		ILabelEditpart text2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel2);
-		IWidgetPresentation<Component> text1Presentation = text1Editpart
+		IButtonEditpart button1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton1);
+		IButtonEditpart button2Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton2);
+		IWidgetPresentation<Component> button1Presentation = button1Editpart
 				.getPresentation();
-		IWidgetPresentation<Component> text2Presentation = text2Editpart
+		IWidgetPresentation<Component> button2Presentation = button2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+		ComponentContainer button1BaseComponentContainer = (ComponentContainer) button1Presentation
 				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
+		ComponentContainer button2BaseComponentContainer = (ComponentContainer) button2Presentation
 				.getWidget();
 
-		Label label1 = (Label) unwrapLabel(text1BaseComponentContainer);
-		Label label2 = (Label) unwrapLabel(text2BaseComponentContainer);
+		Button button1 = (Button) unwrapButton(button1BaseComponentContainer);
+		Button button2 = (Button) unwrapButton(button2BaseComponentContainer);
 
 		// assert css class
-		assertTrue(text1BaseComponentContainer.getStyleName().contains(
+		assertTrue(button1BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
-		assertTrue(text2BaseComponentContainer.getStyleName().contains(
+		assertTrue(button2BaseComponentContainer.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
 
-		assertTrue(label1.getStyleName().contains("anyOtherClass"));
-		assertTrue(label2.getStyleName().contains(
+		assertTrue(button1.getStyleName().contains("anyOtherClass"));
+		assertTrue(button2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", text1BaseComponentContainer.getId());
-		assertNull(label1.getId());
-		assertEquals(text2Editpart.getId(),
-				text2BaseComponentContainer.getId());
-		assertNull(label2.getId());
+		assertEquals("ID_0815", button1BaseComponentContainer.getId());
+		assertNull(button1.getId());
+		assertEquals(button2Editpart.getId(),
+				button2BaseComponentContainer.getId());
+		assertNull(button2.getId());
 	}
-	
+
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -202,80 +202,81 @@ public class LabelPresentationTests {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
-		// ......> yLabel
+		// ......> yButton
 		YView yView = factory.createView();
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
-		YLabel yLabel1 = factory.createLabel();
-		yLayout.getElements().add(yLabel1);
-		YLabel yLabel2 = factory.createLabel();
-		yLayout.getElements().add(yLabel2);
+		YButton yButton1 = factory.createButton();
+		yLayout.getElements().add(yButton1);
+		YButton yButton2 = factory.createButton();
+		yLayout.getElements().add(yButton2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart label1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel1);
-		ILabelEditpart label2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel2);
-		IWidgetPresentation<Component> text1Presentation = label1Editpart
+		IButtonEditpart button1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton1);
+		IButtonEditpart button2Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton2);
+		IWidgetPresentation<Component> button1Presentation = button1Editpart
 				.getPresentation();
-		IWidgetPresentation<Component> text2Presentation = label2Editpart
+		IWidgetPresentation<Component> button2Presentation = button2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+		ComponentContainer button1BaseComponentContainer = (ComponentContainer) button1Presentation
 				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
+		ComponentContainer button2BaseComponentContainer = (ComponentContainer) button2Presentation
 				.getWidget();
-		Label label1 = (Label) unwrapLabel(text1BaseComponentContainer);
-		Label label2 = (Label) unwrapLabel(text2BaseComponentContainer);
+		Button button1 = (Button) unwrapButton(button1BaseComponentContainer);
+		Button button2 = (Button) unwrapButton(button2BaseComponentContainer);
 
 		// start tests
 		//
-		assertTrue(label1.isVisible());
-		assertTrue(label1.isEnabled());
-		assertFalse(label1.isReadOnly());
-		
-		assertTrue(label2.isVisible());
-		assertTrue(label2.isEnabled());
-		assertFalse(label2.isReadOnly());
-		
-		yLabel1.setVisible(false);
-		assertFalse(label1.isVisible());
-		
-		yLabel1.setEnabled(false);
-		assertFalse(label1.isEnabled());
-		
+		assertTrue(button1.isVisible());
+		assertTrue(button1.isEnabled());
+		assertFalse(button1.isReadOnly());
+
+		assertTrue(button2.isVisible());
+		assertTrue(button2.isEnabled());
+		assertFalse(button2.isReadOnly());
+
+		yButton1.setVisible(false);
+		assertFalse(button1.isVisible());
+
+		yButton1.setEnabled(false);
+		assertFalse(button1.isEnabled());
+
 	}
-	
-	
+
 	/**
 	 * Test the automatic disposal of bindings
 	 * 
 	 * @throws ContextException
 	 */
 	@Test
-	public void testBindingIsDisposed() throws ContextException{
+	public void testBindingIsDisposed() throws ContextException {
+		// test that the binding is disposed if field is disposed
 		YView yView = factory.createView();
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
-		YLabel yLabel = factory.createLabel();
-		yGridlayout.getElements().add(yLabel);
+		YButton yButton = factory.createButton();
+		yGridlayout.getElements().add(yButton);
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
-		IWidgetPresentation<Component> presentation = textEditpart
+		IButtonEditpart buttonEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton);
+		IWidgetPresentation<Component> presentation = buttonEditpart
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
-		assertEquals(3, presentation.getUIBindings().size());
+		assertEquals(2, presentation.getUIBindings().size());
 		
 		presentation.dispose();
 		assertFalse(presentation.isRendered());
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
+		
 	}
 
 	/**
@@ -284,7 +285,7 @@ public class LabelPresentationTests {
 	 * @param component
 	 * @return
 	 */
-	private Component unwrapLabel(Component component) {
+	private Component unwrapButton(Component component) {
 		if (component instanceof ComponentContainer) {
 			ComponentContainer composite = (ComponentContainer) component;
 			Iterator<Component> iter = composite.iterator();
@@ -307,7 +308,8 @@ public class LabelPresentationTests {
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart)
+					.getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}
