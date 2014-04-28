@@ -35,6 +35,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 
 /**
  * This presenter is responsible to render a text area on the given layout.
@@ -110,11 +111,19 @@ public class NumericFieldPresentation extends
 
 			numberField.setUseGrouping(modelAccess.isGrouping());
 
+			
+			initializeField(numberField);
+			
 			// send an event, that the content was rendered again
 			sendRenderedLifecycleEvent();
 
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return numberField;
 	}
 
 	@Override

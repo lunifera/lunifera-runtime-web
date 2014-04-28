@@ -23,6 +23,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpa
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.ProgressBar;
 
 /**
@@ -76,8 +77,15 @@ public class ProgressBarPresentation extends
 			if (modelAccess.isLabelValid()) {
 				progressBar.setCaption(modelAccess.getLabel());
 			}
+			
+			initializeField(progressBar);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return progressBar;
 	}
 
 	@Override

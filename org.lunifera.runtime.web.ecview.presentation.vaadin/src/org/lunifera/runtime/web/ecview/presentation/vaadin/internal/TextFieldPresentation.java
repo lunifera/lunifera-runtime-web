@@ -23,6 +23,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
 /**
@@ -76,8 +77,15 @@ public class TextFieldPresentation extends
 			if (modelAccess.isLabelValid()) {
 				text.setCaption(modelAccess.getLabel());
 			}
+			
+			initializeField(text);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return text;
 	}
 
 	@Override

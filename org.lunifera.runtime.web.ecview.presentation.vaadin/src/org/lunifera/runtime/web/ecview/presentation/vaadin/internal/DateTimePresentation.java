@@ -25,6 +25,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Field;
 
 /**
  * This presenter is responsible to render a text area on the given layout.
@@ -93,10 +94,16 @@ public class DateTimePresentation extends
 			// }
 			// }
 			// });
+			
+			initializeField(dateField);
 		}
 		return componentBase;
 	}
 
+	@Override
+	protected Field<?> doGetField() {
+		return dateField;
+	}
 	@Override
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {

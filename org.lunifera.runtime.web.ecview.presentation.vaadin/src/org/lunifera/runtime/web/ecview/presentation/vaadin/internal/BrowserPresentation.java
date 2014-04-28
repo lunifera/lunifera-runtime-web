@@ -18,6 +18,7 @@ import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 
 /**
  * This presenter is responsible to render a text area on the given layout.
@@ -72,6 +73,11 @@ public class BrowserPresentation extends
 			}
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected Field<?> doGetField() {
+		return null;
 	}
 
 	@Override

@@ -28,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditp
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.OptionGroup;
 
 /**
@@ -83,8 +84,15 @@ public class OptionsGroupPresentation extends
 			if (modelAccess.isLabelValid()) {
 				optionsGroup.setCaption(modelAccess.getLabel());
 			}
+			
+			initializeField(optionsGroup);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return optionsGroup;
 	}
 
 	@Override

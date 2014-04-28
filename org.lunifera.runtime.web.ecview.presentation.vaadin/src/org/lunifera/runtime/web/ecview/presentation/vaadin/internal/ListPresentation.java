@@ -28,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.ListSelect;
 
 /**
@@ -81,8 +82,15 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 			if (modelAccess.isLabelValid()) {
 				list.setCaption(modelAccess.getLabel());
 			}
+			
+			initializeField(list);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return list;
 	}
 
 	@Override

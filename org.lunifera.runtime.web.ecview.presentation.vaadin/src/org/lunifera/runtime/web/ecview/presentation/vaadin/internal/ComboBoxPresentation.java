@@ -27,6 +27,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 
 /**
  * This presenter is responsible to render a combo box on the given layout.
@@ -79,8 +80,15 @@ public class ComboBoxPresentation extends
 			if (modelAccess.isLabelValid()) {
 				combo.setCaption(modelAccess.getLabel());
 			}
+			
+			initializeField(combo);
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected Field<?> doGetField() {
+		return combo;
 	}
 
 	@Override

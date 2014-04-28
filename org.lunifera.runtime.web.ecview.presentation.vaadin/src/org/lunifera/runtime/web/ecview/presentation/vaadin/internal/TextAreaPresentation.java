@@ -23,6 +23,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.TextArea;
 
 /**
@@ -76,8 +77,15 @@ public class TextAreaPresentation extends
 			if (modelAccess.isLabelValid()) {
 				textArea.setCaption(modelAccess.getLabel());
 			}
+			
+			initializeField(textArea);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return textArea;
 	}
 
 	@Override

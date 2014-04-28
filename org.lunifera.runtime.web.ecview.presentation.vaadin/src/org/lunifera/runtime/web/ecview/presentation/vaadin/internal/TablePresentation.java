@@ -28,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 
 /**
@@ -81,8 +82,15 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component> {
 			if (modelAccess.isLabelValid()) {
 				table.setCaption(modelAccess.getLabel());
 			}
+			
+			initializeField(table);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return table;
 	}
 
 	@Override

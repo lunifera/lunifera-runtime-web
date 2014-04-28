@@ -17,6 +17,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 
 /**
@@ -71,6 +72,11 @@ public class LabelPresentation extends AbstractFieldWidgetPresenter<Component> {
 			}
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return null;
 	}
 
 	@Override

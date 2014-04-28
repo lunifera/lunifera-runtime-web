@@ -28,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Tree;
 
 /**
@@ -81,8 +82,15 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 			if (modelAccess.isLabelValid()) {
 				tree.setCaption(modelAccess.getLabel());
 			}
+
+			initializeField(tree);
 		}
 		return componentBase;
+	}
+
+	@Override
+	protected Field<?> doGetField() {
+		return tree;
 	}
 
 	@Override

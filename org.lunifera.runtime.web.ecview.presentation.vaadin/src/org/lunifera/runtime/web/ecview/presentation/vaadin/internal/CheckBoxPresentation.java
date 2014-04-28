@@ -24,6 +24,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Field;
 
 /**
  * This presenter is responsible to render a checkBox on the given layout.
@@ -76,8 +77,15 @@ public class CheckBoxPresentation extends
 			if (modelAccess.isLabelValid()) {
 				checkBox.setCaption(modelAccess.getLabel());
 			}
+			
+			initializeField(checkBox);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected Field<?> doGetField() {
+		return checkBox;
 	}
 
 	@Override
