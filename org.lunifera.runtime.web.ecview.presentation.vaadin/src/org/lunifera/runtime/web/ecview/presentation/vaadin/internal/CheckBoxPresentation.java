@@ -29,7 +29,7 @@ import com.vaadin.ui.CssLayout;
  * This presenter is responsible to render a checkBox on the given layout.
  */
 public class CheckBoxPresentation extends
-		AbstractVaadinWidgetPresenter<Component> {
+		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -135,10 +135,10 @@ public class CheckBoxPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			
+
 			// unbind all active bindings
 			unbind();
-			
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {

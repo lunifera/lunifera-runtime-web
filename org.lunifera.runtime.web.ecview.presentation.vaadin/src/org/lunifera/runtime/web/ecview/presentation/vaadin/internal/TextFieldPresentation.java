@@ -29,7 +29,7 @@ import com.vaadin.ui.TextField;
  * This presenter is responsible to render a text field on the given layout.
  */
 public class TextFieldPresentation extends
-		AbstractVaadinWidgetPresenter<Component> {
+		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;

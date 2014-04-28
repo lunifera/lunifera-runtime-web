@@ -33,7 +33,7 @@ import com.vaadin.ui.ListSelect;
 /**
  * This presenter is responsible to render a list on the given layout.
  */
-public class ListPresentation extends AbstractVaadinWidgetPresenter<Component> {
+public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;

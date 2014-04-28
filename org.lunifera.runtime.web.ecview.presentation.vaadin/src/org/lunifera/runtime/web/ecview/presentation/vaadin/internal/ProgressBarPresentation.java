@@ -29,7 +29,7 @@ import com.vaadin.ui.ProgressBar;
  * This presenter is responsible to render a progress bar on the given layout.
  */
 public class ProgressBarPresentation extends
-		AbstractVaadinWidgetPresenter<Component> {
+		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -114,7 +114,8 @@ public class ProgressBarPresentation extends
 	protected void createBindings(YProgressBar yField, ProgressBar field) {
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBindings_Value(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YPROGRESS_BAR__VALUE, progressBar));
+				ExtensionModelPackage.Literals.YPROGRESS_BAR__VALUE,
+				progressBar));
 
 		super.createBindings(yField, field);
 	}

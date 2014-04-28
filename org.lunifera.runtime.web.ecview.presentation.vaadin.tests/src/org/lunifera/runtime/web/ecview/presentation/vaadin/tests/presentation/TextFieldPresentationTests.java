@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
@@ -391,5 +392,10 @@ public class TextFieldPresentationTests {
 		}
 		Component widget = presentation.getWidget();
 		return widget;
+	}
+
+	@Test
+	public void test_addRemoveValidatorByModel() {
+		fail("Implement");
 	}
 }

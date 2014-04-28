@@ -23,7 +23,7 @@ import com.vaadin.ui.CssLayout;
  * This presenter is responsible to render a text area on the given layout.
  */
 public class BrowserPresentation extends
-		AbstractVaadinWidgetPresenter<Component> {
+		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;

@@ -22,7 +22,7 @@ import com.vaadin.ui.Label;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class LabelPresentation extends AbstractVaadinWidgetPresenter<Component> {
+public class LabelPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -31,7 +31,8 @@ public class LabelPresentation extends AbstractVaadinWidgetPresenter<Component> 
 	/**
 	 * Constructor.
 	 * 
-	 * @param editpart The editpart of that presenter
+	 * @param editpart
+	 *            The editpart of that presenter
 	 */
 	public LabelPresentation(IElementEditpart editpart) {
 		super((ILabelEditpart) editpart);
@@ -55,10 +56,10 @@ public class LabelPresentation extends AbstractVaadinWidgetPresenter<Component> 
 			label = new Label();
 			label.addStyleName(CSS_CLASS__CONTROL);
 			label.setSizeFull();
-			
+
 			// creates the binding for the field
 			createBindings(modelAccess.yLabel, label);
-			
+
 			componentBase.addComponent(label);
 
 			if (modelAccess.isCssClassValid()) {
@@ -88,11 +89,12 @@ public class LabelPresentation extends AbstractVaadinWidgetPresenter<Component> 
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			
+
 			// unbind all active bindings
 			unbind();
-			
-			ComponentContainer parent = ((ComponentContainer) componentBase.getParent());
+
+			ComponentContainer parent = ((ComponentContainer) componentBase
+					.getParent());
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
@@ -164,7 +166,8 @@ public class LabelPresentation extends AbstractVaadinWidgetPresenter<Component> 
 		 * @return
 		 */
 		public boolean isLabelValid() {
-			return yLabel.getDatadescription() != null && yLabel.getDatadescription().getLabel() != null;
+			return yLabel.getDatadescription() != null
+					&& yLabel.getDatadescription().getLabel() != null;
 		}
 
 		/**

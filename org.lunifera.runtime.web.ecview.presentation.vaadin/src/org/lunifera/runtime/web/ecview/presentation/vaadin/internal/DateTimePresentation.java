@@ -30,7 +30,7 @@ import com.vaadin.ui.DateField;
  * This presenter is responsible to render a text area on the given layout.
  */
 public class DateTimePresentation extends
-		AbstractVaadinWidgetPresenter<Component> {
+		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -154,7 +154,7 @@ public class DateTimePresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			
+
 			// unbind all active bindings
 			unbind();
 

@@ -29,13 +29,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.OptionGroup;
 
 /**
  * This presenter is responsible to render a list on the given layout.
  */
 public class OptionsGroupPresentation extends
-		AbstractVaadinWidgetPresenter<Component> {
+		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;

@@ -33,7 +33,7 @@ import com.vaadin.ui.Tree;
 /**
  * This presenter is responsible to render a tree on the given layout.
  */
-public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
+public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -68,7 +68,6 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 			tree.addStyleName(CSS_CLASS__CONTROL);
 			tree.setSizeFull();
 			tree.setMultiSelect(modelAccess.yTree.getSelectionType() == YSelectionType.MULTI);
-
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTree, tree);
@@ -115,8 +114,7 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 				ExtensionModelPackage.Literals.YTREE__COLLECTION).observe(
 				getModel());
 	}
-	
-	
+
 	/**
 	 * Returns the observable to observe the selection.
 	 * 
@@ -125,8 +123,8 @@ public class TreePresentation extends AbstractVaadinWidgetPresenter<Component> {
 	protected IObservableList internalGetMultiSelectionEndpoint() {
 		// return the observable value for text
 		return EMFProperties.list(
-				ExtensionModelPackage.Literals.YTREE__MULTI_SELECTION)
-				.observe(getModel());
+				ExtensionModelPackage.Literals.YTREE__MULTI_SELECTION).observe(
+				getModel());
 	}
 
 	/**

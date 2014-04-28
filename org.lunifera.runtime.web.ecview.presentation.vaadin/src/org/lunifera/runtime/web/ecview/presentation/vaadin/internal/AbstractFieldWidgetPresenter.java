@@ -10,15 +10,30 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.presentation.IFieldPresentation;
+import org.eclipse.emf.ecp.ecview.common.validation.IValidator;
 
-import com.vaadin.ui.Field;
+import com.vaadin.ui.Component;
 
 /**
  * An abstract implementation of the {@link IFieldPresentation}.
  */
-public abstract class AbstractFieldWidgetPresenter<A extends Field<?>> extends
-		AbstractDisposable implements IFieldPresentation<A> {
+public abstract class AbstractFieldWidgetPresenter<A extends Component> extends
+		AbstractVaadinWidgetPresenter<A> implements IFieldPresentation<A> {
 
+	public AbstractFieldWidgetPresenter(IEmbeddableEditpart editpart) {
+		super(editpart);
+	}
+
+	@Override
+	public void addValidator(IValidator validator) {
+		
+	}
+
+	@Override
+	public void removeValidator(IValidator validator) {
+		
+	}
+	
 }
