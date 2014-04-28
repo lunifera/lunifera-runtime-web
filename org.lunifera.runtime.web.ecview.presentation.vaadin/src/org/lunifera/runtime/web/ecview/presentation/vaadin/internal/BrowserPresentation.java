@@ -24,7 +24,7 @@ import com.vaadin.ui.Field;
  * This presenter is responsible to render a text area on the given layout.
  */
 public class BrowserPresentation extends
-		AbstractFieldWidgetPresenter<Component> {
+		AbstractEmbeddedWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -73,11 +73,6 @@ public class BrowserPresentation extends
 			}
 		}
 		return componentBase;
-	}
-
-	@Override
-	protected Field<?> doGetField() {
-		return null;
 	}
 
 	@Override
