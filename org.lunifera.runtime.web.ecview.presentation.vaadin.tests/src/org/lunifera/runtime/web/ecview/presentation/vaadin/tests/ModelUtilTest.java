@@ -37,6 +37,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -315,9 +316,14 @@ public class ModelUtilTest {
 		assertNotNull(view);
 	}
 
-	private void assertFalse(boolean contains) {
-		// TODO Auto-generated method stub
+	@Test
+	public void test_URI_ForBeanSlot() {
+		Assert.fail("Implement");
+	}
 
+	@Test
+	public void test_URI_ForBeanSlotBindingEndpoint() {
+		Assert.fail("Implement");
 	}
 
 	/**
