@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
@@ -27,6 +26,8 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
+import org.eclipse.emf.ecp.ecview.common.model.validation.ValidationFactory;
+import org.eclipse.emf.ecp.ecview.common.model.validation.YMinLengthValidator;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
@@ -35,6 +36,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
@@ -395,7 +397,66 @@ public class TextFieldPresentationTests {
 	}
 
 	@Test
-	public void test_addRemoveValidatorByModel() {
-		fail("Implement");
+	public void test_addRemoveValidatorByModel() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextField yText = factory.createTextField();
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
+				.getPresentation();
+		
+		assertEquals(0, yText.getValidators().size());
+		assertEquals(0, presentation.getValidators().size());
+		
+		ValidationFactory vf = ValidationFactory.eINSTANCE;
+		YMinLengthValidator yValidator = vf.createYMinLengthValidator();
+		yText.getValidators().add(yValidator);
+		
+		assertEquals(1, presentation.getValidators().size());
+		assertEquals(1, yText.getValidators().size());
+
+		yText.getValidators().remove(yValidator);
+		assertEquals(0, yText.getValidators().size());
+		assertEquals(0, presentation.getValidators().size());
+
+	}
+	
+	@Test
+	public void test_addRemoveValidatorByModel_Twice() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextField yText = factory.createTextField();
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
+				.getPresentation();
+		
+		assertEquals(0, yText.getValidators().size());
+		assertEquals(0, presentation.getValidators().size());
+		
+		ValidationFactory vf = ValidationFactory.eINSTANCE;
+		YMinLengthValidator yValidator = vf.createYMinLengthValidator();
+		yText.getValidators().add(yValidator);
+		yText.getValidators().add(yValidator);
+		
+		assertEquals(1, presentation.getValidators().size());
+		assertEquals(1, yText.getValidators().size());
+
+		yText.getValidators().remove(yValidator);
+		yText.getValidators().remove(yValidator);
+		assertEquals(0, yText.getValidators().size());
+		assertEquals(0, presentation.getValidators().size());
+
 	}
 }
