@@ -907,7 +907,22 @@ public class DecimalFieldPresentationTests {
 		Assert.assertTrue(valueEndpointEditPart.isDisposed());
 
 	}
+	
+	@Test
+	public void testPrecision_ByChangingDatatype() throws ContextException {
+		Assert.fail();
+	}
 
+	@Test
+	public void testMarkNegative_ByChangingDatatype() throws ContextException {
+		Assert.fail();
+	}
+	
+	@Test
+	public void testGrouping_ByChangingDatatype() throws ContextException {
+		Assert.fail();
+	}
+	
 	/**
 	 * Unwraps the component from its parent composite.
 	 * 

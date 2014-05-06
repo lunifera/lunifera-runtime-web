@@ -33,6 +33,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -432,7 +433,16 @@ public class NumericFieldPresentationTests {
 		yText2.setValue(332211);
 		assertEquals("332211", text2.getValue());
 
-
+	}
+	
+	@Test
+	public void testGrouping_ByChangingDatatype() throws ContextException {
+		Assert.fail();
+	}
+	
+	@Test
+	public void testMarkNegativ_ByChangingDatatype() throws ContextException {
+		Assert.fail();
 	}
 
 	/**
