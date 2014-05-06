@@ -33,6 +33,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -410,14 +411,14 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
-		
+
 		assertEquals(0, yText.getValidators().size());
 		assertEquals(0, presentation.getValidators().size());
-		
+
 		ValidationFactory vf = ValidationFactory.eINSTANCE;
 		YMinLengthValidator yValidator = vf.createYMinLengthValidator();
 		yText.getValidators().add(yValidator);
-		
+
 		assertEquals(1, presentation.getValidators().size());
 		assertEquals(1, yText.getValidators().size());
 
@@ -426,7 +427,7 @@ public class TextFieldPresentationTests {
 		assertEquals(0, presentation.getValidators().size());
 
 	}
-	
+
 	@Test
 	public void test_addRemoveValidatorByModel_Twice() throws ContextException {
 		YView yView = factory.createView();
@@ -441,15 +442,15 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
-		
+
 		assertEquals(0, yText.getValidators().size());
 		assertEquals(0, presentation.getValidators().size());
-		
+
 		ValidationFactory vf = ValidationFactory.eINSTANCE;
 		YMinLengthValidator yValidator = vf.createYMinLengthValidator();
 		yText.getValidators().add(yValidator);
 		yText.getValidators().add(yValidator);
-		
+
 		assertEquals(1, presentation.getValidators().size());
 		assertEquals(1, yText.getValidators().size());
 
@@ -458,5 +459,23 @@ public class TextFieldPresentationTests {
 		assertEquals(0, yText.getValidators().size());
 		assertEquals(0, presentation.getValidators().size());
 
+	}
+
+	@Test
+	public void test_addRemoveInternalValidatorByDatatype()
+			throws ContextException {
+		Assert.fail();
+	}
+
+	@Test
+	public void test_changePropertyOfDatatype_ValidatorNeedsToUpdate()
+			throws ContextException {
+		Assert.fail();
+	}
+
+	@Test
+	public void test_setNewDatatype() throws ContextException {
+		// ensure that the old validators are removed and disposed properly
+		Assert.fail();
 	}
 }
