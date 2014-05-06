@@ -14,6 +14,8 @@ import org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager;
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.context.IViewSetContext;
+import org.eclipse.emf.ecp.ecview.common.context.ViewContext;
+import org.eclipse.emf.ecp.ecview.common.context.ViewSetContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -26,7 +28,10 @@ import org.eclipse.emf.ecp.ecview.common.editpart.binding.IValueBindingEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBinding;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
+import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelFactory;
 import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
+import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlot;
+import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
@@ -37,7 +42,6 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -317,13 +321,78 @@ public class ModelUtilTest {
 	}
 
 	@Test
-	public void test_URI_ForBeanSlot() {
-		Assert.fail("Implement");
+	public void test_URI_ForBeanSlot_ViewContext() {
+		IViewEditpart editpart = DelegatingEditPartManager.getInstance()
+				.createEditpart(CoreModelPackage.eNS_URI, IViewEditpart.class);
+		ViewContext context = new ViewContext(editpart);
+		YView yView = (YView) editpart.getModel();
+
+		YBeanSlot ySlot = factory.createBeanSlot();
+		ySlot.setName("slotNo1");
+		ySlot.setValueType(String.class);
+		yView.getBeanSlots().add(ySlot);
+
+		assertEquals("view://bean/slotNo1", ModelUtil.getURI(ySlot).toString());
 	}
 
 	@Test
-	public void test_URI_ForBeanSlotBindingEndpoint() {
-		Assert.fail("Implement");
+	public void test_URI_ForBeanSlot_ViewSetContext() {
+		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
+				.createEditpart(CoreModelPackage.eNS_URI,
+						IViewSetEditpart.class);
+		ViewSetContext context = new ViewSetContext(editpart);
+		YViewSet yViewSet = (YViewSet) editpart.getModel();
+
+		YBeanSlot ySlot = factory.createBeanSlot();
+		ySlot.setName("slotNo1");
+		ySlot.setValueType(String.class);
+		yViewSet.getBeanSlots().add(ySlot);
+
+		assertEquals("viewset://bean/slotNo1", ModelUtil.getURI(ySlot)
+				.toString());
+	}
+
+	@Test
+	public void test_URI_ForBeanSlotBinding_ViewContext() {
+		IViewEditpart editpart = DelegatingEditPartManager.getInstance()
+				.createEditpart(CoreModelPackage.eNS_URI, IViewEditpart.class);
+		ViewContext context = new ViewContext(editpart);
+		YView yView = (YView) editpart.getModel();
+
+		YBeanSlot ySlot = factory.createBeanSlot();
+		ySlot.setName("slotNo1");
+		ySlot.setValueType(String.class);
+		yView.getBeanSlots().add(ySlot);
+
+		YBeanSlotBindingEndpoint yEndpoint = CoreModelFactory.eINSTANCE
+				.createYBeanSlotBindingEndpoint();
+		yEndpoint.setAttributePath("item.group.name");
+		yEndpoint.setBeanSlot(ySlot);
+
+		assertEquals("view://bean/slotNo1#item.group.name",
+				ModelUtil.getURI(yEndpoint).toString());
+	}
+
+	@Test
+	public void test_URI_ForBeanSlotBinding_ViewSetContext() {
+		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
+				.createEditpart(CoreModelPackage.eNS_URI,
+						IViewSetEditpart.class);
+		ViewSetContext context = new ViewSetContext(editpart);
+		YViewSet yViewSet = (YViewSet) editpart.getModel();
+
+		YBeanSlot ySlot = factory.createBeanSlot();
+		ySlot.setName("slotNo1");
+		ySlot.setValueType(String.class);
+		yViewSet.getBeanSlots().add(ySlot);
+
+		YBeanSlotBindingEndpoint yEndpoint = CoreModelFactory.eINSTANCE
+				.createYBeanSlotBindingEndpoint();
+		yEndpoint.setAttributePath("item.group.name");
+		yEndpoint.setBeanSlot(ySlot);
+
+		assertEquals("viewset://bean/slotNo1#item.group.name",
+				ModelUtil.getURI(yEndpoint).toString());
 	}
 
 	/**

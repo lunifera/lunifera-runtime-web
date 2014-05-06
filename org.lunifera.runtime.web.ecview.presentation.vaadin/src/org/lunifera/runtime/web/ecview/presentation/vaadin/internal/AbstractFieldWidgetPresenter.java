@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,6 +57,12 @@ public abstract class AbstractFieldWidgetPresenter<A extends Component> extends
 		if (adapter != null) {
 			doUpdateValidator(new Event(Event.REMOVE, adapter));
 		}
+	}
+
+	public Map<IValidator, ValidatorAdapter> getValidators() {
+		return validators != null ? java.util.Collections
+				.unmodifiableMap(validators) : Collections
+				.<IValidator, ValidatorAdapter> emptyMap();
 	}
 
 	/**
