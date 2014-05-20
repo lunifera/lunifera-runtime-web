@@ -20,3 +20,5 @@ plugin.xml_gen
 **/log
 **/org.lunifera.runtime.web.doc/contents/
 **/org.lunifera.runtime.web.doc/website/
+**/org.lunifera.runtime.web.vaadin.components/resources/
+**/org.lunifera.runtime.web.vaadin.components/gwt-unitCache/

@@ -10,13 +10,16 @@ public class EntityField extends CustomField<String> {
 
 	public static final String CLASSNAME = "entityfield";
 
-	private long entityId;
-	private String entityUUID;
-	private String value;
-	private String description;
+	private Class<?> entityClass;
+	private final boolean isUUID;
 
 	public EntityField() {
+		this(true);
+	}
+
+	public EntityField(boolean isUUID) {
 		setStyleName(CLASSNAME);
+		this.isUUID = isUUID;
 	}
 
 	@Override
@@ -38,8 +41,16 @@ public class EntityField extends CustomField<String> {
 	 * @return the entityId
 	 */
 	public long getEntityId() {
-		setValue("huhu");
-		return entityId;
+		if (isUUID) {
+			throw new IllegalStateException(
+					"The entity field was defined as a UUID field. Can not be cast to long!");
+		}
+		try {
+			return (Long) getState().entityId;
+		} catch (Exception e) {
+			throw new IllegalStateException(getState().entityId
+					+ " can not be cast to Long!");
+		}
 	}
 
 	/**
@@ -47,14 +58,19 @@ public class EntityField extends CustomField<String> {
 	 *            the entityId to set
 	 */
 	public void setEntityId(long entityId) {
-		this.entityId = entityId;
+		getState().entityId = entityId;
 	}
 
 	/**
 	 * @return the entityUUID
 	 */
 	public String getEntityUUID() {
-		return entityUUID;
+		try {
+			return (String) getState().entityId;
+		} catch (Exception e) {
+			throw new IllegalStateException(getState().entityId
+					+ " can not be cast to String!");
+		}
 	}
 
 	/**
@@ -62,7 +78,46 @@ public class EntityField extends CustomField<String> {
 	 *            the entityUUID to set
 	 */
 	public void setEntityUUID(String entityUUID) {
-		this.entityUUID = entityUUID;
+		getState().entityId = entityUUID;
+	}
+
+	/**
+	 * @return the entityClass
+	 */
+	public Class<?> getEntityClass() {
+		return entityClass;
+	}
+
+	/**
+	 * @param entityClass
+	 *            the entityClass to set
+	 */
+	public void setEntityClass(Class<?> entityClass) {
+		this.entityClass = entityClass;
+	}
+
+	/**
+	 * @return the searchEnabled
+	 */
+	public boolean isSearchEnabled() {
+		return getState().searchEnabled;
+	}
+
+	/**
+	 * @param searchEnabled
+	 *            the searchEnabled to set
+	 */
+	public void setSearchEnabled(boolean searchEnabled) {
+		getState().searchEnabled = searchEnabled;
+	}
+
+	/**
+	 * Returns true, if the id of the field is an UUID.
+	 * 
+	 * @return the isUUID
+	 */
+	public boolean isUUID() {
+		return isUUID;
 	}
 
 }
