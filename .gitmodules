@@ -1,0 +1,3 @@
+[submodule "/runtime"]
+	path = /runtime
+	url = https://github.com/lunifera/lunifera-runtime.git

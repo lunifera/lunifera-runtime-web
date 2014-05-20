@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
@@ -225,6 +226,16 @@ public class ViewPresentation extends AbstractDisposable implements
 	@Override
 	public Future<?> execAsync(Runnable runnable) {
 		return componentBase.getUI().access(runnable);
+	}
+
+	@Override
+	public void apply(IVisibilityPropertiesEditpart properties) {
+
+	}
+
+	@Override
+	public void resetVisibilityProperties() {
+
 	}
 
 	/**

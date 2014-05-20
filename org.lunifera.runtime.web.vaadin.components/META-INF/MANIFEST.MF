@@ -19,3 +19,7 @@ Import-Package: com.vaadin.data;version="7.0.0",
  com.vaadin.shared.ui;version="7.0.0",
  com.vaadin.ui;version="7.0.0",
  org.json;version="0.0.20080701"
+Require-Bundle: com.vaadin.client;bundle-version="7.1.9",
+ com.vaadin.server,
+ com.vaadin.shared;bundle-version="7.1.9",
+ com.vaadin.shared.deps;bundle-version="1.0.2"

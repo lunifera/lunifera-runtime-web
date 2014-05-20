@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
@@ -107,6 +108,16 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 */
 	public IViewContext getViewContext() {
 		return viewContext;
+	}
+
+	@Override
+	public void apply(IVisibilityPropertiesEditpart properties) {
+
+	}
+
+	@Override
+	public void resetVisibilityProperties() {
+
 	}
 
 	/**
@@ -281,8 +292,8 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			// bind the value of yText to textRidget
 			IObservableValue modelObservable = EMFObservables.observeValue(
 					model, modelFeature);
-			IObservableValue uiObservable = VaadinObservables.observeSingleSelection(
-					field, type);
+			IObservableValue uiObservable = VaadinObservables
+					.observeSingleSelection(field, type);
 
 			// create a modelToTarget update strategy with a validator
 			//
