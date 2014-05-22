@@ -10,6 +10,18 @@ public class EntityFieldState extends AbstractFieldState {
 	}
 
 	/**
+	 * The business key of the entity.
+	 */
+	@DelegateToWidget
+	public String entityNumber;
+
+	/**
+	 * The description of the entity.
+	 */
+	@DelegateToWidget
+	public String entityDescription;
+
+	/**
 	 * The object representation of the entity id.
 	 */
 	@DelegateToWidget

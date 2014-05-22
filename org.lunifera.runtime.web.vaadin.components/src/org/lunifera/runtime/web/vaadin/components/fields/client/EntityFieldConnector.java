@@ -13,26 +13,25 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.vaadin.client.EventHelper;
-import com.vaadin.client.MouseEventDetailsBuilder;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
-import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 
 @Connect(EntityField.class)
-public class VEntityFieldConnector extends AbstractFieldConnector implements
-		FocusHandler, BlurHandler, ClickHandler, ChangeHandler, KeyDownHandler {
+public class EntityFieldConnector extends AbstractFieldConnector implements
+		FocusHandler, BlurHandler, ClickHandler, ChangeHandler, KeyDownHandler,
+		MouseUpHandler {
 
-	private HandlerRegistration focusHandlerRegistration;
-	private HandlerRegistration blurHandlerRegistration;
+	private ShortcutActionHandlerOwner hasShortcutActionHandler;
 
 	@Override
 	public boolean delegateCaptionHandling() {
@@ -42,11 +41,7 @@ public class VEntityFieldConnector extends AbstractFieldConnector implements
 	@Override
 	protected void init() {
 		super.init();
-		getWidget().addClickHandler(this);
-		getWidget().addChangeHandler(this);
-		getWidget().addFocusHandler(this);
-		getWidget().addBlurHandler(this);
-		getWidget().addKeyDownHandler(this);
+		getWidget().init(this);
 		getWidget().client = getConnection();
 		getWidget().id = getConnectorId();
 	}
@@ -55,13 +50,7 @@ public class VEntityFieldConnector extends AbstractFieldConnector implements
 	public void onStateChanged(StateChangeEvent stateChangeEvent) {
 		super.onStateChanged(stateChangeEvent);
 
-		focusHandlerRegistration = EventHelper.updateFocusHandler(this,
-				focusHandlerRegistration);
-		blurHandlerRegistration = EventHelper.updateBlurHandler(this,
-				blurHandlerRegistration);
-
 		if (null != getState().errorMessage) {
-			getWidget().setAriaInvalid(true);
 
 			if (getWidget().errorIndicatorElement == null) {
 				getWidget().errorIndicatorElement = DOM.createSpan();
@@ -80,12 +69,10 @@ public class VEntityFieldConnector extends AbstractFieldConnector implements
 			DOM.setStyleAttribute(getWidget().errorIndicatorElement, "display",
 					"none");
 
-			getWidget().setAriaInvalid(false);
 		}
 
-		getWidget().setAriaRequired(isRequired());
 		if (isReadOnly()) {
-			getWidget().setEnabled(false);
+			getWidget().setEditable(false);
 		}
 
 		if (getIcon() != null) {
@@ -105,8 +92,9 @@ public class VEntityFieldConnector extends AbstractFieldConnector implements
 		}
 
 		// Set text
-		getWidget().setText(getState().caption);
-		getWidget().setValue(getState().checked);
+		getWidget().entityNumber = getState().entityNumber;
+		getWidget().entityDescription = getState().entityDescription;
+		getWidget().entityId = getState().entityId;
 		getWidget().immediate = getState().immediate;
 	}
 
@@ -136,30 +124,47 @@ public class VEntityFieldConnector extends AbstractFieldConnector implements
 
 	@Override
 	public void onClick(ClickEvent event) {
-		if (!isEnabled()) {
-			return;
-		}
-
-		getState().checked = getWidget().getValue();
-
-		// Add mouse details
-		MouseEventDetails details = MouseEventDetailsBuilder
-				.buildMouseEventDetails(event.getNativeEvent(), getWidget()
-						.getElement());
-		getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
-				details);
+		// if (!isEnabled()) {
+		// return;
+		// }
+		//
+		// getState().checked = getWidget().getValue();
+		//
+		// // Add mouse details
+		// MouseEventDetails details = MouseEventDetailsBuilder
+		// .buildMouseEventDetails(event.getNativeEvent(), getWidget()
+		// .getElement());
+		// getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
+		// details);
 
 	}
 
 	@Override
 	public void onKeyDown(KeyDownEvent event) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onChange(ChangeEvent event) {
-		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onMouseUp(MouseUpEvent event) {
+
+	}
+
+	private ShortcutActionHandlerOwner getShortcutHandlerOwner() {
+		if (hasShortcutActionHandler == null) {
+			Widget parent = getWidget().getParent();
+			while (parent != null) {
+				if (parent instanceof ShortcutActionHandlerOwner) {
+					break;
+				}
+				parent = parent.getParent();
+			}
+			hasShortcutActionHandler = (ShortcutActionHandlerOwner) parent;
+		}
+		return hasShortcutActionHandler;
 	}
 }
