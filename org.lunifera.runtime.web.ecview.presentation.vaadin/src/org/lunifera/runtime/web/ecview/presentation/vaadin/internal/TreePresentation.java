@@ -68,6 +68,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 			tree = new Tree();
 			tree.addStyleName(CSS_CLASS__CONTROL);
 			tree.setMultiSelect(modelAccess.yTree.getSelectionType() == YSelectionType.MULTI);
+			tree.setImmediate(true);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTree, tree);

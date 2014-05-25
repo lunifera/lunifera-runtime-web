@@ -326,8 +326,8 @@ public class VerticalLayoutPresentation extends
 	public ComponentContainer createWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			// componentBase.setWidth("200px");
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -335,8 +335,6 @@ public class VerticalLayoutPresentation extends
 			}
 
 			verticalLayout = new VerticalLayout();
-			verticalLayout.setData(IConstants.CSS_CLASS__SPACING);
-			verticalLayout.setSpacing(true);
 			componentBase.addComponent(verticalLayout);
 
 			if (modelAccess.isMargin()) {
@@ -345,8 +343,10 @@ public class VerticalLayoutPresentation extends
 			}
 
 			if (!modelAccess.isSpacing()) {
-				verticalLayout.setData(IConstants.CSS_CLASS__SPACING);
 				verticalLayout.setSpacing(false);
+			}else{
+				verticalLayout.setData(IConstants.CSS_CLASS__SPACING);
+				verticalLayout.setSpacing(true);
 			}
 
 			if (modelAccess.isCssClassValid()) {

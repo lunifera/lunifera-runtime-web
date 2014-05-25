@@ -77,6 +77,7 @@ public class NumericFieldPresentation extends
 			numberField = new NumberField();
 			numberField.addStyleName(CSS_CLASS__CONTROL);
 			numberField.setMarkNegative(true); // arbitrary default
+			numberField.setImmediate(true);
 
 			numberField
 					.addValueChangeListener(new Property.ValueChangeListener() {

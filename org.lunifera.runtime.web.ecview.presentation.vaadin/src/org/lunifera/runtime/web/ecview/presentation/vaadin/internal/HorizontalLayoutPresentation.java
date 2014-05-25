@@ -331,8 +331,10 @@ public class HorizontalLayoutPresentation extends
 	public ComponentContainer createWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.setSizeFull();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.setImmediate(true);
+
+
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -340,8 +342,6 @@ public class HorizontalLayoutPresentation extends
 			}
 
 			horizontalLayout = new HorizontalLayout();
-			horizontalLayout.setData(IConstants.CSS_CLASS__SPACING);
-			horizontalLayout.setSpacing(true);
 			componentBase.addComponent(horizontalLayout);
 
 			if (modelAccess.isMargin()) {
@@ -350,8 +350,10 @@ public class HorizontalLayoutPresentation extends
 			}
 
 			if (!modelAccess.isSpacing()) {
-				horizontalLayout.setData(IConstants.CSS_CLASS__SPACING);
 				horizontalLayout.setSpacing(false);
+			}else{
+				horizontalLayout.setData(IConstants.CSS_CLASS__SPACING);
+				horizontalLayout.setSpacing(true);
 			}
 
 			if (modelAccess.isCssClassValid()) {

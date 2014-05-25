@@ -416,6 +416,7 @@ public class GridLayoutPresentation extends
 
 			gridlayout = new GridLayout(modelAccess.getColumns(), 1);
 			gridlayout.setSpacing(false);
+			gridlayout.setImmediate(true);
 			componentBase.addComponent(gridlayout);
 
 			if (modelAccess.isMargin()) {
@@ -464,7 +465,7 @@ public class GridLayoutPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			
+
 			// unbind all active bindings
 			unbind();
 

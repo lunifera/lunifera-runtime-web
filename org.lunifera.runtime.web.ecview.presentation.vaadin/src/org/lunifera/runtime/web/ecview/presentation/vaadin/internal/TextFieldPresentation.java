@@ -64,6 +64,7 @@ public class TextFieldPresentation extends
 			text = new TextField();
 			text.addStyleName(CSS_CLASS__CONTROL);
 			text.setNullRepresentation("");
+			text.setImmediate(true);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yText, text);

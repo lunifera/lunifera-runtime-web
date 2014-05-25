@@ -8,8 +8,11 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.ArrayList;
+
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.listener.YButtonClickListener;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
 
 import com.vaadin.ui.Button;
@@ -54,6 +57,8 @@ public class ButtonPresentation extends
 
 			button = new Button();
 			button.addStyleName(CSS_CLASS__CONTROL);
+			button.setImmediate(true);
+
 
 			// creates the binding for the field
 			createBindings(modelAccess.yButton, button);
@@ -77,8 +82,20 @@ public class ButtonPresentation extends
 	 * @param yButton
 	 * @param button
 	 */
-	protected void createBindings(YButton yButton, Button button) {
+	@SuppressWarnings("serial")
+	protected void createBindings(final YButton yButton, Button button) {
 		super.createBindings(yButton, button);
+
+		button.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(Button.ClickEvent event) {
+				for (YButtonClickListener listener : new ArrayList<YButtonClickListener>(
+						yButton.getClickListeners())) {
+					listener.clicked(yButton);
+				}
+			}
+		});
+
 	}
 
 	@Override

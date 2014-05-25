@@ -50,7 +50,7 @@ public class ContainerItemSetContentProperty extends AbstractVaadinListProperty 
 		return collectionType;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected List<?> doGetList(Object source) {
 

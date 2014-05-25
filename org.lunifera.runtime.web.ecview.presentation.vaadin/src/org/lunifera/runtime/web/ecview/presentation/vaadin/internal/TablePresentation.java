@@ -26,6 +26,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -56,6 +57,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Component createWidget(Object parent) {
 		if (componentBase == null) {
@@ -70,6 +72,12 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			table = new Table();
 			table.addStyleName(CSS_CLASS__CONTROL);
 			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
+			table.setSelectable(true);
+			table.setImmediate(true);
+
+			BeanItemContainer datasource = new BeanItemContainer(
+					modelAccess.yTable.getType());
+			table.setContainerDataSource(datasource);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTable, table);
