@@ -415,7 +415,6 @@ public class GridLayoutPresentation extends
 			}
 
 			gridlayout = new GridLayout(modelAccess.getColumns(), 1);
-			gridlayout.setSizeFull();
 			gridlayout.setSpacing(false);
 			componentBase.addComponent(gridlayout);
 

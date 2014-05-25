@@ -65,7 +65,6 @@ public class DateTimePresentation extends
 
 			dateField = new DateField();
 			dateField.addStyleName(CSS_CLASS__CONTROL);
-			dateField.setSizeFull();
 
 			// creates the binding for the field
 			createBindings(modelAccess.yDateTime, dateField);

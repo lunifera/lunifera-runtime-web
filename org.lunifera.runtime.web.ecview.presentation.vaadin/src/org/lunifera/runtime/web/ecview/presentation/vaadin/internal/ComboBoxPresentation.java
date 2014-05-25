@@ -66,7 +66,6 @@ public class ComboBoxPresentation extends
 
 			combo = new ComboBox();
 			combo.addStyleName(CSS_CLASS__CONTROL);
-			combo.setSizeFull();
 
 			// creates the binding for the field
 			createBindings(modelAccess.yCombo, combo);

@@ -120,7 +120,6 @@ public class ViewPresentation extends AbstractDisposable implements
 
 			// create the component
 			component = new CssLayout();
-			component.setSizeFull();
 			component.addStyleName(IConstants.CSS_CLASS__CONTROL);
 			componentBase.addComponent(component);
 

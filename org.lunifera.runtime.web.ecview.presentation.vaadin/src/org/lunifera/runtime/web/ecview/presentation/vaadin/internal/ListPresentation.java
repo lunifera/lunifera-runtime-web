@@ -67,7 +67,6 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 			list = new ListSelect();
 			list.addStyleName(CSS_CLASS__CONTROL);
-			list.setSizeFull();
 			list.setMultiSelect(modelAccess.yList.getSelectionType() == YSelectionType.MULTI);
 
 			// creates the binding for the field

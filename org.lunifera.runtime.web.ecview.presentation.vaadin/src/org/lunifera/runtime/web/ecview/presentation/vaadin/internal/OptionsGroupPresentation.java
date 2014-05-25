@@ -68,7 +68,6 @@ public class OptionsGroupPresentation extends
 
 			optionsGroup = new OptionGroup();
 			optionsGroup.addStyleName(CSS_CLASS__CONTROL);
-			optionsGroup.setSizeFull();
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
 

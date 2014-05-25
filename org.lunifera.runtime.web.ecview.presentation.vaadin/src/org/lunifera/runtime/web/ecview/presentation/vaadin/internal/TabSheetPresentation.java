@@ -16,6 +16,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabSheetPresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,8 @@ import com.vaadin.ui.TabSheet;
  * This presenter is responsible to render a tab sheet on the given layout.
  */
 public class TabSheetPresentation extends
-		AbstractTabSheetPresenter<ComponentContainer> {
+		AbstractTabSheetPresenter<ComponentContainer> implements
+		ITabSheetPresentation<ComponentContainer> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(TabSheetPresentation.class);
@@ -98,8 +100,7 @@ public class TabSheetPresentation extends
 	 * @param presentation
 	 */
 	protected void addTab(ITabPresentation<?> presentation) {
-		Component tab = (Component) presentation.createWidget(tabSheet);
-		tabSheet.addComponent(tab);
+		presentation.createWidget(tabSheet);
 	}
 
 	@Override
@@ -115,7 +116,6 @@ public class TabSheetPresentation extends
 			}
 
 			tabSheet = new TabSheet();
-			tabSheet.setSizeFull();
 			componentBase.addComponent(tabSheet);
 
 			if (modelAccess.isCssClassValid()) {

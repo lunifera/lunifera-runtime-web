@@ -54,7 +54,6 @@ public class ButtonPresentation extends
 
 			button = new Button();
 			button.addStyleName(CSS_CLASS__CONTROL);
-			button.setSizeFull();
 
 			// creates the binding for the field
 			createBindings(modelAccess.yButton, button);

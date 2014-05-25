@@ -865,7 +865,7 @@ public class VaadinObservables {
 	}
 
 	public static IVaadinObservableValue observeTabIndex(TabSheet component) {
-		return VaadinProperties.accessor(Table.class, "tabIndex").observe(
+		return VaadinProperties.accessor(TabSheet.class, "tabIndex").observe(
 				component);
 	}
 

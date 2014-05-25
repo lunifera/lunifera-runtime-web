@@ -24,6 +24,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -34,7 +35,8 @@ import com.vaadin.ui.Table;
 /**
  * This presenter is responsible to render a table on the given layout.
  */
-public class TablePresentation extends AbstractFieldWidgetPresenter<Component> {
+public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
+		implements ITabPresentation<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
@@ -67,7 +69,6 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 			table = new Table();
 			table.addStyleName(CSS_CLASS__CONTROL);
-			table.setSizeFull();
 			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
 
 			// creates the binding for the field
@@ -82,12 +83,12 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component> {
 			if (modelAccess.isLabelValid()) {
 				table.setCaption(modelAccess.getLabel());
 			}
-			
+
 			initializeField(table);
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected Field<?> doGetField() {
 		return table;

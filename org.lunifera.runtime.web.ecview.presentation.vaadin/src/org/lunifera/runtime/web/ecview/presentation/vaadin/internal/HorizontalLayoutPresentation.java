@@ -46,6 +46,8 @@ public class HorizontalLayoutPresentation extends
 	private HorizontalLayout horizontalLayout;
 	private ModelAccess modelAccess;
 
+	private CssLayout fillerLayout;
+
 	/**
 	 * The constructor.
 	 * 
@@ -111,6 +113,13 @@ public class HorizontalLayoutPresentation extends
 					.getPresentation();
 			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			addChild(childPresentation, yStyles.get(yChild));
+		}
+
+		if (!modelAccess.isFillHorizontal()) {
+			fillerLayout = new CssLayout();
+			fillerLayout.setSizeFull();
+			horizontalLayout.addComponent(fillerLayout);
+			horizontalLayout.setExpandRatio(fillerLayout, 1.0f);
 		}
 
 	}
@@ -331,8 +340,8 @@ public class HorizontalLayoutPresentation extends
 			}
 
 			horizontalLayout = new HorizontalLayout();
-			horizontalLayout.setSizeFull();
-			horizontalLayout.setSpacing(false);
+			horizontalLayout.setData(IConstants.CSS_CLASS__SPACING);
+			horizontalLayout.setSpacing(true);
 			componentBase.addComponent(horizontalLayout);
 
 			if (modelAccess.isMargin()) {
@@ -340,9 +349,9 @@ public class HorizontalLayoutPresentation extends
 				horizontalLayout.setMargin(true);
 			}
 
-			if (modelAccess.isSpacing()) {
+			if (!modelAccess.isSpacing()) {
 				horizontalLayout.setData(IConstants.CSS_CLASS__SPACING);
-				horizontalLayout.setSpacing(true);
+				horizontalLayout.setSpacing(false);
 			}
 
 			if (modelAccess.isCssClassValid()) {
@@ -379,7 +388,7 @@ public class HorizontalLayoutPresentation extends
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
-			
+
 			// unbind all active bindings
 			unbind();
 

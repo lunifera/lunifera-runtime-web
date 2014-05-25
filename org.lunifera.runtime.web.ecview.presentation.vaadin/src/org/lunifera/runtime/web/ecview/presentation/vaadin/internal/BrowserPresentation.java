@@ -57,7 +57,6 @@ public class BrowserPresentation extends
 
 			browser = new BrowserFrame();
 			browser.addStyleName(CSS_CLASS__CONTROL);
-			browser.setSizeFull();
 
 			// creates the binding for the field
 			createBindings(modelAccess.yBrowser, browser);

@@ -56,7 +56,6 @@ public class LabelPresentation extends
 
 			label = new Label();
 			label.addStyleName(CSS_CLASS__CONTROL);
-			label.setSizeFull();
 
 			// creates the binding for the field
 			createBindings(modelAccess.yLabel, label);
