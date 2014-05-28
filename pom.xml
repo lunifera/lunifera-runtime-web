@@ -24,10 +24,10 @@
 	<artifactId>org.lunifera.runtime.web.aggregator</artifactId>
 	<packaging>pom</packaging>
 
-	<properties>
-		<lunifera.deployment.p2.name>runtime-web</lunifera.deployment.p2.name>
-		<lunifera.build.p2.project.name>org.lunifera.runtime.web.p2</lunifera.build.p2.project.name>
-	</properties>
+	<!-- <properties> -->
+	<!-- <lunifera.deployment.p2.name>runtime-web</lunifera.deployment.p2.name> -->
+	<!-- <lunifera.build.p2.project.name>org.lunifera.runtime.web.p2</lunifera.build.p2.project.name> -->
+	<!-- </properties> -->
 
 	<profiles>
 		<profile>
@@ -42,10 +42,10 @@
 				<module>org.lunifera.runtime.web.parent</module>
 
 				<module>org.lunifera.runtime.web.http</module>
-<!-- 				<module>org.lunifera.runtime.web.http.tests</module> -->
+				<!-- <module>org.lunifera.runtime.web.http.tests</module> -->
 
 				<module>org.lunifera.runtime.web.jetty</module>
-<!-- 				<module>org.lunifera.runtime.web.jetty.tests</module> -->
+				<!-- <module>org.lunifera.runtime.web.jetty.tests</module> -->
 
 				<module>org.lunifera.runtime.web.vaadin.common</module>
 				<!-- <module>org.lunifera.runtime.web.vaadin.common.tests</module> -->
