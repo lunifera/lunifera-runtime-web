@@ -38,6 +38,8 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
 import org.eclipse.emf.ecp.ecview.common.model.core.util.CoreModelUtil;
+import org.eclipse.emf.ecp.ecview.common.model.visibility.YColor;
+import org.eclipse.emf.ecp.ecview.common.model.visibility.YVisibilityProperties;
 import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleEvent;
 import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleService;
 import org.eclipse.emf.ecp.ecview.common.notification.LifecycleEvent;
@@ -50,6 +52,7 @@ import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
+import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Component;
@@ -82,6 +85,8 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 
 	private IViewContext disposingTempViewContext;
 
+	private VisibilityOptionsApplier visibilityOptionsApplier;
+
 	public AbstractVaadinWidgetPresenter(IEmbeddableEditpart editpart) {
 		this.editpart = editpart;
 		viewContext = editpart.getView().getContext();
@@ -112,12 +117,26 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 
 	@Override
 	public void apply(IVisibilityPropertiesEditpart properties) {
+		if (visibilityOptionsApplier == null) {
+			visibilityOptionsApplier = createVisibilityOptionsApplier();
+		}
 
+		visibilityOptionsApplier.apply((YVisibilityProperties) properties
+				.getModel());
 	}
 
 	@Override
 	public void resetVisibilityProperties() {
+		visibilityOptionsApplier.apply(null);
+	}
 
+	/**
+	 * Creates a new instance of the visibility options applier.
+	 * 
+	 * @return
+	 */
+	protected VisibilityOptionsApplier createVisibilityOptionsApplier() {
+		return new VisibilityOptionsApplier(getWidget());
 	}
 
 	/**
@@ -583,6 +602,130 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 */
 	public Set<Binding> getUIBindings() {
 		return bindings;
+	}
+
+	/**
+	 * Applies the visibility options to the component.
+	 */
+	protected static class VisibilityOptionsApplier {
+
+		protected final Component component;
+
+		public VisibilityOptionsApplier(Component component) {
+			this.component = component;
+		}
+
+		public void resetStylenames() {
+			component.removeStyleName("l-strikethrough");
+			component.removeStyleName("l-border");
+			component.removeStyleName("l-italic");
+			component.removeStyleName("l-underline");
+			component.removeStyleName("l-foreground");
+			component.removeStyleName("l-background");
+		}
+
+		/**
+		 * Applies the visibility options to the component. Passing
+		 * <code>null</code> as argument means a reset to default values.
+		 * 
+		 * @param yProps
+		 */
+		public void apply(YVisibilityProperties yProps) {
+
+			resetStylenames();
+
+			applyVisible(yProps);
+			applyEnabled(yProps);
+			applyReadOnly(yProps);
+
+			applyStrikeThrough(yProps);
+
+			applyBorder(yProps);
+
+			applyItalic(yProps);
+
+			applyUnderline(yProps);
+
+			applyForegroundColor(yProps);
+
+			applyBackgroundColor(yProps);
+		}
+
+		public void applyUnderline(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			if (yProps.isUnderline()) {
+				component.addStyleName("l-underline");
+			}
+		}
+
+		public void applyItalic(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			if (yProps.isItalic()) {
+				component.addStyleName("l-italic");
+			}
+		}
+
+		public void applyBorder(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			if (yProps.isBorder()) {
+				component.addStyleName("l-border");
+			}
+		}
+
+		public void applyStrikeThrough(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			if (yProps.isStrikethrough()) {
+				component.addStyleName("l-strikethrough");
+			}
+		}
+
+		public void applyReadOnly(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			component.setReadOnly(!yProps.isEditable());
+		}
+
+		public void applyEnabled(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			component.setEnabled(yProps.isEnabled());
+		}
+
+		public void applyVisible(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			component.setVisible(yProps.isVisible());
+		}
+
+		public void applyForegroundColor(YVisibilityProperties yProps) {
+			YColor yColor = yProps.getForegroundColor();
+			if (yColor != null) {
+				Color c = new Color(yColor.getRed(), yColor.getGreen(),
+						yColor.getBlue());
+				component.addStyleName("l-foreground:" + c.getCSS());
+			}
+		}
+
+		public void applyBackgroundColor(YVisibilityProperties yProps) {
+			YColor yColor = yProps.getBackgroundColor();
+			if (yColor != null) {
+				Color c = new Color(yColor.getRed(), yColor.getGreen(),
+						yColor.getBlue());
+				component.addStyleName("l-background:" + c.getCSS());
+			}
+		}
+
 	}
 
 }

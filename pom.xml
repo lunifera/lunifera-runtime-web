@@ -31,7 +31,7 @@
 
 	<profiles>
 		<profile>
-			<id>lunifera.build.features</id>
+			<id>build.features</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -70,7 +70,7 @@
 			</modules>
 		</profile>
 		<profile>
-			<id>lunifera.build.widgetset</id>
+			<id>build.widgetset</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -83,7 +83,7 @@
 			</modules>
 		</profile>
 		<profile>
-			<id>lunifera.build.p2</id>
+			<id>build.p2</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -92,6 +92,15 @@
 			</build>
 			<modules>
 				<module>org.lunifera.runtime.web.p2</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>stage.p2</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>org.lunifera.dependencies.p2</module>
 			</modules>
 		</profile>
 	</profiles>

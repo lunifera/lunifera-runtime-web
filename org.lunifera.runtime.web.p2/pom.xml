@@ -69,7 +69,7 @@
 
 	<profiles>
 		<profile>
-			<id>lunifera.build.p2</id>
+			<id>build.p2</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>

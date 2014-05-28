@@ -14,7 +14,7 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201312172103"/>
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201405250818"/>
 <repository location="http://lun.lunifera.org/downloads/p2/ecview/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
@@ -30,9 +30,9 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.2"/>
-<unit id="org.lunifera.runtime.feature.common.feature.group" version="0.0.1.201403231634"/>
+<unit id="org.lunifera.runtime.feature.common.feature.group" version="0.0.1.201405120903"/>
 <unit id="org.lunifera.dependencies.feature.assert-utilities.feature.group" version="1.2.2"/>
-<unit id="org.lunifera.runtime.feature.common.source.feature.group" version="0.0.1.201403231634"/>
+<unit id="org.lunifera.runtime.feature.common.source.feature.group" version="0.0.1.201405120903"/>
 <unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.1.9"/>
 <repository location="http://lun.lunifera.org/downloads/p2/lunifera/kepler/latest/"/>
 </location>
