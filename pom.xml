@@ -100,7 +100,7 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
-				<module>org.lunifera.dependencies.p2</module>
+				<module>org.lunifera.runtime.web.p2</module>
 			</modules>
 		</profile>
 	</profiles>
