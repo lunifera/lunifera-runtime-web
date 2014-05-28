@@ -12,9 +12,11 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.emf.ElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTab;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,18 +25,19 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.Tab;
 
 /**
  * This presenter is responsible to render a tab sheet on the given layout.
  */
-public class TabPresentation extends
-		AbstractTabSheetPresenter<ComponentContainer> {
+public class TabPresentation extends AbstractTabPresenter<Component> implements
+		ITabPresentation<Component> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(TabPresentation.class);
 
-	private CssLayout componentBase;
-	private TabSheet tabSheet;
+	private CssLayout tabContent;
+	private Tab tab;
 	private ModelAccess modelAccess;
 
 	/**
@@ -44,100 +47,47 @@ public class TabPresentation extends
 	 *            The editpart of that presentation.
 	 */
 	public TabPresentation(IElementEditpart editpart) {
-		super((ITabSheetEditpart) editpart);
-		this.modelAccess = new ModelAccess((YTabSheet) editpart.getModel());
+		super((ITabEditpart) editpart);
+		this.modelAccess = new ModelAccess((YTab) editpart.getModel());
 	}
 
 	@Override
-	public void add(ITabPresentation<?> presentation) {
-		super.add(presentation);
+	public Component createWidget(Object parent) {
+		TabSheet tabSheet = (TabSheet) parent;
 
-		addTab(presentation);
-	}
+		YTab yTab = (YTab) getModel();
+		@SuppressWarnings("restriction")
+		IEmbeddableEditpart childEditpart = ElementEditpart.getEditpart(yTab
+				.getEmbeddable());
 
-	@Override
-	public void remove(ITabPresentation<?> presentation) {
-		super.remove(presentation);
+		CssLayout childLayout = new CssLayout();
+		if (childEditpart == null) {
+			tab = tabSheet.addTab(childLayout, "content missing");
+			return childLayout;
+		}
+		IWidgetPresentation<Component> childPresentation = childEditpart
+				.getPresentation();
 
-		tabSheet.removeComponent((Component) presentation.getWidget());
-	}
+		Component childContent = childPresentation.createWidget(childLayout);
+//		childContent.setSizeFull();
+		childLayout.addComponent(childContent);
 
-	@Override
-	public void insert(ITabPresentation<?> presentation, int index) {
-		super.insert(presentation, index);
-
-		refreshUI();
-	}
-
-	@Override
-	public void move(ITabPresentation<?> presentation, int index) {
-		super.move(presentation, index);
-
-		refreshUI();
-	}
-
-	/**
-	 * Is called to refresh the UI. The element will be removed from the grid
-	 * layout and added to it again afterwards.
-	 */
-	protected void refreshUI() {
-		tabSheet.removeAllComponents();
-
-		// iterate all elements and build the tab element
-		//
-		for (ITabEditpart editPart : getEditpart().getTabs()) {
-			ITabPresentation<?> tabPresentation = editPart.getPresentation();
-			addTab(tabPresentation);
+		tab = tabSheet.addTab(childLayout);
+		if (modelAccess.isLabelValid()) {
+			tab.setCaption(modelAccess.getLabel());
 		}
 
-	}
-
-	/**
-	 * Is called to create the tab component and apply layouting defaults to it.
-	 * 
-	 * @param presentation
-	 */
-	protected void addTab(ITabPresentation<?> presentation) {
-		Component tab = (Component) presentation.createWidget(tabSheet);
-		tabSheet.addComponent(tab);
-	}
-
-	@Override
-	public ComponentContainer createWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.setSizeFull();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			tabSheet = new TabSheet();
-			tabSheet.setSizeFull();
-			componentBase.addComponent(tabSheet);
-
-			if (modelAccess.isCssClassValid()) {
-				tabSheet.addStyleName(modelAccess.getCssClass());
-			} else {
-				tabSheet.addStyleName(CSS_CLASS__CONTROL);
-			}
-
-			renderTabs(false);
-		}
-
-		return componentBase;
+		return null;
 	}
 
 	@Override
 	public ComponentContainer getWidget() {
-		return componentBase;
+		return tabContent;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return tabContent != null;
 	}
 
 	@Override
@@ -151,43 +101,19 @@ public class TabPresentation extends
 
 	@Override
 	public void unrender() {
-		if (componentBase != null) {
+		if (tab != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
-			if (parent != null) {
-				parent.removeComponent(componentBase);
-			}
-			componentBase = null;
-			tabSheet = null;
+			YTab yTab = (YTab) getModel();
+			@SuppressWarnings("restriction")
+			IEmbeddableEditpart editpart = ElementEditpart.getEditpart(yTab
+					.getEmbeddable());
 
-			// unrender the tabs
-			for (ITabPresentation<?> tab : getTabs()) {
-				tab.unrender();
-			}
-		}
-	}
-
-	@Override
-	public void renderTabs(boolean force) {
-		if (force) {
-			unrenderTabs();
-		}
-
-		refreshUI();
-	}
-
-	/**
-	 * Will unrender all tabs.
-	 */
-	protected void unrenderTabs() {
-		for (ITabPresentation<?> presentation : getTabs()) {
-			if (presentation.isRendered()) {
-				presentation.unrender();
-			}
+			IWidgetPresentation<Component> childPresentation = editpart
+					.getPresentation();
+			childPresentation.unrender();
 		}
 	}
 
@@ -195,11 +121,11 @@ public class TabPresentation extends
 	 * An internal helper class.
 	 */
 	private static class ModelAccess {
-		private final YTabSheet yLayout;
+		private final YTab yTab;
 
-		public ModelAccess(YTabSheet yLayout) {
+		public ModelAccess(YTab yTab) {
 			super();
-			this.yLayout = yLayout;
+			this.yTab = yTab;
 		}
 
 		/**
@@ -207,7 +133,7 @@ public class TabPresentation extends
 		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yLayout.getCssClass();
+			return yTab.getCssClass();
 		}
 
 		/**
@@ -224,7 +150,7 @@ public class TabPresentation extends
 		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yLayout.getCssID();
+			return yTab.getCssID();
 		}
 
 		/**
@@ -234,6 +160,25 @@ public class TabPresentation extends
 		 */
 		public boolean isCssIdValid() {
 			return getCssID() != null && !getCssID().equals("");
+		}
+
+		/**
+		 * Returns true, if the label is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isLabelValid() {
+			return yTab.getDatadescription() != null
+					&& yTab.getDatadescription().getLabel() != null;
+		}
+
+		/**
+		 * Returns the label.
+		 * 
+		 * @return
+		 */
+		public String getLabel() {
+			return yTab.getDatadescription().getLabel();
 		}
 	}
 }

@@ -63,7 +63,7 @@ public class TextAreaPresentation extends
 
 			textArea = new TextArea();
 			textArea.addStyleName(CSS_CLASS__CONTROL);
-			textArea.setSizeFull();
+			textArea.setImmediate(true);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTextArea, textArea);

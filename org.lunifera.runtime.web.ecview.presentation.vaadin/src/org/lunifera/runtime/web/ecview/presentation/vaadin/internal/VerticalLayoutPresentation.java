@@ -46,6 +46,8 @@ public class VerticalLayoutPresentation extends
 	private VerticalLayout verticalLayout;
 	private ModelAccess modelAccess;
 
+	private CssLayout fillerLayout;
+
 	/**
 	 * The constructor.
 	 * 
@@ -111,6 +113,13 @@ public class VerticalLayoutPresentation extends
 					.getPresentation();
 			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			addChild(childPresentation, yStyles.get(yChild));
+		}
+
+		if (!modelAccess.isFillVertical()) {
+			fillerLayout = new CssLayout();
+			fillerLayout.setSizeFull();
+			verticalLayout.addComponent(fillerLayout);
+			verticalLayout.setExpandRatio(fillerLayout, 1.0f);
 		}
 
 	}
@@ -317,8 +326,8 @@ public class VerticalLayoutPresentation extends
 	public ComponentContainer createWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.setSizeFull();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -326,8 +335,6 @@ public class VerticalLayoutPresentation extends
 			}
 
 			verticalLayout = new VerticalLayout();
-			verticalLayout.setSizeFull();
-			verticalLayout.setSpacing(false);
 			componentBase.addComponent(verticalLayout);
 
 			if (modelAccess.isMargin()) {
@@ -335,7 +342,9 @@ public class VerticalLayoutPresentation extends
 				verticalLayout.setMargin(true);
 			}
 
-			if (modelAccess.isSpacing()) {
+			if (!modelAccess.isSpacing()) {
+				verticalLayout.setSpacing(false);
+			}else{
 				verticalLayout.setData(IConstants.CSS_CLASS__SPACING);
 				verticalLayout.setSpacing(true);
 			}

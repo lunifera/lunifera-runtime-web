@@ -63,7 +63,7 @@ public class ProgressBarPresentation extends
 
 			progressBar = new ProgressBar();
 			progressBar.addStyleName(CSS_CLASS__CONTROL);
-			progressBar.setSizeFull();
+			progressBar.setImmediate(true);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yProgressBar, progressBar);

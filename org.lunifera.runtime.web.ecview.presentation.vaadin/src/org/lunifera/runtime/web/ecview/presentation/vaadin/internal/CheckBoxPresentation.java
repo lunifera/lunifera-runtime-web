@@ -63,7 +63,7 @@ public class CheckBoxPresentation extends
 
 			checkBox = new CheckBox();
 			checkBox.addStyleName(CSS_CLASS__CONTROL);
-			checkBox.setSizeFull();
+			checkBox.setImmediate(true);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yCheckBox, checkBox);

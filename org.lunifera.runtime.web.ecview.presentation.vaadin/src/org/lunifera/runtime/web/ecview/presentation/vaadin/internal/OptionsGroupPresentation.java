@@ -68,9 +68,9 @@ public class OptionsGroupPresentation extends
 
 			optionsGroup = new OptionGroup();
 			optionsGroup.addStyleName(CSS_CLASS__CONTROL);
-			optionsGroup.setSizeFull();
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
+			optionsGroup.setImmediate(true);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yOptionsGroup, optionsGroup);
