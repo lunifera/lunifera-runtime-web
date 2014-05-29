@@ -5,6 +5,8 @@ import java.util.Map;
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
+import org.lunifera.dsl.metadata.services.IDtoMetadataService;
+import org.lunifera.dsl.metadata.services.IEntityMetadataService;
 import org.lunifera.dsl.semantic.dto.LDto;
 import org.lunifera.dsl.semantic.entity.LEntity;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -23,6 +25,8 @@ public class ECViewUIRenderService implements IECViewUIRenderService {
 
 	private ILDtoRenderStrategy dtoStrategy;
 	private ILEntityRenderStrategy entityStrategy;
+	private IEntityMetadataService entityMetadataService;
+	private IDtoMetadataService dtoMetadataService;
 
 	@Override
 	public IViewContext renderUIForDTO(Class<?> clazz,
@@ -59,6 +63,7 @@ public class ECViewUIRenderService implements IECViewUIRenderService {
 		IViewContext context = null;
 		try {
 			context = renderer.render(component, yView, renderingOptions);
+			context.setBean(IViewContext.ROOTBEAN_SELECTOR, dto);
 		} catch (ContextException e) {
 			throw new RuntimeException(e);
 		}
@@ -102,6 +107,7 @@ public class ECViewUIRenderService implements IECViewUIRenderService {
 		IViewContext context = null;
 		try {
 			context = renderer.render(component, yView, renderingOptions);
+			context.setBean(IViewContext.ROOTBEAN_SELECTOR, entity);
 		} catch (ContextException e) {
 			throw new RuntimeException(e);
 		}
@@ -116,7 +122,7 @@ public class ECViewUIRenderService implements IECViewUIRenderService {
 	 * @return
 	 */
 	private LDto findLDTO(Class<?> clazz) {
-		return null;
+		return dtoMetadataService.getMetadata(clazz);
 	}
 
 	/**
@@ -126,10 +132,10 @@ public class ECViewUIRenderService implements IECViewUIRenderService {
 	 * @return
 	 */
 	private LEntity findLEntity(Class<?> clazz) {
-		return null;
+		return entityMetadataService.getMetadata(clazz);
 	}
 
-	@Reference(unbind = "bindDtoRenderingStrategy", policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MANDATORY)
+	@Reference(unbind = "unbindDtoRenderingStrategy", policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MANDATORY)
 	protected void bindDtoRenderingStrategy(ILDtoRenderStrategy dtoStrategy) {
 		this.dtoStrategy = dtoStrategy;
 	}
@@ -138,7 +144,7 @@ public class ECViewUIRenderService implements IECViewUIRenderService {
 		this.dtoStrategy = null;
 	}
 
-	@Reference(unbind = "bindEntityRenderingStrategy", policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MANDATORY)
+	@Reference(unbind = "unbindEntityRenderingStrategy", policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MANDATORY)
 	protected void bindEntityRenderingStrategy(
 			ILEntityRenderStrategy entityStrategy) {
 		this.entityStrategy = entityStrategy;
@@ -147,6 +153,27 @@ public class ECViewUIRenderService implements IECViewUIRenderService {
 	protected void unbindEntityRenderingStrategy(
 			ILEntityRenderStrategy entityStrategy) {
 		this.entityStrategy = null;
+	}
+
+	@Reference(unbind = "unbindEntityMetadataService", policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MANDATORY)
+	protected void bindEntityMetadataService(
+			IEntityMetadataService entityMetadataService) {
+		this.entityMetadataService = entityMetadataService;
+	}
+
+	protected void unbindEntityMetadataService(
+			IEntityMetadataService entityMetadataService) {
+		this.entityMetadataService = null;
+	}
+
+	@Reference(unbind = "unbindDtoMetadataService", policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MANDATORY)
+	protected void bindDtoMetadataService(IDtoMetadataService dtoMetadataService) {
+		this.dtoMetadataService = dtoMetadataService;
+	}
+
+	protected void unbindDtoMetadataService(
+			IDtoMetadataService dtoMetadataService) {
+		this.dtoMetadataService = null;
 	}
 
 }

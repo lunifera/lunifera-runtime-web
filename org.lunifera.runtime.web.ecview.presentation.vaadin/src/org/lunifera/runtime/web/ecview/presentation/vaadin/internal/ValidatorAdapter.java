@@ -9,6 +9,7 @@ import com.vaadin.data.validator.AbstractValidator;
 public class ValidatorAdapter extends AbstractValidator implements IValidator {
 
 	private final IValidator wrappedValidator;
+	private IStatus status;
 
 	public ValidatorAdapter(IValidator wrappedValidator) {
 		super("");
@@ -17,7 +18,7 @@ public class ValidatorAdapter extends AbstractValidator implements IValidator {
 
 	@Override
 	protected boolean isValidValue(Object value) {
-		IStatus status = wrappedValidator.validateValue(value);
+		status = wrappedValidator.validateValue(value);
 		return status.isOK();
 	}
 
@@ -34,6 +35,10 @@ public class ValidatorAdapter extends AbstractValidator implements IValidator {
 	@Override
 	public IStatus validateValue(Object value) {
 		return wrappedValidator.validateValue(value);
+	}
+
+	public String getErrorMessage() {
+		return status != null ? status.getMessage() : null;
 	}
 
 }
