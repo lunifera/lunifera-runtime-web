@@ -42,14 +42,15 @@ public class VaadinRenderer implements IRenderer {
 	 *            The view model.
 	 * @param options
 	 *            rendering options
+	 * @return viewContext - the rendered view context
 	 * @throws ContextException
 	 *             e
 	 */
-	public void render(ComponentContainer componentContainer, YView yView,
-			Map<String, Object> options) throws ContextException {
+	public IViewContext render(ComponentContainer componentContainer,
+			YView yView, Map<String, Object> options) throws ContextException {
 		IViewEditpart viewEditpart = DelegatingEditPartManager.getInstance()
 				.getEditpart(yView);
-		render(componentContainer, viewEditpart, options);
+		return render(componentContainer, viewEditpart, options);
 	}
 
 	/**
@@ -62,14 +63,17 @@ public class VaadinRenderer implements IRenderer {
 	 *            The viewEditPart that should become rendered
 	 * @param options
 	 *            rendering options
+	 * @return viewContext - the rendered view context
 	 * @throws ContextException
 	 *             e
 	 */
-	public void render(ComponentContainer componentContainer,
+	public IViewContext render(ComponentContainer componentContainer,
 			IViewEditpart viewEditpart, Map<String, Object> options)
 			throws ContextException {
 		ViewContext viewContext = new ViewContext(viewEditpart);
 		render(viewContext, componentContainer, options);
+
+		return viewContext;
 	}
 
 	/**

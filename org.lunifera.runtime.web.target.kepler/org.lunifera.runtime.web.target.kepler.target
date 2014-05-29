@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="34">
+<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="35">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.apache.httpcomponents.httpcore.source" version="4.1.4.v201203221030"/>
@@ -14,7 +14,7 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201405250818"/>
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201405282002"/>
 <repository location="http://lun.lunifera.org/downloads/p2/ecview/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
@@ -42,6 +42,15 @@
 <unit id="org.apache.commons.collections" version="3.2.0.v201005080500"/>
 <unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.lunifera.dsl.feature.entities.headless.feature.group" version="0.0.1.201404030915"/>
+<unit id="org.lunifera.dsl.feature.dto.headless.source.feature.group" version="0.0.1.201404030915"/>
+<unit id="org.lunifera.dsl.feature.entities.headless.source.feature.group" version="0.0.1.201404030915"/>
+<unit id="org.lunifera.dsl.feature.common.headless.feature.group" version="0.0.1.201404030915"/>
+<unit id="org.lunifera.dsl.feature.common.headless.source.feature.group" version="0.0.1.201404030915"/>
+<unit id="org.lunifera.dsl.feature.dto.headless.feature.group" version="0.0.1.201404030915"/>
+<repository location="http://lun.lunifera.org/downloads/p2/lunifera/kepler/latest/"/>
 </location>
 </locations>
 </target>

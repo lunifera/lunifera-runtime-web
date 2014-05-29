@@ -57,6 +57,8 @@
 
 				<module>org.lunifera.runtime.web.vaadin.databinding</module>
 				<!-- <module>org.lunifera.runtime.web.vaadin.databinding.tests</module> -->
+				
+				<module>org.lunifera.runtime.web.ecview.services.vaadin</module>
 
 				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.components</module>
