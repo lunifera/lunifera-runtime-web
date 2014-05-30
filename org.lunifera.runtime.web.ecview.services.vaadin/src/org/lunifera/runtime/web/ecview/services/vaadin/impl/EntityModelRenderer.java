@@ -5,7 +5,9 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
+import org.eclipse.emf.ecp.ecview.common.model.binding.BindingFactory;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YEnumListBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlot;
 import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
@@ -17,16 +19,19 @@ import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YNumericDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YTextDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayoutCellStyle;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.lunifera.dsl.semantic.common.types.LAttribute;
 import org.lunifera.dsl.semantic.common.types.LDataType;
+import org.lunifera.dsl.semantic.common.types.LEnum;
+import org.lunifera.dsl.semantic.common.types.LPackage;
 import org.lunifera.dsl.semantic.common.types.LScalarType;
 import org.lunifera.dsl.semantic.common.types.util.LunTypesSwitch;
 import org.lunifera.dsl.semantic.entity.LBean;
@@ -36,6 +41,8 @@ import org.lunifera.dsl.semantic.entity.LEntity;
 import org.lunifera.dsl.semantic.entity.LEntityAttribute;
 import org.lunifera.dsl.semantic.entity.LEntityFeature;
 import org.lunifera.dsl.semantic.entity.util.LunEntitySwitch;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 public class EntityModelRenderer {
 
@@ -62,12 +69,15 @@ public class EntityModelRenderer {
 	}
 
 	private Stack<Context> contexts = new Stack<Context>();
+	private Bundle modelBundle;
 
 	public EntityModelRenderer() {
 		super();
 	}
 
-	public YEmbeddable render(LEntity lEntity, YLayout yLayout) {
+	public YEmbeddable render(LEntity lEntity, YLayout yLayout,
+			Class<?> entityClass) {
+		modelBundle = FrameworkUtil.getBundle(entityClass);
 		contexts.push(new Context(null, null, yLayout));
 		return new EntityTypesProcessor(null).doSwitch(lEntity);
 	}
@@ -297,6 +307,47 @@ public class EntityModelRenderer {
 
 			return yCheckbox;
 		}
+
+		@Override
+		public YEmbeddable caseLEnum(LEnum object) {
+			LPackage lPkg = (LPackage) object.eContainer();
+			String enumClassName = lPkg.getName() + "." + object.getName();
+			Class<?> enumClass = null;
+			try {
+				enumClass = modelBundle.loadClass(enumClassName);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			YLayout yLayout = getLayout();
+			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
+			YEnumListBindingEndpoint enumValuesEndpoint = BindingFactory.eINSTANCE
+					.createYEnumListBindingEndpoint();
+			enumValuesEndpoint.setEnum(enumClass);
+
+			YEmbeddable result = null;
+			if (enumClass.getEnumConstants().length > 3) {
+				YComboBox yCombo = factory.createComboBox();
+				yCombo.setType(enumClass);
+				result = yCombo;
+				// create the binding -> bind from root slot to the attribute
+
+				yBindingSet.addBinding(yCombo.createCollectionEndpoint(),
+						enumValuesEndpoint);
+			} else {
+				YOptionsGroup yOptions = factory.createOptionsGroup();
+				yOptions.setType(enumClass);
+				result = yOptions;
+				// create the binding -> bind from root slot to the attribute
+
+				yBindingSet.addBinding(yOptions.createCollectionEndpoint(),
+						enumValuesEndpoint);
+
+			}
+
+			return result;
+		}
+
 	}
 
 	/**
@@ -355,8 +406,8 @@ public class EntityModelRenderer {
 
 			YGridLayout layout = (YGridLayout) getLayout();
 			layout.addElement(beanLayout);
-//			YGridLayoutCellStyle yStyle = layout
-//					.addGridLayoutCellStyle(beanLayout);
+			// YGridLayoutCellStyle yStyle = layout
+			// .addGridLayoutCellStyle(beanLayout);
 
 			// if (layout.getElements().size() % layout.getColumns() == 0) {
 			// int row = (layout.getElements().size() / layout.getColumns());

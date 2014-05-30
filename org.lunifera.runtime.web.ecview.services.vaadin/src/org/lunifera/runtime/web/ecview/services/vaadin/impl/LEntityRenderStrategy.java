@@ -31,7 +31,7 @@ public class LEntityRenderStrategy implements ILEntityRenderStrategy {
 
 		// Use the entity renderer to build the UI model
 		EntityModelRenderer renderer = new EntityModelRenderer();
-		renderer.render(lEntity, yLayout);
+		renderer.render(lEntity, yLayout, entityClass);
 
 		return yView;
 	}
