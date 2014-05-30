@@ -25,7 +25,7 @@ public class LDtoRenderStrategy implements ILDtoRenderStrategy {
 
 		// create a main layout
 		YGridLayout yLayout = factory.createGridLayout();
-		yLayout.setColumns(2);
+		yLayout.setColumns(4);
 		yView.setContent(yLayout);
 
 		// Use the dto visitor to build the UI

@@ -25,7 +25,7 @@ public class LEntityRenderStrategy implements ILEntityRenderStrategy {
 
 		// create a main layout
 		YGridLayout yLayout = factory.createGridLayout();
-		yLayout.setColumns(2);
+		yLayout.setColumns(4);
 		yLayout.setFillHorizontal(true);
 		yView.setContent(yLayout);
 
