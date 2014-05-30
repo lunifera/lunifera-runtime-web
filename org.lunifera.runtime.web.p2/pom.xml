@@ -30,6 +30,16 @@
 			<url>http://lun.lunifera.org/downloads/p2/ecview/nightly/</url>
 			<layout>p2</layout>
 		</repository>
+		<repository>
+			<id>xtext-releases</id>
+			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>lunifera</id>
+			<layout>p2</layout>
+			<url>http://lun.lunifera.org/downloads/p2/lunifera/kepler/latest/</url>
+		</repository>
 	</repositories>
 
 	<build>
