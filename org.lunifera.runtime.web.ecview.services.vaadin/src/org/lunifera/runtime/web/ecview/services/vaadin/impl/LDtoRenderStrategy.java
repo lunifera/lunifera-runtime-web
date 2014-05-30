@@ -29,8 +29,8 @@ public class LDtoRenderStrategy implements ILDtoRenderStrategy {
 		yView.setContent(yLayout);
 
 		// Use the dto visitor to build the UI
-		LDtoVisitor visitor = new LDtoVisitor(yLayout);
-		visitor.doSwitch(lDto);
+		DtoModelRenderer visitor = new DtoModelRenderer();
+		visitor.render(lDto, yLayout, dtoClass);
 
 		return yView;
 	}

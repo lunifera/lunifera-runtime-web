@@ -1,15 +1,13 @@
 package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
+import org.eclipse.emf.ecp.ecview.common.model.binding.BindingFactory;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YEnumListBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlot;
 import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.ExtDatatypesFactory;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDateTimeDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDateTimeFormat;
@@ -17,14 +15,18 @@ import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YNumericDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YTextDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.lunifera.dsl.semantic.common.types.LAttribute;
 import org.lunifera.dsl.semantic.common.types.LDataType;
+import org.lunifera.dsl.semantic.common.types.LEnum;
 import org.lunifera.dsl.semantic.common.types.LFeature;
+import org.lunifera.dsl.semantic.common.types.LPackage;
 import org.lunifera.dsl.semantic.common.types.LScalarType;
 import org.lunifera.dsl.semantic.common.types.util.LunTypesSwitch;
 import org.lunifera.dsl.semantic.dto.LDto;
@@ -32,90 +34,27 @@ import org.lunifera.dsl.semantic.dto.LDtoAttribute;
 import org.lunifera.dsl.semantic.dto.LDtoInheritedAttribute;
 import org.lunifera.dsl.semantic.dto.util.LunDtoSwitch;
 
-public class LDtoVisitor extends LunDtoSwitch<Boolean> {
+public class DtoModelRenderer extends AbstractRenderer {
 
-	private final YLayout yLayout;
-	private YLayout yCurrent;
-
-	public LDtoVisitor(YLayout yLayout) {
+	public DtoModelRenderer() {
 		super();
-		this.yLayout = yLayout;
-		yCurrent = yLayout;
 	}
 
-	@Override
-	public Boolean caseLDtoInheritedAttribute(LDtoInheritedAttribute object) {
-
-		LScalarType lType = object.getInheritedType();
-		LAttribute inheritedAttribute = object.getInheritedFeature();
-		YEmbeddable yEmbeddable = new FieldProcessor(
-				object.getInheritedFeature(), yLayout.getView())
-				.doSwitch(lType);
-		yEmbeddable.setLabel(inheritedAttribute.getName());
-		yCurrent.getElements().add(yEmbeddable);
-
-		return Boolean.TRUE;
-	}
-
-	@Override
-	public Boolean caseLDtoAttribute(LDtoAttribute object) {
-		YEmbeddable yEmbeddable = new FieldProcessor(object, yLayout.getView())
-				.doSwitch(object.getType());
-		yEmbeddable.setLabel(object.getName());
-		yCurrent.getElements().add(yEmbeddable);
-
-		return Boolean.TRUE;
-	}
-
-	@Override
-	public Boolean caseLDto(LDto lDto) {
-
-		for (LFeature lFeature : lDto.getAllFeatures()) {
-			doSwitch(lFeature);
-		}
-
-		return Boolean.TRUE;
+	public YEmbeddable render(LDto lDto, YLayout yLayout, Class<?> dtoClass) {
+		super.init(yLayout, dtoClass);
+		return new DtoTypesProcessor(null).doSwitch(lDto);
 	}
 
 	/**
 	 * Is responsible to create fields based on the datatype.
 	 */
-	protected static class FieldProcessor extends LunTypesSwitch<YEmbeddable> {
-
-		private static final Set<String> numericTypes = new HashSet<String>();
-		static {
-			numericTypes.add(Byte.class.getName());
-			numericTypes.add(Long.class.getName());
-			numericTypes.add(Short.class.getName());
-			numericTypes.add(Integer.class.getName());
-
-			numericTypes.add("byte");
-			numericTypes.add("long");
-			numericTypes.add("short");
-			numericTypes.add("int");
-		}
-
-		private static final Set<String> decimalTypes = new HashSet<String>();
-		static {
-			decimalTypes.add(Double.class.getName());
-			decimalTypes.add(Float.class.getName());
-
-			numericTypes.add("double");
-			numericTypes.add("float");
-		}
+	protected class CommonTypesProcessor extends LunTypesSwitch<YEmbeddable> {
 
 		private final SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 		private final LAttribute lAttribute;
-		private final YView yView;
 
-		public FieldProcessor(LAttribute lAttribute, YView yView) {
+		public CommonTypesProcessor(LAttribute lAttribute) {
 			this.lAttribute = lAttribute;
-			this.yView = yView;
-		}
-
-		@Override
-		public YEmbeddable caseLScalarType(LScalarType object) {
-			return super.caseLScalarType(object);
 		}
 
 		@Override
@@ -134,6 +73,13 @@ public class LDtoVisitor extends LunDtoSwitch<Boolean> {
 			}
 
 			return result;
+		}
+
+		@Override
+		public YEmbeddable caseLScalarType(LScalarType object) {
+			// in case of scalar type, delegate to the specific entity datatype
+			// processor
+			return new DtoTypesProcessor(lAttribute).doSwitch(object);
 		}
 
 		/**
@@ -161,12 +107,13 @@ public class LDtoVisitor extends LunDtoSwitch<Boolean> {
 				break;
 			}
 
+			YLayout yLayout = getLayout();
 			// create the binding -> bind from root slot to the attribute
-			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-			YBeanSlot yBeanSlot = yView
-					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
+			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
+			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
+					IViewContext.ROOTBEAN_SELECTOR);
 			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
-					.createBindingEndpoint(lAttribute.getName());
+					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yDate.createValueEndpoint(),
 					yContextBindingEndpoint);
 
@@ -190,11 +137,12 @@ public class LDtoVisitor extends LunDtoSwitch<Boolean> {
 			yDt.setMaxLength(20);
 
 			// create the binding -> bind from root slot to the attribute
-			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-			YBeanSlot yBeanSlot = yView
-					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
+			YLayout yLayout = getLayout();
+			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
+			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
+					IViewContext.ROOTBEAN_SELECTOR);
 			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
-					.createBindingEndpoint(lAttribute.getName());
+					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yText.createValueEndpoint(),
 					yContextBindingEndpoint);
 
@@ -219,11 +167,12 @@ public class LDtoVisitor extends LunDtoSwitch<Boolean> {
 			yDt.setMarkNegative(true);
 
 			// create the binding -> bind from root slot to the attribute
-			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-			YBeanSlot yBeanSlot = yView
-					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
+			YLayout yLayout = getLayout();
+			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
+			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
+					IViewContext.ROOTBEAN_SELECTOR);
 			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
-					.createBindingEndpoint(lAttribute.getName());
+					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yNumeric.createValueEndpoint(),
 					yContextBindingEndpoint);
 
@@ -249,11 +198,12 @@ public class LDtoVisitor extends LunDtoSwitch<Boolean> {
 			yDt.setPrecision(2);
 
 			// create the binding -> bind from root slot to the attribute
-			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-			YBeanSlot yBeanSlot = yView
-					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
+			YLayout yLayout = getLayout();
+			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
+			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
+					IViewContext.ROOTBEAN_SELECTOR);
 			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
-					.createBindingEndpoint(lAttribute.getName());
+					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yDecimal.createValueEndpoint(),
 					yContextBindingEndpoint);
 
@@ -270,36 +220,131 @@ public class LDtoVisitor extends LunDtoSwitch<Boolean> {
 			YCheckBox yCheckbox = factory.createCheckBox();
 
 			// create the binding -> bind from root slot to the attribute
-			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-			YBeanSlot yBeanSlot = yView
-					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
+			YLayout yLayout = getLayout();
+			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
+			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
+					IViewContext.ROOTBEAN_SELECTOR);
+
 			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
-					.createBindingEndpoint(lAttribute.getName());
+					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yCheckbox.createValueEndpoint(),
 					yContextBindingEndpoint);
 
 			return yCheckbox;
 		}
 
-		private boolean isString(LDataType object) {
-			String fqn = object.getJvmTypeReference().getQualifiedName();
-			return "java.lang.String".equals(fqn);
-		}
+		@Override
+		public YEmbeddable caseLEnum(LEnum object) {
+			LPackage lPkg = (LPackage) object.eContainer();
+			String enumClassName = lPkg.getName() + "." + object.getName();
+			Class<?> enumClass = null;
+			try {
+				enumClass = modelBundle.loadClass(enumClassName);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 
-		private boolean isBoolean(LDataType object) {
-			String name = object.getJvmTypeReference().getQualifiedName();
-			return "java.lang.Boolean".equals(name);
-		}
+			YLayout yLayout = getLayout();
+			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
+			YEnumListBindingEndpoint enumValuesEndpoint = BindingFactory.eINSTANCE
+					.createYEnumListBindingEndpoint();
+			enumValuesEndpoint.setEnum(enumClass);
 
-		private boolean isNumeric(LDataType object) {
-			String name = object.getJvmTypeReference().getQualifiedName();
-			return numericTypes.contains(name);
-		}
+			YEmbeddable result = null;
+			if (enumClass.getEnumConstants().length > 3) {
+				YComboBox yCombo = factory.createComboBox();
+				yCombo.setType(enumClass);
+				result = yCombo;
 
-		private boolean isDecimal(LDataType object) {
-			String name = object.getJvmTypeReference().getQualifiedName();
-			return decimalTypes.contains(name);
+				// bind the enum literals as collection input
+				yBindingSet.addBinding(yCombo.createCollectionEndpoint(),
+						enumValuesEndpoint);
+
+				// bind the selection to the input dto
+				YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
+						IViewContext.ROOTBEAN_SELECTOR);
+				YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+						.createBindingEndpoint(getBindingPath(lAttribute
+								.getName()));
+				// bind selection to ui field
+				yBindingSet.addBinding(yCombo.createSelectionEndpoint(),
+						yContextBindingEndpoint);
+
+			} else {
+				YOptionsGroup yOptions = factory.createOptionsGroup();
+				yOptions.setType(enumClass);
+				result = yOptions;
+
+				// bind the enum literals as collection input
+				yBindingSet.addBinding(yOptions.createCollectionEndpoint(),
+						enumValuesEndpoint);
+
+				// bind the selection to the input dto
+				YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
+						IViewContext.ROOTBEAN_SELECTOR);
+				YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+						.createBindingEndpoint(getBindingPath(lAttribute
+								.getName()));
+				// bind selection to ui field
+				yBindingSet.addBinding(yOptions.createSelectionEndpoint(),
+						yContextBindingEndpoint);
+			}
+
+			return result;
 		}
 
 	}
+
+	/**
+	 * Is responsible to create fields based on the datatype.
+	 */
+	protected class DtoTypesProcessor extends LunDtoSwitch<YEmbeddable> {
+		private final SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
+		private final LAttribute lAttribute;
+
+		public DtoTypesProcessor(LAttribute lAttribute) {
+			this.lAttribute = lAttribute;
+		}
+
+		@Override
+		public YEmbeddable caseLDtoAttribute(LDtoAttribute object) {
+			YEmbeddable yEmbeddable = null;
+			yEmbeddable = new CommonTypesProcessor(object).doSwitch(object
+					.getType());
+			if (yEmbeddable != null) {
+				yEmbeddable.setLabel(object.getName());
+			}
+
+			return yEmbeddable;
+		}
+
+		@Override
+		public YEmbeddable caseLDtoInheritedAttribute(
+				LDtoInheritedAttribute object) {
+
+			LAttribute attribute = object.getInheritedFeature();
+			LScalarType type = object.getInheritedType();
+			YEmbeddable yEmbeddable = null;
+			yEmbeddable = new CommonTypesProcessor(attribute).doSwitch(type);
+			if (yEmbeddable != null) {
+				yEmbeddable.setLabel(attribute.getName());
+			}
+
+			return yEmbeddable;
+
+		}
+
+		@Override
+		public YEmbeddable caseLDto(LDto lDto) {
+			YLayout yLayout = getLayout();
+			for (LFeature lFeature : lDto.getAllFeatures()) {
+				YEmbeddable result = doSwitch(lFeature);
+				if (result != null) {
+					yLayout.addElement(result);
+				}
+			}
+			return yLayout;
+		}
+	}
+
 }
