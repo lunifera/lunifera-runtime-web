@@ -92,9 +92,9 @@
 					<!-- <runTarget>mobilemail</runTarget> -->
 					<!-- We are doing "inplace" but into subdir VAADIN/widgetsets. This 
 						way compatible with Vaadin eclipse plugin. -->
-					<webappDirectory>${basedir}/resources
+					<webappDirectory>${basedir}/VAADIN/widgetsets
 					</webappDirectory>
-					<hostedWebapp>${basedir}/resources
+					<hostedWebapp>${basedir}/VAADIN/widgetsets
 					</hostedWebapp>
 					<noServer>true</noServer>
 					<!-- Remove draftCompile when project is ready -->
@@ -123,10 +123,10 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>/resources</directory>
+							<directory>/gwt-unitCache</directory>
 						</fileset>
 						<fileset>
-							<directory>/gwt-unitCache</directory>
+							<directory>/VAADIN/widgetsets</directory>
 						</fileset>
 					</filesets>
 				</configuration>

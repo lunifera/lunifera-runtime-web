@@ -1,4 +1,4 @@
-package org.lunifera.runtime.web.vaadin.components.fields.client;
+package org.lunifera.runtime.web.vaadin.components.widgetset;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
