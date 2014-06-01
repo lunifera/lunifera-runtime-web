@@ -5,7 +5,7 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.BindingFactory;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YEnumListBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlot;
-import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.ExtDatatypesFactory;
@@ -112,7 +112,7 @@ public class DtoModelRenderer extends AbstractRenderer {
 			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
 					IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yDate.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -141,7 +141,7 @@ public class DtoModelRenderer extends AbstractRenderer {
 			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
 					IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yText.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -171,7 +171,7 @@ public class DtoModelRenderer extends AbstractRenderer {
 			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
 					IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yNumeric.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -202,7 +202,7 @@ public class DtoModelRenderer extends AbstractRenderer {
 			YBindingSet yBindingSet = yLayout.getView().getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
 					IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yDecimal.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -225,7 +225,7 @@ public class DtoModelRenderer extends AbstractRenderer {
 			YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
 					IViewContext.ROOTBEAN_SELECTOR);
 
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(getBindingPath(lAttribute.getName()));
 			yBindingSet.addBinding(yCheckbox.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -263,7 +263,7 @@ public class DtoModelRenderer extends AbstractRenderer {
 				// bind the selection to the input dto
 				YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
 						IViewContext.ROOTBEAN_SELECTOR);
-				YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+				YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 						.createBindingEndpoint(getBindingPath(lAttribute
 								.getName()));
 				// bind selection to ui field
@@ -282,7 +282,7 @@ public class DtoModelRenderer extends AbstractRenderer {
 				// bind the selection to the input dto
 				YBeanSlot yBeanSlot = yLayout.getView().getBeanSlot(
 						IViewContext.ROOTBEAN_SELECTOR);
-				YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+				YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 						.createBindingEndpoint(getBindingPath(lAttribute
 								.getName()));
 				// bind selection to ui field

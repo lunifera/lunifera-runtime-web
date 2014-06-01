@@ -6,7 +6,7 @@ import java.util.Set;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlot;
-import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
@@ -165,7 +165,7 @@ public class CopyOfDtoModelRenderer extends LunDtoSwitch<Boolean> {
 			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yView
 					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(lAttribute.getName());
 			yBindingSet.addBinding(yDate.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -193,7 +193,7 @@ public class CopyOfDtoModelRenderer extends LunDtoSwitch<Boolean> {
 			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yView
 					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(lAttribute.getName());
 			yBindingSet.addBinding(yText.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -222,7 +222,7 @@ public class CopyOfDtoModelRenderer extends LunDtoSwitch<Boolean> {
 			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yView
 					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(lAttribute.getName());
 			yBindingSet.addBinding(yNumeric.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -252,7 +252,7 @@ public class CopyOfDtoModelRenderer extends LunDtoSwitch<Boolean> {
 			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yView
 					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(lAttribute.getName());
 			yBindingSet.addBinding(yDecimal.createValueEndpoint(),
 					yContextBindingEndpoint);
@@ -273,7 +273,7 @@ public class CopyOfDtoModelRenderer extends LunDtoSwitch<Boolean> {
 			YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 			YBeanSlot yBeanSlot = yView
 					.getBeanSlot(IViewContext.ROOTBEAN_SELECTOR);
-			YBeanSlotBindingEndpoint yContextBindingEndpoint = yBeanSlot
+			YBeanSlotValueBindingEndpoint yContextBindingEndpoint = yBeanSlot
 					.createBindingEndpoint(lAttribute.getName());
 			yBindingSet.addBinding(yCheckbox.createValueEndpoint(),
 					yContextBindingEndpoint);

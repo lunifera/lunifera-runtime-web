@@ -22,7 +22,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
@@ -296,7 +296,7 @@ public class ProgressBarPresentationTests {
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		yProgressBar1.setValue(0.0f);
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(0.30f);
 		beanBinding.setPropertyPath("floatValue");
 		beanBinding.setBean(bean);

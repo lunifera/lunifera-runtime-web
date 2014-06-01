@@ -25,13 +25,13 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IViewSetEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingSetEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.binding.IValueBindingEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBinding;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelFactory;
 import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
 import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlot;
-import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
@@ -116,7 +116,7 @@ public class ModelUtilTest {
 
 		yBindingSet = yView.getOrCreateBindingSet();
 		yView.setBindingSet(yBindingSet);
-		YBeanBindingEndpoint beanBinding1 = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding1 = factory.createBeanBindingEndpoint();
 		bean1 = new ValueBean(9988.77);
 		beanBinding1.setPropertyPath("doubleValue");
 		beanBinding1.setBean(bean1);
@@ -125,7 +125,7 @@ public class ModelUtilTest {
 		yText1ValueBinding = yBindingSet.addBinding(yText1ValueEndpoint,
 				beanBinding1);
 
-		YBeanBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
 		bean2 = new ValueBean(9988.77);
 		beanBinding2.setPropertyPath("doubleValue");
 		beanBinding2.setBean(bean2);
@@ -364,8 +364,8 @@ public class ModelUtilTest {
 		ySlot.setValueType(String.class);
 		yView.getBeanSlots().add(ySlot);
 
-		YBeanSlotBindingEndpoint yEndpoint = CoreModelFactory.eINSTANCE
-				.createYBeanSlotBindingEndpoint();
+		YBeanSlotValueBindingEndpoint yEndpoint = CoreModelFactory.eINSTANCE
+				.createYBeanSlotValueBindingEndpoint();
 		yEndpoint.setAttributePath("item.group.name");
 		yEndpoint.setBeanSlot(ySlot);
 
@@ -386,8 +386,8 @@ public class ModelUtilTest {
 		ySlot.setValueType(String.class);
 		yViewSet.getBeanSlots().add(ySlot);
 
-		YBeanSlotBindingEndpoint yEndpoint = CoreModelFactory.eINSTANCE
-				.createYBeanSlotBindingEndpoint();
+		YBeanSlotValueBindingEndpoint yEndpoint = CoreModelFactory.eINSTANCE
+				.createYBeanSlotValueBindingEndpoint();
 		yEndpoint.setAttributePath("item.group.name");
 		yEndpoint.setBeanSlot(ySlot);
 

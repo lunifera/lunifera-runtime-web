@@ -22,7 +22,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
@@ -299,7 +299,7 @@ public class TextFieldPresentationTests {
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		yText1.setValue("");
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean("Huhu");
 		beanBinding.setPropertyPath("value");
 		beanBinding.setBean(bean);

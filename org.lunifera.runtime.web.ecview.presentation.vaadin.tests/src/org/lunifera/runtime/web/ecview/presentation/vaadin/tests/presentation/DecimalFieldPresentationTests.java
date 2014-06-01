@@ -27,7 +27,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.binding.IValueBindingEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
@@ -302,7 +302,7 @@ public class DecimalFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(9988.77);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -349,7 +349,7 @@ public class DecimalFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(9988.77);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -470,7 +470,7 @@ public class DecimalFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(9988.77);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -478,7 +478,7 @@ public class DecimalFieldPresentationTests {
 		assertEquals("9.988,77", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
 
-		YBeanBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
 		ValueBean bean2 = new ValueBean(9988.77);
 		beanBinding2.setPropertyPath("doubleValue");
 		beanBinding2.setBean(bean2);
@@ -559,7 +559,7 @@ public class DecimalFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(9988.77);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -567,7 +567,7 @@ public class DecimalFieldPresentationTests {
 		assertEquals("9.988,770", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
 
-		YBeanBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
 		ValueBean bean2 = new ValueBean(9988.77);
 		beanBinding2.setPropertyPath("doubleValue");
 		beanBinding2.setBean(bean2);
@@ -631,7 +631,7 @@ public class DecimalFieldPresentationTests {
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(123.0);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -694,7 +694,7 @@ public class DecimalFieldPresentationTests {
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(123.0);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -813,7 +813,7 @@ public class DecimalFieldPresentationTests {
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(123.0);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
