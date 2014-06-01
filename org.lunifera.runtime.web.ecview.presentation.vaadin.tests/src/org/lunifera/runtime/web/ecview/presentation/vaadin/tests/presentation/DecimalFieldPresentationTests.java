@@ -15,13 +15,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -43,6 +47,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
@@ -302,7 +307,8 @@ public class DecimalFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(9988.77);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -349,7 +355,8 @@ public class DecimalFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(9988.77);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -393,7 +400,8 @@ public class DecimalFieldPresentationTests {
 
 	/**
 	 * Test whether negative values receive an additional CSS style
-	 * @throws ContextException 
+	 * 
+	 * @throws ContextException
 	 * 
 	 */
 	@Test
@@ -402,7 +410,7 @@ public class DecimalFieldPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YDecimalField yText = factory.createDecimalField();
-		
+
 		yGridlayout.getElements().add(yText);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -415,7 +423,6 @@ public class DecimalFieldPresentationTests {
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
 		DecimalField field = (DecimalField) unwrapText(baseComponentContainer);
-		
 
 		yText.setValue(99);
 		assertEquals("99,00", field.getValue());
@@ -470,7 +477,8 @@ public class DecimalFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(9988.77);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -478,7 +486,8 @@ public class DecimalFieldPresentationTests {
 		assertEquals("9.988,77", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
 
-		YBeanValueBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding2 = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean2 = new ValueBean(9988.77);
 		beanBinding2.setPropertyPath("doubleValue");
 		beanBinding2.setBean(bean2);
@@ -559,7 +568,8 @@ public class DecimalFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(9988.77);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -567,7 +577,8 @@ public class DecimalFieldPresentationTests {
 		assertEquals("9.988,770", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
 
-		YBeanValueBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding2 = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean2 = new ValueBean(9988.77);
 		beanBinding2.setPropertyPath("doubleValue");
 		beanBinding2.setBean(bean2);
@@ -631,7 +642,8 @@ public class DecimalFieldPresentationTests {
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(123.0);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -694,7 +706,8 @@ public class DecimalFieldPresentationTests {
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(123.0);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -813,7 +826,8 @@ public class DecimalFieldPresentationTests {
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(123.0);
 		beanBinding.setPropertyPath("doubleValue");
 		beanBinding.setBean(bean);
@@ -907,7 +921,7 @@ public class DecimalFieldPresentationTests {
 		Assert.assertTrue(valueEndpointEditPart.isDisposed());
 
 	}
-	
+
 	@Test
 	public void testPrecision_ByChangingDatatype() throws ContextException {
 		Assert.fail();
@@ -917,12 +931,55 @@ public class DecimalFieldPresentationTests {
 	public void testMarkNegative_ByChangingDatatype() throws ContextException {
 		Assert.fail();
 	}
-	
+
 	@Test
 	public void testGrouping_ByChangingDatatype() throws ContextException {
 		Assert.fail();
 	}
-	
+
+	@Test
+	public void test_i18n() throws ContextException {
+
+		// switch the global locale to german
+		Locale.setDefault(Locale.GERMAN);
+
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YDecimalField yDecimal = factory.createDecimalField();
+		yDecimal.setValue(123456789.1122);
+		YDecimalDatatype yDt = factory.createDecimalDatatype();
+		yDt.setPrecision(4);
+		yDecimal.setDatatype(yDt);
+
+		yGridlayout.getElements().add(yDecimal);
+
+		// set the i18n key
+		yDecimal.setLabelI18nKey(TestI18nService.KEY__AGE);
+
+		// prepare the I18nService and pass it to the renderer
+		Map<String, Object> parameter = new HashMap<String, Object>();
+		Map<String, Object> services = new HashMap<String, Object>();
+		parameter.put(IViewContext.PARAM_SERVICES, services);
+		services.put(II18nService.ID, new TestI18nService());
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		IViewContext context = renderer.render(rootLayout, yView, parameter);
+		IDecimalFieldEditpart decimalEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yDecimal);
+		AbstractFieldWidgetPresenter<Component> presentation = decimalEditpart
+				.getPresentation();
+
+		DecimalField decimalField = (DecimalField) unwrapText(presentation
+				.getWidget());
+		assertEquals("Alter", decimalField.getCaption());
+		assertEquals("123.456.789,1122", decimalField.getValue());
+
+		context.setLocale(Locale.ENGLISH);
+		assertEquals("Age", decimalField.getCaption());
+		assertEquals("123,456,789.1122", decimalField.getValue());
+	}
+
 	/**
 	 * Unwraps the component from its parent composite.
 	 * 

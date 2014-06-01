@@ -29,6 +29,7 @@ public class DecimalConverter extends StringToDoubleConverter {
 	private String numberFormatPattern;
 	private boolean useGrouping;
 	private DecimalFormatSymbols decimalFormatSymbols;
+	private boolean customFormatSymbols;
 	private int precision;
 
 	public DecimalConverter() {
@@ -99,6 +100,12 @@ public class DecimalConverter extends StringToDoubleConverter {
 	public void setDecimalFormatSymbols(
 			DecimalFormatSymbols decimalFormatSymbols) {
 		this.decimalFormatSymbols = decimalFormatSymbols;
+
+		if (decimalFormatSymbols != null) {
+			customFormatSymbols = true;
+		} else {
+			customFormatSymbols = false;
+		}
 	}
 
 	/**
@@ -180,12 +187,12 @@ public class DecimalConverter extends StringToDoubleConverter {
 
 		NumberFormat result = null;
 		if (numberFormatPattern != null && !numberFormatPattern.equals("")) {
-			if (decimalFormatSymbols != null) {
+			if (decimalFormatSymbols != null && customFormatSymbols) {
 				result = new DecimalFormat(numberFormatPattern,
 						decimalFormatSymbols);
 			} else {
 				result = new DecimalFormat(numberFormatPattern,
-						new DecimalFormatSymbols(locale));
+						DecimalFormatSymbols.getInstance(locale));
 			}
 
 			if (integerInstance) {
@@ -201,7 +208,6 @@ public class DecimalConverter extends StringToDoubleConverter {
 		}
 
 		result.setGroupingUsed(useGrouping);
-
 
 		return result;
 	}

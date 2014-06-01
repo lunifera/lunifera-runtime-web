@@ -99,9 +99,6 @@ public class NumericFieldPresentation extends
 						}
 					});
 
-			// creates the binding for the field
-			createBindings(modelAccess.yNumericField, numberField);
-
 			componentBase.addComponent(numberField);
 
 			if (modelAccess.isCssClassValid()) {
@@ -112,23 +109,25 @@ public class NumericFieldPresentation extends
 
 			numberField.setUseGrouping(modelAccess.isGrouping());
 
-			
 			initializeField(numberField);
-			
+
+			// creates the binding for the field
+			createBindings(modelAccess.yNumericField, numberField);
+
 			// send an event, that the content was rendered again
 			sendRenderedLifecycleEvent();
 
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
-		// no need to set the locale to the ui elements. Is handled by vaadin
-		// internally.
-
 		// update the captions
 		applyCaptions();
+
+		// tell the number field about the locale change
+		numberField.setLocale(locale);
 	}
 
 	/**
@@ -137,15 +136,15 @@ public class NumericFieldPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			numberField.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
+			numberField.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				numberField.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
-	
+
 	@Override
 	protected Field<?> doGetField() {
 		return numberField;
@@ -323,7 +322,7 @@ public class NumericFieldPresentation extends
 		public String getLabel() {
 			return yNumericField.getDatadescription().getLabel();
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

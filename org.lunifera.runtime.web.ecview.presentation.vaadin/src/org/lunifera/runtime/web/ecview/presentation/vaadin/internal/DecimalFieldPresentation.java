@@ -99,9 +99,6 @@ public class DecimalFieldPresentation extends
 						}
 					});
 
-			// creates the binding for the field
-			createBindings(modelAccess.yDecimalField, decimalField);
-
 			componentBase.addComponent(decimalField);
 
 			if (modelAccess.isCssClassValid()) {
@@ -115,19 +112,22 @@ public class DecimalFieldPresentation extends
 
 			initializeField(decimalField);
 
+			// creates the binding for the field
+			createBindings(modelAccess.yDecimalField, decimalField);
+
 			// send an event, that the content was rendered again
 			sendRenderedLifecycleEvent();
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
-		// no need to set the locale to the ui elements. Is handled by vaadin
-		// internally.
-
 		// update the captions
 		applyCaptions();
+
+		// tell the number field about the locale change
+		decimalField.setLocale(locale);
 	}
 
 	/**
@@ -136,15 +136,15 @@ public class DecimalFieldPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			decimalField.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
+			decimalField.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				decimalField.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
-	
+
 	@Override
 	protected Field<?> doGetField() {
 		return decimalField;
@@ -341,7 +341,7 @@ public class DecimalFieldPresentation extends
 			return yDecimalField.getDatatype() != null ? yDecimalField
 					.getDatatype().isGrouping() : true;
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

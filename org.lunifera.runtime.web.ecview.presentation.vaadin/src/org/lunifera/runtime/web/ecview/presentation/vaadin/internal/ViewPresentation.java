@@ -11,12 +11,14 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
@@ -24,6 +26,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityProperti
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +39,7 @@ import com.vaadin.ui.CssLayout;
  * This presenter is responsible to render a text field on the given layout.
  */
 public class ViewPresentation extends AbstractDisposable implements
-		IViewPresentation<Component> {
+		IViewPresentation<Component>, ILocaleChangedService.LocaleListener {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ViewPresentation.class);
@@ -140,6 +143,15 @@ public class ViewPresentation extends AbstractDisposable implements
 			// render the content
 			//
 			renderContent();
+
+			// register as an locale change listener
+			IViewContext context = ModelUtil.getViewContext(modelAccess.yView);
+			ILocaleChangedService service = context
+					.getService(ILocaleChangedService.ID);
+			if (service != null) {
+				service.addLocaleListener(this);
+			}
+
 		}
 		return componentBase;
 	}
@@ -165,6 +177,14 @@ public class ViewPresentation extends AbstractDisposable implements
 	@Override
 	public void unrender() {
 		if (componentBase != null) {
+			// unregister as an locale change listener
+			IViewContext context = ModelUtil.getViewContext(modelAccess.yView);
+			ILocaleChangedService service = context
+					.getService(ILocaleChangedService.ID);
+			if (service != null) {
+				service.removeLocaleListener(this);
+			}
+
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {
@@ -235,6 +255,12 @@ public class ViewPresentation extends AbstractDisposable implements
 	@Override
 	public void resetVisibilityProperties() {
 
+	}
+
+	@Override
+	public void localeChanged(Locale locale) {
+		// pass the locale to the root element
+		component.setLocale(locale);
 	}
 
 	/**
