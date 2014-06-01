@@ -28,6 +28,7 @@ public class NumberConverter extends StringToIntegerConverter {
 	private String numberFormatPattern;
 	private boolean useGrouping;
 	private DecimalFormatSymbols decimalFormatSymbols;
+	private boolean customFormatSymbols;
 
 	public NumberConverter() {
 		this.numberFormatPattern = getDefaultFormat();
@@ -82,6 +83,12 @@ public class NumberConverter extends StringToIntegerConverter {
 	public void setDecimalFormatSymbols(
 			DecimalFormatSymbols decimalFormatSymbols) {
 		this.decimalFormatSymbols = decimalFormatSymbols;
+
+		if (decimalFormatSymbols != null) {
+			customFormatSymbols = true;
+		} else {
+			customFormatSymbols = false;
+		}
 	}
 
 	/**
@@ -127,12 +134,12 @@ public class NumberConverter extends StringToIntegerConverter {
 
 		NumberFormat result = null;
 		if (numberFormatPattern != null && !numberFormatPattern.equals("")) {
-			if (decimalFormatSymbols != null) {
+			if (decimalFormatSymbols != null && customFormatSymbols) {
 				result = new DecimalFormat(numberFormatPattern,
 						decimalFormatSymbols);
 			} else {
 				result = new DecimalFormat(numberFormatPattern,
-						new DecimalFormatSymbols(locale));
+						DecimalFormatSymbols.getInstance(locale));
 			}
 			result.setParseIntegerOnly(true);
 			result.setRoundingMode(RoundingMode.HALF_EVEN);
