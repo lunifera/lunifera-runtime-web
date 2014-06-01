@@ -17,10 +17,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -34,12 +39,14 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextArea;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
@@ -48,6 +55,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextAreaPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TreePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfFoo;
@@ -63,6 +71,7 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
@@ -1492,6 +1501,44 @@ public class TreePresentationTests {
 		assertEquals("Foo1_2", yText.getValue());
 		
 	}
+	
+
+	@Test
+	public void test_i18n() throws ContextException {
+
+		// switch the global locale to german
+		Locale.setDefault(Locale.GERMAN);
+
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTree yTree1 = factory.createTree();
+		yGridlayout.getElements().add(yTree1);
+
+		// set the i18n key
+		yTree1.setLabelI18nKey(TestI18nService.KEY__AGE);
+
+		// prepare the I18nService and pass it to the renderer
+		Map<String, Object> parameter = new HashMap<String, Object>();
+		Map<String, Object> services = new HashMap<String, Object>();
+		parameter.put(IViewContext.PARAM_SERVICES, services);
+		services.put(II18nService.ID, new TestI18nService());
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		IViewContext context = renderer.render(rootLayout, yView, parameter);
+		ITreeEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yTree1);
+		TreePresentation presentation = editpart
+				.getPresentation();
+
+		Tree tree = (Tree) unwrapTree(presentation.getWidget());
+		assertEquals("Alter", tree.getCaption());
+
+		context.setLocale(Locale.ENGLISH);
+		assertEquals("Age", tree.getCaption());
+	}
+
+
 
 
 	/**

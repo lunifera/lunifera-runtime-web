@@ -15,9 +15,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -27,11 +32,14 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ButtonPresentation;
 import org.osgi.framework.BundleException;
@@ -41,6 +49,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 /**
@@ -315,5 +324,40 @@ public class ButtonPresentationTests {
 		}
 		Component widget = presentation.getWidget();
 		return widget;
+	}
+	
+	@Test
+	public void test_i18n() throws ContextException {
+
+		// switch the global locale to german
+		Locale.setDefault(Locale.GERMAN);
+
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YButton yButton = factory.createButton();
+		yGridlayout.getElements().add(yButton);
+
+		// set the i18n key
+		yButton.setLabelI18nKey(TestI18nService.KEY__AGE);
+
+		// prepare the I18nService and pass it to the renderer
+		Map<String, Object> parameter = new HashMap<String, Object>();
+		Map<String, Object> services = new HashMap<String, Object>();
+		parameter.put(IViewContext.PARAM_SERVICES, services);
+		services.put(II18nService.ID, new TestI18nService());
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		IViewContext context = renderer.render(rootLayout, yView, parameter);
+		IButtonEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yButton);
+		ButtonPresentation presentation = editpart
+				.getPresentation();
+
+		Button button = (Button) unwrapButton(presentation.getWidget());
+		assertEquals("Alter", button.getCaption());
+
+		context.setLocale(Locale.ENGLISH);
+		assertEquals("Age", button.getCaption());
 	}
 }

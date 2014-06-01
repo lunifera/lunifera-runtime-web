@@ -17,10 +17,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -34,16 +39,19 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.DateTimePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ListPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfFoo;
@@ -59,6 +67,7 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -101,6 +110,8 @@ public class ListPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YList yList = factory.createList();
+		yList.setType(String.class);
+		yList.setType(String.class);
 		yGridlayout.getElements().add(yList);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -133,6 +144,7 @@ public class ListPresentationTests {
 		// ......> yList
 		YView yView = factory.createView();
 		YList yList = factory.createList();
+		yList.setType(String.class);
 		yView.setContent(yList);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -168,10 +180,12 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
+		yList1.setType(String.class);
 		yList1.setCssID("ID_0815");
 		yList1.setCssClass("anyOtherClass");
 		yLayout.getElements().add(yList1);
 		YList yList2 = factory.createList();
+		yList2.setType(String.class);
 		yLayout.getElements().add(yList2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -226,8 +240,10 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 		YList yList2 = factory.createList();
+		yList2.setType(String.class);
 		yLayout.getElements().add(yList2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -282,6 +298,7 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -347,8 +364,10 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 		YList yList2 = factory.createList();
+		yList2.setType(String.class);
 		yLayout.getElements().add(yList2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -463,6 +482,7 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -545,7 +565,8 @@ public class ListPresentationTests {
 
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_Single_DetailBinding_ToBean() throws Exception {
+	public void test_SelectionBinding_Single_DetailBinding_ToBean()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -555,6 +576,7 @@ public class ListPresentationTests {
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
 		yList1.setType(Bar.class);
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -659,37 +681,37 @@ public class ListPresentationTests {
 		yList1.getCollection().add(bar1);
 		yList1.getCollection().add(bar2);
 		assertEquals(2, container.size());
-		
+
 		yList1.setSelection(bar2);
 		assertEquals("Foo2", yText.getValue());
 		assertEquals("Foo2", text.getValue());
-		
+
 		yText.setValue("Foo2_1");
 		assertEquals("Foo2_1", foo2.getName());
 		assertEquals("Foo2_1", text.getValue());
-		
+
 		text.setValue("Foo2_2");
 		assertEquals("Foo2_2", foo2.getName());
 		assertEquals("Foo2_2", yText.getValue());
-		
+
 		yList1.setSelection(bar1);
 		assertEquals("Foo1", yText.getValue());
 		assertEquals("Foo1", text.getValue());
-		
+
 		yText.setValue("Foo1_1");
 		assertEquals("Foo1_1", foo1.getName());
 		assertEquals("Foo1_1", text.getValue());
-		
+
 		text.setValue("Foo1_2");
 		assertEquals("Foo1_2", foo1.getName());
 		assertEquals("Foo1_2", yText.getValue());
-		
+
 	}
-	
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_Single_DetailBinding_ToEmf() throws Exception {
+	public void test_SelectionBinding_Single_DetailBinding_ToEmf()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -699,6 +721,7 @@ public class ListPresentationTests {
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
 		yList1.setType(Bar.class);
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -804,31 +827,31 @@ public class ListPresentationTests {
 		yList1.getCollection().add(bar1);
 		yList1.getCollection().add(bar2);
 		assertEquals(2, container.size());
-		
+
 		yList1.setSelection(bar2);
 		assertEquals("Foo2", yText.getValue());
 		assertEquals("Foo2", text.getValue());
-		
+
 		yText.setValue("Foo2_1");
 		assertEquals("Foo2_1", foo2.getName());
 		assertEquals("Foo2_1", text.getValue());
-		
+
 		text.setValue("Foo2_2");
 		assertEquals("Foo2_2", foo2.getName());
 		assertEquals("Foo2_2", yText.getValue());
-		
+
 		yList1.setSelection(bar1);
 		assertEquals("Foo1", yText.getValue());
 		assertEquals("Foo1", text.getValue());
-		
+
 		yText.setValue("Foo1_1");
 		assertEquals("Foo1_1", foo1.getName());
 		assertEquals("Foo1_1", text.getValue());
-		
+
 		text.setValue("Foo1_2");
 		assertEquals("Foo1_2", foo1.getName());
 		assertEquals("Foo1_2", yText.getValue());
-		
+
 	}
 
 	@Test
@@ -843,6 +866,7 @@ public class ListPresentationTests {
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
 		yList1.setSelectionType(YSelectionType.MULTI);
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -952,6 +976,7 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -994,6 +1019,7 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
+		yList1.setType(String.class);
 		yList1.setSelectionType(YSelectionType.MULTI);
 		yLayout.getElements().add(yList1);
 
@@ -1093,9 +1119,11 @@ public class ListPresentationTests {
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
 		yList1.setSelectionType(YSelectionType.MULTI);
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 		YList yList2 = factory.createList();
 		yList2.setSelectionType(YSelectionType.MULTI);
+		yList2.setType(String.class);
 		yLayout.getElements().add(yList2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1116,8 +1144,8 @@ public class ListPresentationTests {
 		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
 		ListSelect list2 = (ListSelect) unwrapList(list2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) list1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) list2.getContainerDataSource();
+//		Container.Indexed indexedDs1 = (Indexed) list1.getContainerDataSource();
+//		Container.Indexed indexedDs2 = (Indexed) list2.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -1248,8 +1276,10 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
+		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 		YList yList2 = factory.createList();
+		yList2.setType(String.class);
 		yLayout.getElements().add(yList2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1410,6 +1440,7 @@ public class ListPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YList yList = factory.createList();
+		yList.setType(String.class);
 		yGridlayout.getElements().add(yList);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1427,6 +1458,41 @@ public class ListPresentationTests {
 		assertFalse(presentation.isRendered());
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
+	}
+
+	@Test
+	public void test_i18n() throws ContextException {
+
+		// switch the global locale to german
+		Locale.setDefault(Locale.GERMAN);
+
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YList yList = factory.createList();
+		yList.setType(String.class);
+		yGridlayout.getElements().add(yList);
+
+		// set the i18n key
+		yList.setLabelI18nKey(TestI18nService.KEY__AGE);
+
+		// prepare the I18nService and pass it to the renderer
+		Map<String, Object> parameter = new HashMap<String, Object>();
+		Map<String, Object> services = new HashMap<String, Object>();
+		parameter.put(IViewContext.PARAM_SERVICES, services);
+		services.put(II18nService.ID, new TestI18nService());
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		IViewContext context = renderer.render(rootLayout, yView, parameter);
+		IListEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList);
+		ListPresentation presentation = editpart.getPresentation();
+
+		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());
+		assertEquals("Alter", list.getCaption());
+
+		context.setLocale(Locale.ENGLISH);
+		assertEquals("Age", list.getCaption());
 	}
 
 	/**
