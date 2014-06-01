@@ -10,6 +10,8 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.IObservable;
@@ -17,6 +19,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
@@ -64,7 +67,7 @@ public class DecimalFieldPresentation extends
 	 */
 	@SuppressWarnings("serial")
 	@Override
-	public Component createWidget(Object parent) {
+	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
@@ -105,9 +108,7 @@ public class DecimalFieldPresentation extends
 				decimalField.addStyleName(modelAccess.getCssClass());
 			}
 
-			if (modelAccess.isLabelValid()) {
-				decimalField.setCaption(modelAccess.getLabel());
-			}
+			applyCaptions();
 
 			decimalField.setPrecision(modelAccess.getPrecision());
 			decimalField.setUseGrouping(modelAccess.isGrouping());
@@ -118,6 +119,30 @@ public class DecimalFieldPresentation extends
 			sendRenderedLifecycleEvent();
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// no need to set the locale to the ui elements. Is handled by vaadin
+		// internally.
+
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
+		II18nService service = getI18nService();
+		if (service != null && modelAccess.isLabelI18nKeyValid()) {
+			decimalField.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
+		} else {
+			if (modelAccess.isLabelValid()) {
+				decimalField.setCaption(modelAccess.getLabel());
+			}
+		}
 	}
 	
 	@Override
@@ -201,7 +226,7 @@ public class DecimalFieldPresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void unrender() {
+	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings
@@ -315,6 +340,25 @@ public class DecimalFieldPresentation extends
 		public boolean isGrouping() {
 			return yDecimalField.getDatatype() != null ? yDecimalField
 					.getDatatype().isGrouping() : true;
+		}
+		
+		/**
+		 * Returns true, if the label is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isLabelI18nKeyValid() {
+			return yDecimalField.getDatadescription() != null
+					&& yDecimalField.getDatadescription().getLabelI18nKey() != null;
+		}
+
+		/**
+		 * Returns the label.
+		 * 
+		 * @return
+		 */
+		public String getLabelI18nKey() {
+			return yDecimalField.getDatadescription().getLabelI18nKey();
 		}
 	}
 }

@@ -10,9 +10,12 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
@@ -51,7 +54,7 @@ public class ProgressBarPresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Component createWidget(Object parent) {
+	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
@@ -74,13 +77,35 @@ public class ProgressBarPresentation extends
 				progressBar.addStyleName(modelAccess.getCssClass());
 			}
 
-			if (modelAccess.isLabelValid()) {
-				progressBar.setCaption(modelAccess.getLabel());
-			}
+			applyCaptions();
 			
 			initializeField(progressBar);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// no need to set the locale to the ui elements. Is handled by vaadin
+		// internally.
+
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
+		II18nService service = getI18nService();
+		if (service != null && modelAccess.isLabelI18nKeyValid()) {
+			progressBar.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
+		} else {
+			if (modelAccess.isLabelValid()) {
+				progressBar.setCaption(modelAccess.getLabel());
+			}
+		}
 	}
 	
 	@Override
@@ -142,7 +167,7 @@ public class ProgressBarPresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void unrender() {
+	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings
@@ -232,6 +257,25 @@ public class ProgressBarPresentation extends
 		 */
 		public String getLabel() {
 			return yProgressBar.getDatadescription().getLabel();
+		}
+		
+		/**
+		 * Returns true, if the label is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isLabelI18nKeyValid() {
+			return yProgressBar.getDatadescription() != null
+					&& yProgressBar.getDatadescription().getLabelI18nKey() != null;
+		}
+
+		/**
+		 * Returns the label.
+		 * 
+		 * @return
+		 */
+		public String getLabelI18nKey() {
+			return yProgressBar.getDatadescription().getLabelI18nKey();
 		}
 	}
 }

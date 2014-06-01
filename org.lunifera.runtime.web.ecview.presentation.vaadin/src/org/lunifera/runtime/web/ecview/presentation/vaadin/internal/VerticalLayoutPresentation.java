@@ -12,9 +12,11 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
@@ -87,6 +89,21 @@ public class VerticalLayoutPresentation extends
 		super.move(presentation, index);
 
 		refreshUI();
+	}
+	
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// no need to set the locale to the ui elements. Is handled by vaadin
+		// internally.
+
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
 	}
 
 	/**
@@ -323,7 +340,7 @@ public class VerticalLayoutPresentation extends
 	}
 
 	@Override
-	public ComponentContainer createWidget(Object parent) {
+	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
@@ -381,7 +398,7 @@ public class VerticalLayoutPresentation extends
 	}
 
 	@Override
-	public void unrender() {
+	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings

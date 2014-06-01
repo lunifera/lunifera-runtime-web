@@ -10,6 +10,8 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.IObservable;
@@ -17,6 +19,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
@@ -64,7 +67,7 @@ public class NumericFieldPresentation extends
 	 */
 	@SuppressWarnings("serial")
 	@Override
-	public Component createWidget(Object parent) {
+	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
@@ -105,9 +108,7 @@ public class NumericFieldPresentation extends
 				numberField.addStyleName(modelAccess.getCssClass());
 			}
 
-			if (modelAccess.isLabelValid()) {
-				numberField.setCaption(modelAccess.getLabel());
-			}
+			applyCaptions();
 
 			numberField.setUseGrouping(modelAccess.isGrouping());
 
@@ -119,6 +120,30 @@ public class NumericFieldPresentation extends
 
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// no need to set the locale to the ui elements. Is handled by vaadin
+		// internally.
+
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
+		II18nService service = getI18nService();
+		if (service != null && modelAccess.isLabelI18nKeyValid()) {
+			numberField.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
+		} else {
+			if (modelAccess.isLabelValid()) {
+				numberField.setCaption(modelAccess.getLabel());
+			}
+		}
 	}
 	
 	@Override
@@ -202,7 +227,7 @@ public class NumericFieldPresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void unrender() {
+	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings
@@ -297,6 +322,25 @@ public class NumericFieldPresentation extends
 		 */
 		public String getLabel() {
 			return yNumericField.getDatadescription().getLabel();
+		}
+		
+		/**
+		 * Returns true, if the label is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isLabelI18nKeyValid() {
+			return yNumericField.getDatadescription() != null
+					&& yNumericField.getDatadescription().getLabelI18nKey() != null;
+		}
+
+		/**
+		 * Returns the label.
+		 * 
+		 * @return
+		 */
+		public String getLabelI18nKey() {
+			return yNumericField.getDatadescription().getLabelI18nKey();
 		}
 	}
 }

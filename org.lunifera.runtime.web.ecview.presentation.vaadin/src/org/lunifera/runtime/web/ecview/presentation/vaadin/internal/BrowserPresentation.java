@@ -10,6 +10,9 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YBrowser;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
@@ -18,7 +21,6 @@ import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Field;
 
 /**
  * This presenter is responsible to render a text area on the given layout.
@@ -45,7 +47,7 @@ public class BrowserPresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Component createWidget(Object parent) {
+	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
@@ -59,7 +61,6 @@ public class BrowserPresentation extends
 			browser.addStyleName(CSS_CLASS__CONTROL);
 			browser.setImmediate(true);
 
-
 			// creates the binding for the field
 			createBindings(modelAccess.yBrowser, browser);
 
@@ -69,11 +70,34 @@ public class BrowserPresentation extends
 				browser.addStyleName(modelAccess.getCssClass());
 			}
 
+			// set the captions
+			applyCaptions();
+		}
+		return componentBase;
+	}
+
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// no need to set the locale to the ui elements. Is handled by vaadin
+		// internally.
+
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
+		II18nService service = getI18nService();
+		if (service != null && modelAccess.isLabelI18nKeyValid()) {
+			browser.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
+		} else {
 			if (modelAccess.isLabelValid()) {
 				browser.setCaption(modelAccess.getLabel());
 			}
 		}
-		return componentBase;
 	}
 
 	@Override
@@ -90,7 +114,7 @@ public class BrowserPresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void unrender() {
+	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings
@@ -180,6 +204,25 @@ public class BrowserPresentation extends
 		 */
 		public String getLabel() {
 			return yBrowser.getDatadescription().getLabel();
+		}
+
+		/**
+		 * Returns true, if the label is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isLabelI18nKeyValid() {
+			return yBrowser.getDatadescription() != null
+					&& yBrowser.getDatadescription().getLabelI18nKey() != null;
+		}
+
+		/**
+		 * Returns the label.
+		 * 
+		 * @return
+		 */
+		public String getLabelI18nKey() {
+			return yBrowser.getDatadescription().getLabelI18nKey();
 		}
 	}
 }

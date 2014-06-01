@@ -11,6 +11,7 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.databinding.Binding;
@@ -28,6 +29,8 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
+import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -62,7 +65,8 @@ import com.vaadin.ui.Field;
  * An abstract implementation of the {@link IWidgetPresentation}.
  */
 public abstract class AbstractVaadinWidgetPresenter<A extends Component>
-		extends AbstractDisposable implements IWidgetPresentation<A> {
+		extends AbstractDisposable implements IWidgetPresentation<A>,
+		ILocaleChangedService.LocaleListener {
 
 	/**
 	 * See {@link IConstants#CSS_CLASS__CONTROL_BASE}.
@@ -114,6 +118,36 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	public IViewContext getViewContext() {
 		return viewContext;
 	}
+
+	/**
+	 * Returns the active locale for the view.
+	 * 
+	 * @return
+	 */
+	protected Locale getLocale() {
+		return viewContext.getLocale();
+	}
+
+	/**
+	 * Returns the i18n service or <code>null</code> if no service is available.
+	 * 
+	 * @return
+	 */
+	protected II18nService getI18nService() {
+		return viewContext.getService(II18nService.ID);
+	}
+
+	@Override
+	public void localeChanged(Locale locale) {
+		doUpdateLocale(locale);
+	}
+
+	/**
+	 * Needs to be overridden by subclasses to update the locale.
+	 * 
+	 * @param locale
+	 */
+	protected abstract void doUpdateLocale(Locale locale);
 
 	@Override
 	public void apply(IVisibilityPropertiesEditpart properties) {
@@ -550,7 +584,25 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 
 	@Override
 	protected void internalDispose() {
+		unregisterFromLocaleChangedService();
+	}
 
+	/**
+	 * Locale change events are catched by that class.
+	 */
+	protected void registerAtLocaleChangedService() {
+		ILocaleChangedService service = getViewContext().getService(
+				ILocaleChangedService.ID);
+		service.addLocaleListener(this);
+	}
+
+	/**
+	 * Locale change events are not catched by that class.
+	 */
+	protected void unregisterFromLocaleChangedService() {
+		ILocaleChangedService service = getViewContext().getService(
+				ILocaleChangedService.ID);
+		service.removeLocaleListener(this);
 	}
 
 	@Override
@@ -600,9 +652,40 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return
 	 */
+	@Override
 	public Set<Binding> getUIBindings() {
 		return bindings;
 	}
+
+	@Override
+	public A createWidget(Object parent) {
+		A result = doCreateWidget(parent);
+
+		registerAtLocaleChangedService();
+
+		return result;
+	}
+
+	/**
+	 * Needs to be implemented by subclasses to render the widget.
+	 * 
+	 * @param parent
+	 *            - The parent ui component
+	 */
+	protected abstract A doCreateWidget(Object parent);
+
+	@Override
+	public void unrender() {
+
+		unregisterFromLocaleChangedService();
+
+		doUnrender();
+	}
+
+	/**
+	 * Needs to be implemented by subclasses to unrender the widget.
+	 */
+	protected abstract void doUnrender();
 
 	/**
 	 * Applies the visibility options to the component.

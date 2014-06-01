@@ -10,11 +10,14 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFProperties;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
@@ -54,7 +57,7 @@ public class ComboBoxPresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Component createWidget(Object parent) {
+	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
@@ -77,13 +80,35 @@ public class ComboBoxPresentation extends
 				combo.addStyleName(modelAccess.getCssClass());
 			}
 
-			if (modelAccess.isLabelValid()) {
-				combo.setCaption(modelAccess.getLabel());
-			}
+			applyCaptions();
 			
 			initializeField(combo);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// no need to set the locale to the ui elements. Is handled by vaadin
+		// internally.
+
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
+		II18nService service = getI18nService();
+		if (service != null && modelAccess.isLabelI18nKeyValid()) {
+			combo.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
+		} else {
+			if (modelAccess.isLabelValid()) {
+				combo.setCaption(modelAccess.getLabel());
+			}
+		}
 	}
 
 	@Override
@@ -165,7 +190,7 @@ public class ComboBoxPresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void unrender() {
+	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings
@@ -255,6 +280,25 @@ public class ComboBoxPresentation extends
 		 */
 		public String getLabel() {
 			return yCombo.getDatadescription().getLabel();
+		}
+		
+		/**
+		 * Returns true, if the label is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isLabelI18nKeyValid() {
+			return yCombo.getDatadescription() != null
+					&& yCombo.getDatadescription().getLabelI18nKey() != null;
+		}
+
+		/**
+		 * Returns the label.
+		 * 
+		 * @return
+		 */
+		public String getLabelI18nKey() {
+			return yCombo.getDatadescription().getLabelI18nKey();
 		}
 	}
 }

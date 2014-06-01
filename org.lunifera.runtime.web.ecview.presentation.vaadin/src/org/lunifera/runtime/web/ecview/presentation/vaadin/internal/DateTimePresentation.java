@@ -10,10 +10,13 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
@@ -53,7 +56,7 @@ public class DateTimePresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Component createWidget(Object parent) {
+	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
@@ -76,9 +79,7 @@ public class DateTimePresentation extends
 				dateField.addStyleName(modelAccess.getCssClass());
 			}
 
-			if (modelAccess.isLabelValid()) {
-				dateField.setCaption(modelAccess.getLabel());
-			}
+			applyCaptions();
 
 			dateField.setDateFormat(modelAccess.getDateformat());
 
@@ -98,6 +99,30 @@ public class DateTimePresentation extends
 			initializeField(dateField);
 		}
 		return componentBase;
+	}
+	
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// no need to set the locale to the ui elements. Is handled by vaadin
+		// internally.
+
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
+		II18nService service = getI18nService();
+		if (service != null && modelAccess.isLabelI18nKeyValid()) {
+			dateField.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
+		} else {
+			if (modelAccess.isLabelValid()) {
+				dateField.setCaption(modelAccess.getLabel());
+			}
+		}
 	}
 
 	@Override
@@ -159,7 +184,7 @@ public class DateTimePresentation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void unrender() {
+	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings
@@ -283,6 +308,25 @@ public class DateTimePresentation extends
 				return "HH:mm:ss";
 			}
 			return "yyyy.MM.dd HH:mm";
+		}
+		
+		/**
+		 * Returns true, if the label is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isLabelI18nKeyValid() {
+			return yDateTime.getDatadescription() != null
+					&& yDateTime.getDatadescription().getLabelI18nKey() != null;
+		}
+
+		/**
+		 * Returns the label.
+		 * 
+		 * @return
+		 */
+		public String getLabelI18nKey() {
+			return yDateTime.getDatadescription().getLabelI18nKey();
 		}
 	}
 }

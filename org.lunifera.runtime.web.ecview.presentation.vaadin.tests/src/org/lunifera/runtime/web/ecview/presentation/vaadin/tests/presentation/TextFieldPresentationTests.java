@@ -15,17 +15,26 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
+import org.eclipse.emf.ecp.ecview.common.context.IViewSetContext;
+import org.eclipse.emf.ecp.ecview.common.context.ViewSetContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.IViewSetEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
+import org.eclipse.emf.ecp.ecview.common.model.core.YViewSet;
 import org.eclipse.emf.ecp.ecview.common.model.validation.ValidationFactory;
 import org.eclipse.emf.ecp.ecview.common.model.validation.YMinLengthValidator;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
@@ -33,6 +42,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
+import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -299,7 +309,8 @@ public class TextFieldPresentationTests {
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		yText1.setValue("");
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean("Huhu");
 		beanBinding.setPropertyPath("value");
 		beanBinding.setBean(bean);
@@ -459,6 +470,81 @@ public class TextFieldPresentationTests {
 		assertEquals(0, yText.getValidators().size());
 		assertEquals(0, presentation.getValidators().size());
 
+	}
+
+	@Test
+	public void test_i18n() throws ContextException {
+
+		// switch the global locale to german
+		Locale.setDefault(Locale.GERMAN);
+
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextField yText = factory.createTextField();
+		yGridlayout.getElements().add(yText);
+
+		// set the i18n key
+		yText.setLabelI18nKey(TestI18nService.KEY__AGE);
+
+		// prepare the I18nService and pass it to the renderer
+		Map<String, Object> parameter = new HashMap<String, Object>();
+		Map<String, Object> services = new HashMap<String, Object>();
+		parameter.put(IViewContext.PARAM_SERVICES, services);
+		services.put(II18nService.ID, new TestI18nService());
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		IViewContext context = renderer.render(rootLayout, yView, parameter);
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
+				.getPresentation();
+
+		TextField textField = (TextField) unwrapText(presentation.getWidget());
+		assertEquals("Alter", textField.getCaption());
+
+		context.setLocale(Locale.ENGLISH);
+		assertEquals("Age", textField.getCaption());
+	}
+
+	@Test
+	public void test_i18nByViewSet() throws ContextException {
+
+		// switch the global locale to german
+		Locale.setDefault(Locale.GERMAN);
+
+		YViewSet yViewSet = factory.createViewSet();
+		IViewSetEditpart viewSetEditpart = ModelUtil.getEditpart(yViewSet);
+		ViewSetContext viewSetContext = new ViewSetContext(viewSetEditpart);
+		
+		YView yView = factory.createView();
+		yViewSet.getViews().add(yView);
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextField yText = factory.createTextField();
+		yGridlayout.getElements().add(yText);
+
+		// set the i18n key
+		yText.setLabelI18nKey(TestI18nService.KEY__AGE);
+
+		// prepare the I18nService and pass it to the renderer
+		Map<String, Object> parameter = new HashMap<String, Object>();
+		Map<String, Object> services = new HashMap<String, Object>();
+		parameter.put(IViewContext.PARAM_SERVICES, services);
+		services.put(II18nService.ID, new TestI18nService());
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, parameter);
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
+				.getPresentation();
+
+		TextField textField = (TextField) unwrapText(presentation.getWidget());
+		assertEquals("Alter", textField.getCaption());
+
+		viewSetContext.setLocale(Locale.ENGLISH);
+		assertEquals("Age", textField.getCaption());
 	}
 
 	@Test

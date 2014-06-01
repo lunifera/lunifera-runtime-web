@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
@@ -77,6 +80,21 @@ public class TabSheetPresentation extends
 
 		refreshUI();
 	}
+	
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// no need to set the locale to the ui elements. Is handled by vaadin
+		// internally.
+
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
+	}
 
 	/**
 	 * Is called to refresh the UI. The element will be removed from the grid
@@ -104,7 +122,7 @@ public class TabSheetPresentation extends
 	}
 
 	@Override
-	public ComponentContainer createWidget(Object parent) {
+	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.setSizeFull();
@@ -150,7 +168,7 @@ public class TabSheetPresentation extends
 	}
 
 	@Override
-	public void unrender() {
+	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings
