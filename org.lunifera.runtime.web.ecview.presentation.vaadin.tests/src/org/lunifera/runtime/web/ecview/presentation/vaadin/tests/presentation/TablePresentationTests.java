@@ -17,10 +17,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
+import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -34,12 +39,14 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YProgressBar;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
@@ -48,6 +55,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ProgressBarPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TablePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfFoo;
@@ -63,6 +71,7 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -107,6 +116,7 @@ public class TablePresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YTable yTable = factory.createTable();
+		yTable.setType(String.class);
 		yGridlayout.getElements().add(yTable);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -139,6 +149,7 @@ public class TablePresentationTests {
 		// ......> yTable
 		YView yView = factory.createView();
 		YTable yTable = factory.createTable();
+		yTable.setType(String.class);
 		yView.setContent(yTable);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -176,8 +187,10 @@ public class TablePresentationTests {
 		YTable yTable1 = factory.createTable();
 		yTable1.setCssID("ID_0815");
 		yTable1.setCssClass("anyOtherClass");
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTable yTable2 = factory.createTable();
+		yTable2.setType(String.class);
 		yLayout.getElements().add(yTable2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -232,8 +245,10 @@ public class TablePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTable yTable2 = factory.createTable();
+		yTable2.setType(String.class);
 		yLayout.getElements().add(yTable2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -288,6 +303,7 @@ public class TablePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -353,8 +369,10 @@ public class TablePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTable yTable2 = factory.createTable();
+		yTable2.setType(String.class);
 		yLayout.getElements().add(yTable2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -469,6 +487,7 @@ public class TablePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -560,6 +579,7 @@ public class TablePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -608,8 +628,10 @@ public class TablePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTable yTable2 = factory.createTable();
+		yTable2.setType(String.class);
 		yLayout.getElements().add(yTable2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -770,6 +792,7 @@ public class TablePresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YTable yTable = factory.createTable();
+		yTable.setType(String.class);
 		yGridlayout.getElements().add(yTable);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -801,6 +824,7 @@ public class TablePresentationTests {
 		yView.setContent(yLayout);
 		YTable yTable = factory.createTable();
 		yTable.setSelectionType(YSelectionType.MULTI);
+		yTable.setType(String.class);
 		yLayout.getElements().add(yTable);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -899,9 +923,11 @@ public class TablePresentationTests {
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
 		yTable1.setSelectionType(YSelectionType.MULTI);
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTable yTable2 = factory.createTable();
 		yTable2.setSelectionType(YSelectionType.MULTI);
+		yTable2.setType(String.class);
 		yLayout.getElements().add(yTable2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1054,8 +1080,12 @@ public class TablePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
+		yTable1.setType(String.class);
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTable yTable2 = factory.createTable();
+		yTable2.setType(String.class);
+		yTable2.setType(String.class);
 		yLayout.getElements().add(yTable2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1217,6 +1247,7 @@ public class TablePresentationTests {
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
 		yTable1.setType(Bar.class);
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -1361,6 +1392,7 @@ public class TablePresentationTests {
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
 		yTable1.setType(Bar.class);
+		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -1493,7 +1525,41 @@ public class TablePresentationTests {
 		
 	}
 
-	
+	@Test
+	public void test_i18n() throws ContextException {
+
+		// switch the global locale to german
+		Locale.setDefault(Locale.GERMAN);
+
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTable yTable = factory.createTable();
+		yTable.setType(String.class);
+		yLayout.getElements().add(yTable);
+
+		// set the i18n key
+		yTable.setLabelI18nKey(TestI18nService.KEY__AGE);
+
+		// prepare the I18nService and pass it to the renderer
+		Map<String, Object> parameter = new HashMap<String, Object>();
+		Map<String, Object> services = new HashMap<String, Object>();
+		parameter.put(IViewContext.PARAM_SERVICES, services);
+		services.put(II18nService.ID, new TestI18nService());
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		IViewContext context = renderer.render(rootLayout, yView, parameter);
+		ITableEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yTable);
+		TablePresentation presentation = editpart
+				.getPresentation();
+
+		Table table = (Table) unwrapTable(presentation.getWidget());
+		assertEquals("Alter", table.getCaption());
+
+		context.setLocale(Locale.ENGLISH);
+		assertEquals("Age", table.getCaption());
+	}
 
 	/**
 	 * Unwraps the component from its parent composite.
