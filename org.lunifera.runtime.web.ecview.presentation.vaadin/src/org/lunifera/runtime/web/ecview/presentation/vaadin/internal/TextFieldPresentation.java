@@ -23,6 +23,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -38,6 +39,7 @@ public class TextFieldPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private TextField text;
+	private ObjectProperty<String> property;
 
 	/**
 	 * Constructor.
@@ -69,6 +71,9 @@ public class TextFieldPresentation extends
 			text.setNullRepresentation("");
 			text.setImmediate(true);
 
+			property = new ObjectProperty<String>(null, String.class);
+			text.setPropertyDataSource(property);
+
 			// creates the binding for the field
 			createBindings(modelAccess.yText, text);
 
@@ -79,12 +84,12 @@ public class TextFieldPresentation extends
 			}
 
 			applyCaptions();
-			
+
 			initializeField(text);
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
@@ -108,7 +113,7 @@ public class TextFieldPresentation extends
 			}
 		}
 	}
-	
+
 	@Override
 	protected Field<?> doGetField() {
 		return text;
@@ -258,7 +263,7 @@ public class TextFieldPresentation extends
 		public String getLabel() {
 			return yText.getDatadescription().getLabel();
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

@@ -23,6 +23,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -38,6 +39,7 @@ public class CheckBoxPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private CheckBox checkBox;
+	private ObjectProperty<Boolean> property;
 
 	/**
 	 * Constructor.
@@ -67,6 +69,9 @@ public class CheckBoxPresentation extends
 			checkBox = new CheckBox();
 			checkBox.addStyleName(CSS_CLASS__CONTROL);
 			checkBox.setImmediate(true);
+			
+			property = new ObjectProperty<Boolean>(false, Boolean.class);
+			checkBox.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yCheckBox, checkBox);

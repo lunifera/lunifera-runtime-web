@@ -10,7 +10,9 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -30,6 +32,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -45,6 +48,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private Table table;
+	private ObjectProperty property;
 
 	/**
 	 * Constructor.
@@ -78,6 +82,14 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			table.setSelectable(true);
 			table.setImmediate(true);
 
+			if (table.isMultiSelect()) {
+				property = new ObjectProperty(new HashSet(), Set.class);
+			} else {
+				property = new ObjectProperty(null,
+						modelAccess.yTable.getType());
+			}
+			table.setPropertyDataSource(property);
+
 			BeanItemContainer datasource = new BeanItemContainer(
 					modelAccess.yTable.getType());
 			table.setContainerDataSource(datasource);
@@ -97,7 +109,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
@@ -316,7 +328,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		public String getLabel() {
 			return yTable.getDatadescription().getLabel();
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

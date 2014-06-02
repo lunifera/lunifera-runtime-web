@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Date;
 import java.util.Locale;
 
 import org.eclipse.core.databinding.Binding;
@@ -24,6 +25,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -40,6 +42,7 @@ public class DateTimePresentation extends
 	private CssLayout componentBase;
 	private DateField dateField;
 	private Binding binding_valueToUI;
+	private ObjectProperty<Date> property;
 
 	/**
 	 * Constructor.
@@ -70,6 +73,9 @@ public class DateTimePresentation extends
 			dateField.addStyleName(CSS_CLASS__CONTROL);
 			dateField.setImmediate(true);
 
+			property = new ObjectProperty<Date>(null, Date.class);
+			dateField.setPropertyDataSource(property);
+
 			// creates the binding for the field
 			createBindings(modelAccess.yDateTime, dateField);
 
@@ -95,12 +101,12 @@ public class DateTimePresentation extends
 			// }
 			// }
 			// });
-			
+
 			initializeField(dateField);
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
@@ -116,8 +122,8 @@ public class DateTimePresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			dateField.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
+			dateField.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				dateField.setCaption(modelAccess.getLabel());
@@ -129,6 +135,7 @@ public class DateTimePresentation extends
 	protected Field<?> doGetField() {
 		return dateField;
 	}
+
 	@Override
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
@@ -309,7 +316,7 @@ public class DateTimePresentation extends
 			}
 			return "yyyy.MM.dd HH:mm";
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

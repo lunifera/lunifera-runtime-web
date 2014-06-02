@@ -23,6 +23,7 @@ import org.eclipse.core.databinding.property.value.SimpleValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentListener;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
+import org.lunifera.runtime.web.vaadin.databinding.values.SimpleVaadinPropertyObservableValue;
 import org.lunifera.runtime.web.vaadin.databinding.values.VaadinObservableValueDecorator;
 
 import com.vaadin.ui.Component;
@@ -42,8 +43,8 @@ import com.vaadin.ui.Component;
  * (sub class of {@link Component.Event}) to the super constructor to indicate
  * which events signal a property change.
  */
-public abstract class AbstractVaadinValueProperty extends
-		SimpleValueProperty implements IVaadinValueProperty {
+public abstract class AbstractVaadinValueProperty extends SimpleValueProperty
+		implements IVaadinValueProperty {
 	private Class<? extends Component.Event>[] changeEvents;
 	private Class<? extends Component.Event>[] staleEvents;
 
@@ -113,12 +114,38 @@ public abstract class AbstractVaadinValueProperty extends
 		return (IVaadinObservableValue) super.observe(source);
 	}
 
+	/**
+	 * Is used to observe the com.vaadin.data.Property#value attribute.
+	 * 
+	 * @param realm
+	 * @param source
+	 * @return
+	 */
+	public IVaadinObservableValue observeVaadinProperty(Realm realm,
+			Object source) {
+		if (source instanceof com.vaadin.data.Property) {
+			return wrapObservable(new SimpleVaadinPropertyObservableValue(
+					realm, source, this));
+		}
+		return wrapObservable(super.observe(realm, source));
+	}
+
+	/**
+	 * Is used to observe the com.vaadin.data.Property#value attribute.
+	 * 
+	 * @param realm
+	 * @param source
+	 * @return
+	 */
+	public IVaadinObservableValue observeVaadinProperty(Object source) {
+		return observeVaadinProperty(Realm.getDefault(), source);
+	}
+
 	public IObservableValue observe(Realm realm, Object source) {
 		return wrapObservable(super.observe(realm, source));
 	}
 
-	protected IVaadinObservableValue wrapObservable(
-			IObservableValue observable) {
+	protected IVaadinObservableValue wrapObservable(IObservableValue observable) {
 		return new VaadinObservableValueDecorator(observable);
 	}
 

@@ -33,10 +33,10 @@ public class DecimalField extends TextField {
 	public DecimalField(String caption) {
 		this(caption, null);
 	}
-
+	
 	public DecimalField(String caption, DecimalConverter converter) {
 		super(caption);
-
+		
 		setNullRepresentation("");
 		setNullSettingAllowed(false);
 

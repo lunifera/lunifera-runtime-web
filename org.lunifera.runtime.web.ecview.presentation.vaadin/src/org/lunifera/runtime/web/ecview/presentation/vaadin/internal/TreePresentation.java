@@ -10,7 +10,9 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -28,6 +30,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -42,6 +45,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private Tree tree;
+	private ObjectProperty property;
 
 	/**
 	 * Constructor.
@@ -57,6 +61,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
@@ -73,6 +78,13 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 			tree.setMultiSelect(modelAccess.yTree.getSelectionType() == YSelectionType.MULTI);
 			tree.setImmediate(true);
 
+			if (tree.isMultiSelect()) {
+				property = new ObjectProperty(new HashSet(), Set.class);
+			} else {
+				property = new ObjectProperty(null, modelAccess.yTree.getType());
+			}
+			tree.setPropertyDataSource(property);
+
 			// creates the binding for the field
 			createBindings(modelAccess.yTree, tree);
 
@@ -88,7 +100,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
@@ -307,7 +319,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 		public String getLabel() {
 			return yTree.getDatadescription().getLabel();
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

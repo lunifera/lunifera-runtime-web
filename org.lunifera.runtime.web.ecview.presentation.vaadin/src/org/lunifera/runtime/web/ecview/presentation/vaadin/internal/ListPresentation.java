@@ -10,7 +10,9 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -29,6 +31,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -43,6 +46,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private ListSelect list;
+	private ObjectProperty property;
 
 	/**
 	 * Constructor.
@@ -76,7 +80,15 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 			list.setImmediate(true);
 			list.setSizeFull();
 
-			BeanItemContainer datasource = new BeanItemContainer(modelAccess.yList.getType());
+			if (list.isMultiSelect()) {
+				property = new ObjectProperty(new HashSet(), Set.class);
+			} else {
+				property = new ObjectProperty(null, modelAccess.yList.getType());
+			}
+			list.setPropertyDataSource(property);
+
+			BeanItemContainer datasource = new BeanItemContainer(
+					modelAccess.yList.getType());
 			list.setContainerDataSource(datasource);
 
 			// creates the binding for the field
@@ -94,7 +106,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
@@ -312,7 +324,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 		public String getLabel() {
 			return yList.getDatadescription().getLabel();
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

@@ -1369,7 +1369,7 @@ public class TreePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTree yTree1 = factory.createTree();
-		yTree1.setType(Bar.class);
+		yTree1.setType(EmfBar.class);
 		yLayout.getElements().add(yTree1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);

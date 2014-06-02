@@ -335,7 +335,7 @@ public class VaadinObservables {
 	 */
 	public static IVaadinObservableValue observeValue(
 			Property.ValueChangeNotifier notifier) {
-		return VaadinProperties.value().observe(notifier);
+		return VaadinProperties.value().observeVaadinProperty(notifier);
 	}
 
 	/**
@@ -348,7 +348,7 @@ public class VaadinObservables {
 	public static IVaadinObservableValue observeConvertedValue(
 			AbstractField<?> field) {
 		return VaadinProperties.accessor(AbstractField.class, "convertedValue")
-				.observe(field);
+				.observeVaadinProperty(field);
 	}
 
 	/**

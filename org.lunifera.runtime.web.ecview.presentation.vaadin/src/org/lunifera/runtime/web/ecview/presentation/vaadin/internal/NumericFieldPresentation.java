@@ -34,6 +34,7 @@ import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -50,6 +51,7 @@ public class NumericFieldPresentation extends
 	private CssLayout componentBase;
 	private NumberField numberField;
 	private Binding binding_valueToUI;
+	private ObjectProperty<Double> property;
 
 	/**
 	 * Constructor.
@@ -81,6 +83,9 @@ public class NumericFieldPresentation extends
 			numberField.addStyleName(CSS_CLASS__CONTROL);
 			numberField.setMarkNegative(true); // arbitrary default
 			numberField.setImmediate(true);
+
+			property = new ObjectProperty<Double>(0d, Double.class);
+			numberField.setPropertyDataSource(property);
 
 			numberField
 					.addValueChangeListener(new Property.ValueChangeListener() {

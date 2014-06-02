@@ -26,6 +26,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -41,6 +42,7 @@ public class ComboBoxPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private ComboBox combo;
+	private ObjectProperty property;
 
 	/**
 	 * Constructor.
@@ -56,6 +58,7 @@ public class ComboBoxPresentation extends
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
@@ -70,6 +73,9 @@ public class ComboBoxPresentation extends
 			combo = new ComboBox();
 			combo.addStyleName(CSS_CLASS__CONTROL);
 			combo.setImmediate(true);
+			
+			property = new ObjectProperty(null, modelAccess.yCombo.getType());
+			combo.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yCombo, combo);

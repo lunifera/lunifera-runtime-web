@@ -133,7 +133,7 @@ public class NumberField extends TextField {
 		if (getPropertyDataSource() == null || isBuffered() || isModified()) {
 			String value = getInternalValue();
 			try {
-				double result = converter.convertToModel(value, Integer.class,
+				double result = converter.convertToModel(value, Double.class,
 						getLocale());
 				if (result < 0) {
 					addStyleName(NEGATIVE_VALUE);

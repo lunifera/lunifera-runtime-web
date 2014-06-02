@@ -39,12 +39,10 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
@@ -67,7 +65,6 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -349,7 +346,8 @@ public class OptionsGroupPresentationTests {
 	 */
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_CollectionBinding_OptionGroupToOptionGroup() throws Exception {
+	public void test_CollectionBinding_OptionGroupToOptionGroup()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -716,7 +714,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
-		yOptionsGroup1.setType(Bar.class);
+		yOptionsGroup1.setType(EmfBar.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -972,6 +970,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1105,7 +1104,8 @@ public class OptionsGroupPresentationTests {
 	 */
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_Multi_OptionGroupToOptionGroup() throws Exception {
+	public void test_SelectionBinding_Multi_OptionGroupToOptionGroup()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -1267,7 +1267,8 @@ public class OptionsGroupPresentationTests {
 	 */
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_Single_OptionGroupToOptionGroup() throws Exception {
+	public void test_SelectionBinding_Single_OptionGroupToOptionGroup()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -1462,7 +1463,6 @@ public class OptionsGroupPresentationTests {
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
-	
 
 	@Test
 	public void test_i18n() throws ContextException {
@@ -1489,8 +1489,7 @@ public class OptionsGroupPresentationTests {
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
 		IOptionsGroupEditpart editpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yOptionsGroup);
-		OptionsGroupPresentation presentation = editpart
-				.getPresentation();
+		OptionsGroupPresentation presentation = editpart.getPresentation();
 
 		OptionGroup grp = (OptionGroup) unwrapList(presentation.getWidget());
 		assertEquals("Alter", grp.getCaption());

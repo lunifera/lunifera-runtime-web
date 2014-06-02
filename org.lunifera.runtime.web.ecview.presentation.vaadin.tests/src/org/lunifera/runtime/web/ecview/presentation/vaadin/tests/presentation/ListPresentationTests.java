@@ -39,19 +39,16 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.DateTimePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ListPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfFoo;
@@ -67,7 +64,6 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -576,7 +572,6 @@ public class ListPresentationTests {
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
 		yList1.setType(Bar.class);
-		yList1.setType(String.class);
 		yLayout.getElements().add(yList1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -720,8 +715,7 @@ public class ListPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
-		yList1.setType(Bar.class);
-		yList1.setType(String.class);
+		yList1.setType(EmfBar.class);
 		yLayout.getElements().add(yList1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -1144,8 +1138,10 @@ public class ListPresentationTests {
 		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
 		ListSelect list2 = (ListSelect) unwrapList(list2BaseComponentContainer);
 
-//		Container.Indexed indexedDs1 = (Indexed) list1.getContainerDataSource();
-//		Container.Indexed indexedDs2 = (Indexed) list2.getContainerDataSource();
+		// Container.Indexed indexedDs1 = (Indexed)
+		// list1.getContainerDataSource();
+		// Container.Indexed indexedDs2 = (Indexed)
+		// list2.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 

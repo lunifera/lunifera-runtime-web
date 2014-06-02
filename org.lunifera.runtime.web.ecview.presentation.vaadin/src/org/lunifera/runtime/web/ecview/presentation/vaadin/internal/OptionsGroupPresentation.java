@@ -28,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -43,6 +44,7 @@ public class OptionsGroupPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private OptionGroup optionsGroup;
+	private ObjectProperty property;
 
 	/**
 	 * Constructor.
@@ -58,6 +60,7 @@ public class OptionsGroupPresentation extends
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
@@ -74,6 +77,9 @@ public class OptionsGroupPresentation extends
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
 			optionsGroup.setImmediate(true);
+			
+			property = new ObjectProperty(null, modelAccess.yOptionsGroup.getType());
+			optionsGroup.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yOptionsGroup, optionsGroup);

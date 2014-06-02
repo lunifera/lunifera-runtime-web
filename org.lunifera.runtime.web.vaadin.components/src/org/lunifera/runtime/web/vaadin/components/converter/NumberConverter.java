@@ -18,13 +18,13 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.util.converter.StringToDoubleConverter;
 
 /**
  * A converter to format and parse Integer values.
  */
 @SuppressWarnings("serial")
-public class NumberConverter extends StringToIntegerConverter {
+public class NumberConverter extends StringToDoubleConverter {
 	private String numberFormatPattern;
 	private boolean useGrouping;
 	private DecimalFormatSymbols decimalFormatSymbols;

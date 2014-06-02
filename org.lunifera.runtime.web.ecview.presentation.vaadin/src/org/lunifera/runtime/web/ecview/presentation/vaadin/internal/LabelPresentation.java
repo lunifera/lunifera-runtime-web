@@ -17,6 +17,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -31,6 +32,7 @@ public class LabelPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private Label label;
+	private ObjectProperty<String> property;
 
 	/**
 	 * Constructor.
@@ -60,6 +62,9 @@ public class LabelPresentation extends
 			label = new Label();
 			label.addStyleName(CSS_CLASS__CONTROL);
 			label.setImmediate(true);
+			
+			property = new ObjectProperty<String>("", String.class);
+			label.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yLabel, label);

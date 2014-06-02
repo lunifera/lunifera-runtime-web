@@ -32,6 +32,12 @@ public class VaadinValuePropertyDecorator extends ValueProperty implements
 		return new VaadinObservableValueDecorator(delegate.observe(source));
 	}
 
+	@Override
+	public IVaadinObservableValue observeVaadinProperty(Object source) {
+		return new VaadinObservableValueDecorator(
+				delegate.observeVaadinProperty(source));
+	}
+
 	public IObservableValue observe(Realm realm, Object source) {
 		return new VaadinObservableValueDecorator(delegate.observe(realm,
 				source));

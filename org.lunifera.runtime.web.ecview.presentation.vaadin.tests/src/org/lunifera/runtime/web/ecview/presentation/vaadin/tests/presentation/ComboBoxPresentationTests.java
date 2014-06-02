@@ -13,10 +13,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -31,28 +29,19 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YDetailValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ButtonPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ComboBoxPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfFoo;
@@ -65,14 +54,11 @@ import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;
 
 /**
@@ -971,7 +957,7 @@ public class ComboBoxPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YComboBox yComboBox1 = factory.createComboBox();
-		yComboBox1.setType(Bar.class);
+		yComboBox1.setType(EmfBar.class);
 		yLayout.getElements().add(yComboBox1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);

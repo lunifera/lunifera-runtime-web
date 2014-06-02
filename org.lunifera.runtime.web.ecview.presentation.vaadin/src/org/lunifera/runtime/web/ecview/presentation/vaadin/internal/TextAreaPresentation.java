@@ -23,6 +23,7 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextArea;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -38,6 +39,7 @@ public class TextAreaPresentation extends
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private TextArea textArea;
+	private ObjectProperty<String> property;
 
 	/**
 	 * Constructor.
@@ -67,6 +69,9 @@ public class TextAreaPresentation extends
 			textArea = new TextArea();
 			textArea.addStyleName(CSS_CLASS__CONTROL);
 			textArea.setImmediate(true);
+			
+			property = new ObjectProperty<String>(null, String.class);
+			textArea.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTextArea, textArea);

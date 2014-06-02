@@ -14,10 +14,9 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.databinding.properties;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
-
-import com.vaadin.ui.Component;
 
 /**
  * {@link IValueProperty} for observing an vaadin Component
@@ -35,8 +34,17 @@ public interface IVaadinValueProperty extends IValueProperty {
 	 * @return an observable value observing this value property on the given
 	 *         property source
 	 */
-	public IVaadinObservableValue observe(Object source);
-	
+	IVaadinObservableValue observe(Object source);
+
+	/**
+	 * Is used to observe the com.vaadin.data.Property#value attribute.
+	 * 
+	 * @param realm
+	 * @param source
+	 * @return
+	 */
+	IVaadinObservableValue observeVaadinProperty(Object source);
+
 	/**
 	 * Returns an {@link IVaadinComponentObservableValue} observing this value
 	 * property on the given Component, which delays notification of value
