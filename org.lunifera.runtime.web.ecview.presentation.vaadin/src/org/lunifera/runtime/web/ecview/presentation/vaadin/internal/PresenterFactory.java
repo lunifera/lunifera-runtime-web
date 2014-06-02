@@ -35,6 +35,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IVerticalLayoutEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.IMasterDetailPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 
 /**
@@ -99,8 +100,10 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new TabSheetPresentation(editpart);
 		} else if (editpart instanceof ITabEditpart) {
 			return (A) new TabPresentation(editpart);
+		} else if (editpart instanceof IMasterDetailPresentation) {
+			return (A) new MasterDetailPresentation(editpart);
 		}
- 
+
 		throw new IllegalArgumentException(String.format(
 				"No presenter available for editpart %s[%s]", editpart
 						.getClass().getName(), editpart.getId()));

@@ -37,4 +37,15 @@ public interface IConstants {
 	 * This CSS class marks the widget to show a spacing.
 	 */
 	public static final String CSS_CLASS__SPACING = "spacing";
+	
+	
+	/**
+	 * This CSS class for master-detail master-base component.
+	 */
+	String CSS_CLASS__MASTER_BASE = "masterbase";
+	
+	/**
+	 * This CSS class for master-detail detail-base component.
+	 */
+	String CSS_CLASS__DETAIL_BASE = "detailbase";
 }
