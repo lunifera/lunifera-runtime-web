@@ -70,9 +70,8 @@ public class ButtonPresentation extends
 				button.addStyleName(modelAccess.getCssClass());
 			}
 
-			if (modelAccess.isLabelValid()) {
-				button.setCaption(modelAccess.getLabel());
-			}
+			applyCaptions();
+			
 		}
 		return componentBase;
 	}
