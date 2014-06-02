@@ -355,7 +355,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			modelToTarget.setBeforeSetValidator(new IValidator() {
 				@Override
 				public IStatus validate(Object value) {
-					if (value != null && !field.containsId(value)) {
+					if (value != null && !value.equals("") && !field.containsId(value)) {
 						return Status.CANCEL_STATUS;
 					}
 

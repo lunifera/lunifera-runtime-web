@@ -30,6 +30,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
+import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewDatabindingContext;
 import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -62,7 +63,7 @@ public class BindingManager extends
 
 	@Override
 	protected DataBindingContext createDatabindingContext(Realm validationRealm) {
-		return new EMFDataBindingContext(validationRealm);
+		return new ECViewDatabindingContext(validationRealm);
 	}
 
 	@Override

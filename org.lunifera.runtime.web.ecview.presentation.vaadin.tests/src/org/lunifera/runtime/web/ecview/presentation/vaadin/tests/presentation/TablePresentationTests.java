@@ -39,23 +39,16 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YProgressBar;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ProgressBarPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TablePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfFoo;
@@ -71,11 +64,8 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.ProgressBar;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 
 /**
@@ -225,7 +215,8 @@ public class TablePresentationTests {
 		// assert css id
 		assertEquals("ID_0815", table1BaseComponentContainer.getId());
 		assertNull(label1.getId());
-		assertEquals(table2Editpart.getId(), table2BaseComponentContainer.getId());
+		assertEquals(table2Editpart.getId(),
+				table2BaseComponentContainer.getId());
 		assertNull(label2.getId());
 	}
 
@@ -393,16 +384,20 @@ public class TablePresentationTests {
 		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
 		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) table1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) table2.getContainerDataSource();
+		Container.Indexed indexedDs1 = (Indexed) table1
+				.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) table2
+				.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
 		//
 
-		YEmbeddableCollectionEndpoint endp1 = yTable1.createCollectionEndpoint();
-		YEmbeddableCollectionEndpoint endp2 = yTable2.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp1 = yTable1
+				.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yTable2
+				.createCollectionEndpoint();
 		yBindingSet.addBinding(endp1, endp2);
 
 		assertEquals(0, yTable1.getCollection().size());
@@ -652,16 +647,20 @@ public class TablePresentationTests {
 		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
 		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) table1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) table2.getContainerDataSource();
+		Container.Indexed indexedDs1 = (Indexed) table1
+				.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) table2
+				.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
 		//
 
-		YEmbeddableCollectionEndpoint endp1 = yTable1.createCollectionEndpoint();
-		YEmbeddableCollectionEndpoint endp2 = yTable2.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp1 = yTable1
+				.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yTable2
+				.createCollectionEndpoint();
 		yBindingSet.addBinding(endp1, endp2);
 
 		YEmbeddableSelectionEndpoint endpSel1 = yTable1
@@ -670,8 +669,10 @@ public class TablePresentationTests {
 				.createSelectionEndpoint();
 		yBindingSet.addBinding(endpSel1, endpSel2);
 
-		Container.Indexed container1 = (Indexed) table1.getContainerDataSource();
-		Container.Indexed container2 = (Indexed) table2.getContainerDataSource();
+		Container.Indexed container1 = (Indexed) table1
+				.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) table2
+				.getContainerDataSource();
 		assertEquals(0, container1.size());
 		assertEquals(0, container2.size());
 
@@ -811,7 +812,7 @@ public class TablePresentationTests {
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_SelectionBinding_Multi_EmptyCollection() throws Exception {
@@ -948,16 +949,20 @@ public class TablePresentationTests {
 		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
 		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) table1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) table2.getContainerDataSource();
+		Container.Indexed indexedDs1 = (Indexed) table1
+				.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) table2
+				.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
 		//
 
-		YEmbeddableCollectionEndpoint endp1 = yTable1.createCollectionEndpoint();
-		YEmbeddableCollectionEndpoint endp2 = yTable2.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp1 = yTable1
+				.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yTable2
+				.createCollectionEndpoint();
 		yBindingSet.addBinding(endp1, endp2);
 
 		YEmbeddableMultiSelectionEndpoint endpSel1 = yTable1
@@ -966,8 +971,10 @@ public class TablePresentationTests {
 				.createMultiSelectionEndpoint();
 		yBindingSet.addBinding(endpSel1, endpSel2);
 
-		Container.Indexed container1 = (Indexed) table1.getContainerDataSource();
-		Container.Indexed container2 = (Indexed) table2.getContainerDataSource();
+		Container.Indexed container1 = (Indexed) table1
+				.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) table2
+				.getContainerDataSource();
 		assertEquals(0, container1.size());
 		assertEquals(0, container2.size());
 
@@ -1081,10 +1088,8 @@ public class TablePresentationTests {
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
 		yTable1.setType(String.class);
-		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTable yTable2 = factory.createTable();
-		yTable2.setType(String.class);
 		yTable2.setType(String.class);
 		yLayout.getElements().add(yTable2);
 
@@ -1106,16 +1111,20 @@ public class TablePresentationTests {
 		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
 		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) table1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) table2.getContainerDataSource();
+		Container.Indexed indexedDs1 = (Indexed) table1
+				.getContainerDataSource();
+		Container.Indexed indexedDs2 = (Indexed) table2
+				.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
 		//
 
-		YEmbeddableCollectionEndpoint endp1 = yTable1.createCollectionEndpoint();
-		YEmbeddableCollectionEndpoint endp2 = yTable2.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp1 = yTable1
+				.createCollectionEndpoint();
+		YEmbeddableCollectionEndpoint endp2 = yTable2
+				.createCollectionEndpoint();
 		yBindingSet.addBinding(endp1, endp2);
 
 		YEmbeddableSelectionEndpoint endpSel1 = yTable1
@@ -1124,8 +1133,10 @@ public class TablePresentationTests {
 				.createSelectionEndpoint();
 		yBindingSet.addBinding(endpSel1, endpSel2);
 
-		Container.Indexed container1 = (Indexed) table1.getContainerDataSource();
-		Container.Indexed container2 = (Indexed) table2.getContainerDataSource();
+		Container.Indexed container1 = (Indexed) table1
+				.getContainerDataSource();
+		Container.Indexed container2 = (Indexed) table2
+				.getContainerDataSource();
 		assertEquals(0, container1.size());
 		assertEquals(0, container2.size());
 
@@ -1234,10 +1245,11 @@ public class TablePresentationTests {
 		assertNull(yTable2.getSelection());
 		assertNull(table2.getValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_Single_DetailBinding_ToBean() throws Exception {
+	public void test_SelectionBinding_Single_DetailBinding_ToBean()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -1247,7 +1259,6 @@ public class TablePresentationTests {
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
 		yTable1.setType(Bar.class);
-		yTable1.setType(String.class);
 		yLayout.getElements().add(yTable1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -1352,37 +1363,37 @@ public class TablePresentationTests {
 		yTable1.getCollection().add(bar1);
 		yTable1.getCollection().add(bar2);
 		assertEquals(2, container.size());
-		
+
 		yTable1.setSelection(bar2);
 		assertEquals("Foo2", yText.getValue());
 		assertEquals("Foo2", text.getValue());
-		
+
 		yText.setValue("Foo2_1");
 		assertEquals("Foo2_1", foo2.getName());
 		assertEquals("Foo2_1", text.getValue());
-		
+
 		text.setValue("Foo2_2");
 		assertEquals("Foo2_2", foo2.getName());
 		assertEquals("Foo2_2", yText.getValue());
-		
+
 		yTable1.setSelection(bar1);
 		assertEquals("Foo1", yText.getValue());
 		assertEquals("Foo1", text.getValue());
-		
+
 		yText.setValue("Foo1_1");
 		assertEquals("Foo1_1", foo1.getName());
 		assertEquals("Foo1_1", text.getValue());
-		
+
 		text.setValue("Foo1_2");
 		assertEquals("Foo1_2", foo1.getName());
 		assertEquals("Foo1_2", yText.getValue());
-		
+
 	}
-	
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_Single_DetailBinding_ToEmf() throws Exception {
+	public void test_SelectionBinding_Single_DetailBinding_ToEmf()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -1391,8 +1402,7 @@ public class TablePresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
-		yTable1.setType(Bar.class);
-		yTable1.setType(String.class);
+		yTable1.setType(EmfBar.class);
 		yLayout.getElements().add(yTable1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
@@ -1498,31 +1508,31 @@ public class TablePresentationTests {
 		yTable1.getCollection().add(bar1);
 		yTable1.getCollection().add(bar2);
 		assertEquals(2, container.size());
-		
+
 		yTable1.setSelection(bar2);
 		assertEquals("Foo2", yText.getValue());
 		assertEquals("Foo2", text.getValue());
-		
+
 		yText.setValue("Foo2_1");
 		assertEquals("Foo2_1", foo2.getName());
 		assertEquals("Foo2_1", text.getValue());
-		
+
 		text.setValue("Foo2_2");
 		assertEquals("Foo2_2", foo2.getName());
 		assertEquals("Foo2_2", yText.getValue());
-		
+
 		yTable1.setSelection(bar1);
 		assertEquals("Foo1", yText.getValue());
 		assertEquals("Foo1", text.getValue());
-		
+
 		yText.setValue("Foo1_1");
 		assertEquals("Foo1_1", foo1.getName());
 		assertEquals("Foo1_1", text.getValue());
-		
+
 		text.setValue("Foo1_2");
 		assertEquals("Foo1_2", foo1.getName());
 		assertEquals("Foo1_2", yText.getValue());
-		
+
 	}
 
 	@Test
@@ -1549,10 +1559,9 @@ public class TablePresentationTests {
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
-		ITableEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTable);
-		TablePresentation presentation = editpart
-				.getPresentation();
+		ITableEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable);
+		TablePresentation presentation = editpart.getPresentation();
 
 		Table table = (Table) unwrapTable(presentation.getWidget());
 		assertEquals("Alter", table.getCaption());
@@ -1575,7 +1584,6 @@ public class TablePresentationTests {
 		}
 		return component;
 	}
-	
 
 	/**
 	 * Returns the component for the given model element.
@@ -1599,12 +1607,13 @@ public class TablePresentationTests {
 		Component widget = presentation.getWidget();
 		return widget;
 	}
-	
+
 	private Collection<?> castCollection(Object value) {
 		return (Collection<?>) value;
 	}
-	
+
 	private List<?> asList(Object value) {
-		return value != null ? new ArrayList<Object>(castCollection(value)) : new ArrayList<Object>();
+		return value != null ? new ArrayList<Object>(castCollection(value))
+				: new ArrayList<Object>();
 	}
 }
