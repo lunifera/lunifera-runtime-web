@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -770,6 +771,11 @@ public class ComboBoxPresentationTests {
 		assertNull(comboBox1.getValue());
 		assertNull(yComboBox2.getSelection());
 		assertNull(comboBox2.getValue());
+	}
+	
+	@Test
+	public void test_SelectionBinding_Single_WithAttributePath(){
+		fail("Implement!");
 	}
 
 	/**

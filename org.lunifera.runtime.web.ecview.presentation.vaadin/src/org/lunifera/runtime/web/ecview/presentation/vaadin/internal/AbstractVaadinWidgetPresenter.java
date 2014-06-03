@@ -209,6 +209,42 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		// modelToTarget)
 
 	}
+	
+	/**
+	 * Creates the binding.
+	 * 
+	 * @param target
+	 * @param model
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindings(IObservableValue target,
+			IObservableValue model) {
+		bindingManger = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		
+		return bindingManger.bindValue(target, model);
+	}
+	
+	/**
+	 * Creates the binding.
+	 * 
+	 * @param target
+	 * @param model
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindings(IObservableList target,
+			IObservableList model) {
+		bindingManger = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		
+		return bindingManger.bindList(target, model);
+	}
 
 	/**
 	 * Binds the editable flag from the ecview model to the ui element.

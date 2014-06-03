@@ -25,6 +25,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IGridLayoutEditpar
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IHorizontalLayoutEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IMasterDetailEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
@@ -100,7 +101,7 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new TabSheetPresentation(editpart);
 		} else if (editpart instanceof ITabEditpart) {
 			return (A) new TabPresentation(editpart);
-		} else if (editpart instanceof IMasterDetailPresentation) {
+		} else if (editpart instanceof IMasterDetailEditpart) {
 			return (A) new MasterDetailPresentation(editpart);
 		}
 

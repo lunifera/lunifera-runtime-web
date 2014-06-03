@@ -17,6 +17,7 @@ package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValueProperty;
 
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 /**
@@ -42,8 +43,11 @@ public class ComponentDescriptionProperty extends
 	}
 
 	protected void doSetValue(Object source, Object value) {
-		// Component component = (Component) source;
-		// component.setCaption((String) value);
-		throw new UnsupportedOperationException("setDescription missing in interface!");
+		if(source instanceof AbstractComponent){
+			AbstractComponent comp = (AbstractComponent) source;
+			comp.setDescription((String) value);
+		}else{
+			throw new UnsupportedOperationException("setDescription missing in interface!");
+		}
 	}
 }

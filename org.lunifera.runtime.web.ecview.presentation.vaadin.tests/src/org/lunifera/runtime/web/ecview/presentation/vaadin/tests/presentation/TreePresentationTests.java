@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,23 +40,16 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextArea;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextAreaPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TreePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfFoo;
@@ -71,10 +65,7 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;
 
@@ -797,7 +788,7 @@ public class TreePresentationTests {
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_SelectionBinding_Multi_EmptyCollection() throws Exception {
@@ -889,6 +880,11 @@ public class TreePresentationTests {
 		tree1.setValue(selection);
 		assertEquals(0, yTree1.getMultiSelection().size());
 		assertEquals(0, asList(tree1.getValue()).size());
+	}
+
+	@Test
+	public void test_SelectionBinding_Single_WithAttributePath() {
+		fail("Implement!");
 	}
 
 	/**
@@ -1213,10 +1209,11 @@ public class TreePresentationTests {
 		assertNull(yTree2.getSelection());
 		assertNull(tree2.getValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_Single_DetailBinding_ToBean() throws Exception {
+	public void test_SelectionBinding_Single_DetailBinding_ToBean()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -1330,37 +1327,37 @@ public class TreePresentationTests {
 		yTree1.getCollection().add(bar1);
 		yTree1.getCollection().add(bar2);
 		assertEquals(2, container.size());
-		
+
 		yTree1.setSelection(bar2);
 		assertEquals("Foo2", yText.getValue());
 		assertEquals("Foo2", text.getValue());
-		
+
 		yText.setValue("Foo2_1");
 		assertEquals("Foo2_1", foo2.getName());
 		assertEquals("Foo2_1", text.getValue());
-		
+
 		text.setValue("Foo2_2");
 		assertEquals("Foo2_2", foo2.getName());
 		assertEquals("Foo2_2", yText.getValue());
-		
+
 		yTree1.setSelection(bar1);
 		assertEquals("Foo1", yText.getValue());
 		assertEquals("Foo1", text.getValue());
-		
+
 		yText.setValue("Foo1_1");
 		assertEquals("Foo1_1", foo1.getName());
 		assertEquals("Foo1_1", text.getValue());
-		
+
 		text.setValue("Foo1_2");
 		assertEquals("Foo1_2", foo1.getName());
 		assertEquals("Foo1_2", yText.getValue());
-		
+
 	}
-	
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
-	public void test_SelectionBinding_Single_DetailBinding_ToEmf() throws Exception {
+	public void test_SelectionBinding_Single_DetailBinding_ToEmf()
+			throws Exception {
 		// END SUPRESS CATCH EXCEPTION
 		// build the view model
 		// ...> yView
@@ -1475,33 +1472,32 @@ public class TreePresentationTests {
 		yTree1.getCollection().add(bar1);
 		yTree1.getCollection().add(bar2);
 		assertEquals(2, container.size());
-		
+
 		yTree1.setSelection(bar2);
 		assertEquals("Foo2", yText.getValue());
 		assertEquals("Foo2", text.getValue());
-		
+
 		yText.setValue("Foo2_1");
 		assertEquals("Foo2_1", foo2.getName());
 		assertEquals("Foo2_1", text.getValue());
-		
+
 		text.setValue("Foo2_2");
 		assertEquals("Foo2_2", foo2.getName());
 		assertEquals("Foo2_2", yText.getValue());
-		
+
 		yTree1.setSelection(bar1);
 		assertEquals("Foo1", yText.getValue());
 		assertEquals("Foo1", text.getValue());
-		
+
 		yText.setValue("Foo1_1");
 		assertEquals("Foo1_1", foo1.getName());
 		assertEquals("Foo1_1", text.getValue());
-		
+
 		text.setValue("Foo1_2");
 		assertEquals("Foo1_2", foo1.getName());
 		assertEquals("Foo1_2", yText.getValue());
-		
+
 	}
-	
 
 	@Test
 	public void test_i18n() throws ContextException {
@@ -1526,10 +1522,9 @@ public class TreePresentationTests {
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
-		ITreeEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTree1);
-		TreePresentation presentation = editpart
-				.getPresentation();
+		ITreeEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTree1);
+		TreePresentation presentation = editpart.getPresentation();
 
 		Tree tree = (Tree) unwrapTree(presentation.getWidget());
 		assertEquals("Alter", tree.getCaption());
@@ -1537,9 +1532,6 @@ public class TreePresentationTests {
 		context.setLocale(Locale.ENGLISH);
 		assertEquals("Age", tree.getCaption());
 	}
-
-
-
 
 	/**
 	 * Unwraps the component from its parent composite.
@@ -1578,12 +1570,13 @@ public class TreePresentationTests {
 		Component widget = presentation.getWidget();
 		return widget;
 	}
-	
+
 	private Collection<?> castCollection(Object value) {
 		return (Collection<?>) value;
 	}
 
 	private List<?> asList(Object value) {
-		return value != null ? new ArrayList<Object>(castCollection(value)) : new ArrayList<Object>();
+		return value != null ? new ArrayList<Object>(castCollection(value))
+				: new ArrayList<Object>();
 	}
 }

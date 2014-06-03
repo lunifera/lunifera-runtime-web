@@ -10,18 +10,33 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.net.URI;
 import java.util.Locale;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.EMFProperties;
+import org.eclipse.emf.databinding.FeaturePath;
+import org.eclipse.emf.ecp.ecview.common.binding.observables.ContextObservables;
 import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YCollectionBindable;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.uri.URIHelper;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YMasterDetail;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IMasterDetailEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.IMasterDetailPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.VerticalLayout;
@@ -40,6 +55,7 @@ public class MasterDetailPresentation extends
 	private CssLayout detailBase;
 	private IWidgetPresentation<?> masterPresentation;
 	private IWidgetPresentation<?> detailPresentation;
+	private Binding masterCollectionBinding;
 
 	/**
 	 * Constructor.
@@ -48,7 +64,7 @@ public class MasterDetailPresentation extends
 	 *            The editpart of that presenter
 	 */
 	public MasterDetailPresentation(IElementEditpart editpart) {
-		super((ITextFieldEditpart) editpart);
+		super((IMasterDetailEditpart) editpart);
 		this.modelAccess = new ModelAccess((YMasterDetail) editpart.getModel());
 	}
 
@@ -77,17 +93,80 @@ public class MasterDetailPresentation extends
 			detailBase.setSizeFull();
 			componentBase.addComponent(detailBase);
 
+			// creates the binding for the field
+			createBindings(modelAccess.yMasterDetail);
+
 			// render master an detail
 			if (masterPresentation != null) {
-				masterPresentation.createWidget(masterBase);
+				createMasterWidget();
 			}
 
 			if (detailPresentation != null) {
-				detailPresentation.createWidget(detailBase);
+				Component detailWidget = (Component) detailPresentation
+						.createWidget(detailBase);
+				if (detailWidget != null) {
+					detailBase.removeAllComponents();
+					detailBase.addComponent(detailWidget);
+				}
 			}
 
 		}
 		return componentBase;
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YMasterDetail yField) {
+
+		// create the model binding from ECView-Model to the collection bean
+		// slot
+		URI uri = URIHelper.view().bean(getCollectionBeanSlot())
+				.fragment("value").toURI();
+		IObservableList targetObservableList = ContextObservables.observeList(
+				getViewContext(), uri, modelAccess.yMasterDetail.getType());
+		IObservableList modelObservable = EMFProperties.list(
+				ExtensionModelPackage.Literals.YMASTER_DETAIL__COLLECTION)
+				.observe(getModel());
+		registerBinding(createBindings(targetObservableList, modelObservable));
+
+		// // create the model binding from ridget to ECView-model
+		// if (modelAccess.yTable.getSelectionType() == YSelectionType.MULTI) {
+		// // create the model binding from ridget to ECView-model
+		// registerBinding(createBindings_MultiSelection(
+		// castEObject(getModel()),
+		// ExtensionModelPackage.Literals.YTABLE__MULTI_SELECTION,
+		// field, yField.getType()));
+		// } else {
+		// // create the model binding from ridget to ECView-model
+		// registerBinding(createBindings_Selection(castEObject(getModel()),
+		// ExtensionModelPackage.Literals.YTABLE__SELECTION, field,
+		// yField.getType()));
+		//
+		// }
+
+		// super.createBindings(yField, field);
+	}
+
+	/**
+	 * Creates a bean slot that is the input for the detail fields. It is used
+	 * by the presentation to bind the detail fields to that slot.
+	 * 
+	 * @return
+	 */
+	protected String getSelectionBeanSlot() {
+		return "selection_" + getEditpart().getId();
+	}
+
+	/**
+	 * Create a bean slot which is the input for the master detail. It is used
+	 * by the presentation to bind the table, list,... to that slot.
+	 */
+	protected String getCollectionBeanSlot() {
+		return "input_" + getEditpart().getId();
 	}
 
 	@Override
@@ -121,30 +200,52 @@ public class MasterDetailPresentation extends
 			throw new NullPointerException("BindableValue must not be null!");
 		}
 
-		// if (bindableValue instanceof YEmbeddableValueEndpoint) {
-		// return internalGetValueEndpoint();
-		// }
+		if (bindableValue instanceof YEmbeddableSelectionEndpoint) {
+			return internalGetSelectionEndpoint((YEmbeddableSelectionEndpoint) bindableValue);
+		} else if (bindableValue instanceof YEmbeddableCollectionEndpoint) {
+			return internalGetCollectionEndpoint();
+		}
 		throw new IllegalArgumentException("Not a valid input: "
 				+ bindableValue);
 	}
 
-	// /**
-	// * Returns the observable to observe value.
-	// *
-	// * @return
-	// */
-	// protected IObservableValue internalGetValueEndpoint() {
-	// // return the observable value for text
-	// return EMFObservables.observeValue(castEObject(getModel()),
-	// ExtensionModelPackage.Literals.yMasterDetail_FIELD__VALUE);
-	// }
+	/**
+	 * Returns the observable to observe value.
+	 * 
+	 * @return
+	 */
+	protected IObservableList internalGetCollectionEndpoint() {
+		// delegate the binding to the proper bean slot
+		URI uri = URIHelper.view().bean(getCollectionBeanSlot()).toURI();
+		IObservableList modelObservableList = ContextObservables.observeList(
+				getViewContext(), uri, modelAccess.yMasterDetail.getType());
+		return modelObservableList;
+	}
 
-	// /**
-	// * Creates the bindings for the given values.
-	// *
-	// * @param yField
-	// * @param field
-	// */
+	/**
+	 * Returns the observable to observe the selection.
+	 * 
+	 * @return
+	 */
+	protected IObservableValue internalGetSelectionEndpoint(
+			YEmbeddableSelectionEndpoint ep) {
+		if (ep.getAttributePath() == null || ep.getAttributePath().equals("")) {
+			// return the observable value for text
+			return EMFObservables.observeValue(castEObject(getModel()),
+					ExtensionModelPackage.Literals.YTABLE__SELECTION);
+		} else {
+			IObservableValue masterValue = EMFObservables.observeValue(castEObject(getModel()),
+					ExtensionModelPackage.Literals.YMASTER_DETAIL__SELECTION);
+			
+		}
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
 	// protected void createBindings(YMasterDetailField yField, TextField field)
 	// {
 	// // create the model binding from ridget to ECView-model
@@ -182,8 +283,7 @@ public class MasterDetailPresentation extends
 			componentBase = null;
 
 			if (masterPresentation != null) {
-				masterPresentation.unrender();
-				masterBase.removeAllComponents();
+				disposeMasterWidget();
 			}
 
 			if (detailPresentation != null) {
@@ -227,15 +327,68 @@ public class MasterDetailPresentation extends
 		}
 
 		if (this.masterPresentation != null) {
-			this.masterPresentation.dispose();
-			masterBase.removeAllComponents();
+			disposeMasterWidget();
 		}
 
 		this.masterPresentation = master;
 
-		if (this.masterPresentation != null) {
-			this.masterPresentation.createWidget(masterBase);
+		if (isRendered()) {
+			if (this.masterPresentation != null) {
+				createMasterWidget();
+			}
 		}
+	}
+
+	/**
+	 * Creates the master widget and does the databinding.
+	 */
+	public void createMasterWidget() {
+
+		Component masterWidget = (Component) masterPresentation
+				.createWidget(masterBase);
+		if (masterWidget != null) {
+			masterBase.removeAllComponents();
+			masterBase.addComponent(masterWidget);
+		}
+
+		YEmbeddable yMaster = (YEmbeddable) masterPresentation.getModel();
+		if (yMaster instanceof YCollectionBindable) {
+			createMasterCollectionBinding((YCollectionBindable) yMaster);
+		}
+	}
+
+	/**
+	 * Disposes the master widget and removes active bindings.
+	 */
+	protected void disposeMasterWidget() {
+		masterPresentation.dispose();
+		masterBase.removeAllComponents();
+
+		if (masterCollectionBinding != null) {
+			masterCollectionBinding.dispose();
+			masterCollectionBinding = null;
+		}
+	}
+
+	/**
+	 * Creates a binding from the master element to the proper bean slot.
+	 * 
+	 * @param yMaster
+	 */
+	protected void createMasterCollectionBinding(
+			YCollectionBindable yMasterCollectionBindable) {
+
+		YEmbeddableCollectionEndpoint yMasterEndpoint = yMasterCollectionBindable
+				.createCollectionEndpoint();
+		IObservableList targetObservableList = (IObservableList) this.masterPresentation
+				.getObservableValue(yMasterEndpoint);
+		URI uri = URIHelper.view().bean(getCollectionBeanSlot())
+				.fragment("value").toURI();
+		IObservableList modelObservableList = ContextObservables.observeList(
+				getViewContext(), uri, modelAccess.yMasterDetail.getType());
+
+		masterCollectionBinding = createBindings(targetObservableList,
+				modelObservableList);
 	}
 
 	@Override
@@ -251,8 +404,10 @@ public class MasterDetailPresentation extends
 
 		this.detailPresentation = detail;
 
-		if (this.detailPresentation != null) {
-			this.detailPresentation.createWidget(detailBase);
+		if (isRendered()) {
+			if (this.detailPresentation != null) {
+				this.detailPresentation.createWidget(detailBase);
+			}
 		}
 	}
 

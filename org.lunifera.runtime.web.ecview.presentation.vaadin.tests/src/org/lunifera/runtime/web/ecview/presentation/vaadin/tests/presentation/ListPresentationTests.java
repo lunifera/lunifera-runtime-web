@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1094,6 +1095,11 @@ public class ListPresentationTests {
 		list1.setValue(selection);
 		assertEquals(0, yList1.getMultiSelection().size());
 		assertEquals(0, asList(list1.getValue()).size());
+	}
+	
+	@Test
+	public void test_SelectionBinding_Single_WithAttributePath(){
+		fail("Implement!");
 	}
 
 	/**
