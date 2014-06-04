@@ -17,9 +17,7 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFProperties;
-import org.eclipse.emf.databinding.FeaturePath;
 import org.eclipse.emf.ecp.ecview.common.binding.observables.ContextObservables;
 import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -30,6 +28,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoin
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.common.uri.URIHelper;
+import org.eclipse.emf.ecp.ecview.databinding.emf.model.ECViewModelBindable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YMasterDetail;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IMasterDetailEditpart;
@@ -227,17 +226,17 @@ public class MasterDetailPresentation extends
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("restriction")
 	protected IObservableValue internalGetSelectionEndpoint(
-			YEmbeddableSelectionEndpoint ep) {
-		if (ep.getAttributePath() == null || ep.getAttributePath().equals("")) {
-			// return the observable value for text
-			return EMFObservables.observeValue(castEObject(getModel()),
-					ExtensionModelPackage.Literals.YTABLE__SELECTION);
-		} else {
-			IObservableValue masterValue = EMFObservables.observeValue(castEObject(getModel()),
-					ExtensionModelPackage.Literals.YMASTER_DETAIL__SELECTION);
-			
-		}
+			YEmbeddableSelectionEndpoint yEndpoint) {
+
+		String attributePath = ECViewModelBindable.getAttributePath(
+				ExtensionModelPackage.Literals.YMASTER_DETAIL__SELECTION,
+				yEndpoint.getAttributePath());
+
+		// return the observable value for text
+		return ECViewModelBindable.observeValue(castEObject(getModel()),
+				attributePath, modelAccess.yMasterDetail.getType());
 	}
 
 	/**

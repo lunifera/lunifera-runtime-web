@@ -23,6 +23,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
+import org.eclipse.emf.ecp.ecview.databinding.emf.model.ECViewModelBindable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
@@ -136,7 +137,7 @@ public class OptionsGroupPresentation extends
 		if (bindableValue instanceof YEmbeddableCollectionEndpoint) {
 			return internalGetCollectionEndpoint();
 		} else if (bindableValue instanceof YEmbeddableSelectionEndpoint) {
-			return internalGetSelectionEndpoint();
+			return internalGetSelectionEndpoint((YEmbeddableSelectionEndpoint) bindableValue);
 		} else if (bindableValue instanceof YEmbeddableMultiSelectionEndpoint) {
 			return internalGetMultiSelectionEndpoint();
 		}
@@ -161,10 +162,17 @@ public class OptionsGroupPresentation extends
 	 * 
 	 * @return
 	 */
-	protected IObservableValue internalGetSelectionEndpoint() {
+	@SuppressWarnings("restriction")
+	protected IObservableValue internalGetSelectionEndpoint(
+			YEmbeddableSelectionEndpoint yEndpoint) {
+
+		String attributePath = ECViewModelBindable.getAttributePath(
+				ExtensionModelPackage.Literals.YOPTIONS_GROUP__SELECTION,
+				yEndpoint.getAttributePath());
+
 		// return the observable value for text
-		return EMFObservables.observeValue(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YOPTIONS_GROUP__SELECTION);
+		return ECViewModelBindable.observeValue(castEObject(getModel()),
+				attributePath, modelAccess.yOptionsGroup.getType());
 	}
 
 	/**

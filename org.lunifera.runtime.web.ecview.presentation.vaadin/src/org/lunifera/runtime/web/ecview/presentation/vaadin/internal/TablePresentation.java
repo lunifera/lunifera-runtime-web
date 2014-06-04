@@ -17,7 +17,6 @@ import java.util.Set;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -25,6 +24,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
+import org.eclipse.emf.ecp.ecview.databinding.emf.model.ECViewModelBindable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
@@ -149,7 +149,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		if (bindableValue instanceof YEmbeddableCollectionEndpoint) {
 			return internalGetCollectionEndpoint();
 		} else if (bindableValue instanceof YEmbeddableSelectionEndpoint) {
-			return internalGetSelectionEndpoint();
+			return internalGetSelectionEndpoint((YEmbeddableSelectionEndpoint) bindableValue);
 		} else if (bindableValue instanceof YEmbeddableMultiSelectionEndpoint) {
 			return internalGetMultiSelectionEndpoint();
 		}
@@ -174,10 +174,17 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	 * 
 	 * @return
 	 */
-	protected IObservableValue internalGetSelectionEndpoint() {
+	@SuppressWarnings("restriction")
+	protected IObservableValue internalGetSelectionEndpoint(
+			YEmbeddableSelectionEndpoint yEndpoint) {
+
+		String attributePath = ECViewModelBindable.getAttributePath(
+				ExtensionModelPackage.Literals.YTABLE__SELECTION,
+				yEndpoint.getAttributePath());
+
 		// return the observable value for text
-		return EMFObservables.observeValue(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YTABLE__SELECTION);
+		return ECViewModelBindable.observeValue(castEObject(getModel()),
+				attributePath, modelAccess.yTable.getType());
 	}
 
 	/**
