@@ -1,0 +1,117 @@
+package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.ui.samples;
+
+import org.eclipse.emf.ecp.ecview.common.context.ContextException;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
+import org.eclipse.emf.ecp.ecview.common.model.core.YView;
+import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YTextDatatype;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
+
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Label;
+
+public class TextFieldSample extends CustomComponent {
+
+	private final SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
+
+	private CssLayout layout;
+
+	private YView yView;
+
+	private YBindingSet yBindingSet;
+
+	private YVerticalLayout yLayout;
+
+	public TextFieldSample() {
+		layout = new CssLayout();
+		setCompositionRoot(layout);
+
+		init();
+	}
+
+	protected void init() {
+
+		yView = factory.createView();
+		yLayout = factory.createVerticalLayout();
+		yView.setContent(yLayout);
+
+		yBindingSet = yView.getOrCreateBindingSet();
+
+		row1();
+
+		row2();
+
+		// render now, fill in values later
+		// to avoid overwriting values with bindings to empty fields
+		VaadinRenderer renderer = new VaadinRenderer();
+		try {
+			renderer.render(layout, yView, null);
+		} catch (ContextException e) {
+			layout.addComponent(new Label(e.toString()));
+		}
+	}
+	
+	public void row3() {
+		// test row 1
+		YHorizontalLayout row1 = factory.createHorizontalLayout();
+		yLayout.addElement(row1);
+		YCheckBox yCheckbox = factory.createCheckBox();
+		yCheckbox.setLabel("Click for readonly");
+		YTextField yText = factory.createTextField();
+		yText.setLabel("Becomes read only");
+		row1.addElement(yCheckbox);
+		row1.addElement(yText);
+
+		yText.setEditable(value);
+		
+		yBindingSet.addBinding(yText.createValueEndpoint(),
+				yText.getValueBindingEndpoint());
+	}
+
+	public void row2() {
+		// test row 2
+		YHorizontalLayout row2 = factory.createHorizontalLayout();
+		yLayout.addElement(row2);
+
+		YTextField yText2_1 = factory.createTextField();
+		yText2_1.setLabel("minLength 3");
+		row2.addElement(yText2_1);
+		YTextDatatype yDt2_2 = factory.createTextDatatype();
+		yDt2_2.setMinLength(3);
+		yText2_1.setDatatype(yDt2_2);
+
+		YTextField yText2_2 = factory.createTextField();
+		yText2_2.setLabel("maxLength 10:");
+		row2.addElement(yText2_2);
+		YTextDatatype yDt2_1 = factory.createTextDatatype();
+		yDt2_1.setMaxLength(10);
+		yText2_2.setDatatype(yDt2_1);
+
+		YTextField yText2_3 = factory.createTextField();
+		yText2_3.setLabel("regexp: \\d+");
+		row2.addElement(yText2_3);
+		YTextDatatype yDt2_3 = factory.createTextDatatype();
+		yDt2_3.setRegExpression("\\d+");
+		yText2_3.setDatatype(yDt2_3);
+	}
+
+	public void row1() {
+		// test row 1
+		YHorizontalLayout row1 = factory.createHorizontalLayout();
+		yLayout.addElement(row1);
+		YTextField yText1_1 = factory.createTextField();
+		yText1_1.setLabel("A (binds to B):");
+		YTextField yText1_2 = factory.createTextField();
+		yText1_2.setLabel("B (binds to A):");
+		row1.addElement(yText1_1);
+		row1.addElement(yText1_2);
+
+		yBindingSet.addBinding(yText1_1.createValueEndpoint(),
+				yText1_2.getValueBindingEndpoint());
+	}
+}
