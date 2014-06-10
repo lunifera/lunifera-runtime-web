@@ -95,11 +95,11 @@ public class LabelPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			label.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+			componentBase.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
 					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				label.setCaption(modelAccess.getLabel());
+				componentBase.setCaption(modelAccess.getLabel());
 			}
 		}
 	}

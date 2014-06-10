@@ -21,6 +21,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IFormLayoutEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IGridLayoutEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IHorizontalLayoutEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
@@ -36,7 +37,6 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IVerticalLayoutEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.IMasterDetailPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 
 /**
@@ -87,6 +87,8 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new HorizontalLayoutPresentation(editpart);
 		} else if (editpart instanceof IVerticalLayoutEditpart) {
 			return (A) new VerticalLayoutPresentation(editpart);
+		} else if (editpart instanceof IFormLayoutEditpart) {
+			return (A) new FormLayoutPresentation(editpart);
 		} else if (editpart instanceof IDecimalFieldEditpart) {
 			return (A) new DecimalFieldPresentation(editpart);
 		} else if (editpart instanceof INumericFieldEditpart) {
