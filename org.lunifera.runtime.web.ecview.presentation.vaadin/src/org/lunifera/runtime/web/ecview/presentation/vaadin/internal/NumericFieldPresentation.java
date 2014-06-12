@@ -141,11 +141,11 @@ public class NumericFieldPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			numberField.setCaption(service.getValue(
+			componentBase.setCaption(service.getValue(
 					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				numberField.setCaption(modelAccess.getLabel());
+				componentBase.setCaption(modelAccess.getLabel());
 			}
 		}
 	}

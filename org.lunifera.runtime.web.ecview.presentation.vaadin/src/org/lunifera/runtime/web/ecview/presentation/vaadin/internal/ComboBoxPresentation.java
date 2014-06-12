@@ -108,11 +108,11 @@ public class ComboBoxPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			combo.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+			componentBase.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
 					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				combo.setCaption(modelAccess.getLabel());
+				componentBase.setCaption(modelAccess.getLabel());
 			}
 		}
 	}

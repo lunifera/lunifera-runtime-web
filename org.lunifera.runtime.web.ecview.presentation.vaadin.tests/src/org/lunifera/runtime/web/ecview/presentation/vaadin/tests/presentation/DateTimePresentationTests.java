@@ -34,10 +34,12 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +53,7 @@ import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -396,10 +399,133 @@ public class DateTimePresentationTests {
 				.getPresentation();
 
 		DateField datetime = (DateField) unwrapText(presentation.getWidget());
-		assertEquals("Alter", datetime.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", datetime.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Readonly_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDateTime yText = factory.createDateTime();
+		yLayout.getElements().add(yText);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDateTimeEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		DateField datetime = (DateField) unwrapText(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yText.createEditableEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yText.isEditable());
+		assertFalse(!datetime.isReadOnly());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yText.isEditable());
+		assertTrue(!datetime.isReadOnly());
+		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Visible_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDateTime yText = factory.createDateTime();
+		yLayout.getElements().add(yText);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDateTimeEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		DateField datetime = (DateField) unwrapText(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yText.createVisibleEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yText.isVisible());
+		assertFalse(datetime.isVisible());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yText.isVisible());
+		assertTrue(datetime.isVisible());
+		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Enabled_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDateTime yText = factory.createDateTime();
+		yLayout.getElements().add(yText);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDateTimeEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		DateField datetime = (DateField) unwrapText(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yText.createEnabledEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yText.isEnabled());
+		assertFalse(datetime.isEnabled());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yText.isEnabled());
+		assertTrue(datetime.isEnabled());
+		assertTrue(bean.isBoolValue());
 	}
 
 	/**

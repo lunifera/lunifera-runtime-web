@@ -30,10 +30,12 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YBrowser;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.junit.Before;
@@ -46,6 +48,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
+import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -390,10 +393,10 @@ public class CheckBoxPresentationTests {
 				.getPresentation();
 
 		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());
-		assertEquals("Alter", box.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", box.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 
 	/**
@@ -433,4 +436,128 @@ public class CheckBoxPresentationTests {
 		Component widget = presentation.getWidget();
 		return widget;
 	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Readonly_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YCheckBox yCheckBox = factory.createCheckBox();
+		yLayout.getElements().add(yCheckBox);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ICheckboxEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yCheckBox);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yCheckBox.createEditableEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yCheckBox.isEditable());
+		assertFalse(!box.isReadOnly());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yCheckBox.isEditable());
+		assertTrue(!box.isReadOnly());
+		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Visible_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YCheckBox yCheckBox = factory.createCheckBox();
+		yLayout.getElements().add(yCheckBox);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ICheckboxEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yCheckBox);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yCheckBox.createVisibleEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yCheckBox.isVisible());
+		assertFalse(box.isVisible());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yCheckBox.isVisible());
+		assertTrue(box.isVisible());
+		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Enabled_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YCheckBox yCheckBox = factory.createCheckBox();
+		yLayout.getElements().add(yCheckBox);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ICheckboxEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yCheckBox);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yCheckBox.createEnabledEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yCheckBox.isEnabled());
+		assertFalse(box.isEnabled());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yCheckBox.isEnabled());
+		assertTrue(box.isEnabled());
+		assertTrue(bean.isBoolValue());
+	}
+
 }

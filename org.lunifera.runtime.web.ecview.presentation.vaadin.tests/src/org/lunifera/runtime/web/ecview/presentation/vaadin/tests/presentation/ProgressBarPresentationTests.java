@@ -33,9 +33,11 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YProgressBar;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
 import org.junit.Before;
@@ -51,6 +53,7 @@ import org.osgi.service.cm.ConfigurationException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.UI;
@@ -305,7 +308,8 @@ public class ProgressBarPresentationTests {
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		yProgressBar1.setValue(0.0f);
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(0.30f);
 		beanBinding.setPropertyPath("floatValue");
 		beanBinding.setBean(bean);
@@ -380,16 +384,140 @@ public class ProgressBarPresentationTests {
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
-		IProgressBarEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yProgressBar);
-		ProgressBarPresentation presentation = editpart
-				.getPresentation();
+		IProgressBarEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yProgressBar);
+		ProgressBarPresentation presentation = editpart.getPresentation();
 
 		ProgressBar bar = (ProgressBar) unwrapText(presentation.getWidget());
-		assertEquals("Alter", bar.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", bar.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Readonly_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YProgressBar yProgressBar = factory.createProgressBar();
+		yLayout.getElements().add(yProgressBar);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IProgressBarEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yProgressBar);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		ProgressBar progressBar1 = (ProgressBar) unwrapText(baseComponentContainer);
+
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yProgressBar.createEditableEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yProgressBar.isEditable());
+		assertFalse(!progressBar1.isReadOnly());
+		assertFalse(bean.isBoolValue());
+
+		bean.setBoolValue(true);
+		assertTrue(yProgressBar.isEditable());
+		assertTrue(!progressBar1.isReadOnly());
+		assertTrue(bean.isBoolValue());
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Visible_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YProgressBar yProgressBar = factory.createProgressBar();
+		yLayout.getElements().add(yProgressBar);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IProgressBarEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yProgressBar);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		ProgressBar progressBar1 = (ProgressBar) unwrapText(textBaseComponentContainer);
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yProgressBar.createVisibleEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yProgressBar.isVisible());
+		assertFalse(progressBar1.isVisible());
+		assertFalse(bean.isBoolValue());
+
+		bean.setBoolValue(true);
+		assertTrue(yProgressBar.isVisible());
+		assertTrue(progressBar1.isVisible());
+		assertTrue(bean.isBoolValue());
+	}
+
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Enabled_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YProgressBar yProgressBar = factory.createProgressBar();
+		yLayout.getElements().add(yProgressBar);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IProgressBarEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yProgressBar);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		ProgressBar progressBar1 = (ProgressBar) unwrapText(textBaseComponentContainer);
+
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yProgressBar.createEnabledEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yProgressBar.isEnabled());
+		assertFalse(progressBar1.isEnabled());
+		assertFalse(bean.isBoolValue());
+
+		bean.setBoolValue(true);
+		assertTrue(yProgressBar.isEnabled());
+		assertTrue(progressBar1.isEnabled());
+		assertTrue(bean.isBoolValue());
 	}
 
 	/**

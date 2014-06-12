@@ -31,6 +31,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.binding.YDetailValueBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
@@ -40,10 +41,12 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTree;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.junit.Before;
@@ -57,6 +60,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.Model
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.ModelPackage;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.Bar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.Foo;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
@@ -65,6 +69,7 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;
@@ -883,10 +888,147 @@ public class TreePresentationTests {
 	}
 
 	@Test
-	public void test_SelectionBinding_Single_WithAttributePath() {
-		fail("Implement!");
-	}
+	public void test_SelectionBinding_Single_WithAttributePath() 
+			throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTree yTree1 = factory.createTree();
+		yTree1.setType(Bar.class);
+		yLayout.getElements().add(yTree1);
+		YTextField yText = factory.createTextField();
+		yLayout.getElements().add(yText);
 
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		YEmbeddableSelectionEndpoint selectionBindingEndpoint = yTree1
+				.createSelectionEndpoint();
+		selectionBindingEndpoint.setAttributePath("myfoo.name");
+		yBindingSet.addBinding(yText.createValueEndpoint(),
+				selectionBindingEndpoint);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITreeEditpart tree1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTree1);
+		IWidgetPresentation<Component> tree1Presentation = tree1Editpart
+				.getPresentation();
+		ComponentContainer tree1BaseComponentContainer = (ComponentContainer) tree1Presentation
+				.getWidget();
+		Tree tree1 = (Tree) unwrapTree(tree1BaseComponentContainer);
+
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> textPresentation = textEditpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+				.getWidget();
+		TextField text = (TextField) unwrapTree(textBaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) tree1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertNull(tree1.getValue());
+		assertNull(yTree1.getSelection());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// add
+		Bar bar1 = new Bar();
+		bar1.setName("Bar1");
+		Foo foo1 = new Foo();
+		foo1.setName("Foo1");
+		bar1.setMyfoo(foo1);
+
+		Bar bar2 = new Bar();
+		bar2.setName("Bar2");
+		Foo foo2 = new Foo();
+		foo2.setName("Foo2");
+		bar2.setMyfoo(foo2);
+
+		yTree1.getCollection().add(bar1);
+		yTree1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test set selection
+		yTree1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yTree1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		yTree1.setSelection(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		tree1.setValue(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		tree1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		tree1.setValue(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test remove element that is selected
+		// add
+		tree1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yTree1.getCollection().clear();
+
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+
+		// test setValue to textfield
+		yTree1.getCollection().add(bar1);
+		yTree1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		yTree1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yText.setValue("Foo2_1");
+		assertEquals("Foo2_1", foo2.getName());
+		assertEquals("Foo2_1", text.getValue());
+
+		text.setValue("Foo2_2");
+		assertEquals("Foo2_2", foo2.getName());
+		assertEquals("Foo2_2", yText.getValue());
+
+		yTree1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yText.setValue("Foo1_1");
+		assertEquals("Foo1_1", foo1.getName());
+		assertEquals("Foo1_1", text.getValue());
+
+		text.setValue("Foo1_2");
+		assertEquals("Foo1_2", foo1.getName());
+		assertEquals("Foo1_2", yText.getValue());
+
+	}
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -1527,12 +1669,137 @@ public class TreePresentationTests {
 		TreePresentation presentation = editpart.getPresentation();
 
 		Tree tree = (Tree) unwrapTree(presentation.getWidget());
-		assertEquals("Alter", tree.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", tree.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Readonly_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTree yTree1 = factory.createTree();
+		yLayout.getElements().add(yTree1);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITreeEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yTree1);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		Tree tree1 = (Tree) unwrapTree(baseComponentContainer);
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yTree1.createEditableEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yTree1.isEditable());
+		assertFalse(!tree1.isReadOnly());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yTree1.isEditable());
+		assertTrue(!tree1.isReadOnly());
+		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Visible_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTree yTree1 = factory.createTree();
+		yLayout.getElements().add(yTree1);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITreeEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yTree1);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		Tree tree1 = (Tree) unwrapTree(textBaseComponentContainer);		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yTree1.createVisibleEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yTree1.isVisible());
+		assertFalse(tree1.isVisible());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yTree1.isVisible());
+		assertTrue(tree1.isVisible());
+		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Enabled_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTree yTree1 = factory.createTree();
+		yLayout.getElements().add(yTree1);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITreeEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yTree1);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		Tree tree1 = (Tree) unwrapTree(textBaseComponentContainer);		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yTree1.createEnabledEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yTree1.isEnabled());
+		assertFalse(tree1.isEnabled());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yTree1.isEnabled());
+		assertTrue(tree1.isEnabled());
+		assertTrue(bean.isBoolValue());
+	}
+
+	
 	/**
 	 * Unwraps the component from its parent composite.
 	 * 

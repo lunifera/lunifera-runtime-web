@@ -27,13 +27,17 @@ import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.junit.Before;
@@ -42,9 +46,11 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.DateTimePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.LabelPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -317,10 +323,133 @@ public class LabelPresentationTests {
 				.getPresentation();
 
 		Label label = (Label) unwrapLabel(presentation.getWidget());
-		assertEquals("Alter", label.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", label.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Readonly_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YLabel yLabel = factory.createLabel();
+		yLayout.getElements().add(yLabel);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ILabelEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yLabel);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		Label label = (Label) unwrapLabel(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yLabel.createEditableEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yLabel.isEditable());
+		assertFalse(!label.isReadOnly());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yLabel.isEditable());
+		assertTrue(!label.isReadOnly());
+		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Visible_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YLabel yLabel = factory.createLabel();
+		yLayout.getElements().add(yLabel);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ILabelEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yLabel);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		Label label = (Label) unwrapLabel(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yLabel.createVisibleEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yLabel.isVisible());
+		assertFalse(label.isVisible());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yLabel.isVisible());
+		assertTrue(label.isVisible());
+		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	// BEGIN SUPRESS CATCH EXCEPTION
+	public void test_Enabled_Binding() throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YLabel yLabel = factory.createLabel();
+		yLayout.getElements().add(yLabel);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ILabelEditpart editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yLabel);
+		IWidgetPresentation<Component> presentation = editpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
+				.getWidget();
+		Label label = (Label) unwrapLabel(presentation.getWidget());		
+		
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yLabel.createEnabledEndpoint(),
+				yBeanBinding);
+
+		// test binding
+		assertFalse(yLabel.isEnabled());
+		assertFalse(label.isEnabled());
+		assertFalse(bean.isBoolValue());
+		
+		bean.setBoolValue(true);
+		assertTrue(yLabel.isEnabled());
+		assertTrue(label.isEnabled());
+		assertTrue(bean.isBoolValue());
 	}
 
 	/**
