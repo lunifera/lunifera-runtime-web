@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -378,29 +377,25 @@ public class ButtonPresentationTests {
 				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		Button button = (Button) unwrapButton(presentation.getWidget());
 
-		// ValueBean bean = new ValueBean(false);
-		// YBeanValueBindingEndpoint yBeanBinding =
-		// factory.createBeanBindingEndpoint();
-		// yBeanBinding.setBean(bean);
-		// yBeanBinding.setPropertyPath("boolValue");
-		// YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		// yBindingSet.addBinding(yButton.createEditableEndpoint(),
-		// yBeanBinding);
-		//
-		// // test binding
-		// assertFalse(yButton.isEditable());
-		// assertFalse(!button.isReadOnly());
-		// assertFalse(bean.isBoolValue());
-		//
-		// bean.setBoolValue(true);
-		// assertTrue(yButton.isEditable());
-		// assertTrue(!button.isReadOnly());
-		// assertTrue(bean.isBoolValue());
-		fail("FP fixme!");
+		ValueBean bean = new ValueBean(false);
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
+		yBeanBinding.setBean(bean);
+		yBeanBinding.setPropertyPath("boolValue");
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(yButton.createEditableEndpoint(), yBeanBinding);
+
+		// test binding
+		assertFalse(yButton.isEditable());
+		assertFalse(!button.isReadOnly());
+		assertFalse(bean.isBoolValue());
+
+		bean.setBoolValue(true);
+		assertTrue(yButton.isEditable());
+		assertTrue(!button.isReadOnly());
+		assertTrue(bean.isBoolValue());
 	}
 
 	@Test
