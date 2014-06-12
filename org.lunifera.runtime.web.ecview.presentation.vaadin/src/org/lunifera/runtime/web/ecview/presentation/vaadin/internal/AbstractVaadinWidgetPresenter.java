@@ -34,6 +34,7 @@ import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
@@ -41,6 +42,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
 import org.eclipse.emf.ecp.ecview.common.model.core.util.CoreModelUtil;
+import org.eclipse.emf.ecp.ecview.common.model.datatypes.YDatatype;
 import org.eclipse.emf.ecp.ecview.common.model.visibility.YColor;
 import org.eclipse.emf.ecp.ecview.common.model.visibility.YVisibilityProperties;
 import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleEvent;
@@ -160,6 +162,18 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	}
 
 	@Override
+	public void notifyDatatypeChanged(DatatypeChangeEvent event) {
+		if (event.isUnsetEvent()) {
+			doApplyDatatype(null);
+		} else {
+			doApplyDatatype((YDatatype) event.getEditpart().getModel());
+		}
+	}
+
+	protected void doApplyDatatype(YDatatype yDt) {
+	}
+
+	@Override
 	public void resetVisibilityProperties() {
 		visibilityOptionsApplier.apply(null);
 	}
@@ -209,7 +223,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		// modelToTarget)
 
 	}
-	
+
 	/**
 	 * Creates the binding.
 	 * 
@@ -224,10 +238,10 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 				.getService(
 						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
 								.getName());
-		
+
 		return bindingManger.bindValue(target, model);
 	}
-	
+
 	/**
 	 * Creates the binding.
 	 * 
@@ -242,7 +256,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 				.getService(
 						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
 								.getName());
-		
+
 		return bindingManger.bindList(target, model);
 	}
 
@@ -391,7 +405,8 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			modelToTarget.setBeforeSetValidator(new IValidator() {
 				@Override
 				public IStatus validate(Object value) {
-					if (value != null && !value.equals("") && !field.containsId(value)) {
+					if (value != null && !value.equals("")
+							&& !field.containsId(value)) {
 						return Status.CANCEL_STATUS;
 					}
 

@@ -18,6 +18,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
+import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
@@ -31,7 +32,6 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TabSheet.Tab;
 
 /**
  * An abstract implementation of the {@link IWidgetPresentation}.
@@ -95,6 +95,11 @@ public abstract class AbstractTabPresenter<A extends Component> extends
 
 	@Override
 	public void resetVisibilityProperties() {
+
+	}
+
+	@Override
+	public void notifyDatatypeChanged(DatatypeChangeEvent event) {
 
 	}
 

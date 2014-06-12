@@ -24,6 +24,8 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YValueBindable;
+import org.eclipse.emf.ecp.ecview.common.model.datatypes.YDatatype;
+import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
@@ -81,7 +83,6 @@ public class DecimalFieldPresentation extends
 
 			decimalField = new DecimalField();
 			decimalField.addStyleName(CSS_CLASS__CONTROL);
-			decimalField.setMarkNegative(true); // arbitrary default
 			decimalField.setImmediate(true);
 
 			property = new ObjectProperty<Double>(0d, Double.class);
@@ -92,14 +93,7 @@ public class DecimalFieldPresentation extends
 						@Override
 						public void valueChange(ValueChangeEvent event) {
 							if (binding_valueToUI != null) {
-								binding_valueToUI.updateTargetToModel();
-
-								Binding domainToEObjectBinding = ModelUtil
-										.getValueBinding((YValueBindable) getModel());
-								if (domainToEObjectBinding != null) {
-									domainToEObjectBinding
-											.updateTargetToModel();
-								}
+								updateUiToECViewModel();
 							}
 						}
 					});
@@ -112,8 +106,7 @@ public class DecimalFieldPresentation extends
 
 			applyCaptions();
 
-			decimalField.setPrecision(modelAccess.getPrecision());
-			decimalField.setUseGrouping(modelAccess.isGrouping());
+			doApplyDatatype(modelAccess.yDecimalField.getDatatype());
 
 			initializeField(decimalField);
 
@@ -124,6 +117,38 @@ public class DecimalFieldPresentation extends
 			sendRenderedLifecycleEvent();
 		}
 		return componentBase;
+	}
+
+	/**
+	 * Applies the datatype options to the field.
+	 * 
+	 * @param yDt
+	 */
+	protected void doApplyDatatype(YDatatype yDt) {
+		if (decimalField == null) {
+			return;
+		}
+
+		int oldPrecision = decimalField.getPrecision();
+		if (yDt == null) {
+			decimalField.setPrecision(2);
+			decimalField.setUseGrouping(true);
+			decimalField.setMarkNegative(true);
+		} else {
+			YDecimalDatatype yCasted = (YDecimalDatatype) yDt;
+			decimalField.setPrecision(yCasted.getPrecision());
+			decimalField.setUseGrouping(yCasted.isGrouping());
+			decimalField.setMarkNegative(yCasted.isMarkNegative());
+		}
+
+		if (isRendered()) {
+			// if the precision changed, then update the value from the ui field
+			// to the ECViewModel
+			if (oldPrecision != decimalField.getPrecision()) {
+				updateUiToECViewModel();
+			}
+		}
+
 	}
 
 	@Override
@@ -260,7 +285,18 @@ public class DecimalFieldPresentation extends
 		} finally {
 			super.internalDispose();
 		}
+	}
 
+	protected void updateUiToECViewModel() {
+		if(binding_valueToUI != null){
+			binding_valueToUI.updateTargetToModel();
+		}
+
+		Binding domainToEObjectBinding = ModelUtil
+				.getValueBinding((YValueBindable) getModel());
+		if (domainToEObjectBinding != null) {
+			domainToEObjectBinding.updateTargetToModel();
+		}
 	}
 
 	/**
@@ -325,26 +361,6 @@ public class DecimalFieldPresentation extends
 		 */
 		public String getLabel() {
 			return yDecimalField.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns the precision of the decimal field.
-		 * 
-		 * @return
-		 */
-		public int getPrecision() {
-			return yDecimalField.getDatatype() != null ? yDecimalField
-					.getDatatype().getPrecision() : 2;
-		}
-
-		/**
-		 * Returns the grouping of the decimal field.
-		 * 
-		 * @return
-		 */
-		public boolean isGrouping() {
-			return yDecimalField.getDatatype() != null ? yDecimalField
-					.getDatatype().isGrouping() : true;
 		}
 
 		/**

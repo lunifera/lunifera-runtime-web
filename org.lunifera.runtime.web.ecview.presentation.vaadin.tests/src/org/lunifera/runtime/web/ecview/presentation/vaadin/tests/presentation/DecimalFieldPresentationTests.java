@@ -978,6 +978,7 @@ public class DecimalFieldPresentationTests {
 		YDecimalDatatype dt1 = factory.createDecimalDatatype();
 		dt1.setGrouping(true);
 		YDecimalDatatype dt2 = factory.createDecimalDatatype();
+		dt2.setPrecision(1);
 		dt2.setGrouping(false);
 		
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -998,12 +999,12 @@ public class DecimalFieldPresentationTests {
 		assertEquals(112233.44, yField.getValue(), 0);
 		
 		yField.setDatatype(dt2);
-		assertEquals("112233,44", field.getValue());
-		assertEquals(112233.44, yField.getValue(), 0);
+		assertEquals("112233,4", field.getValue());
+		assertEquals(112233.4, yField.getValue(), 0);
 		
 		yField.setValue(4567.890);
-		assertEquals("4567,8", field.getValue());
-		assertEquals(4567.890, yField.getValue(), 0);;
+		assertEquals("4567,9", field.getValue());
+		assertEquals(4567.9, yField.getValue(), 0);;
 	}
 
 	@Test

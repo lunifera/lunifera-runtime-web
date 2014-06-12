@@ -13,7 +13,6 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Locale;
 
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;

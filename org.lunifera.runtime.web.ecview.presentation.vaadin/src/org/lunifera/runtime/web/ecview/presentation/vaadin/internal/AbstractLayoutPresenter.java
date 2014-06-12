@@ -19,7 +19,6 @@ import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
 import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.ComponentContainer;
 

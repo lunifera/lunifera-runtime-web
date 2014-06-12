@@ -24,6 +24,8 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YValueBindable;
+import org.eclipse.emf.ecp.ecview.common.model.datatypes.YDatatype;
+import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YNumericDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
@@ -81,7 +83,6 @@ public class NumericFieldPresentation extends
 
 			numberField = new NumberField();
 			numberField.addStyleName(CSS_CLASS__CONTROL);
-			numberField.setMarkNegative(true); // arbitrary default
 			numberField.setImmediate(true);
 
 			property = new ObjectProperty<Double>(0d, Double.class);
@@ -111,8 +112,7 @@ public class NumericFieldPresentation extends
 			}
 
 			applyCaptions();
-
-			numberField.setUseGrouping(modelAccess.isGrouping());
+			doApplyDatatype(modelAccess.yNumericField.getDatatype());
 
 			initializeField(numberField);
 
@@ -124,6 +124,25 @@ public class NumericFieldPresentation extends
 
 		}
 		return componentBase;
+	}
+
+	/**
+	 * Applies the datatype options to the field.
+	 * 
+	 * @param yDt
+	 */
+	protected void doApplyDatatype(YDatatype yDt) {
+		if (numberField == null) {
+			return;
+		}
+		if (yDt == null) {
+			numberField.setUseGrouping(true);
+			numberField.setMarkNegative(true);
+		} else {
+			YNumericDatatype yCasted = (YNumericDatatype) yDt;
+			numberField.setUseGrouping(yCasted.isGrouping());
+			numberField.setMarkNegative(yCasted.isMarkNegative());
+		}
 	}
 
 	@Override
@@ -268,11 +287,6 @@ public class NumericFieldPresentation extends
 		public ModelAccess(YNumericField yNumericField) {
 			super();
 			this.yNumericField = yNumericField;
-		}
-
-		public boolean isGrouping() {
-			return yNumericField.getDatatype() != null ? yNumericField
-					.getDatatype().isGrouping() : true;
 		}
 
 		/**

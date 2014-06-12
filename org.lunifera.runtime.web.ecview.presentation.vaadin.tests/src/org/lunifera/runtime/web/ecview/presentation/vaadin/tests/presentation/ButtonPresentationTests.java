@@ -33,30 +33,23 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YBrowser;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ButtonPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
-import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 /**
@@ -478,18 +471,17 @@ public class ButtonPresentationTests {
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-//		yBindingSet.addBinding(yButton.createEnabledEndpoint(),
-//				yBeanBinding);
-//
-//		// test binding
-//		assertFalse(yButton.isEnabled());
-//		assertFalse(button.isEnabled());
-//		assertFalse(bean.isBoolValue());
-//		
-//		bean.setBoolValue(true);
-//		assertTrue(yButton.isEnabled());
-//		assertTrue(button.isEnabled());
-//		assertTrue(bean.isBoolValue());
+		yBindingSet.addBinding(yButton.createEnabledEndpoint(), yBeanBinding);
+
+		// test binding
+		assertFalse(yButton.isEnabled());
+		assertFalse(button.isEnabled());
+		assertFalse(bean.isBoolValue());
+
+		bean.setBoolValue(true);
+		assertTrue(yButton.isEnabled());
+		assertTrue(button.isEnabled());
+		assertTrue(bean.isBoolValue());
 		fail("FP fixme!");
 	}
 }
