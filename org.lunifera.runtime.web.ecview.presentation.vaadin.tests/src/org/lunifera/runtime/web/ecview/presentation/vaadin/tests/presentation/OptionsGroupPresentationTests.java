@@ -109,6 +109,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(String.class);
 		yGridlayout.getElements().add(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -141,6 +142,7 @@ public class OptionsGroupPresentationTests {
 		// ......> yOptionsGroup
 		YView yView = factory.createView();
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(String.class);
 		yView.setContent(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -173,10 +175,12 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yOptionsGroup1.setCssID("ID_0815");
 		yOptionsGroup1.setCssClass("anyOtherClass");
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -232,8 +236,10 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -288,6 +294,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -355,8 +362,10 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -475,6 +484,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -859,6 +869,7 @@ public class OptionsGroupPresentationTests {
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
 		yOptionsGroup1.setSelectionType(YSelectionType.MULTI);
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1014,6 +1025,7 @@ public class OptionsGroupPresentationTests {
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
 		yOptionsGroup1.setSelectionType(YSelectionType.MULTI);
+		yOptionsGroup1.setType(List.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1258,9 +1270,11 @@ public class OptionsGroupPresentationTests {
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
 		yOptionsGroup1.setSelectionType(YSelectionType.MULTI);
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
 		yOptionsGroup2.setSelectionType(YSelectionType.MULTI);
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1418,8 +1432,10 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1584,6 +1600,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(String.class);
 		yGridlayout.getElements().add(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1613,6 +1630,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(String.class);
 		yGridlayout.getElements().add(yOptionsGroup);
 
 		// set the i18n key
@@ -1645,6 +1663,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(ValueBean.class);
 		yLayout.getElements().add(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1685,6 +1704,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(ValueBean.class);
 		yLayout.getElements().add(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1726,6 +1746,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(ValueBean.class);
 		yLayout.getElements().add(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();

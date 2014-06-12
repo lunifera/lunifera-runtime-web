@@ -280,12 +280,12 @@ public class ButtonPresentationTests {
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 		assertEquals(2, presentation.getUIBindings().size());
-		
+
 		presentation.dispose();
 		assertFalse(presentation.isRendered());
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
-		
+
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class ButtonPresentationTests {
 		Component widget = presentation.getWidget();
 		return widget;
 	}
-	
+
 	@Test
 	public void test_i18n() throws ContextException {
 
@@ -349,10 +349,9 @@ public class ButtonPresentationTests {
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
-		IButtonEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton);
-		ButtonPresentation presentation = editpart
-				.getPresentation();
+		IButtonEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yButton);
+		ButtonPresentation presentation = editpart.getPresentation();
 
 		Button button = (Button) unwrapButton(presentation.getWidget());
 		assertEquals("Alter", button.getCaption());
@@ -360,7 +359,7 @@ public class ButtonPresentationTests {
 		context.setLocale(Locale.ENGLISH);
 		assertEquals("Age", button.getCaption());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -371,38 +370,39 @@ public class ButtonPresentationTests {
 		yView.setContent(yLayout);
 		YButton yButton = factory.createButton();
 		yLayout.getElements().add(yButton);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IButtonEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton);
+		IButtonEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		Button button = (Button) unwrapButton(presentation.getWidget());		
-		
-//		ValueBean bean = new ValueBean(false);
-//		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
-//		yBeanBinding.setBean(bean);
-//		yBeanBinding.setPropertyPath("boolValue");
-//		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-//		yBindingSet.addBinding(yButton.createEditableEndpoint(),
-//				yBeanBinding);
-//
-//		// test binding
-//		assertFalse(yButton.isEditable());
-//		assertFalse(!button.isReadOnly());
-//		assertFalse(bean.isBoolValue());
-//		
-//		bean.setBoolValue(true);
-//		assertTrue(yButton.isEditable());
-//		assertTrue(!button.isReadOnly());
-//		assertTrue(bean.isBoolValue());
+		Button button = (Button) unwrapButton(presentation.getWidget());
+
+		// ValueBean bean = new ValueBean(false);
+		// YBeanValueBindingEndpoint yBeanBinding =
+		// factory.createBeanBindingEndpoint();
+		// yBeanBinding.setBean(bean);
+		// yBeanBinding.setPropertyPath("boolValue");
+		// YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		// yBindingSet.addBinding(yButton.createEditableEndpoint(),
+		// yBeanBinding);
+		//
+		// // test binding
+		// assertFalse(yButton.isEditable());
+		// assertFalse(!button.isReadOnly());
+		// assertFalse(bean.isBoolValue());
+		//
+		// bean.setBoolValue(true);
+		// assertTrue(yButton.isEditable());
+		// assertTrue(!button.isReadOnly());
+		// assertTrue(bean.isBoolValue());
 		fail("FP fixme!");
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -413,37 +413,37 @@ public class ButtonPresentationTests {
 		yView.setContent(yLayout);
 		YButton yButton = factory.createButton();
 		yLayout.getElements().add(yButton);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IButtonEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton);
+		IButtonEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		Button button = (Button) unwrapButton(presentation.getWidget());		
-		
+		Button button = (Button) unwrapButton(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yButton.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yButton.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yButton.isVisible());
 		assertFalse(button.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yButton.isVisible());
 		assertTrue(button.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -454,20 +454,21 @@ public class ButtonPresentationTests {
 		yView.setContent(yLayout);
 		YButton yButton = factory.createButton();
 		yLayout.getElements().add(yButton);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IButtonEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yButton);
+		IButtonEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		Button button = (Button) unwrapButton(presentation.getWidget());		
-		
+		Button button = (Button) unwrapButton(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();

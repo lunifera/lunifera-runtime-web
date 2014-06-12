@@ -13,8 +13,8 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,12 +41,10 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YList;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
@@ -69,10 +67,10 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 /**
  * Tests the {@link ListPresentation}.
@@ -1101,7 +1099,7 @@ public class ListPresentationTests {
 		assertEquals(0, yList1.getMultiSelection().size());
 		assertEquals(0, asList(list1.getValue()).size());
 	}
-	
+
 	@Test
 	public void test_SelectionBinding_Single_WithAttributePath()
 			throws Exception {
@@ -1243,6 +1241,45 @@ public class ListPresentationTests {
 		assertEquals("Foo1_2", foo1.getName());
 		assertEquals("Foo1_2", yText.getValue());
 
+	}
+
+	@Test
+	public void test_type_String() throws ContextException {
+
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YList yList = factory.createList();
+		yList.setType(String.class);
+		yLayout.getElements().add(yList);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IListEditpart listEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList);
+		IWidgetPresentation<Component> listPresentation = listEditpart
+				.getPresentation();
+		ComponentContainer tableBaseComponentContainer = (ComponentContainer) listPresentation
+				.getWidget();
+		ListSelect list = (ListSelect) unwrapList(tableBaseComponentContainer);
+
+		// start tests
+		//
+		yList.getCollection().add("Blabla");
+		yList.getCollection().add("Huhu");
+
+		// For String values NO BeanItemContainer is prepared.
+		Container.Indexed container = (Indexed) list.getContainerDataSource();
+		assertEquals(0, container.getContainerPropertyIds().size());
+
+		String itemCaption = list.getItemCaption(container.getItemIds()
+				.iterator().next());
+		assertEquals("Blabla", itemCaption);
 	}
 
 	/**
@@ -1639,7 +1676,7 @@ public class ListPresentationTests {
 		context.setLocale(Locale.ENGLISH);
 		assertEquals("Age", presentation.getWidget().getCaption());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -1651,37 +1688,37 @@ public class ListPresentationTests {
 		YList yList = factory.createList();
 		yList.setType(String.class);
 		yLayout.getElements().add(yList);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IListEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList);
+		IListEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());	
-		
+		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yList.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yList.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yList.isEditable());
 		assertFalse(!list.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yList.isEditable());
 		assertTrue(!list.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -1693,37 +1730,37 @@ public class ListPresentationTests {
 		YList yList = factory.createList();
 		yList.setType(String.class);
 		yLayout.getElements().add(yList);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IListEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList);
+		IListEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());	
-		
+		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yList.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yList.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yList.isVisible());
 		assertFalse(list.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yList.isVisible());
 		assertTrue(list.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -1735,31 +1772,31 @@ public class ListPresentationTests {
 		YList yList = factory.createList();
 		yList.setType(String.class);
 		yLayout.getElements().add(yList);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IListEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yList);
+		IListEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yList);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
 		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());
-		
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yList.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yList.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yList.isEnabled());
 		assertFalse(list.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yList.isEnabled());
 		assertTrue(list.isEnabled());

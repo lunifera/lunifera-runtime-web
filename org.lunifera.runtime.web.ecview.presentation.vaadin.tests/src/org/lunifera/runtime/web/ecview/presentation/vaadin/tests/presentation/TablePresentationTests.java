@@ -13,16 +13,18 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.context.II18nService;
@@ -41,12 +43,10 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
@@ -69,10 +69,10 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 /**
  * Tests the {@link TablePresentation}.
@@ -1395,7 +1395,7 @@ public class TablePresentationTests {
 		assertEquals("Foo1_2", yText.getValue());
 
 	}
-	
+
 	@Test
 	public void test_SelectionBinding_Single_WithAttributePath()
 			throws Exception {
@@ -1538,6 +1538,7 @@ public class TablePresentationTests {
 		assertEquals("Foo1_2", yText.getValue());
 
 	}
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_SelectionBinding_Single_DetailBinding_ToEmf()
@@ -1717,7 +1718,7 @@ public class TablePresentationTests {
 		context.setLocale(Locale.ENGLISH);
 		assertEquals("Age", presentation.getWidget().getCaption());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -1729,37 +1730,37 @@ public class TablePresentationTests {
 		YTable yTable = factory.createTable();
 		yTable.setType(String.class);
 		yLayout.getElements().add(yTable);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ITableEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTable);
+		ITableEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		Table table = (Table) unwrapTable(presentation.getWidget());		
-		
+		Table table = (Table) unwrapTable(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yTable.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yTable.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yTable.isEditable());
 		assertFalse(!table.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yTable.isEditable());
 		assertTrue(!table.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -1771,37 +1772,37 @@ public class TablePresentationTests {
 		YTable yTable = factory.createTable();
 		yTable.setType(String.class);
 		yLayout.getElements().add(yTable);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ITableEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTable);
+		ITableEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		Table table = (Table) unwrapTable(presentation.getWidget());		
-		
+		Table table = (Table) unwrapTable(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yTable.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yTable.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yTable.isVisible());
 		assertFalse(table.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yTable.isVisible());
 		assertTrue(table.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -1813,42 +1814,77 @@ public class TablePresentationTests {
 		YTable yTable = factory.createTable();
 		yTable.setType(String.class);
 		yLayout.getElements().add(yTable);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ITableEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTable);
+		ITableEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		Table table = (Table) unwrapTable(presentation.getWidget());		
-		
+		Table table = (Table) unwrapTable(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yTable.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yTable.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yTable.isEnabled());
 		assertFalse(table.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yTable.isEnabled());
 		assertTrue(table.isEnabled());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	public void test_type_String() throws ContextException {
-		fail("Captions don't look good");
-	}
 
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTable yTable = factory.createTable();
+		yTable.setType(String.class);
+		yLayout.getElements().add(yTable);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITableEditpart table1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable);
+		IWidgetPresentation<Component> table1Presentation = table1Editpart
+				.getPresentation();
+		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
+				.getWidget();
+		Table table = (Table) unwrapTable(table1BaseComponentContainer);
+
+		// start tests
+		//
+		yTable.getCollection().add("Blabla");
+		yTable.getCollection().add("Huhu");
+
+		// For String values NO BeanItemContainer is prepared.
+		Container.Indexed container = (Indexed) table.getContainerDataSource();
+		assertEquals(0, container.getContainerPropertyIds().size());
+
+		String itemCaption = table.getItemCaption(container.getItemIds()
+				.iterator().next());
+		assertEquals("Blabla", itemCaption);
+		assertSame(ItemCaptionMode.ID, table.getItemCaptionMode());
+
+	}
 
 	/**
 	 * Unwraps the component from its parent composite.
