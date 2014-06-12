@@ -279,7 +279,7 @@ public class ButtonPresentationTests {
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
-		assertEquals(2, presentation.getUIBindings().size());
+		assertEquals(3, presentation.getUIBindings().size());
 
 		presentation.dispose();
 		assertFalse(presentation.isRendered());
@@ -483,6 +483,5 @@ public class ButtonPresentationTests {
 		assertTrue(yButton.isEnabled());
 		assertTrue(button.isEnabled());
 		assertTrue(bean.isBoolValue());
-		fail("FP fixme!");
 	}
 }

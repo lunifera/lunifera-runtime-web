@@ -41,9 +41,11 @@ import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -54,6 +56,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaad
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
+import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
@@ -956,16 +959,52 @@ public class DecimalFieldPresentationTests {
 		
 		yField.setDatatype(dt2);
 		assertEquals("112.233,4", field.getValue());
-		assertEquals(112233.44, yField.getValue(), 0);
+		assertEquals(112233.4, yField.getValue(), 0);
 		
 		yField.setValue(567.890);
-		assertEquals("567,8", field.getValue());
-		assertEquals(567.890, yField.getValue(), 0);
+		assertEquals("567,9", field.getValue());
+		assertEquals(567.9, yField.getValue(), 0);
 	}
 
 	@Test
 	public void testMarkNegative_ByChangingDatatype() throws ContextException {
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDecimalField yField = factory.createDecimalField();
+		yLayout.getElements().add(yField);
+		YDecimalDatatype dt1 = factory.createDecimalDatatype();
+		dt1.setMarkNegative(true);
+		YDecimalDatatype dt2 = factory.createDecimalDatatype();
+		dt2.setMarkNegative(false);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IDecimalFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yField);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		DecimalField field = (DecimalField) unwrapText(text1BaseComponentContainer);
+
+		// start tests
+		yField.setDatatype(dt1);
+		yField.setValue(112233);
+		assertEquals("112.233,00", field.getValue());
+		assertEquals(112233.0, yField.getValue(), 0);
+		assertFalse(field.getStyleName().contains("lun-negative-value"));
+
+		yField.setValue(-112233.0);
+		assertEquals("-112.233,00", field.getValue());
+		assertEquals(-112233.0, yField.getValue(), 0);
+		assertTrue(field.getStyleName().contains("lun-negative-value"));
+
+		yField.setDatatype(dt2);
+		assertEquals("-112.233,00", field.getValue());
+		assertEquals(-112233.0, yField.getValue(), 0);
+		assertFalse(field.getStyleName().contains("lun-negative-value"));
 	}
 
 	@Test

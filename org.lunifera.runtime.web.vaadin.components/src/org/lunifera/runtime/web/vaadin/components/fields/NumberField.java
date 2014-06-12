@@ -102,6 +102,8 @@ public class NumberField extends TextField {
 	 */
 	public void setMarkNegative(boolean markNegative) {
 		this.markNegative = markNegative;
+		
+		handleNegative();
 	}
 
 	/**
