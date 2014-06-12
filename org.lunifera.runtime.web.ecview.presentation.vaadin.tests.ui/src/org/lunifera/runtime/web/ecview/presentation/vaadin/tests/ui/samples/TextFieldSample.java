@@ -67,7 +67,7 @@ public class TextFieldSample extends CustomComponent {
 		row1.addElement(yCheckbox);
 		row1.addElement(yText);
 
-		yText.setEditable(value);
+//		yText.setEditable(value);
 		
 		yBindingSet.addBinding(yText.createValueEndpoint(),
 				yText.getValueBindingEndpoint());
