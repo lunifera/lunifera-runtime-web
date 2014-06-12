@@ -389,10 +389,10 @@ public class ProgressBarPresentationTests {
 		ProgressBarPresentation presentation = editpart.getPresentation();
 
 		ProgressBar bar = (ProgressBar) unwrapText(presentation.getWidget());
-		assertEquals("Alter", bar.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", bar.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 
 	@Test

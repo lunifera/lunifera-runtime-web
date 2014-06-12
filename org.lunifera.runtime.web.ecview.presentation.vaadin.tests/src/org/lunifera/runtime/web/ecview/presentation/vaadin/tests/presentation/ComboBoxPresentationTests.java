@@ -779,10 +779,146 @@ public class ComboBoxPresentationTests {
 	}
 	
 	@Test
-	public void test_SelectionBinding_Single_WithAttributePath(){
-		fail("Implement!");
-	}
+	public void test_SelectionBinding_Single_WithAttributePath()throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YComboBox yComboBox1 = factory.createComboBox();
+		yComboBox1.setType(Bar.class);
+		yLayout.getElements().add(yComboBox1);
+		YTextField yText = factory.createTextField();
+		yLayout.getElements().add(yText);
 
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		YEmbeddableSelectionEndpoint selectionBindingEndpoint = yComboBox1
+				.createSelectionEndpoint();
+		selectionBindingEndpoint.setAttributePath("myfoo.name");
+		yBindingSet.addBinding(yText.createValueEndpoint(),
+				selectionBindingEndpoint);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IComboBoxEditpart combobox1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yComboBox1);
+		IWidgetPresentation<Component> combobox1Presentation = combobox1Editpart
+				.getPresentation();
+		ComponentContainer combobox1BaseComponentContainer = (ComponentContainer) combobox1Presentation
+				.getWidget();
+		ComboBox combobox1 = (ComboBox) unwrapText(combobox1BaseComponentContainer);
+
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> textPresentation = textEditpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+				.getWidget();
+		TextField text = (TextField) unwrapText(textBaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) combobox1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertNull(combobox1.getValue());
+		assertNull(yComboBox1.getSelection());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// add
+		Bar bar1 = new Bar();
+		bar1.setName("Bar1");
+		Foo foo1 = new Foo();
+		foo1.setName("Foo1");
+		bar1.setMyfoo(foo1);
+
+		Bar bar2 = new Bar();
+		bar2.setName("Bar2");
+		Foo foo2 = new Foo();
+		foo2.setName("Foo2");
+		bar2.setMyfoo(foo2);
+
+		yComboBox1.getCollection().add(bar1);
+		yComboBox1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		assertNull(yComboBox1.getSelection());
+		assertNull(combobox1.getValue());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test set selection
+		yComboBox1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yComboBox1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		yComboBox1.setSelection(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		combobox1.setValue(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		combobox1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		combobox1.setValue(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test remove element that is selected
+		// add
+		combobox1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yComboBox1.getCollection().clear();
+
+		assertNull(yComboBox1.getSelection());
+		assertNull(combobox1.getValue());
+
+		// test setValue to textfield
+		yComboBox1.getCollection().add(bar1);
+		yComboBox1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+		
+		yComboBox1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+		
+		yText.setValue("Foo2_1");
+		assertEquals("Foo2_1", foo2.getName());
+		assertEquals("Foo2_1", text.getValue());
+		
+		text.setValue("Foo2_2");
+		assertEquals("Foo2_2", foo2.getName());
+		assertEquals("Foo2_2", yText.getValue());
+		
+		yComboBox1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+		
+		yText.setValue("Foo1_1");
+		assertEquals("Foo1_1", foo1.getName());
+		assertEquals("Foo1_1", text.getValue());
+		
+		text.setValue("Foo1_2");
+		assertEquals("Foo1_2", foo1.getName());
+		assertEquals("Foo1_2", yText.getValue());
+		
+	}
 	/**
 	 * Test the automatic disposal of bindings
 	 * 
@@ -1131,10 +1267,10 @@ public class ComboBoxPresentationTests {
 				.getPresentation();
 
 		ComboBox box = (ComboBox) unwrapText(presentation.getWidget());
-		assertEquals("Alter", box.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", box.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 	
 	@Test

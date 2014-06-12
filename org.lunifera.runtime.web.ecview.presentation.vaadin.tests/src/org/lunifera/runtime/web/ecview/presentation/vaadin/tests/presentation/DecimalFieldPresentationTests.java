@@ -927,7 +927,40 @@ public class DecimalFieldPresentationTests {
 
 	@Test
 	public void testPrecision_ByChangingDatatype() throws ContextException {
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDecimalField yField = factory.createDecimalField();
+		yLayout.getElements().add(yField);
+		YDecimalDatatype dt1 = factory.createDecimalDatatype();
+		dt1.setPrecision(3);
+		YDecimalDatatype dt2 = factory.createDecimalDatatype();
+		dt2.setPrecision(1);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+		
+		IDecimalFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yField);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		DecimalField field = (DecimalField) unwrapText(text1BaseComponentContainer);
+		
+		//start tests
+		yField.setDatatype(dt1);
+		yField.setValue(112233.44);
+		assertEquals("112.233,440", field.getValue());
+		assertEquals(112233.44, yField.getValue(), 0);
+		
+		yField.setDatatype(dt2);
+		assertEquals("112.233,4", field.getValue());
+		assertEquals(112233.44, yField.getValue(), 0);
+		
+		yField.setValue(567.890);
+		assertEquals("567,8", field.getValue());
+		assertEquals(567.890, yField.getValue(), 0);
 	}
 
 	@Test
@@ -937,7 +970,40 @@ public class DecimalFieldPresentationTests {
 
 	@Test
 	public void testGrouping_ByChangingDatatype() throws ContextException {
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YDecimalField yField = factory.createDecimalField();
+		yLayout.getElements().add(yField);
+		YDecimalDatatype dt1 = factory.createDecimalDatatype();
+		dt1.setGrouping(true);
+		YDecimalDatatype dt2 = factory.createDecimalDatatype();
+		dt2.setGrouping(false);
+		
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+		
+		IDecimalFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yField);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		DecimalField field = (DecimalField) unwrapText(text1BaseComponentContainer);
+		
+		//start tests
+		yField.setDatatype(dt1);
+		yField.setValue(112233.44);
+		assertEquals("112.233,44", field.getValue());
+		assertEquals(112233.44, yField.getValue(), 0);
+		
+		yField.setDatatype(dt2);
+		assertEquals("112233,44", field.getValue());
+		assertEquals(112233.44, yField.getValue(), 0);
+		
+		yField.setValue(4567.890);
+		assertEquals("4567,8", field.getValue());
+		assertEquals(4567.890, yField.getValue(), 0);;
 	}
 
 	@Test
@@ -975,11 +1041,11 @@ public class DecimalFieldPresentationTests {
 
 		DecimalField decimalField = (DecimalField) unwrapText(presentation
 				.getWidget());
-		assertEquals("Alter", decimalField.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 		assertEquals("123.456.789,1122", decimalField.getValue());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", decimalField.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 		assertEquals("123,456,789.1122", decimalField.getValue());
 	}
 	

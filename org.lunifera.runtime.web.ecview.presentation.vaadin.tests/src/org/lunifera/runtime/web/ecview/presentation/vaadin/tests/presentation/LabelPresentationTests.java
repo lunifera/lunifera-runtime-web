@@ -323,10 +323,10 @@ public class LabelPresentationTests {
 				.getPresentation();
 
 		Label label = (Label) unwrapLabel(presentation.getWidget());
-		assertEquals("Alter", label.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", label.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 	
 	@Test

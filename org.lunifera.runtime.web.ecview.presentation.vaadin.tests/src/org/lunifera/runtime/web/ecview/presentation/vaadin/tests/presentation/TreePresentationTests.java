@@ -888,10 +888,147 @@ public class TreePresentationTests {
 	}
 
 	@Test
-	public void test_SelectionBinding_Single_WithAttributePath() {
-		fail("Implement!");
-	}
+	public void test_SelectionBinding_Single_WithAttributePath() 
+			throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTree yTree1 = factory.createTree();
+		yTree1.setType(Bar.class);
+		yLayout.getElements().add(yTree1);
+		YTextField yText = factory.createTextField();
+		yLayout.getElements().add(yText);
 
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		YEmbeddableSelectionEndpoint selectionBindingEndpoint = yTree1
+				.createSelectionEndpoint();
+		selectionBindingEndpoint.setAttributePath("myfoo.name");
+		yBindingSet.addBinding(yText.createValueEndpoint(),
+				selectionBindingEndpoint);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITreeEditpart tree1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTree1);
+		IWidgetPresentation<Component> tree1Presentation = tree1Editpart
+				.getPresentation();
+		ComponentContainer tree1BaseComponentContainer = (ComponentContainer) tree1Presentation
+				.getWidget();
+		Tree tree1 = (Tree) unwrapTree(tree1BaseComponentContainer);
+
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> textPresentation = textEditpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+				.getWidget();
+		TextField text = (TextField) unwrapTree(textBaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) tree1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertNull(tree1.getValue());
+		assertNull(yTree1.getSelection());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// add
+		Bar bar1 = new Bar();
+		bar1.setName("Bar1");
+		Foo foo1 = new Foo();
+		foo1.setName("Foo1");
+		bar1.setMyfoo(foo1);
+
+		Bar bar2 = new Bar();
+		bar2.setName("Bar2");
+		Foo foo2 = new Foo();
+		foo2.setName("Foo2");
+		bar2.setMyfoo(foo2);
+
+		yTree1.getCollection().add(bar1);
+		yTree1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test set selection
+		yTree1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yTree1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		yTree1.setSelection(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		tree1.setValue(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		tree1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		tree1.setValue(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test remove element that is selected
+		// add
+		tree1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yTree1.getCollection().clear();
+
+		assertNull(yTree1.getSelection());
+		assertNull(tree1.getValue());
+
+		// test setValue to textfield
+		yTree1.getCollection().add(bar1);
+		yTree1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		yTree1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yText.setValue("Foo2_1");
+		assertEquals("Foo2_1", foo2.getName());
+		assertEquals("Foo2_1", text.getValue());
+
+		text.setValue("Foo2_2");
+		assertEquals("Foo2_2", foo2.getName());
+		assertEquals("Foo2_2", yText.getValue());
+
+		yTree1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yText.setValue("Foo1_1");
+		assertEquals("Foo1_1", foo1.getName());
+		assertEquals("Foo1_1", text.getValue());
+
+		text.setValue("Foo1_2");
+		assertEquals("Foo1_2", foo1.getName());
+		assertEquals("Foo1_2", yText.getValue());
+
+	}
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -1532,10 +1669,10 @@ public class TreePresentationTests {
 		TreePresentation presentation = editpart.getPresentation();
 
 		Tree tree = (Tree) unwrapTree(presentation.getWidget());
-		assertEquals("Alter", tree.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", tree.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 
 	

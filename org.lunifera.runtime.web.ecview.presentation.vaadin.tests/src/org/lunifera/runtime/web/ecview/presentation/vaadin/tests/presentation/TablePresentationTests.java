@@ -1397,10 +1397,147 @@ public class TablePresentationTests {
 	}
 	
 	@Test
-	public void test_SelectionBinding_Single_WithAttributePath(){
-		fail("Implement!");
-	}
+	public void test_SelectionBinding_Single_WithAttributePath()
+			throws Exception {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTable yTable1 = factory.createTable();
+		yTable1.setType(Bar.class);
+		yLayout.getElements().add(yTable1);
+		YTextField yText = factory.createTextField();
+		yLayout.getElements().add(yText);
 
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		YEmbeddableSelectionEndpoint selectionBindingEndpoint = yTable1
+				.createSelectionEndpoint();
+		selectionBindingEndpoint.setAttributePath("myfoo.name");
+		yBindingSet.addBinding(yText.createValueEndpoint(),
+				selectionBindingEndpoint);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		ITableEditpart table1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTable1);
+		IWidgetPresentation<Component> table1Presentation = table1Editpart
+				.getPresentation();
+		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
+				.getWidget();
+		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> textPresentation = textEditpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+				.getWidget();
+		TextField text = (TextField) unwrapTable(textBaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) table1.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertNull(table1.getValue());
+		assertNull(yTable1.getSelection());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// add
+		Bar bar1 = new Bar();
+		bar1.setName("Bar1");
+		Foo foo1 = new Foo();
+		foo1.setName("Foo1");
+		bar1.setMyfoo(foo1);
+
+		Bar bar2 = new Bar();
+		bar2.setName("Bar2");
+		Foo foo2 = new Foo();
+		foo2.setName("Foo2");
+		bar2.setMyfoo(foo2);
+
+		yTable1.getCollection().add(bar1);
+		yTable1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		assertNull(yTable1.getSelection());
+		assertNull(table1.getValue());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test set selection
+		yTable1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yTable1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		yTable1.setSelection(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		table1.setValue(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		table1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		table1.setValue(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test remove element that is selected
+		// add
+		table1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yTable1.getCollection().clear();
+
+		assertNull(yTable1.getSelection());
+		assertNull(table1.getValue());
+
+		// test setValue to textfield
+		yTable1.getCollection().add(bar1);
+		yTable1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		yTable1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yText.setValue("Foo2_1");
+		assertEquals("Foo2_1", foo2.getName());
+		assertEquals("Foo2_1", text.getValue());
+
+		text.setValue("Foo2_2");
+		assertEquals("Foo2_2", foo2.getName());
+		assertEquals("Foo2_2", yText.getValue());
+
+		yTable1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yText.setValue("Foo1_1");
+		assertEquals("Foo1_1", foo1.getName());
+		assertEquals("Foo1_1", text.getValue());
+
+		text.setValue("Foo1_2");
+		assertEquals("Foo1_2", foo1.getName());
+		assertEquals("Foo1_2", yText.getValue());
+
+	}
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_SelectionBinding_Single_DetailBinding_ToEmf()
@@ -1575,10 +1712,10 @@ public class TablePresentationTests {
 		TablePresentation presentation = editpart.getPresentation();
 
 		Table table = (Table) unwrapTable(presentation.getWidget());
-		assertEquals("Alter", table.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", table.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 	
 	@Test
@@ -1705,6 +1842,11 @@ public class TablePresentationTests {
 		assertTrue(yTable.isEnabled());
 		assertTrue(table.isEnabled());
 		assertTrue(bean.isBoolValue());
+	}
+	
+	@Test
+	public void test_type_String() throws ContextException {
+		fail("Captions don't look good");
 	}
 
 

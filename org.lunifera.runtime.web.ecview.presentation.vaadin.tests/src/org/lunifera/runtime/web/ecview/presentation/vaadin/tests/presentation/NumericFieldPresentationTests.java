@@ -490,11 +490,11 @@ public class NumericFieldPresentationTests {
 				.getPresentation();
 		
 		NumberField textField = (NumberField) unwrapText(presentation.getWidget());
-		assertEquals("Alter", textField.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 		assertEquals("123.456.789", textField.getValue());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", textField.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 		assertEquals("123,456,789", textField.getValue());
 	}
 	

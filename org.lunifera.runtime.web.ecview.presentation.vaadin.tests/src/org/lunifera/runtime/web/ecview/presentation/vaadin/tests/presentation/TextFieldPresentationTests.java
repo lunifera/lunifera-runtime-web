@@ -35,8 +35,11 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.model.core.YViewSet;
 import org.eclipse.emf.ecp.ecview.common.model.validation.ValidationFactory;
+import org.eclipse.emf.ecp.ecview.common.model.validation.YMaxLengthValidator;
 import org.eclipse.emf.ecp.ecview.common.model.validation.YMinLengthValidator;
+import org.eclipse.emf.ecp.ecview.common.model.validation.YValidator;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YTextDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
@@ -51,6 +54,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ValidatorAdapter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
@@ -292,7 +296,7 @@ public class TextFieldPresentationTests {
 		yView.setContent(yLayout);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -303,27 +307,26 @@ public class TextFieldPresentationTests {
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
 				.getWidget();
 		TextField text = (TextField) unwrapText(textBaseComponentContainer);
-		
-		
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yText.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yText.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yText.isEditable());
 		assertFalse(!text.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yText.isEditable());
 		assertTrue(!text.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -334,7 +337,7 @@ public class TextFieldPresentationTests {
 		yView.setContent(yLayout);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -345,27 +348,26 @@ public class TextFieldPresentationTests {
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
 				.getWidget();
 		TextField text = (TextField) unwrapText(textBaseComponentContainer);
-		
-		
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yText.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yText.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yText.isVisible());
 		assertFalse(text.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yText.isVisible());
 		assertTrue(text.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -376,7 +378,7 @@ public class TextFieldPresentationTests {
 		yView.setContent(yLayout);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -387,21 +389,20 @@ public class TextFieldPresentationTests {
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
 				.getWidget();
 		TextField text = (TextField) unwrapText(textBaseComponentContainer);
-		
-		
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yText.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yText.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yText.isEnabled());
 		assertFalse(text.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yText.isEnabled());
 		assertTrue(text.isEnabled());
@@ -629,10 +630,10 @@ public class TextFieldPresentationTests {
 				.getPresentation();
 
 		TextField textField = (TextField) unwrapText(presentation.getWidget());
-		assertEquals("Alter", textField.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", textField.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 
 	@Test
@@ -669,29 +670,122 @@ public class TextFieldPresentationTests {
 				.getPresentation();
 
 		TextField textField = (TextField) unwrapText(presentation.getWidget());
-		assertEquals("Alter", textField.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		viewSetContext.setLocale(Locale.ENGLISH);
-		assertEquals("Age", textField.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
-	
-	
 
 	@Test
 	public void test_addRemoveInternalValidatorByDatatype()
 			throws ContextException {
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextField yText = factory.createTextField();
+		YTextDatatype yTextDt = factory.createTextDatatype();
+		yText.setDatatype(yTextDt);
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
+				.getPresentation();
+
+		assertEquals(0, yText.getInternalValidators().size());
+		assertEquals(0, presentation.getValidators().size());
+
+		yTextDt.setMaxLength(10);
+		assertEquals(1, presentation.getValidators().size());
+		assertEquals(1, yText.getInternalValidators().size());
+
+		yTextDt.setMaxLength(-1);
+		assertEquals(0, presentation.getValidators().size());
+		assertEquals(0, yText.getInternalValidators().size());
+
+		yTextDt.setMinLength(10);
+		assertEquals(1, presentation.getValidators().size());
+		assertEquals(1, yText.getInternalValidators().size());
+
+		yTextDt.setMinLength(-1);
+		assertEquals(0, presentation.getValidators().size());
+		assertEquals(0, yText.getInternalValidators().size());
+
+		yTextDt.setRegExpression("\\.pdf$");
+		assertEquals(1, presentation.getValidators().size());
+		assertEquals(1, yText.getInternalValidators().size());
+
+		yTextDt.setRegExpression("");
+		assertEquals(0, presentation.getValidators().size());
+		assertEquals(0, yText.getInternalValidators().size());
 	}
 
 	@Test
 	public void test_changePropertyOfDatatype_ValidatorNeedsToUpdate()
 			throws ContextException {
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextField yText = factory.createTextField();
+		YTextDatatype yTextDt = factory.createTextDatatype();
+		yText.setDatatype(yTextDt);
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
+				.getPresentation();
+
+		assertEquals(0, yText.getInternalValidators().size());
+		assertEquals(0, presentation.getValidators().size());
+
+		yTextDt.setMaxLength(10);
+		YMaxLengthValidator internalValidator = (YMaxLengthValidator) yText.getInternalValidators().get(0);
+		assertEquals(1, presentation.getValidators().size());
+		assertEquals(1, yText.getInternalValidators().size());
+		assertEquals(10, internalValidator.getMaxLength());
+
+		yTextDt.setMaxLength(5);
+		
+		assertEquals(1, presentation.getValidators().size());
+		assertEquals(1, yText.getInternalValidators().size());
+		assertEquals(5, internalValidator.getMaxLength());
+		
 	}
 
 	@Test
 	public void test_setNewDatatype() throws ContextException {
 		// ensure that the old validators are removed and disposed properly
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yGridlayout = factory.createGridLayout();
+		yView.setContent(yGridlayout);
+		YTextField yText = factory.createTextField();
+		YTextDatatype yTextDt = factory.createTextDatatype();
+		yText.setDatatype(yTextDt);
+		yGridlayout.getElements().add(yText);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
+				.getPresentation();
+
+		assertEquals(0, yText.getInternalValidators().size());
+		assertEquals(0, presentation.getValidators().size());
+
+		yTextDt.setMaxLength(10);
+		
+		assertEquals(1, presentation.getValidators().size());
+		assertEquals(1, yText.getInternalValidators().size());
+		
+		yText.setDatatype(null);
+
+		assertEquals(0, yText.getInternalValidators().size());
+		assertEquals(0, presentation.getValidators().size());
 	}
 }
