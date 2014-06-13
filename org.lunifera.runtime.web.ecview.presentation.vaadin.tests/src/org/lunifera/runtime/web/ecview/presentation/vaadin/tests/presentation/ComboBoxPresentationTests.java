@@ -1092,7 +1092,6 @@ public class ComboBoxPresentationTests {
 		
 	}
 	
-	
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_SelectionBinding_Single_DetailBinding_ToEmf() throws Exception {
@@ -1112,9 +1111,9 @@ public class ComboBoxPresentationTests {
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 		YDetailValueBindingEndpoint yDetailEndpoint = yComboBox1
 				.createSelectionEndpoint().createDetailValueEndpoint();
-		yDetailEndpoint.setPropertyPath("myfoo.name");
 		yDetailEndpoint.setType(EmfBar.class);
-		yDetailEndpoint.setEmfNSUri(ModelPackage.eNS_URI);
+		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfBar_Myfoo());
+		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfFoo_Name());
 		yBindingSet.addBinding(yText.createValueEndpoint(), yDetailEndpoint);
 
 		VaadinRenderer renderer = new VaadinRenderer();
