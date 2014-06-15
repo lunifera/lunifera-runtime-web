@@ -31,7 +31,9 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -87,10 +89,6 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 			}
 			list.setPropertyDataSource(property);
 
-			BeanItemContainer datasource = new BeanItemContainer(
-					modelAccess.yList.getType());
-			list.setContainerDataSource(datasource);
-
 			// creates the binding for the field
 			createBindings(modelAccess.yList, list);
 
@@ -122,8 +120,8 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
+			componentBase.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				componentBase.setCaption(modelAccess.getLabel());

@@ -386,10 +386,10 @@ public class TextAreaPresentationTests {
 				.getPresentation();
 
 		TextArea area = (TextArea) unwrapText(presentation.getWidget());
-		assertEquals("Alter", area.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", area.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 
 	@Test

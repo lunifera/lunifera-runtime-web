@@ -32,7 +32,9 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -90,9 +92,15 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			}
 			table.setPropertyDataSource(property);
 
-			BeanItemContainer datasource = new BeanItemContainer(
-					modelAccess.yTable.getType());
-			table.setContainerDataSource(datasource);
+			if (modelAccess.yTable.getType() == String.class) {
+				IndexedContainer datasource = new IndexedContainer();
+				table.setContainerDataSource(datasource);
+				table.setItemCaptionMode(ItemCaptionMode.ID);
+			} else {
+				BeanItemContainer datasource = new BeanItemContainer(
+						modelAccess.yTable.getType());
+				table.setContainerDataSource(datasource);
+			}
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTable, table);
@@ -125,8 +133,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
+			componentBase.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				componentBase.setCaption(modelAccess.getLabel());

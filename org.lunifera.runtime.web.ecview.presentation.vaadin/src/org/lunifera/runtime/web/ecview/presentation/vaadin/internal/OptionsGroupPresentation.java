@@ -11,11 +11,11 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -78,8 +78,15 @@ public class OptionsGroupPresentation extends
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
 			optionsGroup.setImmediate(true);
-			
-			property = new ObjectProperty(null, modelAccess.yOptionsGroup.getType());
+
+			if (modelAccess.yOptionsGroup.getSelectionType() == YSelectionType.MULTI) {
+				// multi selections need to be of type Set.class
+				property = new ObjectProperty(null, Set.class);
+			} else {
+				property = new ObjectProperty(null,
+						modelAccess.yOptionsGroup.getType());
+			}
+
 			optionsGroup.setPropertyDataSource(property);
 
 			// creates the binding for the field
@@ -92,12 +99,12 @@ public class OptionsGroupPresentation extends
 			}
 
 			applyCaptions();
-			
+
 			initializeField(optionsGroup);
 		}
 		return componentBase;
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
@@ -113,15 +120,15 @@ public class OptionsGroupPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
+			componentBase.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				componentBase.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
-	
+
 	@Override
 	protected Field<?> doGetField() {
 		return optionsGroup;
@@ -322,7 +329,7 @@ public class OptionsGroupPresentation extends
 		public String getLabel() {
 			return yOptionsGroup.getDatadescription().getLabel();
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

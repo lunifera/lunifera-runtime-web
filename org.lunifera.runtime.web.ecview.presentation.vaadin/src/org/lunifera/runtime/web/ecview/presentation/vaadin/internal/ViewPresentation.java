@@ -22,6 +22,7 @@ import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
@@ -254,6 +255,11 @@ public class ViewPresentation extends AbstractDisposable implements
 
 	@Override
 	public void resetVisibilityProperties() {
+
+	}
+
+	@Override
+	public void notifyDatatypeChanged(DatatypeChangeEvent event) {
 
 	}
 

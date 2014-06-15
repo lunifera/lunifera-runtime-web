@@ -369,10 +369,10 @@ public class BrowserPresentationTests {
 				.getPresentation();
 
 		BrowserFrame browser = (BrowserFrame) unwrapText(presentation.getWidget());
-		assertEquals("Alter", browser.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", browser.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 	
 	@Test

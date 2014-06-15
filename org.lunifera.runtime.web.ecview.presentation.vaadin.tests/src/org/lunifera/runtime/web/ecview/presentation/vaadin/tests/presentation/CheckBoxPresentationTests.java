@@ -393,10 +393,10 @@ public class CheckBoxPresentationTests {
 				.getPresentation();
 
 		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());
-		assertEquals("Alter", box.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", box.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 
 	/**

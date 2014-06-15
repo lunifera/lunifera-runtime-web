@@ -36,11 +36,13 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.model.core.YViewSet;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
@@ -53,6 +55,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFiel
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
+import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
@@ -312,7 +315,8 @@ public class NumericFieldPresentationTests {
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(998877);
 		beanBinding.setPropertyPath("intValue");
 		beanBinding.setBean(bean);
@@ -378,7 +382,7 @@ public class NumericFieldPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YNumericField yText = factory.createNumericField();
-		
+
 		yGridlayout.getElements().add(yText);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -391,7 +395,6 @@ public class NumericFieldPresentationTests {
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
 		NumberField field = (NumberField) unwrapText(baseComponentContainer);
-		
 
 		yText.setValue(99);
 		assertEquals("99", field.getValue());
@@ -402,10 +405,10 @@ public class NumericFieldPresentationTests {
 
 	}
 
-	/** 
-	 *  Test grouping of decimals
-	 *  
-	 * @throws ContextException 
+	/**
+	 * Test grouping of decimals
+	 * 
+	 * @throws ContextException
 	 */
 	@Test
 	public void testGrouping() throws ContextException {
@@ -441,7 +444,6 @@ public class NumericFieldPresentationTests {
 		NumberField text1 = (NumberField) unwrapText(text1BaseComponentContainer);
 		NumberField text2 = (NumberField) unwrapText(text2BaseComponentContainer);
 
-
 		yText1.setValue(112233);
 		assertEquals("112.233", text1.getValue());
 
@@ -449,17 +451,89 @@ public class NumericFieldPresentationTests {
 		assertEquals("332211", text2.getValue());
 
 	}
-	
+
 	@Test
 	public void testGrouping_ByChangingDatatype() throws ContextException {
-		Assert.fail();
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YNumericField yField = factory.createNumericField();
+		yLayout.getElements().add(yField);
+		YDecimalDatatype dt1 = factory.createDecimalDatatype();
+		dt1.setGrouping(true);
+		YDecimalDatatype dt2 = factory.createDecimalDatatype();
+		dt2.setPrecision(1);
+		dt2.setGrouping(false);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		INumericFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yField);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		NumberField field = (NumberField) unwrapText(text1BaseComponentContainer);
+
+		// start tests
+		yField.setDatatype(dt1);
+		yField.setValue(112233);
+		assertEquals("112.233", field.getValue());
+		assertEquals(112233, yField.getValue(), 0);
+
+		yField.setDatatype(dt2);
+		assertEquals("112233", field.getValue());
+		assertEquals(112233, yField.getValue(), 0);
+
+		yField.setValue(4567);
+		assertEquals("4567", field.getValue());
+		assertEquals(4567, yField.getValue(), 0);
 	}
-	
+
 	@Test
-	public void testMarkNegativ_ByChangingDatatype() throws ContextException {
-		Assert.fail();
+	public void testMarkNegative_ByChangingDatatype() throws ContextException {
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YNumericField yField = factory.createNumericField();
+		yLayout.getElements().add(yField);
+		YDecimalDatatype dt1 = factory.createDecimalDatatype();
+		dt1.setMarkNegative(true);
+		YDecimalDatatype dt2 = factory.createDecimalDatatype();
+		dt2.setPrecision(1);
+		dt2.setMarkNegative(false);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		INumericFieldEditpart text1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yField);
+		IWidgetPresentation<Component> text1Presentation = text1Editpart
+				.getPresentation();
+		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+				.getWidget();
+		NumberField field = (NumberField) unwrapText(text1BaseComponentContainer);
+
+		// start tests
+		yField.setDatatype(dt1);
+		yField.setValue(112233);
+		assertEquals("112.233", field.getValue());
+		assertEquals(112233, yField.getValue(), 0);
+		assertFalse(field.getStyleName().contains("lun-negative-value"));
+
+		yField.setValue(-112233);
+		assertEquals("-112.233", field.getValue());
+		assertEquals(-112233, yField.getValue(), 0);
+		assertTrue(field.getStyleName().contains("lun-negative-value"));
+
+		yField.setDatatype(dt2);
+		assertEquals("-112.233", field.getValue());
+		assertEquals(-112233, yField.getValue(), 0);
+		assertFalse(field.getStyleName().contains("lun-negative-value"));
+
 	}
-	
+
 	@Test
 	public void test_i18n() throws ContextException {
 
@@ -488,16 +562,17 @@ public class NumericFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
-		
-		NumberField textField = (NumberField) unwrapText(presentation.getWidget());
-		assertEquals("Alter", textField.getCaption());
+
+		NumberField textField = (NumberField) unwrapText(presentation
+				.getWidget());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 		assertEquals("123.456.789", textField.getValue());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", textField.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 		assertEquals("123,456,789", textField.getValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -508,7 +583,7 @@ public class NumericFieldPresentationTests {
 		yView.setContent(yLayout);
 		YNumericField yText = factory.createNumericField();
 		yLayout.getElements().add(yText);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -518,27 +593,28 @@ public class NumericFieldPresentationTests {
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		NumberField textField = (NumberField) unwrapText(presentation.getWidget());		
-		
+		NumberField textField = (NumberField) unwrapText(presentation
+				.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yText.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yText.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yText.isEditable());
 		assertFalse(!textField.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yText.isEditable());
 		assertTrue(!textField.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -549,7 +625,7 @@ public class NumericFieldPresentationTests {
 		yView.setContent(yLayout);
 		YNumericField yText = factory.createNumericField();
 		yLayout.getElements().add(yText);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -559,27 +635,28 @@ public class NumericFieldPresentationTests {
 				.getPresentation();
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		NumberField textField = (NumberField) unwrapText(presentation.getWidget());		
-		
+		NumberField textField = (NumberField) unwrapText(presentation
+				.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yText.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yText.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yText.isVisible());
 		assertFalse(textField.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yText.isVisible());
 		assertTrue(textField.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -590,7 +667,7 @@ public class NumericFieldPresentationTests {
 		yView.setContent(yLayout);
 		YNumericField yText = factory.createNumericField();
 		yLayout.getElements().add(yText);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -600,21 +677,22 @@ public class NumericFieldPresentationTests {
 				.getPresentation();
 		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
-		NumberField textField = (NumberField) unwrapText(presentation.getWidget());		
-		
+		NumberField textField = (NumberField) unwrapText(presentation
+				.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yText.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yText.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yText.isEnabled());
 		assertFalse(textField.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yText.isEnabled());
 		assertTrue(textField.isEnabled());

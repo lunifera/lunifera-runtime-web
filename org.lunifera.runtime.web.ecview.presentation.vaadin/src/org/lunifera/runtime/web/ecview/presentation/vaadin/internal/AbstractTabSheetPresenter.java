@@ -15,13 +15,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
 import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabSheetPresentation;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.ComponentContainer;
 

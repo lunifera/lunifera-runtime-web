@@ -21,6 +21,8 @@ import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.datatypes.YDatatype;
+import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDateTimeDatatype;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
@@ -85,26 +87,47 @@ public class DateTimePresentation extends
 				dateField.addStyleName(modelAccess.getCssClass());
 			}
 
+			doApplyDatatype(modelAccess.yDateTime.getDatatype());
+
 			applyCaptions();
-
-			dateField.setDateFormat(modelAccess.getDateformat());
-
-			// dateField
-			// .addValueChangeListener(new Property.ValueChangeListener() {
-			// @Override
-			// public void valueChange(Property.ValueChangeEvent event) {
-			// // observe the value property since binding is to
-			// // convertedValue property and convertedValue
-			// // property does not notify about changes
-			// if (widgetValueBinding != null) {
-			// widgetValueBinding.updateTargetToModel();
-			// }
-			// }
-			// });
 
 			initializeField(dateField);
 		}
 		return componentBase;
+	}
+
+	/**
+	 * Applies the datatype options to the field.
+	 * 
+	 * @param yDt
+	 */
+	protected void doApplyDatatype(YDatatype yDt) {
+		if (dateField == null) {
+			return;
+		}
+
+		dateField.setDateFormat(getDateformat((YDateTimeDatatype) yDt));
+	}
+
+	/**
+	 * Returns the date format.
+	 * 
+	 * @return
+	 */
+	public String getDateformat(YDateTimeDatatype yDt) {
+		if (yDt == null) {
+			return "yyyy.MM.dd HH:mm";
+		}
+
+		switch (yDt.getFormat()) {
+		case DATE:
+			return "yyyy.MM.dd";
+		case DATE_TIME:
+			return "yyyy.MM.dd HH:mm";
+		case TIME:
+			return "HH:mm:ss";
+		}
+		return "yyyy.MM.dd HH:mm";
 	}
 
 	@Override
@@ -294,27 +317,6 @@ public class DateTimePresentation extends
 		public boolean isDateformatValid() {
 			return yDateTime.getDatadescription() != null
 					&& yDateTime.getDatatype().getFormat() != null;
-		}
-
-		/**
-		 * Returns the date format.
-		 * 
-		 * @return
-		 */
-		public String getDateformat() {
-			if (yDateTime.getDatatype() == null) {
-				return "yyyy.MM.dd HH:mm";
-			}
-
-			switch (yDateTime.getDatatype().getFormat()) {
-			case DATE:
-				return "yyyy.MM.dd";
-			case DATE_TIME:
-				return "yyyy.MM.dd HH:mm";
-			case TIME:
-				return "HH:mm:ss";
-			}
-			return "yyyy.MM.dd HH:mm";
 		}
 
 		/**

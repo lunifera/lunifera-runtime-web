@@ -399,10 +399,10 @@ public class DateTimePresentationTests {
 				.getPresentation();
 
 		DateField datetime = (DateField) unwrapText(presentation.getWidget());
-		assertEquals("Alter", datetime.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", datetime.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
 	
 	@Test

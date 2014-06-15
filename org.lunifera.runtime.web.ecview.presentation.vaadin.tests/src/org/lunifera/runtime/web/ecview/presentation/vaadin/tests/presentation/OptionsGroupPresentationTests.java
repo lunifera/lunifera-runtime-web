@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,12 +40,10 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
@@ -70,7 +67,6 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -113,6 +109,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(String.class);
 		yGridlayout.getElements().add(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -145,6 +142,7 @@ public class OptionsGroupPresentationTests {
 		// ......> yOptionsGroup
 		YView yView = factory.createView();
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(String.class);
 		yView.setContent(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -157,11 +155,8 @@ public class OptionsGroupPresentationTests {
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
 
-		OptionGroup label = (OptionGroup) unwrapList(baseComponentContainer);
+		unwrapList(baseComponentContainer);
 		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
 	}
 
 	/**
@@ -180,10 +175,12 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yOptionsGroup1.setCssID("ID_0815");
 		yOptionsGroup1.setCssClass("anyOtherClass");
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -239,8 +236,10 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -295,6 +294,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -362,8 +362,10 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -482,6 +484,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -728,9 +731,9 @@ public class OptionsGroupPresentationTests {
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 		YDetailValueBindingEndpoint yDetailEndpoint = yOptionsGroup1
 				.createSelectionEndpoint().createDetailValueEndpoint();
-		yDetailEndpoint.setPropertyPath("myfoo.name");
 		yDetailEndpoint.setType(EmfBar.class);
-		yDetailEndpoint.setEmfNSUri(ModelPackage.eNS_URI);
+		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfBar_Myfoo());
+		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfFoo_Name());
 		yBindingSet.addBinding(yText.createValueEndpoint(), yDetailEndpoint);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -866,6 +869,7 @@ public class OptionsGroupPresentationTests {
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
 		yOptionsGroup1.setSelectionType(YSelectionType.MULTI);
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1021,6 +1025,7 @@ public class OptionsGroupPresentationTests {
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
 		yOptionsGroup1.setSelectionType(YSelectionType.MULTI);
+		yOptionsGroup1.setType(List.class);
 		yLayout.getElements().add(yOptionsGroup1);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1102,10 +1107,149 @@ public class OptionsGroupPresentationTests {
 		assertEquals(0, yOptionsGroup1.getMultiSelection().size());
 		assertEquals(0, asList(optionsGroup1.getValue()).size());
 	}
-	
+
 	@Test
-	public void test_SelectionBinding_Single_WithAttributePath(){
-		fail("Implement!");
+	public void test_SelectionBinding_Single_WithAttributePath()
+			throws ContextException {
+		// END SUPRESS CATCH EXCEPTION
+		// build the view model
+		// ...> yView
+		// ......> yText
+		YView yView = factory.createView();
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(Bar.class);
+		yLayout.getElements().add(yOptionsGroup1);
+		YTextField yText = factory.createTextField();
+		yLayout.getElements().add(yText);
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		YEmbeddableSelectionEndpoint selectionBindingEndpoint = yOptionsGroup1
+				.createSelectionEndpoint();
+		selectionBindingEndpoint.setAttributePath("myfoo.name");
+		yBindingSet.addBinding(yText.createValueEndpoint(),
+				selectionBindingEndpoint);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		renderer.render(rootLayout, yView, null);
+
+		IOptionsGroupEditpart optionsGroup1Editpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yOptionsGroup1);
+		IWidgetPresentation<Component> optionsGroup1Presentation = optionsGroup1Editpart
+				.getPresentation();
+		ComponentContainer optionsGroup1BaseComponentContainer = (ComponentContainer) optionsGroup1Presentation
+				.getWidget();
+		OptionGroup optionsGroup1 = (OptionGroup) unwrapList(optionsGroup1BaseComponentContainer);
+
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> textPresentation = textEditpart
+				.getPresentation();
+		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+				.getWidget();
+		TextField text = (TextField) unwrapList(textBaseComponentContainer);
+
+		// start tests
+		//
+		Container.Indexed container = (Indexed) optionsGroup1
+				.getContainerDataSource();
+		assertEquals(0, container.size());
+
+		assertNull(optionsGroup1.getValue());
+		assertNull(yOptionsGroup1.getSelection());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// add
+		Bar bar1 = new Bar();
+		bar1.setName("Bar1");
+		Foo foo1 = new Foo();
+		foo1.setName("Foo1");
+		bar1.setMyfoo(foo1);
+
+		Bar bar2 = new Bar();
+		bar2.setName("Bar2");
+		Foo foo2 = new Foo();
+		foo2.setName("Foo2");
+		bar2.setMyfoo(foo2);
+
+		yOptionsGroup1.getCollection().add(bar1);
+		yOptionsGroup1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		assertNull(yOptionsGroup1.getSelection());
+		assertNull(optionsGroup1.getValue());
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test set selection
+		yOptionsGroup1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yOptionsGroup1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		yOptionsGroup1.setSelection(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		optionsGroup1.setValue(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		optionsGroup1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		// test set selection null
+		optionsGroup1.setValue(null);
+		assertNull(yText.getValue());
+		assertNull(text.getValue());
+
+		// test remove element that is selected
+		// add
+		optionsGroup1.setValue(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yOptionsGroup1.getCollection().clear();
+
+		assertNull(yOptionsGroup1.getSelection());
+		assertNull(optionsGroup1.getValue());
+
+		// test setValue to textfield
+		yOptionsGroup1.getCollection().add(bar1);
+		yOptionsGroup1.getCollection().add(bar2);
+		assertEquals(2, container.size());
+
+		yOptionsGroup1.setSelection(bar2);
+		assertEquals("Foo2", yText.getValue());
+		assertEquals("Foo2", text.getValue());
+
+		yText.setValue("Foo2_1");
+		assertEquals("Foo2_1", foo2.getName());
+		assertEquals("Foo2_1", text.getValue());
+
+		text.setValue("Foo2_2");
+		assertEquals("Foo2_2", foo2.getName());
+		assertEquals("Foo2_2", yText.getValue());
+
+		yOptionsGroup1.setSelection(bar1);
+		assertEquals("Foo1", yText.getValue());
+		assertEquals("Foo1", text.getValue());
+
+		yText.setValue("Foo1_1");
+		assertEquals("Foo1_1", foo1.getName());
+		assertEquals("Foo1_1", text.getValue());
+
+		text.setValue("Foo1_2");
+		assertEquals("Foo1_2", foo1.getName());
+		assertEquals("Foo1_2", yText.getValue());
+
 	}
 
 	/**
@@ -1126,9 +1270,11 @@ public class OptionsGroupPresentationTests {
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
 		yOptionsGroup1.setSelectionType(YSelectionType.MULTI);
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
 		yOptionsGroup2.setSelectionType(YSelectionType.MULTI);
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1149,10 +1295,8 @@ public class OptionsGroupPresentationTests {
 		OptionGroup optionsGroup1 = (OptionGroup) unwrapList(optionsGroup1BaseComponentContainer);
 		OptionGroup optionsGroup2 = (OptionGroup) unwrapList(optionsGroup2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) optionsGroup1
-				.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) optionsGroup2
-				.getContainerDataSource();
+		optionsGroup1.getContainerDataSource();
+		optionsGroup2.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -1288,8 +1432,10 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
+		yOptionsGroup1.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup1);
 		YOptionsGroup yOptionsGroup2 = factory.createOptionsGroup();
+		yOptionsGroup2.setType(String.class);
 		yLayout.getElements().add(yOptionsGroup2);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1310,10 +1456,8 @@ public class OptionsGroupPresentationTests {
 		OptionGroup optionsGroup1 = (OptionGroup) unwrapList(optionsGroup1BaseComponentContainer);
 		OptionGroup optionsGroup2 = (OptionGroup) unwrapList(optionsGroup2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) optionsGroup1
-				.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) optionsGroup2
-				.getContainerDataSource();
+		optionsGroup1.getContainerDataSource();
+		optionsGroup2.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -1456,6 +1600,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(String.class);
 		yGridlayout.getElements().add(yOptionsGroup);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1485,6 +1630,7 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(String.class);
 		yGridlayout.getElements().add(yOptionsGroup);
 
 		// set the i18n key
@@ -1502,13 +1648,12 @@ public class OptionsGroupPresentationTests {
 				.getInstance().getEditpart(yOptionsGroup);
 		OptionsGroupPresentation presentation = editpart.getPresentation();
 
-		OptionGroup grp = (OptionGroup) unwrapList(presentation.getWidget());
-		assertEquals("Alter", grp.getCaption());
+		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
-		assertEquals("Age", grp.getCaption());
+		assertEquals("Age", presentation.getWidget().getCaption());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -1518,8 +1663,9 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(ValueBean.class);
 		yLayout.getElements().add(yOptionsGroup);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -1527,12 +1673,11 @@ public class OptionsGroupPresentationTests {
 				.getInstance().getEditpart(yOptionsGroup);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		OptionGroup grp = (OptionGroup) unwrapList(presentation.getWidget());		
-		
+		OptionGroup grp = (OptionGroup) unwrapList(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
@@ -1543,13 +1688,13 @@ public class OptionsGroupPresentationTests {
 		assertFalse(yOptionsGroup.isEditable());
 		assertFalse(!grp.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yOptionsGroup.isEditable());
 		assertTrue(!grp.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -1559,8 +1704,9 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(ValueBean.class);
 		yLayout.getElements().add(yOptionsGroup);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -1568,12 +1714,12 @@ public class OptionsGroupPresentationTests {
 				.getInstance().getEditpart(yOptionsGroup);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		OptionGroup grp = (OptionGroup) unwrapList(presentation.getWidget());		
-		
+		presentation.getWidget();
+		OptionGroup grp = (OptionGroup) unwrapList(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
@@ -1584,13 +1730,13 @@ public class OptionsGroupPresentationTests {
 		assertFalse(yOptionsGroup.isVisible());
 		assertFalse(grp.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yOptionsGroup.isVisible());
 		assertTrue(grp.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -1600,8 +1746,9 @@ public class OptionsGroupPresentationTests {
 		YGridLayout yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup = factory.createOptionsGroup();
+		yOptionsGroup.setType(ValueBean.class);
 		yLayout.getElements().add(yOptionsGroup);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -1609,12 +1756,12 @@ public class OptionsGroupPresentationTests {
 				.getInstance().getEditpart(yOptionsGroup);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		OptionGroup grp = (OptionGroup) unwrapList(presentation.getWidget());		
-		
+		presentation.getWidget();
+		OptionGroup grp = (OptionGroup) unwrapList(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
@@ -1625,7 +1772,7 @@ public class OptionsGroupPresentationTests {
 		assertFalse(yOptionsGroup.isEnabled());
 		assertFalse(grp.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yOptionsGroup.isEnabled());
 		assertTrue(grp.isEnabled());

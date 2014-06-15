@@ -122,6 +122,8 @@ public class DecimalField extends TextField {
 	 */
 	public void setMarkNegative(boolean markNegative) {
 		this.markNegative = markNegative;
+		
+		handleNegative();
 	}
 
 	/**
