@@ -21,7 +21,7 @@ public interface HttpConstants extends org.osgi.framework.Constants {
 	/**
 	 * The persistence ID used for {@link ManagedServiceFactory}
 	 */
-	public static final String OSGI__FACTORY_PID = "lunifera.http.application.factory";
+	public static final String OSGI_FACTORY_PID = "lunifera.http.application.factory";
 
 	/**
 	 * Property for the id of the http application.

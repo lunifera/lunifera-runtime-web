@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 public class HttpApplicationServletContextHandler extends
 		org.eclipse.jetty.servlet.ServletContextHandler {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HttpApplicationServletContextHandler.class);
 
 	private final HttpApplication application;
@@ -174,7 +174,7 @@ public class HttpApplicationServletContextHandler extends
 			final URL fileURL = FileLocator.toFileURL(resourceUrl);
 			return Resource.newResource(fileURL);
 		} catch (final IOException e) {
-			logger.warn("Error resolving url {} to file based resource. {}",
+			LOGGER.warn("Error resolving url {} to file based resource. {}",
 					resourceUrl.toExternalForm(), e.getMessage());
 			return null;
 		}

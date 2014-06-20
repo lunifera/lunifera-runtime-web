@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpApplicationFactory implements ManagedServiceFactory {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HttpApplicationFactory.class);
 
 	private Map<String, HttpApplication> applications = Collections
@@ -52,7 +52,7 @@ public class HttpApplicationFactory implements ManagedServiceFactory {
 	 */
 	protected void activate(ComponentContext context,
 			Map<String, Object> properties) {
-		logger.debug("{} started", getName());
+		LOGGER.debug("{} started", getName());
 		this.context = context;
 	}
 
@@ -72,7 +72,7 @@ public class HttpApplicationFactory implements ManagedServiceFactory {
 			deleted(pid);
 		}
 
-		logger.debug("{} stopped", getName());
+		LOGGER.debug("{} stopped", getName());
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class HttpApplicationFactory implements ManagedServiceFactory {
 		// start the application again
 		//
 		application.start();
-		logger.debug("New HttpApplication {} started on context path {}",
+		LOGGER.debug("New HttpApplication {} started on context path {}",
 				application.getName(), application.getContextPath());
 	}
 
@@ -166,7 +166,7 @@ public class HttpApplicationFactory implements ManagedServiceFactory {
 		if (application != null) {
 			application.destroy();
 
-			logger.debug("HttpApplication {} stopped on context path {}",
+			LOGGER.debug("HttpApplication {} stopped on context path {}",
 					application.getName(), application.getContextPath());
 		}
 
@@ -175,7 +175,7 @@ public class HttpApplicationFactory implements ManagedServiceFactory {
 				.remove(pid);
 		if (registration != null) {
 			registration.unregister();
-			logger.debug("HttpApplication {} removed as a service!",
+			LOGGER.debug("HttpApplication {} removed as a service!",
 					application.getName());
 		}
 

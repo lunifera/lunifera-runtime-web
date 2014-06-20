@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpApplication implements IHttpApplication {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger Logger = LoggerFactory
 			.getLogger(HttpApplication.class);
 
 	// OSGi
@@ -209,7 +209,7 @@ public class HttpApplication implements IHttpApplication {
 	 */
 	public void start() {
 		if (started) {
-			logger.debug("HttpApplication {} is already started", getName());
+			Logger.debug("HttpApplication {} is already started", getName());
 			return;
 		}
 
@@ -237,10 +237,10 @@ public class HttpApplication implements IHttpApplication {
 					}
 				}
 			} catch (ServletException e) {
-				logger.error("{}", e);
+				Logger.error("{}", e);
 				throw new RuntimeException(e);
 			} catch (NamespaceException e) {
-				logger.error("{}", e);
+				Logger.error("{}", e);
 				throw new RuntimeException(e);
 			}
 
@@ -292,7 +292,7 @@ public class HttpApplication implements IHttpApplication {
 	 */
 	public void stop() {
 		if (!started) {
-			logger.debug("HttpApplication {} not started", getName());
+			Logger.debug("HttpApplication {} not started", getName());
 			return;
 		}
 
@@ -327,7 +327,7 @@ public class HttpApplication implements IHttpApplication {
 					servletContext.stop();
 					servletContext.destroy();
 				} catch (Exception e) {
-					logger.error("{}", e);
+					Logger.error("{}", e);
 				}
 				servletContext = null;
 			}
@@ -654,7 +654,7 @@ public class HttpApplication implements IHttpApplication {
 
 	private void registerAlias(final String alias) throws NamespaceException {
 		if (registeredAlias.contains(alias)) {
-			logger.error("Alias {} was already registered!", alias);
+			Logger.error("Alias {} was already registered!", alias);
 			throw new NamespaceException(alias);
 		}
 		registeredAlias.add(alias);
@@ -667,7 +667,7 @@ public class HttpApplication implements IHttpApplication {
 	 */
 	private void unregisterAlias(final String alias) {
 		if (!registeredAlias.contains(alias)) {
-			logger.error("Alias {} was not registered!", alias);
+			Logger.error("Alias {} was not registered!", alias);
 			throw new IllegalArgumentException(String.format(
 					"Alias %s was not registered", alias));
 		}
@@ -695,7 +695,7 @@ public class HttpApplication implements IHttpApplication {
 				try {
 					unregister(alias);
 				} catch (final Exception e2) {
-					logger.error("{}", e);
+					Logger.error("{}", e);
 				}
 				// fail
 				throw new ServletException(String.format(

@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JettyFactory implements ManagedServiceFactory {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JettyFactory.class);
 
 	private static final String JETTY_WORK_DIR = "jettywork"; //$NON-NLS-1$
@@ -78,7 +78,7 @@ public class JettyFactory implements ManagedServiceFactory {
 	 */
 	protected void activate(ComponentContext context,
 			Map<String, Object> properties) {
-		logger.debug("{} started", getName());
+		LOGGER.debug("{} started", getName());
 		this.context = context;
 
 		jettyWorkDir = new File(
@@ -101,7 +101,7 @@ public class JettyFactory implements ManagedServiceFactory {
 			deleted(pid);
 		}
 
-		logger.debug("{} stopped", getName());
+		LOGGER.debug("{} stopped", getName());
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		// start the jetty again
 		//
 		jetty.start();
-		logger.debug("New IJetty {} started on port {}", jetty.getName(),
+		LOGGER.debug("New IJetty {} started on port {}", jetty.getName(),
 				jetty.getHttpPort());
 	}
 
@@ -207,7 +207,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		if (jetty != null) {
 			jettyName = jetty.getName();
 			jetty.stop();
-			logger.debug("IJetty {} deleted from configuration {}",
+			LOGGER.debug("IJetty {} deleted from configuration {}",
 					jetty.getName(), jetty.getHttpPort());
 
 			// deletes the working directory of the jetty server with the given
@@ -219,7 +219,7 @@ public class JettyFactory implements ManagedServiceFactory {
 		ServiceRegistration<IJetty> registration = registrations.remove(pid);
 		if (registration != null) {
 			registration.unregister();
-			logger.debug("IJetty {} removed as a service!", jettyName);
+			LOGGER.debug("IJetty {} removed as a service!", jettyName);
 		}
 
 	}

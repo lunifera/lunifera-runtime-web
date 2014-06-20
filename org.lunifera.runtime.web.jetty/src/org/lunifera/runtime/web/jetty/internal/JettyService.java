@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JettyService implements IJetty {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JettyService.class);
 
 	private HandlerCollection handlerCollection;
@@ -309,11 +309,11 @@ public class JettyService implements IJetty {
 	 */
 	public void start() {
 		if (started) {
-			logger.debug("Httpserver {} is already started", getName());
+			LOGGER.debug("Httpserver {} is already started", getName());
 			return;
 		}
 		if (server != null) {
-			logger.error("Server already exists!");
+			LOGGER.error("Server already exists!");
 			throw new IllegalStateException("Server already exists!");
 		}
 
@@ -326,7 +326,7 @@ public class JettyService implements IJetty {
 				serviceTracker.open();
 			} catch (InvalidSyntaxException e) {
 				accessLock.unlock();
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 				throw new IllegalStateException(e);
 			}
 
@@ -360,7 +360,7 @@ public class JettyService implements IJetty {
 			try {
 				server.start();
 			} catch (Exception e) {
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 			}
 
 		} finally {
@@ -375,7 +375,7 @@ public class JettyService implements IJetty {
 	 */
 	public void stop() {
 		if (!started) {
-			logger.debug("Httpserver {} not started", getName());
+			LOGGER.debug("Httpserver {} not started", getName());
 			return;
 		}
 
@@ -395,7 +395,7 @@ public class JettyService implements IJetty {
 					server = null;
 					handlerCollection = null;
 				} catch (Exception e) {
-					logger.debug("{}", e);
+					LOGGER.debug("{}", e);
 				}
 			}
 
@@ -416,7 +416,7 @@ public class JettyService implements IJetty {
 		}
 
 		if (handlerMap.containsKey(service)) {
-			logger.warn("Service already added!");
+			LOGGER.warn("Service already added!");
 			return;
 		}
 
@@ -426,10 +426,10 @@ public class JettyService implements IJetty {
 
 			// stop the server
 			try {
-				logger.info("Stopping server to add new handler!");
+				LOGGER.info("Stopping server to add new handler!");
 				server.stop();
 			} catch (Exception e) {
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 			}
 
 			// add the handler
@@ -438,10 +438,10 @@ public class JettyService implements IJetty {
 
 		} finally {
 			try {
-				logger.info("Starting server after adding new handler!");
+				LOGGER.info("Starting server after adding new handler!");
 				server.start();
 			} catch (Exception e) {
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 			}
 			accessLock.unlock();
 		}
@@ -474,10 +474,10 @@ public class JettyService implements IJetty {
 
 			// stop the server
 			try {
-				logger.info("Stopping server to add new handler!");
+				LOGGER.info("Stopping server to add new handler!");
 				server.stop();
 			} catch (Exception e) {
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 			}
 
 			// remove the handler
@@ -489,10 +489,10 @@ public class JettyService implements IJetty {
 
 		} finally {
 			try {
-				logger.info("Starting server after adding new handler!");
+				LOGGER.info("Starting server after adding new handler!");
 				server.start();
 			} catch (Exception e) {
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 			}
 			accessLock.unlock();
 		}
@@ -523,7 +523,7 @@ public class JettyService implements IJetty {
 			} catch (IOException e) {
 				// this would be unexpected since we're opening the next
 				// available port
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 			}
 		}
 		return connector;

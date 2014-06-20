@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpApplicationScopeHandler extends ScopedHandler {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HttpApplicationScopeHandler.class);
 
 	private final HttpApplication httpApplication;
@@ -115,7 +115,7 @@ public class HttpApplicationScopeHandler extends ScopedHandler {
 			}
 			nextScope(target, baseRequest, baseRequest, response);
 		} catch (final ServletException e) {
-			logger.error("{}", e);
+			LOGGER.error("{}", e);
 			throw e;
 		}
 		return baseRequest.isHandled();
