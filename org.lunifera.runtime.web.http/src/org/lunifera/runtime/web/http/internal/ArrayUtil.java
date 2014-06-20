@@ -32,19 +32,22 @@ public class ArrayUtil implements Cloneable, Serializable {
 
 	/* ------------------------------------------------------------ */
 	public static <T> T[] removeFromArray(T[] array, Object item) {
-		if (item == null || array == null)
+		if (item == null || array == null) {
 			return array;
+		}
 		for (int i = array.length; i-- > 0;) {
 			if (item.equals(array[i])) {
 				Class<?> c = array == null ? item.getClass() : array.getClass()
 						.getComponentType();
 				@SuppressWarnings("unchecked")
 				T[] na = (T[]) Array.newInstance(c, Array.getLength(array) - 1);
-				if (i > 0)
+				if (i > 0) {
 					System.arraycopy(array, 0, na, 0, i);
-				if (i + 1 < array.length)
+				}
+				if (i + 1 < array.length) {
 					System.arraycopy(array, i + 1, na, i, array.length
 							- (i + 1));
+				}
 				return na;
 			}
 		}
@@ -65,8 +68,9 @@ public class ArrayUtil implements Cloneable, Serializable {
 	 */
 	public static <T> T[] addToArray(T[] array, T item, Class<?> type) {
 		if (array == null) {
-			if (type == null && item != null)
+			if (type == null && item != null){
 				type = item.getClass();
+			}
 			@SuppressWarnings("unchecked")
 			T[] na = (T[]) Array.newInstance(type, 1);
 			na[0] = item;
@@ -92,8 +96,9 @@ public class ArrayUtil implements Cloneable, Serializable {
 	 */
 	public static <T> T[] prependToArray(T item, T[] array, Class<?> type) {
 		if (array == null) {
-			if (type == null && item != null)
+			if (type == null && item != null){
 				type = item.getClass();
+			}
 			@SuppressWarnings("unchecked")
 			T[] na = (T[]) Array.newInstance(type, 1);
 			na[0] = item;
@@ -116,8 +121,9 @@ public class ArrayUtil implements Cloneable, Serializable {
 	 *         <code>array</code>.
 	 */
 	public static <E> List<E> asMutableList(E[] array) {
-		if (array == null || array.length == 0)
+		if (array == null || array.length == 0) {
 			return new ArrayList<E>();
+		}
 		return new ArrayList<E>(Arrays.asList(array));
 	}
 
@@ -126,9 +132,11 @@ public class ArrayUtil implements Cloneable, Serializable {
 		for (T t : array) {
 			if (t == null) {
 				List<T> list = new ArrayList<T>();
-				for (T t2 : array)
-					if (t2 != null)
+				for (T t2 : array) {
+					if (t2 != null) {
 						list.add(t2);
+					}
+				}
 				return list.toArray(Arrays.copyOf(array, list.size()));
 			}
 		}

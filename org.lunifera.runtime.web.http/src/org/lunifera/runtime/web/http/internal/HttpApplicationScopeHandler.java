@@ -92,17 +92,18 @@ public class HttpApplicationScopeHandler extends ScopedHandler {
 	public boolean handleHttpApplicationCallback(
 			final HttpServletRequest request, final HttpServletResponse response)
 			throws IOException, ServletException {
-		if (!(request instanceof Request))
+		if (!(request instanceof Request)) {
 			throw new IllegalArgumentException(
 					"Please ensure that this method is called within the request thread with the original Jetty request and response objects!");
-		final Request baseRequest = (Request) request;
+		}
 
+		final Request baseRequest = (Request) request;
 		try {
 			// calculate target based on current path info
 			final String target = baseRequest.getPathInfo();
 			// also make sure the path absolute is absolute (required by
 			// ServletHandler down the road)
-			if ((null == target) || !target.startsWith(URIUtil.SLASH))
+			if ((null == target) || !target.startsWith(URIUtil.SLASH)) {
 				// if not it might indicate a problem higher up the stack, thus,
 				// make sure to fail
 				// otherwise we might unveil unwanted resources (eg. display
@@ -111,6 +112,7 @@ public class HttpApplicationScopeHandler extends ScopedHandler {
 						String.format(
 								"Unable to handle request. It seems the specified request is invalid (path info '%s'). At least an absolute path info is necessary in order to determine the request target within the registered application servlets and resources.",
 								StringUtils.trimToEmpty(target)));
+			}
 			nextScope(target, baseRequest, baseRequest, response);
 		} catch (final ServletException e) {
 			logger.error("{}", e);

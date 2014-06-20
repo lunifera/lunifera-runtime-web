@@ -1360,18 +1360,23 @@ public class VaadinObservables {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			final UIRealm other = (UIRealm) obj;
 			if (ui == null) {
-				if (other.ui != null)
+				if (other.ui != null) {
 					return false;
-			} else if (!ui.equals(other.ui))
+				}
+			} else if (!ui.equals(other.ui)) {
 				return false;
+			}
 			return true;
 		}
 	}

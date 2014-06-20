@@ -55,21 +55,23 @@ public class ComponentListener extends NativePropertyListener implements
 
 	@Override
 	public void componentEvent(com.vaadin.ui.Component.Event event) {
-		if (staleEvents != null)
-			for (int i = 0; i < staleEvents.length; i++)
+		if (staleEvents != null) {
+			for (int i = 0; i < staleEvents.length; i++) {
 				if (event.getClass().isAssignableFrom(staleEvents[i])) {
 					fireStale(event.getComponent());
 					break;
 				}
-
-		if (changeEvents != null)
-			for (int i = 0; i < changeEvents.length; i++)
+			}
+		}
+		if (changeEvents != null){
+			for (int i = 0; i < changeEvents.length; i++) {
 				if (event.getClass().isAssignableFrom(changeEvents[i])) {
 					fireChange(event.getComponent(), null);
 					break;
 				}
+			}
 	}
-
+	}
 	protected void doAddTo(Object source) {
 		Component widget = (Component) source;
 		if (changeEvents != null) {

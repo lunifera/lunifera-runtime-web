@@ -102,8 +102,9 @@ public abstract class AbstractVaadinValueProperty extends SimpleValueProperty
 
 	public INativePropertyListener adaptListener(
 			ISimplePropertyListener listener) {
-		if (changeEvents == null && staleEvents == null)
+		if (changeEvents == null && staleEvents == null) {
 			return null;
+		}
 		return new ComponentListener(this, listener, changeEvents, staleEvents);
 	}
 

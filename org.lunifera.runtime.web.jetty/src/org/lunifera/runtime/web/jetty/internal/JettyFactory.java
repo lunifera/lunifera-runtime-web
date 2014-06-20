@@ -298,16 +298,19 @@ public class JettyFactory implements ManagedServiceFactory {
 		if (javaVendor.equals("IBM Corporation")) { //$NON-NLS-1$
 			String javaVersion = systemProperties.getProperty(
 					"java.version", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			if (javaVersion.startsWith("1.4")) //$NON-NLS-1$
+			if (javaVersion.startsWith("1.4")) { //$NON-NLS-1$
 				return Boolean.FALSE;
+			}
 			// Note: no problems currently logged with 1.5
 			if (javaVersion.equals("1.6.0")) { //$NON-NLS-1$
 				String jclVersion = systemProperties.getProperty(
 						"java.jcl.version", ""); //$NON-NLS-1$ //$NON-NLS-2$
-				if (jclVersion.startsWith("2007")) //$NON-NLS-1$
+				if (jclVersion.startsWith("2007")) { //$NON-NLS-1$
 					return Boolean.FALSE;
-				if (jclVersion.startsWith("2008") && !jclVersion.startsWith("200811") && !jclVersion.startsWith("200812")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+				if (jclVersion.startsWith("2008") && !jclVersion.startsWith("200811") && !jclVersion.startsWith("200812")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					return Boolean.FALSE;
+				}
 			}
 		}
 		return Boolean.TRUE;
@@ -357,8 +360,9 @@ public class JettyFactory implements ManagedServiceFactory {
 		Object needClientAuth = dictionary
 				.get(JettyConstants.SSL_NEEDCLIENTAUTH);
 		if (needClientAuth != null) {
-			if (needClientAuth instanceof String)
+			if (needClientAuth instanceof String) {
 				needClientAuth = Boolean.valueOf((String) needClientAuth);
+			}
 			jetty.setSslNeedsClientAuth((Boolean) needClientAuth);
 		}
 

@@ -52,23 +52,30 @@ public class PropertyInfo {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		PropertyInfo other = (PropertyInfo) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		if (prop == null) {
-			if (other.prop != null)
+			if (other.prop != null) {
 				return false;
-		} else if (!prop.equals(other.prop))
+			}
+		} else if (!prop.equals(other.prop)) {
 			return false;
+		}
 		return true;
 	}
 

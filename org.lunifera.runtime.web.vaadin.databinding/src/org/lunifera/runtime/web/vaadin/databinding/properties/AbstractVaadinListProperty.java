@@ -71,8 +71,9 @@ public abstract class AbstractVaadinListProperty extends SimpleListProperty {
 
 	public INativePropertyListener adaptListener(
 			ISimplePropertyListener listener) {
-		if (changeEvents == null && staleEvents == null)
+		if (changeEvents == null && staleEvents == null) {
 			return null;
+		}
 		return new ComponentListener(this, listener, changeEvents, staleEvents);
 	}
 

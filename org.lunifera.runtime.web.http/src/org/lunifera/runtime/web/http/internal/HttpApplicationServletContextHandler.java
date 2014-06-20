@@ -151,13 +151,14 @@ public class HttpApplicationServletContextHandler extends
 		}
 
 		path = URIUtil.canonicalPath(path);
-		final PathMap.Entry entry = resourcesMap
-				.getMatch(path);
-		if (null == entry)
+		final PathMap.Entry entry = resourcesMap.getMatch(path);
+		if (null == entry) {
 			return null;
+		}
 		final IResourceProvider provider = (IResourceProvider) entry.getValue();
-		if (null == provider)
+		if (null == provider) {
 			return null;
+		}
 
 		final String pathSpec = (String) entry.getKey();
 		final String pathInfo = PathMap.pathInfo(pathSpec, path);

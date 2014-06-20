@@ -31,8 +31,9 @@ public class ComponentListenerUtil {
 	public static void asyncAddListener(final MethodEventSource widget,
 			final Class<? extends Component.Event> event,
 			final Component.Listener listener, Method listenerMethod) {
-		if (widget == null)
+		if (widget == null) {
 			return;
+		}
 
 		UI ui = UI.getCurrent();
 		if (ui != null) {
@@ -50,8 +51,9 @@ public class ComponentListenerUtil {
 	public static void asyncRemoveListener(final MethodEventSource widget,
 			final Class<? extends Component.Event> event,
 			final Component.Listener listener, Method listenerMethod) {
-		if (widget == null)
+		if (widget == null) {
 			return;
+		}
 
 		UI ui = UI.getCurrent();
 		if (ui != null) {

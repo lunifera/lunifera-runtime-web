@@ -244,8 +244,10 @@ public class HttpApplication implements IHttpApplication {
 				throw new RuntimeException(e);
 			}
 
-			// register http service 
-			// ATTENTION: First the http service has to be registered. Otherwise servlets can not add servletContext listener if servlet context already started!
+			// register http service
+			// ATTENTION: First the http service has to be registered. Otherwise
+			// servlets can not add servletContext listener if servlet context
+			// already started!
 			//
 			if (httpServiceRegistration == null) {
 				Hashtable<String, Object> properties = new Hashtable<String, Object>();
@@ -494,9 +496,10 @@ public class HttpApplication implements IHttpApplication {
 		}
 
 		// sanity check
-		if (!removedSomething)
+		if (!removedSomething) {
 			throw new IllegalStateException("alias '" + alias
 					+ "' registered but nothing removed");
+		}
 
 		// find servlets to remove
 		final ServletHolder[] servlets = servletHandler.getServlets();
@@ -714,20 +717,25 @@ public class HttpApplication implements IHttpApplication {
 	private String normalizeAliasToPathSpec(final String alias)
 			throws IllegalArgumentException {
 		// sanity check alias
-		if (null == alias)
+		if (null == alias) {
 			throw new IllegalArgumentException("alias must not be null");
-		if (!alias.startsWith(URIUtil.SLASH) && !alias.startsWith("*."))
+		}
+		if (!alias.startsWith(URIUtil.SLASH) && !alias.startsWith("*.")) {
 			throw new IllegalArgumentException(
 					"alias must start with '/' or '*.'");
-		if (alias.endsWith("/*"))
+		}
+		if (alias.endsWith("/*")) {
 			throw new IllegalArgumentException("alias must not end with '/*'");
+		}
 		if (!URIUtil.SLASH.equals(alias)
-				&& StringUtil.endsWithIgnoreCase(alias, URIUtil.SLASH))
+				&& StringUtil.endsWithIgnoreCase(alias, URIUtil.SLASH)) {
 			throw new IllegalArgumentException("alias must not end with '/'");
+		}
 
 		// use extension alias as is
-		if (alias.startsWith("*."))
+		if (alias.startsWith("*.")) {
 			return alias;
+		}
 
 		// make all other aliases implicit to simulate OSGi prefix matching
 		// note, '/' must also be made implicit so that internally it matches as
@@ -841,11 +849,12 @@ public class HttpApplication implements IHttpApplication {
 
 		@Override
 		public void bundleChanged(final BundleEvent event) {
-			if (bundleId != event.getBundle().getBundleId())
+			if (bundleId != event.getBundle().getBundleId()) {
 				// ignore events for different bundles
 				// (clarify if we should ever get those here; I got a stacktrace
 				// once that indicates this)
 				return;
+			}
 			if (event.getType() == Bundle.STOPPING) {
 				try {
 					if (filter != null) {
