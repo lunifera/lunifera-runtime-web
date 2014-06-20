@@ -1,5 +1,7 @@
 package org.lunifera.runtime.web.vaadin.databinding.properties;
 
+import java.util.Arrays;
+
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.property.INativePropertyListener;
@@ -65,8 +67,10 @@ public abstract class AbstractVaadinSetProperty extends SimpleSetProperty {
 	public AbstractVaadinSetProperty(
 			Class<? extends Component.Event>[] changeEvents,
 			Class<? extends Component.Event>[] staleEvents) {
-		this.changeEvents = changeEvents;
-		this.staleEvents = staleEvents;
+		this.changeEvents = Arrays.copyOf(changeEvents, changeEvents.length);
+		this.staleEvents = Arrays.copyOf(staleEvents, staleEvents.length);
+		
+		
 	}
 
 	public INativePropertyListener adaptListener(

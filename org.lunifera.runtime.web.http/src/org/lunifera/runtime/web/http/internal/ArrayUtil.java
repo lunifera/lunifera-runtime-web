@@ -37,8 +37,7 @@ public class ArrayUtil implements Cloneable, Serializable {
 		}
 		for (int i = array.length; i-- > 0;) {
 			if (item.equals(array[i])) {
-				Class<?> c = array == null ? item.getClass() : array.getClass()
-						.getComponentType();
+				Class<?> c = array.getClass().getComponentType();
 				@SuppressWarnings("unchecked")
 				T[] na = (T[]) Array.newInstance(c, Array.getLength(array) - 1);
 				if (i > 0) {
@@ -68,7 +67,7 @@ public class ArrayUtil implements Cloneable, Serializable {
 	 */
 	public static <T> T[] addToArray(T[] array, T item, Class<?> type) {
 		if (array == null) {
-			if (type == null && item != null){
+			if (type == null && item != null) {
 				type = item.getClass();
 			}
 			@SuppressWarnings("unchecked")
@@ -96,7 +95,7 @@ public class ArrayUtil implements Cloneable, Serializable {
 	 */
 	public static <T> T[] prependToArray(T item, T[] array, Class<?> type) {
 		if (array == null) {
-			if (type == null && item != null){
+			if (type == null && item != null) {
 				type = item.getClass();
 			}
 			@SuppressWarnings("unchecked")

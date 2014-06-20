@@ -15,6 +15,7 @@
 package org.lunifera.runtime.web.vaadin.databinding.component.internal;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import org.eclipse.core.databinding.property.IProperty;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
@@ -49,8 +50,8 @@ public class ComponentListener extends NativePropertyListener implements
 			Class<? extends Component.Event>[] changeEvents,
 			Class<? extends Component.Event>[] staleEvents) {
 		super(property, listener);
-		this.changeEvents = changeEvents;
-		this.staleEvents = staleEvents;
+		this.changeEvents = Arrays.copyOf(changeEvents, changeEvents.length);
+		this.staleEvents = Arrays.copyOf(staleEvents, staleEvents.length);
 	}
 
 	@Override
@@ -63,15 +64,16 @@ public class ComponentListener extends NativePropertyListener implements
 				}
 			}
 		}
-		if (changeEvents != null){
+		if (changeEvents != null) {
 			for (int i = 0; i < changeEvents.length; i++) {
 				if (event.getClass().isAssignableFrom(changeEvents[i])) {
 					fireChange(event.getComponent(), null);
 					break;
 				}
 			}
+		}
 	}
-	}
+
 	protected void doAddTo(Object source) {
 		Component widget = (Component) source;
 		if (changeEvents != null) {

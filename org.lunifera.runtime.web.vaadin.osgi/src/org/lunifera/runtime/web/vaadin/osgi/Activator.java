@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.lunifera.runtime.web.vaadin.osgi.common.IVaadinApplication;
 import org.lunifera.runtime.web.vaadin.osgi.common.VaadinConstants;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -57,8 +56,6 @@ public class Activator implements BundleActivator {
 	public static final String BUNDLE_NAME = "org.lunifera.runtime.web.vaadin.osgi";
 
 	private LogService logService;
-	private Bundle jettyBundle;
-	private Bundle vaadinBundle;
 
 	private static BundleContext bundleContext;
 
@@ -128,41 +125,11 @@ public class Activator implements BundleActivator {
 		// bind the log service
 		bindLogService(context);
 
-		// start the jetty with data from CM
-		startJetty(context);
-
-		// start the Vaadin bundle
-		startVaadin(context);
-
-	}
-
-	private void startJetty(BundleContext context) {
-
-		// jettyBundle = FrameworkUtil.getBundle(JettyConstants.class);
-		// if (jettyBundle == null) {
-		// getLogService()
-		// .log(LogService.LOG_ERROR,
-		// "Bundle org.eclipse.equinox.http.jetty is not in target platform");
-		// }
-
-	}
-
-	private void startVaadin(BundleContext context) {
-
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 
-		if (vaadinBundle != null) {
-			vaadinBundle.stop();
-		}
-		if (jettyBundle != null) {
-			jettyBundle.stop();
-		}
-
-		vaadinBundle = null;
-		jettyBundle = null;
 		logService = null;
 	}
 

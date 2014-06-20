@@ -118,8 +118,7 @@ public class AbstractRenderer {
 
 			if (bindingAttribute != null) {
 				if (path != null && !path.equals("")) {
-					if (bindingAttribute != null
-							&& !bindingAttribute.equals("")) {
+					if (!bindingAttribute.equals("")) {
 						// attache the binding attribute separated by a "."
 						path = path + "." + bindingAttribute;
 					}

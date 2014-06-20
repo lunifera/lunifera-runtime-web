@@ -246,7 +246,8 @@ public class EntityModelRenderer extends AbstractRenderer {
 			try {
 				enumClass = modelBundle.loadClass(enumClassName);
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				throw new IllegalArgumentException("No class found for "
+						+ enumClassName);
 			}
 
 			YLayout yLayout = getLayout();

@@ -325,6 +325,7 @@ public class JettyService implements IJetty {
 				serviceTracker = new HandlerTracker(context, getName());
 				serviceTracker.open();
 			} catch (InvalidSyntaxException e) {
+				accessLock.unlock();
 				logger.error("{}", e);
 				throw new IllegalStateException(e);
 			}

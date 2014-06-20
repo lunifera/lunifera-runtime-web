@@ -204,10 +204,8 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 								.getName());
 		applyDefaults(yEmbeddable);
 
-		if (yEmbeddable instanceof YVisibleable) {
-			registerBinding(createBindings_Visiblility(yEmbeddable,
-					abstractComponent));
-		}
+		registerBinding(createBindings_Visiblility(yEmbeddable,
+				abstractComponent));
 
 		if (yEmbeddable instanceof YEnable) {
 			registerBinding(createBindings_Enabled((YEnable) yEmbeddable,
