@@ -20,4 +20,6 @@
 	<artifactId>org.lunifera.runtime.web.vaadin.common</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
+	<name>Vaadin Common stuff</name>
+	<description>Vaadin stuff that is used by different bundles.</description>
 </project>

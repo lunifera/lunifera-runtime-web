@@ -55,7 +55,7 @@ public abstract class AbstractVaadinValueProperty extends SimpleValueProperty
 	 * events.
 	 */
 	protected AbstractVaadinValueProperty() {
-		this(null, null);
+		this(new Class[0], new Class[0]);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public abstract class AbstractVaadinValueProperty extends SimpleValueProperty
 	@SuppressWarnings("unchecked")
 	protected AbstractVaadinValueProperty(
 			Class<? extends Component.Event> changeEvent) {
-		this(new Class[] { changeEvent }, null);
+		this(new Class[] { changeEvent },  new Class[0]);
 	}
 
 	/**
@@ -79,9 +79,10 @@ public abstract class AbstractVaadinValueProperty extends SimpleValueProperty
 	 *            array of vaadin event constants of the events that signify a
 	 *            property change.
 	 */
+	@SuppressWarnings("unchecked")
 	protected AbstractVaadinValueProperty(
 			Class<? extends Component.Event>[] changeEvents) {
-		this(changeEvents, null);
+		this(changeEvents, new Class[0]);
 	}
 
 	/**
@@ -100,7 +101,6 @@ public abstract class AbstractVaadinValueProperty extends SimpleValueProperty
 			Class<? extends Component.Event>[] staleEvents) {
 		this.changeEvents = Arrays.copyOf(changeEvents, changeEvents.length);
 		this.staleEvents = Arrays.copyOf(staleEvents, staleEvents.length);
-	
 
 	}
 

@@ -190,4 +190,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<name>Vaadin components for Lunifera</name>
+	<description>Contains different fields like NumericField, DecimalField,…</description>
 </project>

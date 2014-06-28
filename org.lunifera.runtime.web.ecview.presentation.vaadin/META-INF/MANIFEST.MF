@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Vaadin
+Bundle-Name: ECView presentation layer for Vaadin
 Bundle-SymbolicName: org.lunifera.runtime.web.ecview.presentation.vaadin
 Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.eclipse.emf.ecp.ecview.extension.editparts;bundle-version="0.0.1";visibility:=reexport,
@@ -14,7 +14,10 @@ Require-Bundle: org.eclipse.emf.ecp.ecview.extension.editparts;bundle-version="0
  org.lunifera.runtime.web.vaadin.components;bundle-version="0.0.1",
  com.ibm.icu;bundle-version="50.1.1",
  org.eclipse.emf.ecp.ecview.util.emf;bundle-version="0.0.1",
- org.eclipse.emf.ecp.ecview.databinding.emf;bundle-version="0.0.1"
+ org.eclipse.emf.ecp.ecview.databinding.emf;bundle-version="0.0.1",
+ org.eclipse.emf.ecp.ecview.common,
+ org.eclipse.emf.ecp.ecview.common.model,
+ org.eclipse.emf.ecp.ecview.common.editparts.emf
 Import-Package: org.eclipse.emf.ecp.ecview.databinding.emf.common,
  org.osgi.framework;version="1.7.0",
  org.slf4j;version="1.6.4"

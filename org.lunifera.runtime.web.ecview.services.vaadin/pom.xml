@@ -20,4 +20,8 @@
 	<artifactId>org.lunifera.runtime.web.ecview.services.vaadin</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
+	<name>ECView model generator</name>
+	<description>Generates default ECView models for Entities and DTOs that are defined by Lunifera Xtext DSL.
+
+The IECViewUIRenderService is exposed as an OSGi service.</description>
 </project>

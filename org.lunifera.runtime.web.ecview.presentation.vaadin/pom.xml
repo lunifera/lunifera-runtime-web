@@ -19,4 +19,6 @@
 	</parent>
 	<artifactId>org.lunifera.runtime.web.ecview.presentation.vaadin</artifactId>
 	<packaging>eclipse-plugin</packaging>
+	<name>Vaadin presentation layer of ECView</name>
+	<description>A presentation layer for the ECView model based UI.</description>
 </project>

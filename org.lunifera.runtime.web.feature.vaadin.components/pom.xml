@@ -56,4 +56,7 @@
 			</plugin>
 		</plugins>
 	</build>
+	<name>Feature - Vaadin Components for Lunifera</name>
+	<description>Contains different fields like NumericField, DecimalField,…
+</description>
 </project>

@@ -1,47 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature id="org.lunifera.runtime.web.feature.vaadin.common" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.components" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.databinding" version="0.0.0">
-      <category name="lunifera-web-features"/>
-   </feature>
-   <feature id="org.lunifera.runtime.web.feature.http" version="0.0.0">
-      <category name="lunifera-web-features"/>
-   </feature>
-   <feature id="org.lunifera.runtime.web.feature.jetty" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.addon.osgi" version="0.0.0">
       <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.common.source" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.components.source" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.databinding.source" version="0.0.0">
-      <category name="lunifera-web-features"/>
-   </feature>
-   <feature id="org.lunifera.runtime.web.feature.http.source" version="0.0.0">
-      <category name="lunifera-web-features"/>
-   </feature>
-   <feature id="org.lunifera.runtime.web.feature.jetty.source" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.vaadin.addon.osgi.source" version="0.0.0">
       <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.ecview.presentation.vaadin" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
    <feature id="org.lunifera.runtime.web.feature.ecview.presentation.vaadin.source" version="0.0.0">
-      <category name="lunifera-web-features"/>
+      <category name="lunifera-web-vaadin-addons"/>
    </feature>
-   <category-def name="lunifera-web-features" label="Lunifera Web Features"/>
-   <category-def name="lunifera-web-vaadin-addons" label="lunifera Web Vaadin Addons"/>
+   <category-def name="lunifera-web-vaadin-addons" label="Lunifera Vaadin Addons"/>
 </site>

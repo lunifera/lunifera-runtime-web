@@ -6,7 +6,7 @@ Export-Package: org.lunifera.runtime.web.vaadin.osgi;x-internal:=true,
 Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy
 Built-By: root
-Bundle-Name: Vaadin standalone
+Bundle-Name: Vaadin 7 OSGi bridge
 Created-By: Apache Maven
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.equinox.common;bundle-version="3.6.100",co

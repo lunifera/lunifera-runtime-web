@@ -14,7 +14,7 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201405282002"/>
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.0.1.201406272004"/>
 <repository location="http://lun.lunifera.org/downloads/p2/ecview/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
@@ -44,22 +44,22 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.lunifera.dsl.feature.entities.headless.feature.group" version="0.0.1.201404030915"/>
-<unit id="org.lunifera.dsl.feature.dto.headless.source.feature.group" version="0.0.1.201404030915"/>
-<unit id="org.lunifera.dsl.feature.entities.headless.source.feature.group" version="0.0.1.201404030915"/>
-<unit id="org.lunifera.dsl.feature.common.headless.feature.group" version="0.0.1.201404030915"/>
-<unit id="org.lunifera.dsl.feature.common.headless.source.feature.group" version="0.0.1.201404030915"/>
-<unit id="org.lunifera.dsl.feature.dto.headless.feature.group" version="0.0.1.201404030915"/>
+<unit id="org.lunifera.dsl.feature.entities.headless.feature.group" version="0.0.1.201406261127"/>
+<unit id="org.lunifera.dsl.feature.dto.headless.source.feature.group" version="0.0.1.201406261127"/>
+<unit id="org.lunifera.dsl.feature.entities.headless.source.feature.group" version="0.0.1.201406261127"/>
+<unit id="org.lunifera.dsl.feature.common.headless.feature.group" version="0.0.1.201406261127"/>
+<unit id="org.lunifera.dsl.feature.common.headless.source.feature.group" version="0.0.1.201406261127"/>
+<unit id="org.lunifera.dsl.feature.dto.headless.feature.group" version="0.0.1.201406261127"/>
 <repository location="http://lun.lunifera.org/downloads/p2/lunifera/kepler/latest/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.xtext.redist.feature.group" version="2.5.4.v201404100756"/>
-<unit id="org.eclipse.xtext.ui.feature.group" version="2.5.4.v201404100756"/>
-<unit id="org.eclipse.xtext.runtime.feature.group" version="2.5.4.v201404100756"/>
-<unit id="org.eclipse.xtext.xbase.feature.group" version="2.5.4.v201404100756"/>
-<unit id="org.eclipse.xtext.examples.feature.group" version="2.5.4.v201404100756"/>
-<unit id="org.eclipse.xtext.sdk.feature.group" version="2.5.4.v201404100756"/>
-<unit id="org.eclipse.xtext.docs.feature.group" version="2.5.4.v201404100756"/>
+<unit id="org.eclipse.xtext.redist.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.ui.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.runtime.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.xbase.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.examples.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.docs.feature.group" version="2.6.1.v201406120726"/>
 <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases"/>
 </location>
 </locations>
