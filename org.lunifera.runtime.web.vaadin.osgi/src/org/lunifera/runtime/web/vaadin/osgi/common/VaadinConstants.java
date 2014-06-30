@@ -19,7 +19,7 @@ public class VaadinConstants {
 	/**
 	 * The persistence ID used for {@link ManagedServiceFactory}
 	 */
-	public static final String OSGI__FACTORY_PID = "lunifera.vaadin.application.factory";
+	public static final String OSGI_FACTORY_PID = "lunifera.vaadin.application.factory";
 
 	/**
 	 * Property for the external PID of vaadin application.
@@ -82,7 +82,7 @@ public class VaadinConstants {
 	 * factory=
 	 * "org.lunifera.web.vaadin.UI/org.lunifera.web.vaadin.example.Vaadin7DemoUI"
 	 */
-	public static final String OSGI_COMP_FACTORY__VAADIN_UI = "org.lunifera.web.vaadin.UI";
+	public static final String OSGI_COMP_FACTORY_VAADIN_UI = "org.lunifera.web.vaadin.UI";
 
 	/**
 	 * The prefix of the factory component name before the UI class name starts. <br>
@@ -90,7 +90,7 @@ public class VaadinConstants {
 	 * Factory name: org.lunifera.web.vaadin.UI/org.lunifera.web.vaadin.example.
 	 * Vaadin7DemoUI
 	 */
-	public static final String PREFIX__UI_CLASS = OSGI_COMP_FACTORY__VAADIN_UI
+	public static final String PREFIX_UI_CLASS = OSGI_COMP_FACTORY_VAADIN_UI
 			+ "/";
 
 }

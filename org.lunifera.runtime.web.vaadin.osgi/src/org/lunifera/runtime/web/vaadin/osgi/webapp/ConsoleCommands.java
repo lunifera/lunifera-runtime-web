@@ -37,18 +37,18 @@ public class ConsoleCommands implements CommandProvider {
 	private final static String TAB = "\t"; //$NON-NLS-1$
 	private final static String NEW_LINE = "\r\n"; //$NON-NLS-1$
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ConsoleCommands.class);
 
-	private static final Set<Command> commands = new HashSet<ConsoleCommands.Command>();
+	private static final Set<Command> COMMANDS = new HashSet<ConsoleCommands.Command>();
 	static {
-		commands.add(new Command("<ls>", "",
+		COMMANDS.add(new Command("<ls>", "",
 				"Lists all registered vaadin applications"));
-		commands.add(new Command("<properties>", "",
+		COMMANDS.add(new Command("<properties>", "",
 				"Lists all available service properties"));
-		commands.add(new Command("<start|stop>", "[application id]",
+		COMMANDS.add(new Command("<start|stop>", "[application id]",
 				"Starts or stops the vaadin application with the given id"));
-		commands.add(new Command("<dlt>", "[application id]",
+		COMMANDS.add(new Command("<dlt>", "[application id]",
 				"Deletes the vaadin application with the given id"));
 	}
 
@@ -107,7 +107,7 @@ public class ConsoleCommands implements CommandProvider {
 				printApplication(ci, service);
 			}
 		} catch (InvalidSyntaxException e) {
-			logger.error("{}", e);
+			LOGGER.error("{}", e);
 		}
 	}
 
@@ -190,7 +190,7 @@ public class ConsoleCommands implements CommandProvider {
 				config.delete();
 			}
 		} catch (IOException e) {
-			logger.error("{}", e);
+			LOGGER.error("{}", e);
 		}
 
 		ci.println("\tVaadinApplication successfully deleted!");
@@ -213,7 +213,7 @@ public class ConsoleCommands implements CommandProvider {
 				application = bundleContext.getService(refs.iterator().next());
 			}
 		} catch (InvalidSyntaxException e) {
-			logger.error("{}", e);
+			LOGGER.error("{}", e);
 		}
 		return application;
 	}
@@ -236,7 +236,7 @@ public class ConsoleCommands implements CommandProvider {
 						.getProperty(Constants.SERVICE_PID);
 			}
 		} catch (InvalidSyntaxException e) {
-			logger.error("{}", e);
+			LOGGER.error("{}", e);
 		}
 		return pid;
 	}
@@ -273,7 +273,7 @@ public class ConsoleCommands implements CommandProvider {
 		builder.append("lvaadin <cmd> [args]");
 		builder.append(NEW_LINE);
 
-		for (Command command : commands) {
+		for (Command command : COMMANDS) {
 			command.writeTo(builder);
 		}
 		return builder.toString();

@@ -286,10 +286,8 @@ public class EntityModelRenderer extends AbstractRenderer {
 	 */
 	protected class EntityTypesProcessor extends LunEntitySwitch<YEmbeddable> {
 		private final SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
-		private final LAttribute lAttribute;
 
 		public EntityTypesProcessor(LAttribute lAttribute) {
-			this.lAttribute = lAttribute;
 		}
 
 		@Override
@@ -337,17 +335,7 @@ public class EntityModelRenderer extends AbstractRenderer {
 
 			YGridLayout layout = (YGridLayout) getLayout();
 			layout.addElement(beanLayout);
-			// YGridLayoutCellStyle yStyle = layout
-			// .addGridLayoutCellStyle(beanLayout);
-
-			// if (layout.getElements().size() % layout.getColumns() == 0) {
-			// int row = (layout.getElements().size() / layout.getColumns());
-			// yStyle.addSpanInfo(0, row, 1, row);
-			// } else {
-			// int row = (layout.getElements().size() / layout.getColumns()) +
-			// 1;
-			// yStyle.addSpanInfo(0, row, 1, row);
-			// }
+			
 
 			// put a new context on the stack
 			contexts.push(new Context(contexts.peek(), null, beanLayout));

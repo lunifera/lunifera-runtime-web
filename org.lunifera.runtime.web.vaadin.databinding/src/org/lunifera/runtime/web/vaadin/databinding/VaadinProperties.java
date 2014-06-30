@@ -175,7 +175,7 @@ public class VaadinProperties {
 	 * 
 	 * @return
 	 */
-	public static IVaadinValueProperty color_ColorPickerGradient() {
+	public static IVaadinValueProperty colorColorPickerGradient() {
 		return new ColorPickerGradientColorProperty();
 	}
 
@@ -185,7 +185,7 @@ public class VaadinProperties {
 	 * 
 	 * @return
 	 */
-	public static IVaadinValueProperty color_ColorPickerGrid() {
+	public static IVaadinValueProperty colorColorPickerGrid() {
 		return new ColorPickerGridColorProperty();
 	}
 
@@ -195,7 +195,7 @@ public class VaadinProperties {
 	 * 
 	 * @return
 	 */
-	public static IVaadinValueProperty color_ColorPickerHistory() {
+	public static IVaadinValueProperty colorColorPickerHistory() {
 		return new ColorPickerHistoryColorProperty();
 	}
 
@@ -205,7 +205,7 @@ public class VaadinProperties {
 	 * 
 	 * @return
 	 */
-	public static IVaadinValueProperty color_ColorPickerSelect() {
+	public static IVaadinValueProperty colorColorPickerSelect() {
 		return new ColorPickerSelectColorProperty();
 	}
 

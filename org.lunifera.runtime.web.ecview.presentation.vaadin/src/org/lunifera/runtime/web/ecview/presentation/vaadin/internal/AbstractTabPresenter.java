@@ -28,7 +28,6 @@ import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleService;
 import org.eclipse.emf.ecp.ecview.common.notification.LifecycleEvent;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.Component;
@@ -40,14 +39,14 @@ public abstract class AbstractTabPresenter<A extends Component> extends
 		AbstractDisposable implements IWidgetPresentation<A> {
 
 	/**
-	 * See {@link IConstants#CSS_CLASS__CONTROL_BASE}.
+	 * See {@link IConstants#CSS_CLASS_CONTROL_BASE}.
 	 */
-	public static final String CSS_CLASS__CONTROL_BASE = IConstants.CSS_CLASS__CONTROL_BASE;
+	public static final String CSS_CLASS_CONTROL_BASE = IConstants.CSS_CLASS_CONTROL_BASE;
 
 	/**
-	 * See {@link IConstants#CSS_CLASS__CONTROL}.
+	 * See {@link IConstants#CSS_CLASS_CONTROL}.
 	 */
-	public static final String CSS_CLASS__CONTROL = IConstants.CSS_CLASS__CONTROL;
+	public static final String CSS_CLASS_CONTROL = IConstants.CSS_CLASS_CONTROL;
 
 	// a reference to viewContext is required for disposal. Otherwise the view
 	// may not become accessed
@@ -55,10 +54,10 @@ public abstract class AbstractTabPresenter<A extends Component> extends
 
 	private final ITabEditpart editpart;
 
-	private IBindingManager bindingManger;
+	
 	private Set<Binding> bindings = new HashSet<Binding>();
 
-	private IViewContext disposingTempViewContext;
+	
 
 	public AbstractTabPresenter(ITabEditpart editpart) {
 		this.editpart = editpart;

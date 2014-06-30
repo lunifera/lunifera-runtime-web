@@ -18,8 +18,6 @@ import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTab;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -32,9 +30,6 @@ import com.vaadin.ui.TabSheet.Tab;
  */
 public class TabPresentation extends AbstractTabPresenter<Component> implements
 		ITabPresentation<Component> {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(TabPresentation.class);
 
 	private CssLayout tabContent;
 	private Tab tab;
@@ -69,7 +64,6 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 				.getPresentation();
 
 		Component childContent = childPresentation.createWidget(childLayout);
-//		childContent.setSizeFull();
 		childLayout.addComponent(childContent);
 
 		tab = tabSheet.addTab(childLayout);

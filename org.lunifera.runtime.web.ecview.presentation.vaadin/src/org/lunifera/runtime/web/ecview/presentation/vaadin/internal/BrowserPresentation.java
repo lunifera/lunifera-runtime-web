@@ -50,7 +50,7 @@ public class BrowserPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -58,7 +58,7 @@ public class BrowserPresentation extends
 			}
 
 			browser = new BrowserFrame();
-			browser.addStyleName(CSS_CLASS__CONTROL);
+			browser.addStyleName(CSS_CLASS_CONTROL);
 			browser.setImmediate(true);
 
 			// creates the binding for the field

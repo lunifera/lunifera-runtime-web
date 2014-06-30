@@ -40,7 +40,7 @@ import com.vaadin.ui.HorizontalLayout;
 public class HorizontalLayoutPresentation extends
 		AbstractLayoutPresenter<ComponentContainer> {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HorizontalLayoutPresentation.class);
 
 	private CssLayout componentBase;
@@ -117,7 +117,7 @@ public class HorizontalLayoutPresentation extends
 		Map<YEmbeddable, YHorizontalLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YHorizontalLayoutCellStyle>();
 		for (YHorizontalLayoutCellStyle style : modelAccess.getCellStyles()) {
 			if (yStyles.containsKey(style.getTarget())) {
-				logger.warn("Multiple style for element {}", style.getTarget());
+				LOGGER.warn("Multiple style for element {}", style.getTarget());
 			}
 			yStyles.put(style.getTarget(), style);
 		}
@@ -347,7 +347,7 @@ public class HorizontalLayoutPresentation extends
 	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			componentBase.setImmediate(true);
 
 
@@ -361,21 +361,21 @@ public class HorizontalLayoutPresentation extends
 			componentBase.addComponent(horizontalLayout);
 
 			if (modelAccess.isMargin()) {
-				horizontalLayout.addStyleName(IConstants.CSS_CLASS__MARGIN);
+				horizontalLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
 				horizontalLayout.setMargin(true);
 			}
 
 			if (!modelAccess.isSpacing()) {
 				horizontalLayout.setSpacing(false);
 			}else{
-				horizontalLayout.setData(IConstants.CSS_CLASS__SPACING);
+				horizontalLayout.setData(IConstants.CSS_CLASS_SPACING);
 				horizontalLayout.setSpacing(true);
 			}
 
 			if (modelAccess.isCssClassValid()) {
 				horizontalLayout.addStyleName(modelAccess.getCssClass());
 			} else {
-				horizontalLayout.addStyleName(CSS_CLASS__CONTROL);
+				horizontalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
 			renderChildren(false);

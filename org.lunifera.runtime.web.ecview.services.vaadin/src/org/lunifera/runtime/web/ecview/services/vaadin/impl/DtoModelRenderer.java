@@ -300,11 +300,8 @@ public class DtoModelRenderer extends AbstractRenderer {
 	 * Is responsible to create fields based on the datatype.
 	 */
 	protected class DtoTypesProcessor extends LunDtoSwitch<YEmbeddable> {
-		private final SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
-		private final LAttribute lAttribute;
-
+		
 		public DtoTypesProcessor(LAttribute lAttribute) {
-			this.lAttribute = lAttribute;
 		}
 
 		@Override

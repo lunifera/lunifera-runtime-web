@@ -117,14 +117,14 @@ public class ViewPresentation extends AbstractDisposable implements
 			//
 			componentBase = new CssLayout();
 			componentBase.setSizeFull();
-			componentBase.addStyleName(IConstants.CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(IConstants.CSS_CLASS_CONTROL_BASE);
 
 			ComponentContainer parentContainer = (ComponentContainer) parent;
 			parentContainer.addComponent(componentBase);
 
 			// create the component
 			component = new CssLayout();
-			component.addStyleName(IConstants.CSS_CLASS__CONTROL);
+			component.addStyleName(IConstants.CSS_CLASS_CONTROL);
 			componentBase.addComponent(component);
 
 			if (modelAccess.isCssIdValid()) {
@@ -138,7 +138,7 @@ public class ViewPresentation extends AbstractDisposable implements
 			}
 
 			if (modelAccess.isMargin()) {
-				component.addStyleName(IConstants.CSS_CLASS__MARGIN);
+				component.addStyleName(IConstants.CSS_CLASS_MARGIN);
 			}
 
 			// render the content

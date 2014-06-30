@@ -66,7 +66,7 @@ public class OptionsGroupPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -74,7 +74,7 @@ public class OptionsGroupPresentation extends
 			}
 
 			optionsGroup = new OptionGroup();
-			optionsGroup.addStyleName(CSS_CLASS__CONTROL);
+			optionsGroup.addStyleName(CSS_CLASS_CONTROL);
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
 			optionsGroup.setImmediate(true);
@@ -138,7 +138,7 @@ public class OptionsGroupPresentation extends
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException("BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableCollectionEndpoint) {
@@ -209,13 +209,13 @@ public class OptionsGroupPresentation extends
 
 		if (modelAccess.yOptionsGroup.getSelectionType() == YSelectionType.MULTI) {
 			// create the model binding from ridget to ECView-model
-			registerBinding(createBindings_MultiSelection(
+			registerBinding(createBindingsMultiSelection(
 					castEObject(getModel()),
 					ExtensionModelPackage.Literals.YOPTIONS_GROUP__MULTI_SELECTION,
 					field, yField.getType()));
 		} else {
 			// create the model binding from ridget to ECView-model
-			registerBinding(createBindings_Selection(castEObject(getModel()),
+			registerBinding(createBindingsSelection(castEObject(getModel()),
 					ExtensionModelPackage.Literals.YOPTIONS_GROUP__SELECTION,
 					field, yField.getType()));
 

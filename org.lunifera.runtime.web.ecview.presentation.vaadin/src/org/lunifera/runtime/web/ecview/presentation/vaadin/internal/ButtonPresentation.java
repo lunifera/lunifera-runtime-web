@@ -50,7 +50,7 @@ public class ButtonPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -58,7 +58,7 @@ public class ButtonPresentation extends
 			}
 
 			button = new Button();
-			button.addStyleName(CSS_CLASS__CONTROL);
+			button.addStyleName(CSS_CLASS_CONTROL);
 			button.setImmediate(true);
 
 			// creates the binding for the field

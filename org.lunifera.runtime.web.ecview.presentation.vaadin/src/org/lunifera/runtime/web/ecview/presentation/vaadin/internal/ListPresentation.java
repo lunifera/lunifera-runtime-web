@@ -66,7 +66,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -74,7 +74,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 			}
 
 			list = new ListSelect();
-			list.addStyleName(CSS_CLASS__CONTROL);
+			list.addStyleName(CSS_CLASS_CONTROL);
 			list.setMultiSelect(modelAccess.yList.getSelectionType() == YSelectionType.MULTI);
 			list.setImmediate(true);
 			list.setSizeFull();
@@ -206,13 +206,13 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		if (modelAccess.yList.getSelectionType() == YSelectionType.MULTI) {
 			// create the model binding from ridget to ECView-model
-			registerBinding(createBindings_MultiSelection(
+			registerBinding(createBindingsMultiSelection(
 					castEObject(getModel()),
 					ExtensionModelPackage.Literals.YLIST__MULTI_SELECTION,
 					field, yField.getType()));
 		} else {
 			// create the model binding from ridget to ECView-model
-			registerBinding(createBindings_Selection(castEObject(getModel()),
+			registerBinding(createBindingsSelection(castEObject(getModel()),
 					ExtensionModelPackage.Literals.YLIST__SELECTION, field,
 					yField.getType()));
 

@@ -40,7 +40,7 @@ import com.vaadin.ui.VerticalLayout;
 public class VerticalLayoutPresentation extends
 		AbstractLayoutPresenter<ComponentContainer> {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(VerticalLayoutPresentation.class);
 
 	private CssLayout componentBase;
@@ -117,7 +117,7 @@ public class VerticalLayoutPresentation extends
 		Map<YEmbeddable, YVerticalLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YVerticalLayoutCellStyle>();
 		for (YVerticalLayoutCellStyle style : modelAccess.getCellStyles()) {
 			if (yStyles.containsKey(style.getTarget())) {
-				logger.warn("Multiple style for element {}", style.getTarget());
+				LOGGER.warn("Multiple style for element {}", style.getTarget());
 			}
 			yStyles.put(style.getTarget(), style);
 		}
@@ -342,7 +342,7 @@ public class VerticalLayoutPresentation extends
 	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
@@ -354,21 +354,21 @@ public class VerticalLayoutPresentation extends
 			componentBase.addComponent(verticalLayout);
 
 			if (modelAccess.isMargin()) {
-				verticalLayout.addStyleName(IConstants.CSS_CLASS__MARGIN);
+				verticalLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
 				verticalLayout.setMargin(true);
 			}
 
 			if (!modelAccess.isSpacing()) {
 				verticalLayout.setSpacing(false);
 			}else{
-				verticalLayout.setData(IConstants.CSS_CLASS__SPACING);
+				verticalLayout.setData(IConstants.CSS_CLASS_SPACING);
 				verticalLayout.setSpacing(true);
 			}
 
 			if (modelAccess.isCssClassValid()) {
 				verticalLayout.addStyleName(modelAccess.getCssClass());
 			} else {
-				verticalLayout.addStyleName(CSS_CLASS__CONTROL);
+				verticalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
 			renderChildren(false);

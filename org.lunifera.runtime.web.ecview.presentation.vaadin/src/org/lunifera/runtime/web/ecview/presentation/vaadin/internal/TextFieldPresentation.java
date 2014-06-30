@@ -59,7 +59,7 @@ public class TextFieldPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -67,7 +67,7 @@ public class TextFieldPresentation extends
 			}
 
 			text = new TextField();
-			text.addStyleName(CSS_CLASS__CONTROL);
+			text.addStyleName(CSS_CLASS_CONTROL);
 			text.setNullRepresentation("");
 			text.setImmediate(true);
 
@@ -123,7 +123,7 @@ public class TextFieldPresentation extends
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException("BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableValueEndpoint) {

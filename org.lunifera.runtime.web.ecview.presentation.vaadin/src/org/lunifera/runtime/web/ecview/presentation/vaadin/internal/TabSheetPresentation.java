@@ -19,8 +19,6 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabSheetPresentation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -34,8 +32,8 @@ public class TabSheetPresentation extends
 		AbstractTabSheetPresenter<ComponentContainer> implements
 		ITabSheetPresentation<ComponentContainer> {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(TabSheetPresentation.class);
+	
+			
 
 	private CssLayout componentBase;
 	private TabSheet tabSheet;
@@ -125,7 +123,7 @@ public class TabSheetPresentation extends
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.setSizeFull();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -138,7 +136,7 @@ public class TabSheetPresentation extends
 			if (modelAccess.isCssClassValid()) {
 				tabSheet.addStyleName(modelAccess.getCssClass());
 			} else {
-				tabSheet.addStyleName(CSS_CLASS__CONTROL);
+				tabSheet.addStyleName(CSS_CLASS_CONTROL);
 			}
 
 			renderTabs(false);

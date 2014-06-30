@@ -52,7 +52,7 @@ public class LabelPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -60,7 +60,7 @@ public class LabelPresentation extends
 			}
 
 			label = new Label();
-			label.addStyleName(CSS_CLASS__CONTROL);
+			label.addStyleName(CSS_CLASS_CONTROL);
 			label.setImmediate(true);
 			
 			property = new ObjectProperty<String>("", String.class);

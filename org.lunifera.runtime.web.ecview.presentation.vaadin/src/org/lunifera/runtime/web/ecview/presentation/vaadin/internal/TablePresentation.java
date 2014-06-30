@@ -71,7 +71,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -79,7 +79,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			}
 
 			table = new Table();
-			table.addStyleName(CSS_CLASS__CONTROL);
+			table.addStyleName(CSS_CLASS_CONTROL);
 			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
 			table.setSelectable(true);
 			table.setImmediate(true);
@@ -151,7 +151,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException("BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableCollectionEndpoint) {
@@ -223,13 +223,13 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		// create the model binding from ridget to ECView-model
 		if (modelAccess.yTable.getSelectionType() == YSelectionType.MULTI) {
 			// create the model binding from ridget to ECView-model
-			registerBinding(createBindings_MultiSelection(
+			registerBinding(createBindingsMultiSelection(
 					castEObject(getModel()),
 					ExtensionModelPackage.Literals.YTABLE__MULTI_SELECTION,
 					field, yField.getType()));
 		} else {
 			// create the model binding from ridget to ECView-model
-			registerBinding(createBindings_Selection(castEObject(getModel()),
+			registerBinding(createBindingsSelection(castEObject(getModel()),
 					ExtensionModelPackage.Literals.YTABLE__SELECTION, field,
 					yField.getType()));
 

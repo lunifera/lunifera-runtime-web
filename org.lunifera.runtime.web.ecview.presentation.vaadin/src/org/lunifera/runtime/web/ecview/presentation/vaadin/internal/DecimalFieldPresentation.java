@@ -74,7 +74,7 @@ public class DecimalFieldPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -82,7 +82,7 @@ public class DecimalFieldPresentation extends
 			}
 
 			decimalField = new DecimalField();
-			decimalField.addStyleName(CSS_CLASS__CONTROL);
+			decimalField.addStyleName(CSS_CLASS_CONTROL);
 			decimalField.setImmediate(true);
 
 			property = new ObjectProperty<Double>(0d, Double.class);
@@ -184,7 +184,7 @@ public class DecimalFieldPresentation extends
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException("BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableValueEndpoint) {

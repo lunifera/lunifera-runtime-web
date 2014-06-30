@@ -1176,21 +1176,21 @@ public class VaadinObservables {
 
 	public static IVaadinObservableValue observeColor(
 			ColorPickerGradient component) {
-		return VaadinProperties.color_ColorPickerGradient().observe(component);
+		return VaadinProperties.colorColorPickerGradient().observe(component);
 	}
 
 	public static IVaadinObservableValue observeColor(ColorPickerGrid component) {
-		return VaadinProperties.color_ColorPickerGrid().observe(component);
+		return VaadinProperties.colorColorPickerGrid().observe(component);
 	}
 
 	public static IVaadinObservableValue observeColor(
 			ColorPickerHistory component) {
-		return VaadinProperties.color_ColorPickerHistory().observe(component);
+		return VaadinProperties.colorColorPickerHistory().observe(component);
 	}
 
 	public static IVaadinObservableValue observeColor(
 			ColorPickerSelect component) {
-		return VaadinProperties.color_ColorPickerSelect().observe(component);
+		return VaadinProperties.colorColorPickerSelect().observe(component);
 	}
 
 	public static IVaadinObservableValue observeAlternateText(Embedded component) {
@@ -1340,11 +1340,7 @@ public class VaadinObservables {
 
 		@Override
 		public void asyncExec(final Runnable runnable) {
-			// Runnable safeRunnable = new Runnable() {
-			// public void run() {
-			// safeRun(runnable);
-			// }
-			// };
+			
 			throw new UnsupportedOperationException("Not a valid call!");
 		}
 

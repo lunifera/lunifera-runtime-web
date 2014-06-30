@@ -20,32 +20,32 @@ public interface IConstants {
 	 * This CSS class is applied to the base composite of presentations. The base composite is used to enable
 	 * margins on a control and to allow a control to rebuild its SWT controls at the "base composite parent".
 	 */
-	String CSS_CLASS__CONTROL_BASE = "controlbase";
+	String CSS_CLASS_CONTROL_BASE = "controlbase";
 
 	/**
 	 * This CSS class is applied to the control of a presentation as far as the model element does not specify its own
 	 * CSS class.
 	 */
-	public static final String CSS_CLASS__CONTROL = "control";
+	public static final String CSS_CLASS_CONTROL = "control";
 
 	/**
 	 * This CSS class marks the widget to show a margin.
 	 */
-	public static final String CSS_CLASS__MARGIN = "margin";
+	public static final String CSS_CLASS_MARGIN = "margin";
 	
 	/**
 	 * This CSS class marks the widget to show a spacing.
 	 */
-	public static final String CSS_CLASS__SPACING = "spacing";
+	public static final String CSS_CLASS_SPACING = "spacing";
 	
 	
 	/**
 	 * This CSS class for master-detail master-base component.
 	 */
-	String CSS_CLASS__MASTER_BASE = "masterbase";
+	String CSS_CLASS_MASTER_BASE = "masterbase";
 	
 	/**
 	 * This CSS class for master-detail detail-base component.
 	 */
-	String CSS_CLASS__DETAIL_BASE = "detailbase";
+	String CSS_CLASS_DETAIL_BASE = "detailbase";
 }

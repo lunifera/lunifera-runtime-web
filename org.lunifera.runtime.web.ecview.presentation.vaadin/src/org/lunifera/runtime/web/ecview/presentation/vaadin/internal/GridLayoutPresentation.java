@@ -44,7 +44,7 @@ import com.vaadin.ui.GridLayout.Area;
 public class GridLayoutPresentation extends
 		AbstractLayoutPresenter<ComponentContainer> {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(GridLayoutPresentation.class);
 
 	private CssLayout componentBase;
@@ -119,7 +119,7 @@ public class GridLayoutPresentation extends
 		Map<YEmbeddable, YGridLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YGridLayoutCellStyle>();
 		for (YGridLayoutCellStyle style : modelAccess.getCellStyles()) {
 			if (yStyles.containsKey(style.getTarget())) {
-				logger.warn("Multiple style for element {}", style.getTarget());
+				LOGGER.warn("Multiple style for element {}", style.getTarget());
 			}
 			yStyles.put(style.getTarget(), style);
 		}
@@ -254,7 +254,7 @@ public class GridLayoutPresentation extends
 			gridlayout.addComponent(child);
 		} else {
 			gridlayout.addComponent(child);
-			logger.warn("Invalid span: col1 {}, row1 {}, col2 {}, row2{}",
+			LOGGER.warn("Invalid span: col1 {}, row1 {}, col2 {}, row2{}",
 					new Object[] { col1, row1, col2, row2 });
 		}
 		applyAlignment(child, yAlignment);
@@ -424,7 +424,7 @@ public class GridLayoutPresentation extends
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.setSizeFull();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -437,19 +437,19 @@ public class GridLayoutPresentation extends
 			componentBase.addComponent(gridlayout);
 
 			if (modelAccess.isMargin()) {
-				gridlayout.addStyleName(IConstants.CSS_CLASS__MARGIN);
+				gridlayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
 				gridlayout.setMargin(true);
 			}
 
 			if (modelAccess.isSpacing()) {
-				gridlayout.setData(IConstants.CSS_CLASS__SPACING);
+				gridlayout.setData(IConstants.CSS_CLASS_SPACING);
 				gridlayout.setSpacing(true);
 			}
 
 			if (modelAccess.isCssClassValid()) {
 				gridlayout.addStyleName(modelAccess.getCssClass());
 			} else {
-				gridlayout.addStyleName(CSS_CLASS__CONTROL);
+				gridlayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
 			renderChildren(false);

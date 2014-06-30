@@ -82,19 +82,5 @@ public class OSGiUIProvider extends UIProvider {
 		return ui;
 	}
 
-	// /**
-	// * Initializes the web context.
-	// */
-	// protected void initContext() {
-	// if (registry != null) {
-	// Principal user = VaadinService.getCurrentRequest()
-	// .getUserPrincipal();
-	// Hashtable<String, Object> properties = new Hashtable<String, Object>();
-	// webContext = (IVaadinWebContext) registry.createContext(
-	// user != null ? user.getName() : null, properties);
-	// webContext.addDisposeListener(this);
-	//
-	// ((VaadinWebContext) webContext).setUi(this);
-	// }
-	// }
+	
 }

@@ -64,7 +64,7 @@ public class DateTimePresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -72,7 +72,7 @@ public class DateTimePresentation extends
 			}
 
 			dateField = new DateField();
-			dateField.addStyleName(CSS_CLASS__CONTROL);
+			dateField.addStyleName(CSS_CLASS_CONTROL);
 			dateField.setImmediate(true);
 
 			property = new ObjectProperty<Date>(null, Date.class);
@@ -163,7 +163,7 @@ public class DateTimePresentation extends
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException("BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableValueEndpoint) {
@@ -192,7 +192,7 @@ public class DateTimePresentation extends
 	 */
 	protected void createBindings(YDateTime yField, DateField field) {
 		// create the model binding from widget to ECView-model
-		binding_valueToUI = createBindings_Value(castEObject(getModel()),
+		binding_valueToUI = createBindingsValue(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YDATE_TIME__VALUE, field, null,
 				null);
 		registerBinding(binding_valueToUI);

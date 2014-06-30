@@ -55,7 +55,7 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("deprecation")
 public class VaadinApplication implements IVaadinApplication {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(VaadinApplication.class);
 
 	private final String RESOURCE_BASE = "/VAADIN";
@@ -97,7 +97,7 @@ public class VaadinApplication implements IVaadinApplication {
 	 */
 	protected void activate(ComponentContext context,
 			Map<String, Object> properties) {
-		logger.debug("{} started", getName());
+		LOGGER.debug("{} started", getName());
 		this.context = context;
 		this.id = UUID.randomUUID().toString();
 
@@ -117,7 +117,7 @@ public class VaadinApplication implements IVaadinApplication {
 
 		this.context = null;
 
-		logger.debug("{} stopped", getName());
+		LOGGER.debug("{} stopped", getName());
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class VaadinApplication implements IVaadinApplication {
 			Map<String, Object> properties) {
 
 		System.out.println("Update");
-		logger.debug("Calling update");
+		LOGGER.debug("Calling update");
 
 		try {
 			accessLock.lock();
@@ -189,7 +189,7 @@ public class VaadinApplication implements IVaadinApplication {
 			//
 			start();
 
-			logger.debug(
+			LOGGER.debug(
 					"New IVaadinApplication {} deployed on 'http application' {}",
 					getName(), getHttpApplication());
 
@@ -340,7 +340,7 @@ public class VaadinApplication implements IVaadinApplication {
 	 */
 	public void start() {
 		if (started) {
-			logger.debug("HttpApplication {} is already started", getName());
+			LOGGER.debug("HttpApplication {} is already started", getName());
 			return;
 		}
 
@@ -353,7 +353,7 @@ public class VaadinApplication implements IVaadinApplication {
 						context.getBundleContext(), this);
 				serviceTracker.open();
 			} catch (InvalidSyntaxException e) {
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 				setStatus(VaadinStatusCodes.createHttpServiceTracker(e));
 
 				// stop the application
@@ -367,7 +367,7 @@ public class VaadinApplication implements IVaadinApplication {
 				try {
 					setHttpService(httpService);
 				} catch (AppException e) {
-					logger.error(String
+					LOGGER.error(String
 							.format("Stopping vaadin application %s since setting http service caused a problem.",
 									getName()));
 					setStatus(VaadinStatusCodes.createSettingHttpService(e));
@@ -401,7 +401,7 @@ public class VaadinApplication implements IVaadinApplication {
 		try {
 			setHttpService(httpService);
 		} catch (AppException e) {
-			logger.error(String
+			LOGGER.error(String
 					.format("Stopping vaadin application %s since setting http service caused a problem.",
 							getName()));
 			setStatus(VaadinStatusCodes.createSettingHttpService(e));
@@ -445,7 +445,7 @@ public class VaadinApplication implements IVaadinApplication {
 	protected void setHttpService(ExtendedHttpService httpService)
 			throws AppException {
 		if (this.httpService != null) {
-			logger.error("HttpService already present. Abort operation!");
+			LOGGER.error("HttpService already present. Abort operation!");
 			return;
 		}
 
@@ -477,7 +477,7 @@ public class VaadinApplication implements IVaadinApplication {
 				httpService.registerFilter("/", filter, properties,
 						defaultContext);
 			} catch (Exception e) {
-				logger.error("{}", e);
+				LOGGER.error("{}", e);
 				throw new AppException(e);
 			}
 			httpService.registerResources(RESOURCE_BASE, RESOURCE_BASE,
@@ -485,10 +485,10 @@ public class VaadinApplication implements IVaadinApplication {
 			httpService.registerServlet(servletAlias, servlet, properties,
 					defaultContext);
 		} catch (ServletException e) {
-			logger.error("{}", e);
+			LOGGER.error("{}", e);
 			throw new AppException(e);
 		} catch (NamespaceException e) {
-			logger.error("{}", e);
+			LOGGER.error("{}", e);
 			throw new AppException(e);
 		}
 	}
@@ -502,7 +502,7 @@ public class VaadinApplication implements IVaadinApplication {
 		this.status = status;
 
 		if (status != null && status != VaadinStatusCodes.OK_STATUS) {
-			logger.warn("Status was set to vaadin application {}: {}",
+			LOGGER.warn("Status was set to vaadin application {}: {}",
 					getName(), status);
 		}
 	}
@@ -518,7 +518,7 @@ public class VaadinApplication implements IVaadinApplication {
 		} catch (Exception e) {
 			// May throw exception if http service was stopped by
 			// tracker.close()
-			logger.info("{}", e.getMessage());
+			LOGGER.info("{}", e.getMessage());
 		} finally {
 			servletAlias = null;
 			servlet = null;
@@ -529,7 +529,7 @@ public class VaadinApplication implements IVaadinApplication {
 				httpService.unregisterFilter(filter);
 			}
 		} catch (Exception e) {
-			logger.info("{}", e.getMessage());
+			LOGGER.info("{}", e.getMessage());
 		} finally {
 			filter = null;
 		}
@@ -537,7 +537,7 @@ public class VaadinApplication implements IVaadinApplication {
 		try {
 			httpService.unregister(RESOURCE_BASE);
 		} catch (Exception e) {
-			logger.info("{}", e.getMessage());
+			LOGGER.info("{}", e.getMessage());
 		} finally {
 		}
 	}
@@ -549,12 +549,12 @@ public class VaadinApplication implements IVaadinApplication {
 	 */
 	protected void unsetHttpService(ExtendedHttpService httpService) {
 		if (this.httpService == null) {
-			logger.error("HttpService can not be unset! No instance set yet!");
+			LOGGER.error("HttpService can not be unset! No instance set yet!");
 			return;
 		}
 
 		if (this.httpService != httpService) {
-			logger.error("Tries to unset different http service. Operation aborted.");
+			LOGGER.error("Tries to unset different http service. Operation aborted.");
 			return;
 		}
 
@@ -580,7 +580,7 @@ public class VaadinApplication implements IVaadinApplication {
 	 */
 	protected void stop(boolean force) {
 		if (!force && !started) {
-			logger.debug("HttpApplication {} not started", getName());
+			LOGGER.debug("HttpApplication {} not started", getName());
 			return;
 		}
 
@@ -727,14 +727,14 @@ public class VaadinApplication implements IVaadinApplication {
 		try {
 			accessLock.lock();
 
-			logger.debug("Adding ui factory");
+			LOGGER.debug("Adding ui factory");
 
 			// parse the target of service
 			//
 			String name = (String) reference.getProperty("component.factory");
 			String[] tokens = name.split("/");
 			if (tokens.length != 2) {
-				logger.error(
+				LOGGER.error(
 						"UiFactory {} does not meet syntax. (org.lunifera.web.vaadin.UI/[uiclass]@[vaadinApp]) Eg: org.lunifera.web.vaadin.UI/org.lunifera.examples.runtime.web.vaadin.standalone.Vaadin7StandaloneDemoUI@StandaloneDemo",
 						name);
 				return;

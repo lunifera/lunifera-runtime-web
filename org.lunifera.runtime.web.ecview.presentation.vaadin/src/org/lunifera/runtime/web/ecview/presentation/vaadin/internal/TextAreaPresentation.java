@@ -59,7 +59,7 @@ public class TextAreaPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -67,7 +67,7 @@ public class TextAreaPresentation extends
 			}
 
 			textArea = new TextArea();
-			textArea.addStyleName(CSS_CLASS__CONTROL);
+			textArea.addStyleName(CSS_CLASS_CONTROL);
 			textArea.setImmediate(true);
 			
 			property = new ObjectProperty<String>(null, String.class);
@@ -122,7 +122,7 @@ public class TextAreaPresentation extends
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException("BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableValueEndpoint) {
