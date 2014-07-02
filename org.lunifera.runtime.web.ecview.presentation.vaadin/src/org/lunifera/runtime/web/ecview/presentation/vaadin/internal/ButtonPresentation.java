@@ -71,7 +71,7 @@ public class ButtonPresentation extends
 			}
 
 			applyCaptions();
-			
+
 		}
 		return componentBase;
 	}

@@ -1,19 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2012 by committers of lunifera.org
- * 
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Information:
- * 		Based on original sources of 
- *				- com.c4biz.osgiutils.vaadin.equinox.shiro.WebResourcesHttpContext from Cristiano Gaviao
- *
- * Contributors:
- *    Florian Pirchner - migrated to vaadin 7 and copied into org.lunifera namespace
- *    
- *******************************************************************************/
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
 package org.lunifera.runtime.web.vaadin.osgi.servlet;
 
 import java.io.IOException;

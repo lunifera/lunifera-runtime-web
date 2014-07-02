@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
+
 package org.lunifera.runtime.web.vaadin.databinding.properties;
 
 import com.vaadin.data.Container;
@@ -33,7 +44,8 @@ public class Util {
 	 * @return
 	 */
 	public static Container getContainer(Object source) {
-		// if source is AbstractSelect, then access the container by #getContainerDataSource
+		// if source is AbstractSelect, then access the container by
+		// #getContainerDataSource
 		if (source instanceof Container && !(source instanceof AbstractSelect)) {
 			return (Container) source;
 		}
