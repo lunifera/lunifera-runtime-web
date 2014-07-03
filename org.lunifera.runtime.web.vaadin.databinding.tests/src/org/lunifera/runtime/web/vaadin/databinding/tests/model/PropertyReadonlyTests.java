@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.lunifera.runtime.web.vaadin.databinding.tests.model;
 
-import java.util.Collection;
-
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.junit.Assert;
@@ -21,10 +19,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.PropertysetItem;
+import com.vaadin.ui.CheckBox;
 
-public class ItemPropertySetTest {
+public class PropertyReadonlyTests {
 
 	@Before
 	public void setup() {
@@ -32,20 +29,35 @@ public class ItemPropertySetTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
-	public void test_itemPropertySet() {
-		// Binded
-		// VaadinObservables.observePropertySet(Item.PropertySetChangeNotifier)
-		// Am besten ProperySetItem verwenden und manuell properties hinzuf��gen
-		PropertysetItem property = new PropertysetItem();
+	public void test_propertyReadonly() {
+		CheckBox property = new CheckBox();
+
 		WritableValue value = new WritableValue();
-		Assert.assertNotNull(value);
+		Assert.assertNull(value.getValue());
 
 		DataBindingContext dbc = new DataBindingContext();
-		dbc.bindValue(value, VaadinObservables.observeItemPropertySetValue(property));
-		
-		property.addItemProperty("1", new ObjectProperty<String>("1"));
-		Collection<PropertysetItem> properties = (Collection<PropertysetItem>) value.getValue();
-		Assert.assertEquals(1, properties.size());
+		dbc.bindValue(value, VaadinObservables.observeReadonly(property));
+		Assert.assertEquals(false, value.getValue());
+
+		property.setReadOnly(true);
+		Assert.assertEquals(true, value.getValue());
 	}
+
+	@Test
+	public void test_propertyReadonly_updateFromTarget() {
+		CheckBox property = new CheckBox();
+
+		WritableValue value = new WritableValue();
+		Assert.assertNull(value.getValue());
+
+		DataBindingContext dbc = new DataBindingContext();
+		dbc.bindValue(value, VaadinObservables.observeReadonly(property));
+		Assert.assertEquals(false, value.getValue());
+
+		value.setValue(true);
+		Assert.assertTrue(property.isReadOnly());
+		value.setValue(false);
+		Assert.assertFalse(property.isReadOnly());
+	}
+	
 }

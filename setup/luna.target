@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.runtime.web.target.kepler" sequenceNumber="37">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.apache.httpcomponents.httpcore.source" version="4.1.4.v201203221030"/>
+<unit id="org.apache.httpcomponents.httpcore" version="4.1.4.v201203221030"/>
+<unit id="org.apache.httpcomponents.httpcore.nio" version="4.1.0.v201101201700"/>
+<unit id="org.apache.httpcomponents.httpcore.nio.source" version="4.1.0.v201101201700"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.apache.httpcomponents.httpclient" version="4.1.2.v201203221030"/>
+<unit id="org.apache.httpcomponents.httpclient.source" version="4.1.2.v201203221030"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.7.0"/>
+<repository location="http://lun.lunifera.org/downloads/p2/ecview/nightly/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.9.0.v20140221-1852"/>
+<unit id="org.eclipse.platform.sdk" version="4.3.2.M20140221-1700"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.9.2.v20140203-1126"/>
+<repository location="http://download.eclipse.org/releases/kepler"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.junit.source" version="4.10.0.v4_10_0_v20120426-0900"/>
+<unit id="org.junit" version="4.10.0.v4_10_0_v20120426-0900"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.2"/>
+<unit id="org.lunifera.runtime.feature.common.feature.group" version="0.7.1.201407011710"/>
+<unit id="org.lunifera.dependencies.feature.assert-utilities.feature.group" version="1.2.2.2"/>
+<unit id="org.lunifera.runtime.feature.common.source.feature.group" version="0.7.1.201407011710"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.2.3"/>
+<repository location="http://lun.lunifera.org/downloads/p2/lunifera/luna/latest/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.apache.commons.math" version="2.1.0.v201105210652"/>
+<unit id="org.apache.commons.lang" version="2.6.0.v201205030909"/>
+<unit id="org.apache.commons.collections" version="3.2.0.v201005080500"/>
+<unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.lunifera.dsl.feature.entities.headless.feature.group" version="0.7.0"/>
+<unit id="org.lunifera.dsl.feature.dto.headless.source.feature.group" version="0.7.0"/>
+<unit id="org.lunifera.dsl.feature.entities.headless.source.feature.group" version="0.7.0"/>
+<unit id="org.lunifera.dsl.feature.common.headless.feature.group" version="0.7.0"/>
+<unit id="org.lunifera.dsl.feature.common.headless.source.feature.group" version="0.7.0"/>
+<unit id="org.lunifera.dsl.feature.dto.headless.feature.group" version="0.7.0"/>
+<repository location="http://lun.lunifera.org/downloads/p2/lunifera/luna/latest/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.xtext.redist.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.ui.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.runtime.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.xbase.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.examples.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.6.1.v201406120726"/>
+<unit id="org.eclipse.xtext.docs.feature.group" version="2.6.1.v201406120726"/>
+<repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.lunifera.dsl.feature.metadata.builder.participant.source.feature.group" version="0.7.0"/>
+<unit id="org.lunifera.dsl.feature.metadata.builder.participant.feature.group" version="0.7.0"/>
+<repository location="http://lun.lunifera.org/downloads/p2/lunifera/luna/latest/"/>
+</location>
+</locations>
+</target>

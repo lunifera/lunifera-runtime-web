@@ -52,7 +52,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 
-public class ModelUtilTest {
+public class ModelUtilTests {
 
 	private SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 	private CssLayout rootLayout = new CssLayout();

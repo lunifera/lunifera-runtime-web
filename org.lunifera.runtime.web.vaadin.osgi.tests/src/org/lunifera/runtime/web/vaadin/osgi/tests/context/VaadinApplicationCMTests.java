@@ -46,7 +46,7 @@ import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
 @SuppressWarnings("restriction")
-public class VaadinApplicationCMTest {
+public class VaadinApplicationCMTests {
 
 	private ConfigurationAdmin cm;
 	private Activator activator;

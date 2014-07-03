@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.vaadin.databinding.values.SetToListAdapter;
 
-public class SetToListAdapterTest {
+public class SetToListAdapterTests {
 
 	@Before
 	public void setup() {

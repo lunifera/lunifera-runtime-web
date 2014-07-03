@@ -26,7 +26,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("restriction")
-public class BindingManagerTest {
+public class BindingManagerTests {
 
 	private SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 	private BindingManager bindingManager;

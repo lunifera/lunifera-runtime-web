@@ -20,7 +20,8 @@ Require-Bundle: org.junit;bundle-version="4.10.0",
  org.eclipse.emf.databinding;bundle-version="1.3.0",
  org.eclipse.emf.ecp.ecview.databinding.emf;bundle-version="0.0.1",
  org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecp.ecview.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model,
  org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.impl,

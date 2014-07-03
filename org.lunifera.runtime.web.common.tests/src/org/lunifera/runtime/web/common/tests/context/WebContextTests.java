@@ -27,7 +27,7 @@ import org.lunifera.runtime.web.common.tests.Activator;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
-public class WebContextTest {
+public class WebContextTests {
 
 	protected boolean called;
 

@@ -27,7 +27,7 @@ import org.lunifera.runtime.web.vaadin.databinding.properties.PropertyInfo;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
 
-public class ItemPropertySetInfoTest {
+public class ItemPropertySetInfoTests {
 
 	@Before
 	public void setup() {

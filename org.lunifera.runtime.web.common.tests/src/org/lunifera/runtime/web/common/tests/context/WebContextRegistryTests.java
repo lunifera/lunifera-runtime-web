@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.lunifera.runtime.web.common.IWebContext;
 import org.lunifera.runtime.web.common.IWebContextRegistry;
 
-public class WebContextRegistryTest {
+public class WebContextRegistryTests {
 
 	protected boolean called;
 

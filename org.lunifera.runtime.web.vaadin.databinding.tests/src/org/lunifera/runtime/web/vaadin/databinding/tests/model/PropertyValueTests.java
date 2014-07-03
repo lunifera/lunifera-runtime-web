@@ -22,7 +22,7 @@ import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.TextField;
 
-public class PropertyValueTest {
+public class PropertyValueTests {
 
 	@Test
 	public void test_propertyValue() {

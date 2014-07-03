@@ -21,7 +21,7 @@ import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.data.util.IndexedContainer;
 
-public class ContainerItemSetTest {
+public class ContainerItemSetTests {
 
 	@Before
 	public void setup() {

@@ -9,7 +9,7 @@ import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.ui.Table;
 
-public class PropertyDescriptionTest {
+public class PropertyDescriptionTests {
 
 	@Before
 	public void setup() {

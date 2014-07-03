@@ -67,9 +67,8 @@ public abstract class AbstractVaadinListProperty extends SimpleListProperty {
 	public AbstractVaadinListProperty(
 			Class<? extends Component.Event>[] changeEvents,
 			Class<? extends Component.Event>[] staleEvents) {
-		this.changeEvents = Arrays.copyOf(changeEvents, changeEvents.length);
-		this.staleEvents = Arrays.copyOf(staleEvents, staleEvents.length);
-		
+		this.changeEvents = changeEvents != null ? Arrays.copyOf(changeEvents, changeEvents.length) : changeEvents;
+		this.staleEvents = staleEvents != null ? Arrays.copyOf(staleEvents, staleEvents.length) : staleEvents;
 	}
 
 	public INativePropertyListener adaptListener(
