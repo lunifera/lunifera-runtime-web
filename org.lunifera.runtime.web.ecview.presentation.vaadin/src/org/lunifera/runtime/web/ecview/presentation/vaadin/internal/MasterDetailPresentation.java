@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * Florian Pirchner - initial API and implementation
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
@@ -74,7 +74,7 @@ public class MasterDetailPresentation extends
 	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new VerticalLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -83,12 +83,12 @@ public class MasterDetailPresentation extends
 
 			// create the container for master an detail
 			masterBase = new CssLayout();
-			masterBase.setStyleName(IConstants.CSS_CLASS__MASTER_BASE);
+			masterBase.setStyleName(IConstants.CSS_CLASS_MASTER_BASE);
 			masterBase.setSizeFull();
 			componentBase.addComponent(masterBase);
 
 			detailBase = new CssLayout();
-			masterBase.setStyleName(IConstants.CSS_CLASS__DETAIL_BASE);
+			masterBase.setStyleName(IConstants.CSS_CLASS_DETAIL_BASE);
 			detailBase.setSizeFull();
 			componentBase.addComponent(detailBase);
 
@@ -132,22 +132,6 @@ public class MasterDetailPresentation extends
 				.observe(getModel());
 		registerBinding(createBindings(targetObservableList, modelObservable));
 
-		// // create the model binding from ridget to ECView-model
-		// if (modelAccess.yTable.getSelectionType() == YSelectionType.MULTI) {
-		// // create the model binding from ridget to ECView-model
-		// registerBinding(createBindings_MultiSelection(
-		// castEObject(getModel()),
-		// ExtensionModelPackage.Literals.YTABLE__MULTI_SELECTION,
-		// field, yField.getType()));
-		// } else {
-		// // create the model binding from ridget to ECView-model
-		// registerBinding(createBindings_Selection(castEObject(getModel()),
-		// ExtensionModelPackage.Literals.YTABLE__SELECTION, field,
-		// yField.getType()));
-		//
-		// }
-
-		// super.createBindings(yField, field);
 	}
 
 	/**
@@ -170,8 +154,6 @@ public class MasterDetailPresentation extends
 
 	@Override
 	protected void doUpdateLocale(Locale locale) {
-		// no need to set the locale to the ui elements. Is handled by vaadin
-		// internally.
 
 		// update the captions
 		applyCaptions();
@@ -183,11 +165,10 @@ public class MasterDetailPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			// text.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-			// getLocale()));
+
 		} else {
 			if (modelAccess.isLabelValid()) {
-				// text.setCaption(modelAccess.getLabel());
+
 			}
 		}
 	}
@@ -238,21 +219,6 @@ public class MasterDetailPresentation extends
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
 				attributePath, modelAccess.yMasterDetail.getType(), modelAccess.yMasterDetail.getEmfNsURI());
 	}
-
-	/**
-	 * Creates the bindings for the given values.
-	 * 
-	 * @param yField
-	 * @param field
-	 */
-	// protected void createBindings(YMasterDetailField yField, TextField field)
-	// {
-	// // create the model binding from ridget to ECView-model
-	// // registerBinding(createBindings_Value(castEObject(getModel()),
-	// // ExtensionModelPackage.Literals.yMasterDetail_FIELD__VALUE, text));
-	//
-	// super.createBindings(yField, field);
-	// }
 
 	@Override
 	public ComponentContainer getWidget() {

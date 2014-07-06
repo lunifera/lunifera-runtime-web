@@ -1,17 +1,15 @@
-/*******************************************************************************
- * Copyright (c) 2012 by committers of lunifera.org
-
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Original source based on org.eclipse.jface.databinding.swt.SWTObservables (EPL)
+ * Based on ideas from Eclipse Databinding.
  * 
- * Contributor:
- * 		Florian Pirchner - porting swt databinding to support vaadin
- * 
- *******************************************************************************/
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
 package org.lunifera.runtime.web.vaadin.databinding;
 
 import java.beans.PropertyChangeListener;
@@ -1176,21 +1174,21 @@ public class VaadinObservables {
 
 	public static IVaadinObservableValue observeColor(
 			ColorPickerGradient component) {
-		return VaadinProperties.color_ColorPickerGradient().observe(component);
+		return VaadinProperties.colorColorPickerGradient().observe(component);
 	}
 
 	public static IVaadinObservableValue observeColor(ColorPickerGrid component) {
-		return VaadinProperties.color_ColorPickerGrid().observe(component);
+		return VaadinProperties.colorColorPickerGrid().observe(component);
 	}
 
 	public static IVaadinObservableValue observeColor(
 			ColorPickerHistory component) {
-		return VaadinProperties.color_ColorPickerHistory().observe(component);
+		return VaadinProperties.colorColorPickerHistory().observe(component);
 	}
 
 	public static IVaadinObservableValue observeColor(
 			ColorPickerSelect component) {
-		return VaadinProperties.color_ColorPickerSelect().observe(component);
+		return VaadinProperties.colorColorPickerSelect().observe(component);
 	}
 
 	public static IVaadinObservableValue observeAlternateText(Embedded component) {
@@ -1340,11 +1338,7 @@ public class VaadinObservables {
 
 		@Override
 		public void asyncExec(final Runnable runnable) {
-			// Runnable safeRunnable = new Runnable() {
-			// public void run() {
-			// safeRun(runnable);
-			// }
-			// };
+
 			throw new UnsupportedOperationException("Not a valid call!");
 		}
 

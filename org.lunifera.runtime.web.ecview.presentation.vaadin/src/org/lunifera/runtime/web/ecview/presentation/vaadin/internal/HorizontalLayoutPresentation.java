@@ -1,14 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2011 Florian Pirchner
- * 
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * Florian Pirchner - initial API and implementation
- *******************************************************************************/
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.HashMap;
@@ -40,7 +39,7 @@ import com.vaadin.ui.HorizontalLayout;
 public class HorizontalLayoutPresentation extends
 		AbstractLayoutPresenter<ComponentContainer> {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HorizontalLayoutPresentation.class);
 
 	private CssLayout componentBase;
@@ -89,7 +88,7 @@ public class HorizontalLayoutPresentation extends
 
 		refreshUI();
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
@@ -117,7 +116,7 @@ public class HorizontalLayoutPresentation extends
 		Map<YEmbeddable, YHorizontalLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YHorizontalLayoutCellStyle>();
 		for (YHorizontalLayoutCellStyle style : modelAccess.getCellStyles()) {
 			if (yStyles.containsKey(style.getTarget())) {
-				logger.warn("Multiple style for element {}", style.getTarget());
+				LOGGER.warn("Multiple style for element {}", style.getTarget());
 			}
 			yStyles.put(style.getTarget(), style);
 		}
@@ -347,9 +346,8 @@ public class HorizontalLayoutPresentation extends
 	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			componentBase.setImmediate(true);
-
 
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
@@ -361,21 +359,21 @@ public class HorizontalLayoutPresentation extends
 			componentBase.addComponent(horizontalLayout);
 
 			if (modelAccess.isMargin()) {
-				horizontalLayout.addStyleName(IConstants.CSS_CLASS__MARGIN);
+				horizontalLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
 				horizontalLayout.setMargin(true);
 			}
 
 			if (!modelAccess.isSpacing()) {
 				horizontalLayout.setSpacing(false);
-			}else{
-				horizontalLayout.setData(IConstants.CSS_CLASS__SPACING);
+			} else {
+				horizontalLayout.setData(IConstants.CSS_CLASS_SPACING);
 				horizontalLayout.setSpacing(true);
 			}
 
 			if (modelAccess.isCssClassValid()) {
 				horizontalLayout.addStyleName(modelAccess.getCssClass());
 			} else {
-				horizontalLayout.addStyleName(CSS_CLASS__CONTROL);
+				horizontalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
 			renderChildren(false);

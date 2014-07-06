@@ -210,13 +210,13 @@ public class TablePresentationTests {
 
 		// assert css class
 		assertTrue(table1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 		assertTrue(table2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(label1.getStyleName().contains("anyOtherClass"));
 		assertTrue(label2.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
 		assertEquals("ID_0815", table1BaseComponentContainer.getId());

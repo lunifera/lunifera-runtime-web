@@ -200,13 +200,13 @@ public class NumericFieldPresentationTests {
 
 		// assert css class
 		assertTrue(text1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 		assertTrue(text2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(text1.getStyleName().contains("anyOtherClass"));
 		assertTrue(text2.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
 		assertEquals("ID_0815", text1BaseComponentContainer.getId());

@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * Florian Pirchner - initial API and implementation
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
@@ -117,14 +117,14 @@ public class ViewPresentation extends AbstractDisposable implements
 			//
 			componentBase = new CssLayout();
 			componentBase.setSizeFull();
-			componentBase.addStyleName(IConstants.CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(IConstants.CSS_CLASS_CONTROL_BASE);
 
 			ComponentContainer parentContainer = (ComponentContainer) parent;
 			parentContainer.addComponent(componentBase);
 
 			// create the component
 			component = new CssLayout();
-			component.addStyleName(IConstants.CSS_CLASS__CONTROL);
+			component.addStyleName(IConstants.CSS_CLASS_CONTROL);
 			componentBase.addComponent(component);
 
 			if (modelAccess.isCssIdValid()) {
@@ -138,7 +138,7 @@ public class ViewPresentation extends AbstractDisposable implements
 			}
 
 			if (modelAccess.isMargin()) {
-				component.addStyleName(IConstants.CSS_CLASS__MARGIN);
+				component.addStyleName(IConstants.CSS_CLASS_MARGIN);
 			}
 
 			// render the content

@@ -183,13 +183,13 @@ public class ButtonPresentationTests {
 
 		// assert css class
 		assertTrue(button1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 		assertTrue(button2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(button1.getStyleName().contains("anyOtherClass"));
 		assertTrue(button2.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
 		assertEquals("ID_0815", button1BaseComponentContainer.getId());

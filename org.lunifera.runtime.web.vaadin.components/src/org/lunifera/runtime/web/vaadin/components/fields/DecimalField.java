@@ -1,15 +1,14 @@
-/*******************************************************************************
- * Copyright (c) 2011-2013 Committers of lunifera.org
- * 
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Florian Pirchner - initial API and implementation
- *    Hans-Georg Glöckler - initial API and implementation
- *******************************************************************************/
+ * 
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ * 		Hans Georg Glöckler - Initial implementation
+ */
 package org.lunifera.runtime.web.vaadin.components.fields;
 
 import java.text.DecimalFormatSymbols;
@@ -33,10 +32,10 @@ public class DecimalField extends TextField {
 	public DecimalField(String caption) {
 		this(caption, null);
 	}
-	
+
 	public DecimalField(String caption, DecimalConverter converter) {
 		super(caption);
-		
+
 		setNullRepresentation("");
 		setNullSettingAllowed(false);
 
@@ -122,7 +121,7 @@ public class DecimalField extends TextField {
 	 */
 	public void setMarkNegative(boolean markNegative) {
 		this.markNegative = markNegative;
-		
+
 		handleNegative();
 	}
 

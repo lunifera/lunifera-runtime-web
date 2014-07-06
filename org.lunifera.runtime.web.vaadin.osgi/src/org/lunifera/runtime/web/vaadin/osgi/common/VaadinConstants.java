@@ -1,12 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2012 by committers of lunifera.org
-
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- *******************************************************************************/
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
 package org.lunifera.runtime.web.vaadin.osgi.common;
 
 import org.osgi.service.cm.ManagedServiceFactory;
@@ -19,13 +20,13 @@ public class VaadinConstants {
 	/**
 	 * The persistence ID used for {@link ManagedServiceFactory}
 	 */
-	public static final String OSGI__FACTORY_PID = "lunifera.vaadin.application.factory";
+	public static final String OSGI_FACTORY_PID = "lunifera.vaadin.application.factory";
 
 	/**
 	 * Property for the external PID of vaadin application.
 	 */
 	public static final String EXTERNAL_PID = "lunifera.externalPid";
-	
+
 	/**
 	 * Property for the name of a {@link IHttpApplication}.
 	 */
@@ -48,7 +49,7 @@ public class VaadinConstants {
 	 * The OSGi property for specifying the widgetset.
 	 */
 	public static final String WIDGETSET = "lunifera.web.vaadin.widgetset";
-	
+
 	/**
 	 * The OSGi property for specifying the productionmode.
 	 */
@@ -82,7 +83,7 @@ public class VaadinConstants {
 	 * factory=
 	 * "org.lunifera.web.vaadin.UI/org.lunifera.web.vaadin.example.Vaadin7DemoUI"
 	 */
-	public static final String OSGI_COMP_FACTORY__VAADIN_UI = "org.lunifera.web.vaadin.UI";
+	public static final String OSGI_COMP_FACTORY_VAADIN_UI = "org.lunifera.web.vaadin.UI";
 
 	/**
 	 * The prefix of the factory component name before the UI class name starts. <br>
@@ -90,7 +91,7 @@ public class VaadinConstants {
 	 * Factory name: org.lunifera.web.vaadin.UI/org.lunifera.web.vaadin.example.
 	 * Vaadin7DemoUI
 	 */
-	public static final String PREFIX__UI_CLASS = OSGI_COMP_FACTORY__VAADIN_UI
+	public static final String PREFIX_UI_CLASS = OSGI_COMP_FACTORY_VAADIN_UI
 			+ "/";
 
 }

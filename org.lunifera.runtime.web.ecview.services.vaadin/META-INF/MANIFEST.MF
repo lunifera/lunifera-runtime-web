@@ -7,7 +7,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.runtime.web.ecview.services.vaadin
 Bundle-Vendor: Lunifera.org
-Require-Bundle: com.vaadin.server;bundle-version="7.1.1",
+Require-Bundle: 
+ com.vaadin.server;bundle-version="7.1.1",
  com.vaadin.shared;bundle-version="7.1.1",
  org.eclipse.emf.ecp.ecview.common;bundle-version="0.0.1",
  org.eclipse.emf.ecp.ecview.common.editparts.emf;bundle-version="0.0.1",
@@ -22,7 +23,8 @@ Require-Bundle: com.vaadin.server;bundle-version="7.1.1",
  org.lunifera.dsl.semantic.common;bundle-version="0.0.1",
  org.lunifera.dsl.semantic.dto;bundle-version="0.0.1",
  org.lunifera.dsl.semantic.entity;bundle-version="0.0.1",
- org.lunifera.dsl.xtext.builder.participant;bundle-version="0.7.0"
+ org.lunifera.dsl.xtext.builder.participant;bundle-version="0.7.0",
+ org.lunifera.dsl.semantic.entity;bundle-version="0.0.1"
 Import-Package: org.osgi.service.component;version="1.2.0",
  org.osgi.service.component.annotations;version="1.2.0"
 Service-Component: OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.LDtoRenderStrategy.xml,

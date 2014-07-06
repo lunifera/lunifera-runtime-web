@@ -199,13 +199,13 @@ public class ComboBoxPresentationTests {
 
 		// assert css class
 		assertTrue(comboBox1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 		assertTrue(comboBox2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(comboBox1.getStyleName().contains("anyOtherClass"));
 		assertTrue(comboBox2.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
 		assertEquals("ID_0815", comboBox1BaseComponentContainer.getId());

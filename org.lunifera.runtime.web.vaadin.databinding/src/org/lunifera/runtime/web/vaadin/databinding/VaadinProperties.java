@@ -1,18 +1,15 @@
-/*******************************************************************************
- * Copyright (c) 2012 by committers of lunifera.org
-
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Original source based on org.eclipse.jface.databinding.swt.WidgetProperties (EPL)
+ * Based on ideas from Eclipse Databinding.
  * 
- * Contributor:
- * 		Florian Pirchner - porting swt databinding to support vaadin
- * 
- *******************************************************************************/
-
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
 package org.lunifera.runtime.web.vaadin.databinding;
 
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPickerGradientColorProperty;
@@ -175,7 +172,7 @@ public class VaadinProperties {
 	 * 
 	 * @return
 	 */
-	public static IVaadinValueProperty color_ColorPickerGradient() {
+	public static IVaadinValueProperty colorColorPickerGradient() {
 		return new ColorPickerGradientColorProperty();
 	}
 
@@ -185,7 +182,7 @@ public class VaadinProperties {
 	 * 
 	 * @return
 	 */
-	public static IVaadinValueProperty color_ColorPickerGrid() {
+	public static IVaadinValueProperty colorColorPickerGrid() {
 		return new ColorPickerGridColorProperty();
 	}
 
@@ -195,7 +192,7 @@ public class VaadinProperties {
 	 * 
 	 * @return
 	 */
-	public static IVaadinValueProperty color_ColorPickerHistory() {
+	public static IVaadinValueProperty colorColorPickerHistory() {
 		return new ColorPickerHistoryColorProperty();
 	}
 
@@ -205,7 +202,7 @@ public class VaadinProperties {
 	 * 
 	 * @return
 	 */
-	public static IVaadinValueProperty color_ColorPickerSelect() {
+	public static IVaadinValueProperty colorColorPickerSelect() {
 		return new ColorPickerSelectColorProperty();
 	}
 

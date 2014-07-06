@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * Florian Pirchner - initial API and implementation
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
@@ -71,25 +71,21 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		ILocaleChangedService.LocaleListener {
 
 	/**
-	 * See {@link IConstants#CSS_CLASS__CONTROL_BASE}.
+	 * See {@link IConstants#CSS_CLASS_CONTROL_BASE}.
 	 */
-	public static final String CSS_CLASS__CONTROL_BASE = IConstants.CSS_CLASS__CONTROL_BASE;
+	public static final String CSS_CLASS_CONTROL_BASE = IConstants.CSS_CLASS_CONTROL_BASE;
 
 	/**
-	 * See {@link IConstants#CSS_CLASS__CONTROL}.
+	 * See {@link IConstants#CSS_CLASS_CONTROL}.
 	 */
-	public static final String CSS_CLASS__CONTROL = IConstants.CSS_CLASS__CONTROL;
+	public static final String CSS_CLASS_CONTROL = IConstants.CSS_CLASS_CONTROL;
 
-	// a reference to viewContext is required for disposal. Otherwise the view
-	// may not become accessed
 	private IViewContext viewContext;
 
 	private final IEmbeddableEditpart editpart;
 
 	private IBindingManager bindingManger;
 	private Set<Binding> bindings = new HashSet<Binding>();
-
-	private IViewContext disposingTempViewContext;
 
 	private VisibilityOptionsApplier visibilityOptionsApplier;
 
@@ -204,21 +200,18 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 								.getName());
 		applyDefaults(yEmbeddable);
 
-		registerBinding(createBindings_Visiblility(yEmbeddable,
+		registerBinding(createBindingsVisiblility(yEmbeddable,
 				abstractComponent));
 
 		if (yEmbeddable instanceof YEnable) {
-			registerBinding(createBindings_Enabled((YEnable) yEmbeddable,
+			registerBinding(createBindingsEnabled((YEnable) yEmbeddable,
 					abstractComponent));
 		}
 
 		if (yEmbeddable instanceof YEditable) {
-			registerBinding(createBindings_Editable((YEditable) yEmbeddable,
+			registerBinding(createBindingsEditable((YEditable) yEmbeddable,
 					abstractComponent));
 		}
-
-		// createBindings_Value(yEmbeddable, modelFeature, field, targetToModel,
-		// modelToTarget)
 
 	}
 
@@ -266,9 +259,9 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return Binding - the created binding
 	 */
-	protected Binding createBindings_Editable(YEditable yEditable,
+	protected Binding createBindingsEditable(YEditable yEditable,
 			AbstractComponent abstractComponent) {
-		// bind readonly
+
 		if (abstractComponent instanceof Property.ReadOnlyStatusChangeNotifier) {
 			return bindingManger.bindReadonly(yEditable,
 					(Property.ReadOnlyStatusChangeNotifier) abstractComponent);
@@ -298,9 +291,9 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return Binding - the created binding
 	 */
-	protected Binding createBindings_Visiblility(YVisibleable yVisibleable,
+	protected Binding createBindingsVisiblility(YVisibleable yVisibleable,
 			AbstractComponent abstractComponent) {
-		// bind visible
+
 		return bindingManger.bindVisible(yVisibleable, abstractComponent);
 	}
 
@@ -312,7 +305,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return Binding - the created binding
 	 */
-	protected Binding createBindings_Enabled(YEnable yEnable,
+	protected Binding createBindingsEnabled(YEnable yEnable,
 			AbstractComponent abstractComponent) {
 		IBindingManager bindingManger = getViewContext()
 				.getService(
@@ -335,7 +328,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 */
 	protected Binding createBindings_Value(EObject model,
 			EStructuralFeature modelFeature, Field<?> field) {
-		return createBindings_Value(model, modelFeature, field, null, null);
+		return createBindingsValue(model, modelFeature, field, null, null);
 	}
 
 	/**
@@ -348,7 +341,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return Binding - the created binding
 	 */
-	protected Binding createBindings_Value(EObject model,
+	protected Binding createBindingsValue(EObject model,
 			EStructuralFeature modelFeature, Field<?> field,
 			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
 		IBindingManager bindingManager = getViewContext()
@@ -382,7 +375,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return Binding - the created binding
 	 */
-	protected Binding createBindings_Selection(EObject model,
+	protected Binding createBindingsSelection(EObject model,
 			EStructuralFeature modelFeature, final AbstractSelect field,
 			Class<?> type) {
 		IBindingManager bindingManager = getViewContext()
@@ -464,7 +457,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @return Binding - the created binding
 	 */
-	protected Binding createBindings_MultiSelection(EObject model,
+	protected Binding createBindingsMultiSelection(EObject model,
 			EStructuralFeature modelFeature, final AbstractSelect field,
 			Class<?> collectionType) {
 		IBindingManager bindingManager = getViewContext()
@@ -478,54 +471,9 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			IVaadinObservableList uiObservable = VaadinObservables
 					.observeMultiSelectionAsList(field, collectionType);
 
-			// // create a modelToTarget update strategy with a validator
-			// //
-			// ECViewUpdateListStrategy modelToTarget = new
-			// ECViewUpdateListStrategy(
-			// ECViewUpdateValueStrategy.POLICY_UPDATE);
-			// modelToTarget.setBeforeSetValidator(new IValidator() {
-			// @Override
-			// public IStatus validate(Object value) {
-			// if (value != null && !field.containsId(value)) {
-			// return Status.CANCEL_STATUS;
-			// }
-			//
-			// return Status.OK_STATUS;
-			// }
-			// });
-
 			final Binding binding = bindingManager.bindList(uiObservable,
 					modelObservable, null, null);
 			registerBinding(binding);
-
-			// // now bind the validation state to an observable value. If the
-			// // doSetValue is called, we check whether the set operation was
-			// // successfully. Otherwise we send the target value back to the
-			// // model.
-			// Binding validationBinding = bindingManager.bindValue(
-			// binding.getValidationStatus(),
-			// new AbstractObservableValue() {
-			//
-			// @Override
-			// public Object getValueType() {
-			// return null;
-			// }
-			//
-			// @Override
-			// protected Object doGetValue() {
-			// return null;
-			// }
-			//
-			// @SuppressWarnings("restriction")
-			// @Override
-			// protected void doSetValue(Object value) {
-			// BindingStatus status = (BindingStatus) value;
-			// if (status.getSeverity() == BindingStatus.CANCEL) {
-			// binding.updateTargetToModel();
-			// }
-			// }
-			// });
-			// registerBinding(validationBinding);
 
 			return binding;
 		}
@@ -549,7 +497,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	protected Binding createBindings_ContainerContents(EObject model,
 			EStructuralFeature modelFeature,
 			Container.ItemSetChangeNotifier field, Class<?> collectionType) {
-		return createBindings_ContainerContents(model, modelFeature, field,
+		return createBindingsContainerContents(model, modelFeature, field,
 				collectionType, null, null);
 	}
 
@@ -571,7 +519,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 *            the update strategy
 	 * @return Binding - the created binding
 	 */
-	protected Binding createBindings_ContainerContents(EObject model,
+	protected Binding createBindingsContainerContents(EObject model,
 			EStructuralFeature modelFeature,
 			Container.ItemSetChangeNotifier field, Class<?> collectionType,
 			UpdateListStrategy targetToModel, UpdateListStrategy modelToTarget) {

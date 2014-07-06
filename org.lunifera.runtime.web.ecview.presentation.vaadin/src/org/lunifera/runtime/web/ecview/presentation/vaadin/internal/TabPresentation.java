@@ -1,14 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2011 Florian Pirchner
- * 
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * Florian Pirchner - initial API and implementation
- *******************************************************************************/
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
@@ -18,8 +17,6 @@ import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTab;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -32,9 +29,6 @@ import com.vaadin.ui.TabSheet.Tab;
  */
 public class TabPresentation extends AbstractTabPresenter<Component> implements
 		ITabPresentation<Component> {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(TabPresentation.class);
 
 	private CssLayout tabContent;
 	private Tab tab;
@@ -69,7 +63,6 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 				.getPresentation();
 
 		Component childContent = childPresentation.createWidget(childLayout);
-//		childContent.setSizeFull();
 		childLayout.addComponent(childContent);
 
 		tab = tabSheet.addTab(childLayout);

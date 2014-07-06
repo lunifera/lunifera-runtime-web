@@ -1,14 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2011 Florian Pirchner
- * 
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * Florian Pirchner - initial API and implementation
- *******************************************************************************/
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.HashMap;
@@ -40,7 +39,7 @@ import com.vaadin.ui.FormLayout;
 public class FormLayoutPresentation extends
 		AbstractLayoutPresenter<ComponentContainer> {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(FormLayoutPresentation.class);
 
 	private CssLayout componentBase;
@@ -57,8 +56,7 @@ public class FormLayoutPresentation extends
 	 */
 	public FormLayoutPresentation(IElementEditpart editpart) {
 		super((ILayoutEditpart) editpart);
-		this.modelAccess = new ModelAccess(
-				(YFormLayout) editpart.getModel());
+		this.modelAccess = new ModelAccess((YFormLayout) editpart.getModel());
 	}
 
 	@Override
@@ -117,7 +115,7 @@ public class FormLayoutPresentation extends
 		Map<YEmbeddable, YFormLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YFormLayoutCellStyle>();
 		for (YFormLayoutCellStyle style : modelAccess.getCellStyles()) {
 			if (yStyles.containsKey(style.getTarget())) {
-				logger.warn("Multiple style for element {}", style.getTarget());
+				LOGGER.warn("Multiple style for element {}", style.getTarget());
 			}
 			yStyles.put(style.getTarget(), style);
 		}
@@ -332,7 +330,7 @@ public class FormLayoutPresentation extends
 	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
@@ -344,21 +342,21 @@ public class FormLayoutPresentation extends
 			componentBase.addComponent(formLayout);
 
 			if (modelAccess.isMargin()) {
-				formLayout.addStyleName(IConstants.CSS_CLASS__MARGIN);
+				formLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
 				formLayout.setMargin(true);
 			}
 
 			if (!modelAccess.isSpacing()) {
 				formLayout.setSpacing(false);
 			} else {
-				formLayout.setData(IConstants.CSS_CLASS__SPACING);
+				formLayout.setData(IConstants.CSS_CLASS_SPACING);
 				formLayout.setSpacing(true);
 			}
 
 			if (modelAccess.isCssClassValid()) {
 				formLayout.addStyleName(modelAccess.getCssClass());
 			} else {
-				formLayout.addStyleName(CSS_CLASS__CONTROL);
+				formLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
 			renderChildren(false);

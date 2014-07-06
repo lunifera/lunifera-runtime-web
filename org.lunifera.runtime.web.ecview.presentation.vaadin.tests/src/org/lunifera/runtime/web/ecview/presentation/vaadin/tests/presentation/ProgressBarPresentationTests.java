@@ -190,13 +190,13 @@ public class ProgressBarPresentationTests {
 
 		// assert css class
 		assertTrue(progressBar1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 		assertTrue(progressBar2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL_BASE));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(progressBar1.getStyleName().contains("anyOtherClass"));
 		assertTrue(progressBar2.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS__CONTROL));
+				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
 		assertEquals("ID_0815", progressBar1BaseComponentContainer.getId());

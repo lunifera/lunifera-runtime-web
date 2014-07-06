@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * Florian Pirchner - initial API and implementation
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
@@ -74,7 +74,7 @@ public class NumericFieldPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -82,7 +82,7 @@ public class NumericFieldPresentation extends
 			}
 
 			numberField = new NumberField();
-			numberField.addStyleName(CSS_CLASS__CONTROL);
+			numberField.addStyleName(CSS_CLASS_CONTROL);
 			numberField.setImmediate(true);
 
 			property = new ObjectProperty<Double>(0d, Double.class);
@@ -178,7 +178,8 @@ public class NumericFieldPresentation extends
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException(
+					"BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableValueEndpoint) {

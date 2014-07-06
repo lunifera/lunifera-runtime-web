@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2012 Lunifera GmbH (Austria) and others.
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * Florian Pirchner - initial API and implementation
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
@@ -59,7 +59,7 @@ public class TextFieldPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS__CONTROL_BASE);
+			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
@@ -67,7 +67,7 @@ public class TextFieldPresentation extends
 			}
 
 			text = new TextField();
-			text.addStyleName(CSS_CLASS__CONTROL);
+			text.addStyleName(CSS_CLASS_CONTROL);
 			text.setNullRepresentation("");
 			text.setImmediate(true);
 
@@ -105,8 +105,8 @@ public class TextFieldPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
+			componentBase.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				componentBase.setCaption(modelAccess.getLabel());
@@ -123,7 +123,8 @@ public class TextFieldPresentation extends
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException(
+					"BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableValueEndpoint) {

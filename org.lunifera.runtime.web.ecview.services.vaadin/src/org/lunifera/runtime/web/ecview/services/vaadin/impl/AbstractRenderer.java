@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
+
 package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 import java.util.HashSet;
@@ -11,26 +22,26 @@ import org.osgi.framework.FrameworkUtil;
 
 public class AbstractRenderer {
 
-	protected static final Set<String> numericTypes = new HashSet<String>();
+	protected static final Set<String> NUMERICTYPES = new HashSet<String>();
 	static {
-		numericTypes.add(Byte.class.getName());
-		numericTypes.add(Long.class.getName());
-		numericTypes.add(Short.class.getName());
-		numericTypes.add(Integer.class.getName());
+		NUMERICTYPES.add(Byte.class.getName());
+		NUMERICTYPES.add(Long.class.getName());
+		NUMERICTYPES.add(Short.class.getName());
+		NUMERICTYPES.add(Integer.class.getName());
 
-		numericTypes.add("byte");
-		numericTypes.add("long");
-		numericTypes.add("short");
-		numericTypes.add("int");
+		NUMERICTYPES.add("byte");
+		NUMERICTYPES.add("long");
+		NUMERICTYPES.add("short");
+		NUMERICTYPES.add("int");
 	}
 
-	protected static final Set<String> decimalTypes = new HashSet<String>();
+	protected static final Set<String> DECIMALTYPES = new HashSet<String>();
 	static {
-		decimalTypes.add(Double.class.getName());
-		decimalTypes.add(Float.class.getName());
+		DECIMALTYPES.add(Double.class.getName());
+		DECIMALTYPES.add(Float.class.getName());
 
-		numericTypes.add("double");
-		numericTypes.add("float");
+		NUMERICTYPES.add("double");
+		NUMERICTYPES.add("float");
 	}
 
 	protected Stack<Context> contexts = new Stack<Context>();
@@ -71,12 +82,12 @@ public class AbstractRenderer {
 
 	public static boolean isNumeric(LDataType object) {
 		String name = object.getJvmTypeReference().getQualifiedName();
-		return numericTypes.contains(name);
+		return NUMERICTYPES.contains(name);
 	}
 
 	public static boolean isDecimal(LDataType object) {
 		String name = object.getJvmTypeReference().getQualifiedName();
-		return decimalTypes.contains(name);
+		return DECIMALTYPES.contains(name);
 	}
 
 	protected static class Context {

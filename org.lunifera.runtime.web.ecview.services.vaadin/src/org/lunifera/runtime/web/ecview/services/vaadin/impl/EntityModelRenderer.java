@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: 
+ * 		Florian Pirchner - Initial implementation
+ */
+
 package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
@@ -286,10 +297,8 @@ public class EntityModelRenderer extends AbstractRenderer {
 	 */
 	protected class EntityTypesProcessor extends LunEntitySwitch<YEmbeddable> {
 		private final SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
-		private final LAttribute lAttribute;
 
 		public EntityTypesProcessor(LAttribute lAttribute) {
-			this.lAttribute = lAttribute;
 		}
 
 		@Override
@@ -337,17 +346,6 @@ public class EntityModelRenderer extends AbstractRenderer {
 
 			YGridLayout layout = (YGridLayout) getLayout();
 			layout.addElement(beanLayout);
-			// YGridLayoutCellStyle yStyle = layout
-			// .addGridLayoutCellStyle(beanLayout);
-
-			// if (layout.getElements().size() % layout.getColumns() == 0) {
-			// int row = (layout.getElements().size() / layout.getColumns());
-			// yStyle.addSpanInfo(0, row, 1, row);
-			// } else {
-			// int row = (layout.getElements().size() / layout.getColumns()) +
-			// 1;
-			// yStyle.addSpanInfo(0, row, 1, row);
-			// }
 
 			// put a new context on the stack
 			contexts.push(new Context(contexts.peek(), null, beanLayout));
