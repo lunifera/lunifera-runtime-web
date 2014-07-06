@@ -1552,6 +1552,7 @@ public class TablePresentationTests {
 		yView.setContent(yLayout);
 		YTable yTable1 = factory.createTable();
 		yTable1.setType(EmfBar.class);
+		yTable1.setEmfNsURI(ModelPackage.eINSTANCE.getNsURI());
 		yLayout.getElements().add(yTable1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);

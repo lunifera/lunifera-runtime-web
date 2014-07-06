@@ -165,7 +165,7 @@ public class ComboBoxPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yCombo.getType());
+				attributePath, modelAccess.yCombo.getType(), modelAccess.yCombo.getEmfNsURI());
 	}
 
 	/**

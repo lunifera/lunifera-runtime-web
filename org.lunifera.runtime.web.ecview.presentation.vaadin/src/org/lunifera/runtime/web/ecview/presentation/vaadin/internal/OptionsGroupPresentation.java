@@ -179,7 +179,7 @@ public class OptionsGroupPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yOptionsGroup.getType());
+				attributePath, modelAccess.yOptionsGroup.getType(), modelAccess.yOptionsGroup.getEmfNsURI());
 	}
 
 	/**

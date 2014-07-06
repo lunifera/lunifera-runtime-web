@@ -720,6 +720,7 @@ public class ListPresentationTests {
 		yView.setContent(yLayout);
 		YList yList1 = factory.createList();
 		yList1.setType(EmfBar.class);
+		yList1.setEmfNsURI(ModelPackage.eINSTANCE.getNsURI());
 		yLayout.getElements().add(yList1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);

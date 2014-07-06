@@ -1506,6 +1506,7 @@ public class TreePresentationTests {
 		yView.setContent(yLayout);
 		YTree yTree1 = factory.createTree();
 		yTree1.setType(EmfBar.class);
+		yTree1.setEmfNsURI(ModelPackage.eINSTANCE.getNsURI());
 		yLayout.getElements().add(yTree1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);

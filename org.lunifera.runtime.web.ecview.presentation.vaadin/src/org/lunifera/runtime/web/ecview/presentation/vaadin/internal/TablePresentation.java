@@ -192,7 +192,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yTable.getType());
+				attributePath, modelAccess.yTable.getType(), modelAccess.yTable.getEmfNsURI());
 	}
 
 	/**

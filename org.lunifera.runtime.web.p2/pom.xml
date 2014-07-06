@@ -17,6 +17,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
+	<groupId>org.lunifera.runtime.web</groupId>
 	<artifactId>org.lunifera.runtime.web.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
 
@@ -36,11 +37,11 @@
 			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
 			<layout>p2</layout>
 		</repository>
-<!-- 		<repository> -->
-<!-- 			<id>lunifera</id> -->
-<!-- 			<layout>p2</layout> -->
-<!-- 			<url>http://lun.lunifera.org/downloads/p2/lunifera/kepler/latest/</url> -->
-<!-- 		</repository> -->
+		<!-- <repository> -->
+		<!-- <id>lunifera</id> -->
+		<!-- <layout>p2</layout> -->
+		<!-- <url>http://lun.lunifera.org/downloads/p2/lunifera/kepler/latest/</url> -->
+		<!-- </repository> -->
 	</repositories>
 
 	<build>

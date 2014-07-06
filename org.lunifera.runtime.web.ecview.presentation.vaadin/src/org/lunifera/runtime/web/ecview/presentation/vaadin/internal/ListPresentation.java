@@ -176,7 +176,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yList.getType());
+				attributePath, modelAccess.yList.getType(), modelAccess.yList.getEmfNsURI());
 	}
 
 	/**

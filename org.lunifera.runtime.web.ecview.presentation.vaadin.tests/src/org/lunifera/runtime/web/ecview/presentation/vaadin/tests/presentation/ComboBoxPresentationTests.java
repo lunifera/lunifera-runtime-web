@@ -1104,6 +1104,7 @@ public class ComboBoxPresentationTests {
 		yView.setContent(yLayout);
 		YComboBox yComboBox1 = factory.createComboBox();
 		yComboBox1.setType(EmfBar.class);
+		yComboBox1.setEmfNsURI(ModelPackage.eINSTANCE.getNsURI());
 		yLayout.getElements().add(yComboBox1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);

@@ -236,7 +236,7 @@ public class MasterDetailPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yMasterDetail.getType());
+				attributePath, modelAccess.yMasterDetail.getType(), modelAccess.yMasterDetail.getEmfNsURI());
 	}
 
 	/**

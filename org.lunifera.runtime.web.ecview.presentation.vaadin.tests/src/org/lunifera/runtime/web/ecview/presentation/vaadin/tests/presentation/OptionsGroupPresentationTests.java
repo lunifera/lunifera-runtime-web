@@ -724,6 +724,7 @@ public class OptionsGroupPresentationTests {
 		yView.setContent(yLayout);
 		YOptionsGroup yOptionsGroup1 = factory.createOptionsGroup();
 		yOptionsGroup1.setType(EmfBar.class);
+		yOptionsGroup1.setEmfNsURI(ModelPackage.eINSTANCE.getNsURI());
 		yLayout.getElements().add(yOptionsGroup1);
 		YTextField yText = factory.createTextField();
 		yLayout.getElements().add(yText);

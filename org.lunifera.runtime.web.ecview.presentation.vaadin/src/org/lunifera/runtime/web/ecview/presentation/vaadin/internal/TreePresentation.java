@@ -116,8 +116,8 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
+			componentBase.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				componentBase.setCaption(modelAccess.getLabel());
@@ -187,7 +187,8 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yTree.getType());
+				attributePath, modelAccess.yTree.getType(),
+				modelAccess.yTree.getEmfNsURI());
 	}
 
 	/**
