@@ -36,12 +36,14 @@ import com.vaadin.ui.Field;
 /**
  * This presenter is responsible to render a combo box on the given layout.
  */
+@SuppressWarnings("restriction")
 public class ComboBoxPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private CssLayout componentBase;
 	private ComboBox combo;
+	@SuppressWarnings("rawtypes")
 	private ObjectProperty property;
 
 	/**
@@ -69,10 +71,14 @@ public class ComboBoxPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yCombo);
 
 			combo = new ComboBox();
 			combo.addStyleName(CSS_CLASS_CONTROL);
 			combo.setImmediate(true);
+			
+			associateWidget(combo, modelAccess.yCombo);
 
 			property = new ObjectProperty(null, modelAccess.yCombo.getType());
 			combo.setPropertyDataSource(property);
@@ -156,7 +162,6 @@ public class ComboBoxPresentation extends
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("restriction")
 	protected IObservableValue internalGetSelectionEndpoint(
 			YEmbeddableSelectionEndpoint yEndpoint) {
 
@@ -166,7 +171,8 @@ public class ComboBoxPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yCombo.getType(), modelAccess.yCombo.getEmfNsURI());
+				attributePath, modelAccess.yCombo.getType(),
+				modelAccess.yCombo.getEmfNsURI());
 	}
 
 	/**
@@ -187,7 +193,7 @@ public class ComboBoxPresentation extends
 				ExtensionModelPackage.Literals.YCOMBO_BOX__SELECTION, field,
 				yField.getType()));
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -215,6 +221,11 @@ public class ComboBoxPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(combo);
+
 			componentBase = null;
 			combo = null;
 		}

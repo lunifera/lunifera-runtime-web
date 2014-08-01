@@ -348,10 +348,14 @@ public class VerticalLayoutPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yLayout);
 
 			verticalLayout = new VerticalLayout();
 			componentBase.addComponent(verticalLayout);
 
+			associateWidget(verticalLayout, modelAccess.yLayout);
+			
 			if (modelAccess.isMargin()) {
 				verticalLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
 				verticalLayout.setMargin(true);
@@ -369,6 +373,8 @@ public class VerticalLayoutPresentation extends
 			} else {
 				verticalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
+
+			// initializeElementClickSupport(verticalLayout);
 
 			renderChildren(false);
 		}
@@ -407,6 +413,11 @@ public class VerticalLayoutPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(verticalLayout);
+
 			componentBase = null;
 			verticalLayout = null;
 

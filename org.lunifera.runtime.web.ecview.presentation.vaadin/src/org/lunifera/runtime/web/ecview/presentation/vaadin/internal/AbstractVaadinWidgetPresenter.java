@@ -37,6 +37,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
+import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
@@ -49,6 +50,7 @@ import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleEvent;
 import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleService;
 import org.eclipse.emf.ecp.ecview.common.notification.LifecycleEvent;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.services.IWidgetAssocationsService;
 import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
@@ -66,6 +68,7 @@ import com.vaadin.ui.Field;
 /**
  * An abstract implementation of the {@link IWidgetPresentation}.
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		extends AbstractDisposable implements IWidgetPresentation<A>,
 		ILocaleChangedService.LocaleListener {
@@ -187,12 +190,13 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * Creates the bindings from the ECView EMF model to the given UI element.
 	 * 
 	 * @param yEmbeddable
+	 * @param container
+	 *            TODO
 	 * @param field
-	 * 
 	 * @return Binding - the created binding
 	 */
 	protected void createBindings(YEmbeddable yEmbeddable,
-			AbstractComponent abstractComponent) {
+			AbstractComponent widget, AbstractComponent container) {
 
 		bindingManger = getViewContext()
 				.getService(
@@ -200,17 +204,19 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 								.getName());
 		applyDefaults(yEmbeddable);
 
-		registerBinding(createBindingsVisiblility(yEmbeddable,
-				abstractComponent));
+		if (container != null) {
+			registerBinding(createBindingsVisiblility(yEmbeddable, container));
+		} else {
+			registerBinding(createBindingsVisiblility(yEmbeddable, widget));
+		}
 
 		if (yEmbeddable instanceof YEnable) {
-			registerBinding(createBindingsEnabled((YEnable) yEmbeddable,
-					abstractComponent));
+			registerBinding(createBindingsEnabled((YEnable) yEmbeddable, widget));
 		}
 
 		if (yEmbeddable instanceof YEditable) {
 			registerBinding(createBindingsEditable((YEditable) yEmbeddable,
-					abstractComponent));
+					widget));
 		}
 
 	}
@@ -427,7 +433,6 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 							return null;
 						}
 
-						@SuppressWarnings("restriction")
 						@Override
 						protected void doSetValue(Object value) {
 							BindingStatus status = (BindingStatus) value;
@@ -585,6 +590,29 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	}
 
 	/**
+	 * Uses the {@link IWidgetAssocationsService} to register the widget.
+	 * 
+	 * @param component
+	 * @param yElement
+	 */
+	protected void associateWidget(Component component, EObject yElement) {
+		IWidgetAssocationsService service = getViewContext().getService(
+				IWidgetAssocationsService.ID);
+		service.associate(component, yElement);
+	}
+
+	/**
+	 * Uses the {@link IWidgetAssocationsService} to unregister the widget.
+	 * 
+	 * @param component
+	 */
+	protected void unassociateWidget(Component component) {
+		IWidgetAssocationsService service = getViewContext().getService(
+				IWidgetAssocationsService.ID);
+		service.remove(component);
+	}
+
+	/**
 	 * Locale change events are catched by that class.
 	 */
 	protected void registerAtLocaleChangedService() {
@@ -683,6 +711,29 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * Needs to be implemented by subclasses to unrender the widget.
 	 */
 	protected abstract void doUnrender();
+
+	// /**
+	// * Initializes the element click support.
+	// * @param component
+	// */
+	// @SuppressWarnings("serial")
+	// protected void initializeElementClickSupport(Component component) {
+	// ComponentContainer layout = (Layout) component.getParent();
+	// if (layout instanceof LayoutClickNotifier) {
+	// ((LayoutClickNotifier) layout)
+	// .addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
+	// @Override
+	// public void layoutClick(
+	// LayoutEvents.LayoutClickEvent event) {
+	// IElementMouseClickService service = getViewContext()
+	// .getService(IElementMouseClickService.ID);
+	// if (service != null) {
+	// service.notifyClick(getModel());
+	// }
+	// }
+	// });
+	// }
+	// }
 
 	/**
 	 * Applies the visibility options to the component.

@@ -80,10 +80,14 @@ public class NumericFieldPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yNumericField);
 
 			numberField = new NumberField();
 			numberField.addStyleName(CSS_CLASS_CONTROL);
 			numberField.setImmediate(true);
+			
+			associateWidget(numberField, modelAccess.yNumericField);
 
 			property = new ObjectProperty<Double>(0d, Double.class);
 			numberField.setPropertyDataSource(property);
@@ -215,7 +219,7 @@ public class NumericFieldPresentation extends
 
 		registerBinding(binding_valueToUI);
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	protected Binding createModelBinding(EObject model,
@@ -262,6 +266,11 @@ public class NumericFieldPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(numberField);
+
 			componentBase = null;
 			numberField = null;
 		}

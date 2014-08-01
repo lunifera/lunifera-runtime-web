@@ -70,10 +70,14 @@ public class DateTimePresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yDateTime);
 
 			dateField = new DateField();
 			dateField.addStyleName(CSS_CLASS_CONTROL);
 			dateField.setImmediate(true);
+			
+			associateWidget(dateField, modelAccess.yDateTime);
 
 			property = new ObjectProperty<Date>(null, Date.class);
 			dateField.setPropertyDataSource(property);
@@ -198,7 +202,7 @@ public class DateTimePresentation extends
 				null);
 		registerBinding(binding_valueToUI);
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -226,6 +230,11 @@ public class DateTimePresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(dateField);
+
 			componentBase = null;
 			dateField = null;
 		}
@@ -315,6 +324,7 @@ public class DateTimePresentation extends
 		 * 
 		 * @return
 		 */
+		@SuppressWarnings("unused")
 		public boolean isDateformatValid() {
 			return yDateTime.getDatadescription() != null
 					&& yDateTime.getDatatype().getFormat() != null;

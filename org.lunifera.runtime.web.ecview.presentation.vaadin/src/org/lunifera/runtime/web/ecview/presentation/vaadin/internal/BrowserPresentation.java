@@ -56,13 +56,17 @@ public class BrowserPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yBrowser);
 
 			browser = new BrowserFrame();
 			browser.addStyleName(CSS_CLASS_CONTROL);
 			browser.setImmediate(true);
+			
+			associateWidget(browser, modelAccess.yBrowser);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yBrowser, browser);
+			createBindings(modelAccess.yBrowser, browser, null);
 
 			componentBase.addComponent(browser);
 
@@ -120,6 +124,10 @@ public class BrowserPresentation extends
 			// unbind all active bindings
 			unbind();
 
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(browser);
+			
 			ComponentContainer parent = ((ComponentContainer) componentBase
 					.getParent());
 			if (parent != null) {

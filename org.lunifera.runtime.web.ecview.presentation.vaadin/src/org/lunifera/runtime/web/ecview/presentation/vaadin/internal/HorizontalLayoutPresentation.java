@@ -48,6 +48,8 @@ public class HorizontalLayoutPresentation extends
 
 	private CssLayout fillerLayout;
 
+	private boolean lockRendering;
+
 	/**
 	 * The constructor.
 	 * 
@@ -72,7 +74,10 @@ public class HorizontalLayoutPresentation extends
 	public void remove(IWidgetPresentation<?> presentation) {
 		super.remove(presentation);
 
-		horizontalLayout.removeComponent((Component) presentation.getWidget());
+		if (horizontalLayout != null) {
+			horizontalLayout.removeComponent((Component) presentation
+					.getWidget());
+		}
 	}
 
 	@Override
@@ -105,8 +110,8 @@ public class HorizontalLayoutPresentation extends
 	}
 
 	/**
-	 * Is called to refresh the UI. The element will be removed from the grid
-	 * layout and added to it again afterwards.
+	 * Is called to refresh the UI. The element will be removed from the layout
+	 * and added to it again afterwards.
 	 */
 	protected void refreshUI() {
 		horizontalLayout.removeAllComponents();
@@ -123,9 +128,7 @@ public class HorizontalLayoutPresentation extends
 
 		// iterate all elements and build the child element
 		//
-		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
-			IWidgetPresentation<?> childPresentation = editPart
-					.getPresentation();
+		for (IWidgetPresentation<?> childPresentation : getChildren()) {
 			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			addChild(childPresentation, yStyles.get(yChild));
 		}
@@ -355,8 +358,12 @@ public class HorizontalLayoutPresentation extends
 				componentBase.setId(getEditpart().getId());
 			}
 
+			associateWidget(componentBase, modelAccess.yLayout);
+
 			horizontalLayout = new HorizontalLayout();
 			componentBase.addComponent(horizontalLayout);
+
+			associateWidget(horizontalLayout, modelAccess.yLayout);
 
 			if (modelAccess.isMargin()) {
 				horizontalLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
@@ -376,10 +383,27 @@ public class HorizontalLayoutPresentation extends
 				horizontalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
+			initializeChildren();
 			renderChildren(false);
 		}
 
 		return componentBase;
+	}
+
+	/**
+	 * Adds the children to the superclass and prevents rendering.
+	 */
+	private void initializeChildren() {
+		setRenderLock(true);
+		try {
+			for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
+				IWidgetPresentation<?> childPresentation = editPart
+						.getPresentation();
+				super.add(childPresentation);
+			}
+		} finally {
+			setRenderLock(false);
+		}
 	}
 
 	@Override
@@ -413,14 +437,24 @@ public class HorizontalLayoutPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(horizontalLayout);
+
 			componentBase = null;
 			horizontalLayout = null;
 
 			// unrender the childs
 			for (IWidgetPresentation<?> child : getChildren()) {
-				child.unrender();
+				remove(child);
 			}
 		}
+	}
+
+	@Override
+	protected void internalRemove(IWidgetPresentation<?> child) {
+		child.unrender();
 	}
 
 	@Override

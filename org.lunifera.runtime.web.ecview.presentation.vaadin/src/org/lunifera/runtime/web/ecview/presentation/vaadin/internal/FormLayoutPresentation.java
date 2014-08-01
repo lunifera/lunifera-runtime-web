@@ -70,8 +70,12 @@ public class FormLayoutPresentation extends
 	public void remove(IWidgetPresentation<?> presentation) {
 		super.remove(presentation);
 
-		presentation.unrender();
-		refreshUI();
+		if (isRendered()) {
+			presentation.unrender();
+		}
+		if (!isDisposed()) {
+			refreshUI();
+		}
 	}
 
 	@Override
@@ -133,7 +137,7 @@ public class FormLayoutPresentation extends
 			fillerLayout = new CssLayout();
 			fillerLayout.setSizeFull();
 			formLayout.addComponent(fillerLayout);
-			formLayout.setExpandRatio(fillerLayout, 1.0f);
+			// formLayout.setExpandRatio(fillerLayout, 1.0f);
 		}
 
 	}
@@ -338,8 +342,12 @@ public class FormLayoutPresentation extends
 				componentBase.setId(getEditpart().getId());
 			}
 
+			associateWidget(componentBase, modelAccess.yLayout);
+
 			formLayout = new FormLayout();
 			componentBase.addComponent(formLayout);
+
+			associateWidget(formLayout, modelAccess.yLayout);
 
 			if (modelAccess.isMargin()) {
 				formLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
@@ -358,6 +366,8 @@ public class FormLayoutPresentation extends
 			} else {
 				formLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
+
+			// initializeElementClickSupport(formLayout);
 
 			renderChildren(false);
 		}
@@ -396,6 +406,11 @@ public class FormLayoutPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(formLayout);
+
 			componentBase = null;
 			formLayout = null;
 

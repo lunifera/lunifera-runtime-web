@@ -65,10 +65,14 @@ public class ProgressBarPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yProgressBar);
 
 			progressBar = new ProgressBar();
 			progressBar.addStyleName(CSS_CLASS_CONTROL);
 			progressBar.setImmediate(true);
+			
+			associateWidget(progressBar, modelAccess.yProgressBar);
 
 			property = new ObjectProperty<Float>(0f, Float.class);
 			progressBar.setPropertyDataSource(property);
@@ -156,7 +160,7 @@ public class ProgressBarPresentation extends
 				ExtensionModelPackage.Literals.YPROGRESS_BAR__VALUE,
 				progressBar));
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -184,6 +188,11 @@ public class ProgressBarPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(progressBar);
+
 			componentBase = null;
 			progressBar = null;
 		}

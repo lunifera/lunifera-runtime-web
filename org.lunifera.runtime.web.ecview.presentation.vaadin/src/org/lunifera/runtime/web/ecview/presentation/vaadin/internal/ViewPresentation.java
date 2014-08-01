@@ -27,11 +27,15 @@ import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityProperti
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.common.services.IUiKitBasedService;
+import org.eclipse.emf.ecp.ecview.common.tooling.IWidgetMouseClickService;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetMouseClickService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -267,6 +271,24 @@ public class ViewPresentation extends AbstractDisposable implements
 	public void localeChanged(Locale locale) {
 		// pass the locale to the root element
 		component.setLocale(locale);
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	@Override
+	public <A extends IUiKitBasedService> A createService(Class<A> serviceClass) {
+		if (serviceClass == IWidgetMouseClickService.class) {
+			final WidgetMouseClickService service = new WidgetMouseClickService(
+					getViewContext());
+			service.activate();
+			return (A) service;
+		}
+
+		throw new IllegalArgumentException(String.format(
+				"%s is not a supported service.", serviceClass.getName()));
+	}
+
+	public void click(ClickEvent event) {
+
 	}
 
 	/**

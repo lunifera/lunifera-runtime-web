@@ -72,12 +72,16 @@ public class OptionsGroupPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yOptionsGroup);
 
 			optionsGroup = new OptionGroup();
 			optionsGroup.addStyleName(CSS_CLASS_CONTROL);
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
 			optionsGroup.setImmediate(true);
+			
+			associateWidget(optionsGroup, modelAccess.yOptionsGroup);
 
 			if (modelAccess.yOptionsGroup.getSelectionType() == YSelectionType.MULTI) {
 				// multi selections need to be of type Set.class
@@ -180,7 +184,8 @@ public class OptionsGroupPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yOptionsGroup.getType(), modelAccess.yOptionsGroup.getEmfNsURI());
+				attributePath, modelAccess.yOptionsGroup.getType(),
+				modelAccess.yOptionsGroup.getEmfNsURI());
 	}
 
 	/**
@@ -222,7 +227,7 @@ public class OptionsGroupPresentation extends
 
 		}
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -250,6 +255,11 @@ public class OptionsGroupPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(optionsGroup);
+
 			componentBase = null;
 			optionsGroup = null;
 		}

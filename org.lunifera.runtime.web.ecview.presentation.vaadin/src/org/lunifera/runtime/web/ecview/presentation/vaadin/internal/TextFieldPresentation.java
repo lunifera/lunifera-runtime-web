@@ -24,6 +24,8 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.event.MouseEvents;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -66,14 +68,18 @@ public class TextFieldPresentation extends
 				componentBase.setId(getEditpart().getId());
 			}
 
+			associateWidget(componentBase, modelAccess.yText);
+
 			text = new TextField();
 			text.addStyleName(CSS_CLASS_CONTROL);
 			text.setNullRepresentation("");
 			text.setImmediate(true);
 
+			associateWidget(text, modelAccess.yText);
+
 			property = new ObjectProperty<String>(null, String.class);
 			text.setPropertyDataSource(property);
-
+			
 			// creates the binding for the field
 			createBindings(modelAccess.yText, text);
 
@@ -156,7 +162,7 @@ public class TextFieldPresentation extends
 		registerBinding(createBindings_Value(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YTEXT_FIELD__VALUE, text));
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -184,6 +190,11 @@ public class TextFieldPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(text);
+
 			componentBase = null;
 			text = null;
 		}

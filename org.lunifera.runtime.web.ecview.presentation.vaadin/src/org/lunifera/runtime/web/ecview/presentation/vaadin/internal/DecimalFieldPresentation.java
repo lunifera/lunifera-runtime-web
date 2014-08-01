@@ -80,10 +80,14 @@ public class DecimalFieldPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yDecimalField);
 
 			decimalField = new DecimalField();
 			decimalField.addStyleName(CSS_CLASS_CONTROL);
 			decimalField.setImmediate(true);
+			
+			associateWidget(decimalField, modelAccess.yDecimalField);
 
 			property = new ObjectProperty<Double>(0d, Double.class);
 			decimalField.setPropertyDataSource(property);
@@ -221,7 +225,7 @@ public class DecimalFieldPresentation extends
 
 		registerBinding(binding_valueToUI);
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	protected Binding createModelBinding(EObject model,
@@ -268,6 +272,11 @@ public class DecimalFieldPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(decimalField);
+
 			componentBase = null;
 			decimalField = null;
 

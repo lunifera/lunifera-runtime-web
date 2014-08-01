@@ -58,16 +58,20 @@ public class LabelPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yLabel);
 
 			label = new Label();
 			label.addStyleName(CSS_CLASS_CONTROL);
 			label.setImmediate(true);
+			
+			associateWidget(label, modelAccess.yLabel);
 
 			property = new ObjectProperty<String>("", String.class);
 			label.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yLabel, label);
+			createBindings(modelAccess.yLabel, label, null);
 
 			componentBase.addComponent(label);
 
@@ -129,6 +133,11 @@ public class LabelPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(label);
+
 			componentBase = null;
 			label = null;
 		}

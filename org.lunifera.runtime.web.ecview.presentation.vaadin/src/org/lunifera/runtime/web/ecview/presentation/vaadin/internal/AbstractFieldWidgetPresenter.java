@@ -135,6 +135,7 @@ public abstract class AbstractFieldWidgetPresenter<A extends Component> extends
 	 */
 	protected void initializeField(Field<?> field) {
 		attachValidators(field);
-	}
 
+//		initializeElementClickSupport(field);
+	}
 }

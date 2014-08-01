@@ -80,17 +80,23 @@ public class MasterDetailPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yMasterDetail);
 
 			// create the container for master an detail
 			masterBase = new CssLayout();
 			masterBase.setStyleName(IConstants.CSS_CLASS_MASTER_BASE);
 			masterBase.setSizeFull();
 			componentBase.addComponent(masterBase);
+			
+			associateWidget(masterBase, modelAccess.yMasterDetail);
 
 			detailBase = new CssLayout();
 			masterBase.setStyleName(IConstants.CSS_CLASS_DETAIL_BASE);
 			detailBase.setSizeFull();
 			componentBase.addComponent(detailBase);
+			
+			associateWidget(detailBase, modelAccess.yMasterDetail);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yMasterDetail);
@@ -217,7 +223,8 @@ public class MasterDetailPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yMasterDetail.getType(), modelAccess.yMasterDetail.getEmfNsURI());
+				attributePath, modelAccess.yMasterDetail.getType(),
+				modelAccess.yMasterDetail.getEmfNsURI());
 	}
 
 	@Override
@@ -245,6 +252,10 @@ public class MasterDetailPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+
 			componentBase = null;
 
 			if (masterPresentation != null) {

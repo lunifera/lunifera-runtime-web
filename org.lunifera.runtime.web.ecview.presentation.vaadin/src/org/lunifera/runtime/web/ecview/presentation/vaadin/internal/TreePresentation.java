@@ -72,11 +72,15 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yTree);
 
 			tree = new Tree();
 			tree.addStyleName(CSS_CLASS_CONTROL);
 			tree.setMultiSelect(modelAccess.yTree.getSelectionType() == YSelectionType.MULTI);
 			tree.setImmediate(true);
+			
+			associateWidget(tree, modelAccess.yTree);
 
 			if (tree.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
@@ -220,7 +224,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		}
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -248,6 +252,11 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(tree);
+
 			componentBase = null;
 			tree = null;
 		}

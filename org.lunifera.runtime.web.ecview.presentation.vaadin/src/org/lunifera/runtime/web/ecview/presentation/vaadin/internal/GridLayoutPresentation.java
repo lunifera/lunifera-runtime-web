@@ -110,11 +110,11 @@ public class GridLayoutPresentation extends
 	 * layout and added to it again afterwards.
 	 */
 	protected void refreshUI() {
-		if(!isRendered()){
+		if (!isRendered()) {
 			return;
 		}
 		gridlayout.removeAllComponents();
- 
+
 		// create a map containing the style for the embeddable
 		//
 		Map<YEmbeddable, YGridLayoutCellStyle> yStyles = new HashMap<YEmbeddable, YGridLayoutCellStyle>();
@@ -431,11 +431,15 @@ public class GridLayoutPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yLayout);
 
 			gridlayout = new GridLayout(modelAccess.getColumns(), 1);
 			gridlayout.setSpacing(false);
 			gridlayout.setImmediate(true);
 			componentBase.addComponent(gridlayout);
+			
+			associateWidget(gridlayout, modelAccess.yLayout);
 
 			if (modelAccess.isMargin()) {
 				gridlayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
@@ -492,6 +496,11 @@ public class GridLayoutPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(gridlayout);
+
 			componentBase = null;
 			gridlayout = null;
 

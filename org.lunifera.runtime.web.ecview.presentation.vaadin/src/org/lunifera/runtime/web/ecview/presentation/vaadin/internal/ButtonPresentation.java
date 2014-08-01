@@ -56,10 +56,14 @@ public class ButtonPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yButton);
 
 			button = new Button();
 			button.addStyleName(CSS_CLASS_CONTROL);
 			button.setImmediate(true);
+			
+			associateWidget(button, modelAccess.yButton);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yButton, button);
@@ -108,7 +112,7 @@ public class ButtonPresentation extends
 	 */
 	@SuppressWarnings("serial")
 	protected void createBindings(final YButton yButton, Button button) {
-		super.createBindings(yButton, button);
+		super.createBindings(yButton, button, componentBase);
 
 		button.addClickListener(new Button.ClickListener() {
 			@Override
@@ -147,6 +151,11 @@ public class ButtonPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(button);
+
 			componentBase = null;
 			button = null;
 		}

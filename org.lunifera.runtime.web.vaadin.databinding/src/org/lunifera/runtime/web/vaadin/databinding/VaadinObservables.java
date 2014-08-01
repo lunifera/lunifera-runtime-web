@@ -96,6 +96,7 @@ public class VaadinObservables {
 			for (Iterator<UIRealm> it = realms.iterator(); it.hasNext();) {
 				UIRealm displayRealm = it.next();
 				if (displayRealm.ui == ui) {
+					displayRealm.makeDefault();
 					return displayRealm;
 				}
 			}

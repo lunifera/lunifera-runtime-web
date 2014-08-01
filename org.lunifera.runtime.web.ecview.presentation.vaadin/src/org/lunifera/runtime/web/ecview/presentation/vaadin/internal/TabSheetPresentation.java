@@ -125,9 +125,13 @@ public class TabSheetPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yLayout);
 
 			tabSheet = new TabSheet();
 			componentBase.addComponent(tabSheet);
+			
+			associateWidget(tabSheet, modelAccess.yLayout);
 
 			if (modelAccess.isCssClassValid()) {
 				tabSheet.addStyleName(modelAccess.getCssClass());
@@ -172,6 +176,11 @@ public class TabSheetPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(tabSheet);
+
 			componentBase = null;
 			tabSheet = null;
 

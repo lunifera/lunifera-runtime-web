@@ -65,11 +65,15 @@ public class TextAreaPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yTextArea);
 
 			textArea = new TextArea();
 			textArea.addStyleName(CSS_CLASS_CONTROL);
 			textArea.setImmediate(true);
 
+			associateWidget(textArea, modelAccess.yTextArea);
+			
 			property = new ObjectProperty<String>(null, String.class);
 			textArea.setPropertyDataSource(property);
 
@@ -154,7 +158,7 @@ public class TextAreaPresentation extends
 		registerBinding(createBindings_Value(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YTEXT_AREA__VALUE, textArea));
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -182,6 +186,11 @@ public class TextAreaPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(textArea);
+
 			componentBase = null;
 			textArea = null;
 		}

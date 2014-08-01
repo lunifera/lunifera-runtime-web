@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
 import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
@@ -30,6 +29,8 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 		ILayoutPresentation<A> {
 
 	private List<IWidgetPresentation<?>> children;
+
+	private boolean renderLock;
 
 	public AbstractLayoutPresenter(ILayoutEditpart editpart) {
 		super(editpart);
@@ -47,15 +48,6 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	@Override
 	public YLayout getModel() {
 		return (YLayout) getEditpart().getModel();
-	}
-
-	/**
-	 * Returns the view context.
-	 * 
-	 * @return viewContext
-	 */
-	public IViewContext getViewContext() {
-		return getEditpart().getView().getContext();
 	}
 
 	@Override
@@ -76,7 +68,9 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 		if (!children.contains(presentation)) {
 			children.add(presentation);
 
-			internalAdd(presentation);
+			if (!renderLock) {
+				internalAdd(presentation);
+			}
 		}
 	}
 
@@ -98,7 +92,7 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 			return;
 		}
 
-		if (children.remove(presentation)) {
+		if (children.remove(presentation) && !renderLock) {
 			internalRemove(presentation);
 		}
 	}
@@ -164,7 +158,9 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 		children.remove(presentation);
 		children.add(index, presentation);
 
-		internalMove(presentation, currentIndex, index);
+		if (!renderLock) {
+			internalMove(presentation, currentIndex, index);
+		}
 	}
 
 	/**
@@ -183,6 +179,24 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	protected void internalMove(IWidgetPresentation<?> presentation,
 			int oldIndex, int newIndex) {
 
+	}
+
+	/**
+	 * Returns true, if rendering should not be done.
+	 * 
+	 * @return
+	 */
+	public boolean isRenderLock() {
+		return renderLock;
+	}
+
+	/**
+	 * True, if rendering should not be done.
+	 * 
+	 * @param renderLock
+	 */
+	public void setRenderLock(boolean renderLock) {
+		this.renderLock = renderLock;
 	}
 
 	/**

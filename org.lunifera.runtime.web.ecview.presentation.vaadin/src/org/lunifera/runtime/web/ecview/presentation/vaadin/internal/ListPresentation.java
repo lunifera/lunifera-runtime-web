@@ -72,12 +72,16 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yList);
 
 			list = new ListSelect();
 			list.addStyleName(CSS_CLASS_CONTROL);
 			list.setMultiSelect(modelAccess.yList.getSelectionType() == YSelectionType.MULTI);
 			list.setImmediate(true);
 			list.setSizeFull();
+			
+			associateWidget(list, modelAccess.yList);
 
 			if (list.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
@@ -176,7 +180,8 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yList.getType(), modelAccess.yList.getEmfNsURI());
+				attributePath, modelAccess.yList.getType(),
+				modelAccess.yList.getEmfNsURI());
 	}
 
 	/**
@@ -218,7 +223,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		}
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -246,6 +251,11 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(list);
+
 			componentBase = null;
 			list = null;
 		}

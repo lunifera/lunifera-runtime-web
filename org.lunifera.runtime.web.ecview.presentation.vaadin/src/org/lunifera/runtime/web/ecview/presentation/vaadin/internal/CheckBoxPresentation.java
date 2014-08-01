@@ -65,10 +65,14 @@ public class CheckBoxPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
+			
+			associateWidget(componentBase, modelAccess.yCheckBox);
 
 			checkBox = new CheckBox();
 			checkBox.addStyleName(CSS_CLASS_CONTROL);
 			checkBox.setImmediate(true);
+			
+			associateWidget(checkBox, modelAccess.yCheckBox);
 
 			property = new ObjectProperty<Boolean>(false, Boolean.class);
 			checkBox.setPropertyDataSource(property);
@@ -155,7 +159,7 @@ public class CheckBoxPresentation extends
 		registerBinding(createBindings_Value(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YCHECK_BOX__VALUE, field));
 
-		super.createBindings(yField, field);
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override
@@ -183,6 +187,11 @@ public class CheckBoxPresentation extends
 			if (parent != null) {
 				parent.removeComponent(componentBase);
 			}
+
+			// remove assocations
+			unassociateWidget(componentBase);
+			unassociateWidget(checkBox);
+
 			componentBase = null;
 			checkBox = null;
 		}
