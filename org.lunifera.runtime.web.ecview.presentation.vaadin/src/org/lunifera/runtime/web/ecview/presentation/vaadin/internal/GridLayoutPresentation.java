@@ -21,7 +21,6 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayoutCellStyle;
@@ -62,29 +61,29 @@ public class GridLayoutPresentation extends
 	}
 
 	@Override
-	public void add(IWidgetPresentation<?> presentation) {
-		super.add(presentation);
+	public void add(IEmbeddableEditpart editpart) {
+		super.add(editpart);
 
 		refreshUI();
 	}
 
 	@Override
-	public void remove(IWidgetPresentation<?> presentation) {
-		super.remove(presentation);
+	public void remove(IEmbeddableEditpart editpart) {
+		super.remove(editpart);
 
 		refreshUI();
 	}
 
 	@Override
-	public void insert(IWidgetPresentation<?> presentation, int index) {
-		super.insert(presentation, index);
+	public void insert(IEmbeddableEditpart editpart, int index) {
+		super.insert(editpart, index);
 
 		refreshUI();
 	}
 
 	@Override
-	public void move(IWidgetPresentation<?> presentation, int index) {
-		super.move(presentation, index);
+	public void move(IEmbeddableEditpart editpart, int index) {
+		super.move(editpart, index);
 
 		refreshUI();
 	}
@@ -129,10 +128,8 @@ public class GridLayoutPresentation extends
 		//
 		List<Cell> cells = new ArrayList<Cell>();
 		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
-			IWidgetPresentation<?> childPresentation = editPart
-					.getPresentation();
-			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
-			Cell cell = addChild(childPresentation, yStyles.get(yChild));
+			YEmbeddable yChild = (YEmbeddable) editPart.getModel();
+			Cell cell = addChild(editPart, yStyles.get(yChild));
 			cells.add(cell);
 		}
 
@@ -200,14 +197,14 @@ public class GridLayoutPresentation extends
 	 * Is called to create the child component and apply layouting defaults to
 	 * it.
 	 * 
-	 * @param presentation
+	 * @param editpart
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation,
+	protected Cell addChild(IEmbeddableEditpart editpart,
 			YGridLayoutCellStyle yStyle) {
 
-		Component child = (Component) presentation.createWidget(gridlayout);
+		Component child = (Component) editpart.render(gridlayout);
 
 		// calculate the spanning of the element
 		// and adds the child to the grid layout
@@ -431,14 +428,14 @@ public class GridLayoutPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
+
 			associateWidget(componentBase, modelAccess.yLayout);
 
 			gridlayout = new GridLayout(modelAccess.getColumns(), 1);
 			gridlayout.setSpacing(false);
 			gridlayout.setImmediate(true);
 			componentBase.addComponent(gridlayout);
-			
+
 			associateWidget(gridlayout, modelAccess.yLayout);
 
 			if (modelAccess.isMargin()) {
@@ -505,7 +502,7 @@ public class GridLayoutPresentation extends
 			gridlayout = null;
 
 			// unrender the childs
-			for (IWidgetPresentation<?> child : getChildren()) {
+			for (IEmbeddableEditpart child : getChildren()) {
 				child.unrender();
 			}
 		}
@@ -524,9 +521,9 @@ public class GridLayoutPresentation extends
 	 * Will unrender all children.
 	 */
 	protected void unrenderChildren() {
-		for (IWidgetPresentation<?> presentation : getChildren()) {
-			if (presentation.isRendered()) {
-				presentation.unrender();
+		for (IEmbeddableEditpart editpart : getChildren()) {
+			if (editpart.isRendered()) {
+				editpart.unrender();
 			}
 		}
 	}

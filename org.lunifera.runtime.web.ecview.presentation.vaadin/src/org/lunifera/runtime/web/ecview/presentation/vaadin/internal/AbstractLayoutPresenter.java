@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
 import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 
 import com.vaadin.ui.ComponentContainer;
 
@@ -28,7 +28,7 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 		extends AbstractVaadinWidgetPresenter<A> implements
 		ILayoutPresentation<A> {
 
-	private List<IWidgetPresentation<?>> children;
+	private List<IEmbeddableEditpart> children;
 
 	private boolean renderLock;
 
@@ -51,18 +51,18 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	}
 
 	@Override
-	public List<IWidgetPresentation<?>> getChildren() {
+	public List<IEmbeddableEditpart> getChildren() {
 		return children != null ? Collections.unmodifiableList(children)
-				: Collections.<IWidgetPresentation<?>> emptyList();
+				: Collections.<IEmbeddableEditpart> emptyList();
 	}
 
 	@Override
-	public boolean contains(IWidgetPresentation<?> presentation) {
+	public boolean contains(IEmbeddableEditpart presentation) {
 		return children != null && children.contains(presentation);
 	}
 
 	@Override
-	public void add(IWidgetPresentation<?> presentation) {
+	public void add(IEmbeddableEditpart presentation) {
 		ensureChildren();
 
 		if (!children.contains(presentation)) {
@@ -75,19 +75,19 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	}
 
 	/**
-	 * This method is called after the presentation was successfully added to
-	 * the children collection.<br>
+	 * This method is called after the editpart was successfully added to the
+	 * children collection.<br>
 	 * Subclasses should handle the add of the UI element in that method.
 	 * 
-	 * @param presentation
-	 *            The presentation to be added
+	 * @param editpart
+	 *            The editpart to be added
 	 */
-	protected void internalAdd(IWidgetPresentation<?> presentation) {
+	protected void internalAdd(IEmbeddableEditpart presentation) {
 
 	}
 
 	@Override
-	public void remove(IWidgetPresentation<?> presentation) {
+	public void remove(IEmbeddableEditpart presentation) {
 		if (children == null) {
 			return;
 		}
@@ -98,20 +98,19 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	}
 
 	/**
-	 * This method is called after the presentation was successfully removed
-	 * from the children collection.<br>
-	 * Subclasses should handle the unrendering of the UI element in that
-	 * method.
+	 * This method is called after the editpart was successfully removed from
+	 * the children collection.<br>
+	 * Subclasses should handle the removal of the UI element in that method.
 	 * 
 	 * @param presentation
 	 *            The presentation to be removed
 	 */
-	protected void internalRemove(IWidgetPresentation<?> presentation) {
+	protected void internalRemove(IEmbeddableEditpart presentation) {
 
 	}
 
 	@Override
-	public void insert(IWidgetPresentation<?> presentation, int index) {
+	public void insert(IEmbeddableEditpart presentation, int index) {
 		ensureChildren();
 
 		int currentIndex = children.indexOf(presentation);
@@ -127,21 +126,21 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	}
 
 	/**
-	 * This method is called after the presentation was successfully inserted to
-	 * the children collection.<br>
+	 * This method is called after the editpart was successfully inserted to the
+	 * children collection.<br>
 	 * Subclasses should handle the insert of the UI element in that method.
 	 * 
-	 * @param presentation
-	 *            The presentation to be inserted
+	 * @param editpart
+	 *            The editpart to be inserted
 	 * @param index
-	 *            The index where the presentation should be inserted
+	 *            The index where the editpart should be inserted
 	 */
-	protected void internalInsert(IWidgetPresentation<?> presentation, int index) {
+	protected void internalInsert(IEmbeddableEditpart editpart, int index) {
 
 	}
 
 	@Override
-	public void move(IWidgetPresentation<?> presentation, int index) {
+	public void move(IEmbeddableEditpart presentation, int index) {
 		if (children == null) {
 			throw new RuntimeException(
 					"Move not possible. No children present.");
@@ -176,8 +175,8 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	 *            The new index where the control should be located after the
 	 *            move operation.
 	 */
-	protected void internalMove(IWidgetPresentation<?> presentation,
-			int oldIndex, int newIndex) {
+	protected void internalMove(IEmbeddableEditpart presentation, int oldIndex,
+			int newIndex) {
 
 	}
 
@@ -204,7 +203,7 @@ public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
 	 */
 	protected void ensureChildren() {
 		if (children == null) {
-			children = new ArrayList<IWidgetPresentation<?>>();
+			children = new ArrayList<IEmbeddableEditpart>();
 		}
 	}
 

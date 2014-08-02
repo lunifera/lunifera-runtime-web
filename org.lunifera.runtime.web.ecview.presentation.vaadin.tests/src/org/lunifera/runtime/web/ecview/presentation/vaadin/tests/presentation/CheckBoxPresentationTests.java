@@ -254,7 +254,7 @@ public class CheckBoxPresentationTests {
 		assertFalse(checkBox2.isReadOnly());
 
 		yCheckBox1.setVisible(false);
-		assertFalse(checkBox1.isVisible());
+		assertFalse(checkBox1.getParent().isVisible());
 
 		yCheckBox1.setEnabled(false);
 		assertFalse(checkBox1.isEnabled());
@@ -510,7 +510,7 @@ public class CheckBoxPresentationTests {
 
 		// test binding
 		assertFalse(yCheckBox.isVisible());
-		assertFalse(box.isVisible());
+		assertFalse(box.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 		
 		bean.setBoolValue(true);

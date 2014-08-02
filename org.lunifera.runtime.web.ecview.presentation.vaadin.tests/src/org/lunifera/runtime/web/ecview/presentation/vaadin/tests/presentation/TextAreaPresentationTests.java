@@ -253,7 +253,7 @@ public class TextAreaPresentationTests {
 		assertFalse(textArea2.isReadOnly());
 
 		yTextArea1.setVisible(false);
-		assertFalse(textArea1.isVisible());
+		assertFalse(textArea1.getParent().isVisible());
 
 		yTextArea1.setEnabled(false);
 		assertFalse(textArea1.isEnabled());
@@ -465,7 +465,7 @@ public class TextAreaPresentationTests {
 
 		// test binding
 		assertFalse(yTextArea.isVisible());
-		assertFalse(area.isVisible());
+		assertFalse(area.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 		
 		bean.setBoolValue(true);

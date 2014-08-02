@@ -256,7 +256,7 @@ public class DateTimePresentationTests {
 		assertFalse(text2.isReadOnly());
 
 		yText1.setVisible(false);
-		assertFalse(text1.isVisible());
+		assertFalse(text1.getParent().isVisible());
 
 		yText1.setEnabled(false);
 		assertFalse(text1.isEnabled());
@@ -478,7 +478,7 @@ public class DateTimePresentationTests {
 
 		// test binding
 		assertFalse(yText.isVisible());
-		assertFalse(datetime.isVisible());
+		assertFalse(datetime.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 		
 		bean.setBoolValue(true);

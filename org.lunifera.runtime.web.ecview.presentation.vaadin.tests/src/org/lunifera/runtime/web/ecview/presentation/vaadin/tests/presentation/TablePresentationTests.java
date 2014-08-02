@@ -277,7 +277,7 @@ public class TablePresentationTests {
 		assertFalse(label2.isReadOnly());
 
 		yTable1.setVisible(false);
-		assertFalse(label1.isVisible());
+		assertFalse(label1.getParent().isVisible());
 
 		yTable1.setEnabled(false);
 		assertFalse(label1.isEnabled());
@@ -1795,7 +1795,7 @@ public class TablePresentationTests {
 
 		// test binding
 		assertFalse(yTable.isVisible());
-		assertFalse(table.isVisible());
+		assertFalse(table.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);

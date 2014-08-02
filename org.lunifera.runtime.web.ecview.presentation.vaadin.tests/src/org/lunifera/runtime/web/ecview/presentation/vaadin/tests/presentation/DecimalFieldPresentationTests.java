@@ -38,14 +38,10 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YNumericField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -56,14 +52,12 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaad
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
-import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.UI;
 
 /**
@@ -263,7 +257,7 @@ public class DecimalFieldPresentationTests {
 		assertFalse(text2.isReadOnly());
 
 		yText1.setVisible(false);
-		assertFalse(text1.isVisible());
+		assertFalse(text1.getParent().isVisible());
 
 		yText1.setEnabled(false);
 		assertFalse(text1.isEnabled());
@@ -871,11 +865,10 @@ public class DecimalFieldPresentationTests {
 		//
 		yView.setContent(null);
 
-		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertTrue(presentation.isDisposed());
 		Assert.assertFalse(presentation.isRendered());
 		Assert.assertTrue(binding.isDisposed());
-		Assert.assertFalse(bindingEditpart.isDisposed());
-		Assert.assertFalse(bindingEditpart.isBound());
+		Assert.assertTrue(bindingEditpart.isDisposed());
 		for (Binding uiBinding : uiBindings) {
 			Assert.assertTrue(uiBinding.isDisposed());
 		}
@@ -887,6 +880,11 @@ public class DecimalFieldPresentationTests {
 		// now render the element again
 		//
 		yView.setContent(yText);
+
+		textEditpart = DelegatingEditPartManager.getInstance().getEditpart(
+				yText);
+		presentation = textEditpart.getPresentation();
+		baseComponentContainer = (ComponentContainer) presentation.getWidget();
 
 		beanBindingEditPart = DelegatingEditPartManager.getInstance()
 				.getEditpart(beanBinding);
@@ -914,11 +912,10 @@ public class DecimalFieldPresentationTests {
 		//
 		yView.setContent(null);
 
-		Assert.assertFalse(presentation.isDisposed());
+		Assert.assertTrue(presentation.isDisposed());
 		Assert.assertFalse(presentation.isRendered());
 		Assert.assertTrue(binding.isDisposed());
-		Assert.assertFalse(bindingEditpart.isDisposed());
-		Assert.assertFalse(bindingEditpart.isBound());
+		Assert.assertTrue(bindingEditpart.isDisposed());
 		for (Binding uiBinding : uiBindings) {
 			Assert.assertTrue(uiBinding.isDisposed());
 		}
@@ -939,10 +936,10 @@ public class DecimalFieldPresentationTests {
 		dt1.setPrecision(3);
 		YDecimalDatatype dt2 = factory.createDecimalDatatype();
 		dt2.setPrecision(1);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
-		
+
 		IDecimalFieldEditpart text1Editpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yField);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
@@ -950,17 +947,17 @@ public class DecimalFieldPresentationTests {
 		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
 				.getWidget();
 		DecimalField field = (DecimalField) unwrapText(text1BaseComponentContainer);
-		
-		//start tests
+
+		// start tests
 		yField.setDatatype(dt1);
 		yField.setValue(112233.44);
 		assertEquals("112.233,440", field.getValue());
 		assertEquals(112233.44, yField.getValue(), 0);
-		
+
 		yField.setDatatype(dt2);
 		assertEquals("112.233,4", field.getValue());
 		assertEquals(112233.4, yField.getValue(), 0);
-		
+
 		yField.setValue(567.890);
 		assertEquals("567,9", field.getValue());
 		assertEquals(567.9, yField.getValue(), 0);
@@ -1019,10 +1016,10 @@ public class DecimalFieldPresentationTests {
 		YDecimalDatatype dt2 = factory.createDecimalDatatype();
 		dt2.setPrecision(1);
 		dt2.setGrouping(false);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
-		
+
 		IDecimalFieldEditpart text1Editpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yField);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
@@ -1030,20 +1027,21 @@ public class DecimalFieldPresentationTests {
 		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
 				.getWidget();
 		DecimalField field = (DecimalField) unwrapText(text1BaseComponentContainer);
-		
-		//start tests
+
+		// start tests
 		yField.setDatatype(dt1);
 		yField.setValue(112233.44);
 		assertEquals("112.233,44", field.getValue());
 		assertEquals(112233.44, yField.getValue(), 0);
-		
+
 		yField.setDatatype(dt2);
 		assertEquals("112233,4", field.getValue());
 		assertEquals(112233.4, yField.getValue(), 0);
-		
+
 		yField.setValue(4567.890);
 		assertEquals("4567,9", field.getValue());
-		assertEquals(4567.9, yField.getValue(), 0);;
+		assertEquals(4567.9, yField.getValue(), 0);
+		;
 	}
 
 	@Test
@@ -1088,7 +1086,7 @@ public class DecimalFieldPresentationTests {
 		assertEquals("Age", presentation.getWidget().getCaption());
 		assertEquals("123,456,789.1122", decimalField.getValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -1099,7 +1097,7 @@ public class DecimalFieldPresentationTests {
 		yView.setContent(yLayout);
 		YDecimalField yDecimal = factory.createDecimalField();
 		yLayout.getElements().add(yDecimal);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -1111,26 +1109,26 @@ public class DecimalFieldPresentationTests {
 				.getWidget();
 		DecimalField decimalField = (DecimalField) unwrapText(presentation
 				.getWidget());
-		
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yDecimal.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yDecimal.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yDecimal.isEditable());
 		assertFalse(!decimalField.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yDecimal.isEditable());
 		assertTrue(!decimalField.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -1141,7 +1139,7 @@ public class DecimalFieldPresentationTests {
 		yView.setContent(yLayout);
 		YDecimalField yDecimal = factory.createDecimalField();
 		yLayout.getElements().add(yDecimal);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -1153,26 +1151,26 @@ public class DecimalFieldPresentationTests {
 				.getWidget();
 		DecimalField decimalField = (DecimalField) unwrapText(presentation
 				.getWidget());
-		
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yDecimal.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yDecimal.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yDecimal.isVisible());
-		assertFalse(decimalField.isVisible());
+		assertFalse(decimalField.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yDecimal.isVisible());
 		assertTrue(decimalField.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -1183,7 +1181,7 @@ public class DecimalFieldPresentationTests {
 		yView.setContent(yLayout);
 		YDecimalField yDecimal = factory.createDecimalField();
 		yLayout.getElements().add(yDecimal);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
@@ -1195,20 +1193,20 @@ public class DecimalFieldPresentationTests {
 				.getWidget();
 		DecimalField decimalField = (DecimalField) unwrapText(presentation
 				.getWidget());
-		
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yDecimal.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yDecimal.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yDecimal.isEnabled());
 		assertFalse(decimalField.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yDecimal.isEnabled());
 		assertTrue(decimalField.isEnabled());

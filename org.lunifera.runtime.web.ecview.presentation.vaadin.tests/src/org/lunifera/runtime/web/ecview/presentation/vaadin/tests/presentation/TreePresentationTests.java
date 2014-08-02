@@ -266,7 +266,7 @@ public class TreePresentationTests {
 		assertFalse(label2.isReadOnly());
 
 		yTree1.setVisible(false);
-		assertFalse(label1.isVisible());
+		assertFalse(label1.getParent().isVisible());
 
 		yTree1.setEnabled(false);
 		assertFalse(label1.isEnabled());
@@ -1748,7 +1748,7 @@ public class TreePresentationTests {
 
 		// test binding
 		assertFalse(yTree1.isVisible());
-		assertFalse(tree1.isVisible());
+		assertFalse(tree1.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);

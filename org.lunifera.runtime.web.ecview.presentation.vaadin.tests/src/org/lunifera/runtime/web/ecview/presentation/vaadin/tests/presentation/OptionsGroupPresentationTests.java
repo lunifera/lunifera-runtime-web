@@ -271,7 +271,7 @@ public class OptionsGroupPresentationTests {
 		assertFalse(label2.isReadOnly());
 
 		yOptionsGroup1.setVisible(false);
-		assertFalse(label1.isVisible());
+		assertFalse(label1.getParent().isVisible());
 
 		yOptionsGroup1.setEnabled(false);
 		assertFalse(label1.isEnabled());
@@ -1729,7 +1729,7 @@ public class OptionsGroupPresentationTests {
 
 		// test binding
 		assertFalse(yOptionsGroup.isVisible());
-		assertFalse(grp.isVisible());
+		assertFalse(grp.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);

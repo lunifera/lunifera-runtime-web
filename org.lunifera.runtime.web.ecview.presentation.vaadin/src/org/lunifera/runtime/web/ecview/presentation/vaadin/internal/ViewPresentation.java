@@ -21,12 +21,12 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
+import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.common.services.IUiKitBasedService;
 import org.eclipse.emf.ecp.ecview.common.tooling.IWidgetMouseClickService;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
@@ -53,7 +53,7 @@ public class ViewPresentation extends AbstractDisposable implements
 	private final IViewEditpart editpart;
 	private CssLayout componentBase;
 	private CssLayout component;
-	private IWidgetPresentation<?> contentPresentation;
+	private IEmbeddableEditpart content;
 
 	/**
 	 * Constructor.
@@ -84,14 +84,10 @@ public class ViewPresentation extends AbstractDisposable implements
 	@Override
 	public void render(Map<String, Object> options) {
 		checkDisposed();
-
-		if (editpart.getContent() != null) {
-			contentPresentation = editpart.getContent().getPresentation();
-		}
+		this.content = editpart.getContent();
 		ComponentContainer parent = (ComponentContainer) editpart.getContext()
 				.getRootLayout();
 		createWidget(parent);
-
 	}
 
 	/**
@@ -102,9 +98,10 @@ public class ViewPresentation extends AbstractDisposable implements
 			return;
 		}
 
-		if (contentPresentation != null) {
-			Component contentComponent = (Component) contentPresentation
-					.createWidget(component);
+		component.removeAllComponents();
+
+		if (content != null) {
+			Component contentComponent = (Component) content.render(component);
 			component.addComponent(contentComponent);
 		} else {
 			LOGGER.warn("Content is null");
@@ -196,11 +193,6 @@ public class ViewPresentation extends AbstractDisposable implements
 				parent.removeComponent(componentBase);
 			}
 			componentBase = null;
-
-			IWidgetPresentation<?> childPresentation = getContent();
-			if (childPresentation != null) {
-				childPresentation.unrender();
-			}
 		}
 	}
 
@@ -215,21 +207,14 @@ public class ViewPresentation extends AbstractDisposable implements
 	}
 
 	@Override
-	public void setContent(IWidgetPresentation<?> presentation) {
-		IWidgetPresentation<?> oldPresentation = this.contentPresentation;
-
-		this.contentPresentation = presentation;
-
-		if (oldPresentation != null) {
-			oldPresentation.unrender();
-		}
-
+	public void setContent(IEmbeddableEditpart editpart) {
+		this.content = editpart;
 		renderContent();
 	}
 
 	@Override
-	public IWidgetPresentation<?> getContent() {
-		return contentPresentation;
+	public IEmbeddableEditpart getContent() {
+		return content;
 	}
 
 	@Override

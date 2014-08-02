@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -19,7 +20,6 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayoutCellStyle;
@@ -61,35 +61,6 @@ public class VerticalLayoutPresentation extends
 	}
 
 	@Override
-	public void add(IWidgetPresentation<?> presentation) {
-		super.add(presentation);
-
-		refreshUI();
-	}
-
-	@Override
-	public void remove(IWidgetPresentation<?> presentation) {
-		super.remove(presentation);
-
-		presentation.unrender();
-		refreshUI();
-	}
-
-	@Override
-	public void insert(IWidgetPresentation<?> presentation, int index) {
-		super.insert(presentation, index);
-
-		refreshUI();
-	}
-
-	@Override
-	public void move(IWidgetPresentation<?> presentation, int index) {
-		super.move(presentation, index);
-
-		refreshUI();
-	}
-
-	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
 		// internally.
@@ -123,9 +94,7 @@ public class VerticalLayoutPresentation extends
 
 		// iterate all elements and build the child element
 		//
-		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
-			IWidgetPresentation<?> childPresentation = editPart
-					.getPresentation();
+		for (IEmbeddableEditpart childPresentation : getChildren()) {
 			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
 			addChild(childPresentation, yStyles.get(yChild));
 		}
@@ -143,14 +112,14 @@ public class VerticalLayoutPresentation extends
 	 * Is called to create the child component and apply layouting defaults to
 	 * it.
 	 * 
-	 * @param presentation
+	 * @param editpart
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation,
+	protected Cell addChild(IEmbeddableEditpart editpart,
 			YVerticalLayoutCellStyle yStyle) {
 
-		Component child = (Component) presentation.createWidget(verticalLayout);
+		Component child = (Component) editpart.render(verticalLayout);
 
 		// calculate and apply the alignment to be used
 		//
@@ -348,14 +317,14 @@ public class VerticalLayoutPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
+
 			associateWidget(componentBase, modelAccess.yLayout);
 
 			verticalLayout = new VerticalLayout();
 			componentBase.addComponent(verticalLayout);
 
 			associateWidget(verticalLayout, modelAccess.yLayout);
-			
+
 			if (modelAccess.isMargin()) {
 				verticalLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
 				verticalLayout.setMargin(true);
@@ -374,12 +343,31 @@ public class VerticalLayoutPresentation extends
 				verticalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
-			// initializeElementClickSupport(verticalLayout);
+			// creates the binding for the field
+			createBindings(modelAccess.yLayout, verticalLayout, componentBase);
 
+			// initialize all children
+			initializeChildren();
+
+			// and now render children
 			renderChildren(false);
 		}
 
 		return componentBase;
+	}
+
+	/**
+	 * Adds the children to the superclass and prevents rendering.
+	 */
+	private void initializeChildren() {
+		setRenderLock(true);
+		try {
+			for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
+				super.add(editPart);
+			}
+		} finally {
+			setRenderLock(false);
+		}
 	}
 
 	@Override
@@ -395,6 +383,10 @@ public class VerticalLayoutPresentation extends
 	@Override
 	protected void internalDispose() {
 		try {
+			for (IEmbeddableEditpart child : new ArrayList<IEmbeddableEditpart>(
+					getChildren())) {
+				child.dispose();
+			}
 			unrender();
 		} finally {
 			super.internalDispose();
@@ -408,24 +400,39 @@ public class VerticalLayoutPresentation extends
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
-			if (parent != null) {
-				parent.removeComponent(componentBase);
-			}
-
 			// remove assocations
 			unassociateWidget(componentBase);
 			unassociateWidget(verticalLayout);
 
 			componentBase = null;
 			verticalLayout = null;
-
-			// unrender the childs
-			for (IWidgetPresentation<?> child : getChildren()) {
-				child.unrender();
-			}
 		}
+	}
+
+	@Override
+	protected void internalAdd(IEmbeddableEditpart editpart) {
+		YEmbeddable yChild = (YEmbeddable) editpart.getModel();
+		addChild(editpart, modelAccess.getCellStyle(yChild));
+	}
+
+	@Override
+	protected void internalRemove(IEmbeddableEditpart child) {
+		if (verticalLayout != null && child.isRendered()) {
+			verticalLayout.removeComponent((Component) child.getWidget());
+		}
+
+		child.unrender();
+	}
+
+	@Override
+	protected void internalInsert(IEmbeddableEditpart editpart, int index) {
+		refreshUI();
+	}
+
+	@Override
+	protected void internalMove(IEmbeddableEditpart editpart, int oldIndex,
+			int newIndex) {
+		refreshUI();
 	}
 
 	@Override
@@ -441,9 +448,9 @@ public class VerticalLayoutPresentation extends
 	 * Will unrender all children.
 	 */
 	protected void unrenderChildren() {
-		for (IWidgetPresentation<?> presentation : getChildren()) {
-			if (presentation.isRendered()) {
-				presentation.unrender();
+		for (IEmbeddableEditpart editpart : getChildren()) {
+			if (editpart.isRendered()) {
+				editpart.unrender();
 			}
 		}
 	}
@@ -515,6 +522,10 @@ public class VerticalLayoutPresentation extends
 		 */
 		public EList<YVerticalLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
+		}
+
+		public YVerticalLayoutCellStyle getCellStyle(YEmbeddable element) {
+			return yLayout.getCellStyle(element);
 		}
 
 		/**

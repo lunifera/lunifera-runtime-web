@@ -260,7 +260,7 @@ public class ProgressBarPresentationTests {
 		assertEquals(0.0f, progressBar2.getValue(), 0);
 
 		yProgressBar1.setVisible(false);
-		assertFalse(progressBar1.isVisible());
+		assertFalse(progressBar1.getParent().isVisible());
 
 		yProgressBar1.setEnabled(false);
 		assertFalse(progressBar1.isEnabled());
@@ -469,7 +469,7 @@ public class ProgressBarPresentationTests {
 
 		// test binding
 		assertFalse(yProgressBar.isVisible());
-		assertFalse(progressBar1.isVisible());
+		assertFalse(progressBar1.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);

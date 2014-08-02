@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -19,7 +20,6 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayoutCellStyle;
@@ -45,53 +45,18 @@ public class HorizontalLayoutPresentation extends
 	private CssLayout componentBase;
 	private HorizontalLayout horizontalLayout;
 	private ModelAccess modelAccess;
-
 	private CssLayout fillerLayout;
-
-	private boolean lockRendering;
 
 	/**
 	 * The constructor.
 	 * 
 	 * @param editpart
-	 *            The editpart of that presentation.
+	 *            The editpart of that editpart.
 	 */
 	public HorizontalLayoutPresentation(IElementEditpart editpart) {
 		super((ILayoutEditpart) editpart);
 		this.modelAccess = new ModelAccess(
 				(YHorizontalLayout) editpart.getModel());
-	}
-
-	@Override
-	public void add(IWidgetPresentation<?> presentation) {
-		super.add(presentation);
-
-		YEmbeddable yChild = (YEmbeddable) presentation.getModel();
-		addChild(presentation, modelAccess.getCellStyle(yChild));
-	}
-
-	@Override
-	public void remove(IWidgetPresentation<?> presentation) {
-		super.remove(presentation);
-
-		if (horizontalLayout != null) {
-			horizontalLayout.removeComponent((Component) presentation
-					.getWidget());
-		}
-	}
-
-	@Override
-	public void insert(IWidgetPresentation<?> presentation, int index) {
-		super.insert(presentation, index);
-
-		refreshUI();
-	}
-
-	@Override
-	public void move(IWidgetPresentation<?> presentation, int index) {
-		super.move(presentation, index);
-
-		refreshUI();
 	}
 
 	@Override
@@ -128,9 +93,9 @@ public class HorizontalLayoutPresentation extends
 
 		// iterate all elements and build the child element
 		//
-		for (IWidgetPresentation<?> childPresentation : getChildren()) {
-			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
-			addChild(childPresentation, yStyles.get(yChild));
+		for (IEmbeddableEditpart child : getChildren()) {
+			YEmbeddable yChild = (YEmbeddable) child.getModel();
+			addChild(child, yStyles.get(yChild));
 		}
 
 		if (!modelAccess.isFillHorizontal()) {
@@ -146,15 +111,14 @@ public class HorizontalLayoutPresentation extends
 	 * Is called to create the child component and apply layouting defaults to
 	 * it.
 	 * 
-	 * @param presentation
+	 * @param editpart
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation,
+	protected Cell addChild(IEmbeddableEditpart editpart,
 			YHorizontalLayoutCellStyle yStyle) {
 
-		Component child = (Component) presentation
-				.createWidget(horizontalLayout);
+		Component child = (Component) editpart.render(horizontalLayout);
 
 		// calculate and apply the alignment to be used
 		//
@@ -383,7 +347,13 @@ public class HorizontalLayoutPresentation extends
 				horizontalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
+			// creates the binding for the field
+			createBindings(modelAccess.yLayout, horizontalLayout, componentBase);
+
+			// initialize all children
 			initializeChildren();
+
+			// and now render children
 			renderChildren(false);
 		}
 
@@ -397,9 +367,7 @@ public class HorizontalLayoutPresentation extends
 		setRenderLock(true);
 		try {
 			for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
-				IWidgetPresentation<?> childPresentation = editPart
-						.getPresentation();
-				super.add(childPresentation);
+				super.add(editPart);
 			}
 		} finally {
 			setRenderLock(false);
@@ -432,29 +400,41 @@ public class HorizontalLayoutPresentation extends
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
-			if (parent != null) {
-				parent.removeComponent(componentBase);
-			}
-
 			// remove assocations
 			unassociateWidget(componentBase);
 			unassociateWidget(horizontalLayout);
 
+			horizontalLayout.removeAllComponents();
 			componentBase = null;
 			horizontalLayout = null;
-
-			// unrender the childs
-			for (IWidgetPresentation<?> child : getChildren()) {
-				remove(child);
-			}
 		}
 	}
 
 	@Override
-	protected void internalRemove(IWidgetPresentation<?> child) {
+	protected void internalAdd(IEmbeddableEditpart editpart) {
+		YEmbeddable yChild = (YEmbeddable) editpart.getModel();
+		addChild(editpart, modelAccess.getCellStyle(yChild));
+	}
+
+	@Override
+	protected void internalRemove(IEmbeddableEditpart child) {
+		if (horizontalLayout != null && child.isRendered()) {
+			// will happen during disposal since children already disposed.
+			horizontalLayout.removeComponent((Component) child.getWidget());
+		}
+
 		child.unrender();
+	}
+
+	@Override
+	protected void internalInsert(IEmbeddableEditpart editpart, int index) {
+		refreshUI();
+	}
+
+	@Override
+	protected void internalMove(IEmbeddableEditpart editpart, int oldIndex,
+			int newIndex) {
+		refreshUI();
 	}
 
 	@Override
@@ -470,9 +450,9 @@ public class HorizontalLayoutPresentation extends
 	 * Will unrender all children.
 	 */
 	protected void unrenderChildren() {
-		for (IWidgetPresentation<?> presentation : getChildren()) {
-			if (presentation.isRendered()) {
-				presentation.unrender();
+		for (IEmbeddableEditpart editpart : getChildren()) {
+			if (editpart.isRendered()) {
+				editpart.unrender();
 			}
 		}
 	}

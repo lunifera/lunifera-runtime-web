@@ -275,7 +275,7 @@ public class ListPresentationTests {
 		assertFalse(label2.isReadOnly());
 
 		yList1.setVisible(false);
-		assertFalse(label1.isVisible());
+		assertFalse(label1.getParent().isVisible());
 
 		yList1.setEnabled(false);
 		assertFalse(label1.isEnabled());
@@ -1753,7 +1753,7 @@ public class ListPresentationTests {
 
 		// test binding
 		assertFalse(yList.isVisible());
-		assertFalse(list.isVisible());
+		assertFalse(list.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);

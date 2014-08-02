@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -23,7 +24,9 @@ import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YFormLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YFormLayoutCellStyle;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayoutCellStyle;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.HorizontalLayoutPresentation.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,39 +63,6 @@ public class FormLayoutPresentation extends
 	}
 
 	@Override
-	public void add(IWidgetPresentation<?> presentation) {
-		super.add(presentation);
-
-		refreshUI();
-	}
-
-	@Override
-	public void remove(IWidgetPresentation<?> presentation) {
-		super.remove(presentation);
-
-		if (isRendered()) {
-			presentation.unrender();
-		}
-		if (!isDisposed()) {
-			refreshUI();
-		}
-	}
-
-	@Override
-	public void insert(IWidgetPresentation<?> presentation, int index) {
-		super.insert(presentation, index);
-
-		refreshUI();
-	}
-
-	@Override
-	public void move(IWidgetPresentation<?> presentation, int index) {
-		super.move(presentation, index);
-
-		refreshUI();
-	}
-
-	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
 		// internally.
@@ -125,13 +95,11 @@ public class FormLayoutPresentation extends
 		}
 
 		// iterate all elements and build the child element
-		//
-		for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
-			IWidgetPresentation<?> childPresentation = editPart
-					.getPresentation();
-			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
-			addChild(childPresentation, yStyles.get(yChild));
-		}
+				//
+				for (IEmbeddableEditpart child : getChildren()) {
+					YEmbeddable yChild = (YEmbeddable) child.getModel();
+					addChild(child, yStyles.get(yChild));
+				}
 
 		if (!modelAccess.isFillVertical()) {
 			fillerLayout = new CssLayout();
@@ -146,14 +114,14 @@ public class FormLayoutPresentation extends
 	 * Is called to create the child component and apply layouting defaults to
 	 * it.
 	 * 
-	 * @param presentation
+	 * @param editpart
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IWidgetPresentation<?> presentation,
+	protected Cell addChild(IEmbeddableEditpart editpart,
 			YFormLayoutCellStyle yStyle) {
 
-		Component child = (Component) presentation.createWidget(formLayout);
+		Component child = (Component) editpart.render(formLayout);
 
 		// calculate and apply the alignment to be used
 		//
@@ -367,12 +335,30 @@ public class FormLayoutPresentation extends
 				formLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
 
-			// initializeElementClickSupport(formLayout);
+			// creates the binding for the field
+			createBindings(modelAccess.yLayout, formLayout, componentBase);
+
+			// initialize all children
+			initializeChildren();
 
 			renderChildren(false);
 		}
 
 		return componentBase;
+	}
+
+	/**
+	 * Adds the children to the superclass and prevents rendering.
+	 */
+	private void initializeChildren() {
+		setRenderLock(true);
+		try {
+			for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
+				super.add(editPart);
+			}
+		} finally {
+			setRenderLock(false);
+		}
 	}
 
 	@Override
@@ -386,26 +372,11 @@ public class FormLayoutPresentation extends
 	}
 
 	@Override
-	protected void internalDispose() {
-		try {
-			unrender();
-		} finally {
-			super.internalDispose();
-		}
-	}
-
-	@Override
 	public void doUnrender() {
 		if (componentBase != null) {
 
 			// unbind all active bindings
 			unbind();
-
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
-			if (parent != null) {
-				parent.removeComponent(componentBase);
-			}
 
 			// remove assocations
 			unassociateWidget(componentBase);
@@ -413,12 +384,47 @@ public class FormLayoutPresentation extends
 
 			componentBase = null;
 			formLayout = null;
-
-			// unrender the childs
-			for (IWidgetPresentation<?> child : getChildren()) {
-				child.unrender();
-			}
 		}
+	}
+	
+	@Override
+	protected void internalDispose() {
+		try {
+			for (IEmbeddableEditpart child : new ArrayList<IEmbeddableEditpart>(
+					getChildren())) {
+				child.dispose();
+			}
+			unrender();
+		} finally {
+			super.internalDispose();
+		}
+	}
+
+	@Override
+	protected void internalAdd(IEmbeddableEditpart editpart) {
+		YEmbeddable yChild = (YEmbeddable) editpart.getModel();
+		addChild(editpart, modelAccess.getCellStyle(yChild));
+	}
+
+	@Override
+	protected void internalRemove(IEmbeddableEditpart child) {
+		if (formLayout != null && child.isRendered()) {
+			// will happen during disposal since children already disposed.
+			formLayout.removeComponent((Component) child.getWidget());
+		}
+		
+		child.unrender();
+	}
+
+	@Override
+	protected void internalInsert(IEmbeddableEditpart editpart, int index) {
+		refreshUI();
+	}
+
+	@Override
+	protected void internalMove(IEmbeddableEditpart editpart,
+			int oldIndex, int newIndex) {
+		refreshUI();
 	}
 
 	@Override
@@ -434,9 +440,9 @@ public class FormLayoutPresentation extends
 	 * Will unrender all children.
 	 */
 	protected void unrenderChildren() {
-		for (IWidgetPresentation<?> presentation : getChildren()) {
-			if (presentation.isRendered()) {
-				presentation.unrender();
+		for (IEmbeddableEditpart editpart : getChildren()) {
+			if (editpart.isRendered()) {
+				editpart.unrender();
 			}
 		}
 	}
@@ -508,6 +514,10 @@ public class FormLayoutPresentation extends
 		 */
 		public EList<YFormLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
+		}
+		
+		public YFormLayoutCellStyle getCellStyle(YEmbeddable element) {
+			return yLayout.getCellStyle(element);
 		}
 
 		/**

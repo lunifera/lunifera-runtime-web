@@ -248,7 +248,7 @@ public class ButtonPresentationTests {
 		assertFalse(button2.isReadOnly());
 
 		yButton1.setVisible(false);
-		assertFalse(button1.isVisible());
+		assertFalse(button1.getParent().isVisible());
 
 		yButton1.setEnabled(false);
 		assertFalse(button1.isEnabled());
@@ -430,7 +430,7 @@ public class ButtonPresentationTests {
 
 		// test binding
 		assertFalse(yButton.isVisible());
-		assertFalse(button.isVisible());
+		assertFalse(button.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);

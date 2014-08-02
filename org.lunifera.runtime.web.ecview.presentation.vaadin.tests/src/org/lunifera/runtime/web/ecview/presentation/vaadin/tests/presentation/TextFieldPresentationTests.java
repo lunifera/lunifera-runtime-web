@@ -267,7 +267,7 @@ public class TextFieldPresentationTests {
 		assertEquals("", text2.getValue());
 
 		yText1.setVisible(false);
-		assertFalse(text1.isVisible());
+		assertFalse(text1.getParent().isVisible());
 
 		yText1.setEnabled(false);
 		assertFalse(text1.isEnabled());
@@ -359,7 +359,7 @@ public class TextFieldPresentationTests {
 
 		// test binding
 		assertFalse(yText.isVisible());
-		assertFalse(text.isVisible());
+		assertFalse(text.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);

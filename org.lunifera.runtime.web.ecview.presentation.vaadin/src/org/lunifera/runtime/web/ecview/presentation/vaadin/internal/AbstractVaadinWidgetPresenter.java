@@ -701,9 +701,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 
 	@Override
 	public void unrender() {
-
 		unregisterFromLocaleChangedService();
-
 		doUnrender();
 	}
 
@@ -711,29 +709,6 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * Needs to be implemented by subclasses to unrender the widget.
 	 */
 	protected abstract void doUnrender();
-
-	// /**
-	// * Initializes the element click support.
-	// * @param component
-	// */
-	// @SuppressWarnings("serial")
-	// protected void initializeElementClickSupport(Component component) {
-	// ComponentContainer layout = (Layout) component.getParent();
-	// if (layout instanceof LayoutClickNotifier) {
-	// ((LayoutClickNotifier) layout)
-	// .addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
-	// @Override
-	// public void layoutClick(
-	// LayoutEvents.LayoutClickEvent event) {
-	// IElementMouseClickService service = getViewContext()
-	// .getService(IElementMouseClickService.ID);
-	// if (service != null) {
-	// service.notifyClick(getModel());
-	// }
-	// }
-	// });
-	// }
-	// }
 
 	/**
 	 * Applies the visibility options to the component.

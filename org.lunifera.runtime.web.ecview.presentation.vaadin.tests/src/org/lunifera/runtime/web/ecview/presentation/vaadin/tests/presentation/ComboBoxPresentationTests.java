@@ -264,7 +264,7 @@ public class ComboBoxPresentationTests {
 		assertFalse(comboBox2.isReadOnly());
 
 		yComboBox1.setVisible(false);
-		assertFalse(comboBox1.isVisible());
+		assertFalse(comboBox1.getParent().isVisible());
 
 		yComboBox1.setEnabled(false);
 		assertFalse(comboBox1.isEnabled());
@@ -1346,7 +1346,7 @@ public class ComboBoxPresentationTests {
 
 		// test binding
 		assertFalse(yComboBox.isVisible());
-		assertFalse(box.isVisible());
+		assertFalse(box.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
 		
 		bean.setBoolValue(true);
