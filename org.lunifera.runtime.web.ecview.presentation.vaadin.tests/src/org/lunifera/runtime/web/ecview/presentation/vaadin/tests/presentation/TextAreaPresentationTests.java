@@ -31,18 +31,13 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextArea;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.OptionsGroupPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextAreaPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
@@ -51,8 +46,6 @@ import org.osgi.service.cm.ConfigurationException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 
@@ -296,22 +289,14 @@ public class TextAreaPresentationTests {
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		yText1.setValue("");
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean("Huhu");
 		beanBinding.setPropertyPath("value");
 		beanBinding.setBean(bean);
 		yBindingSet.addBinding(yText1.createValueEndpoint(), beanBinding);
 		assertEquals("Huhu", text1.getValue());
 		assertEquals("Huhu", yText1.getValue());
-
-		// bean = new ValueBean("Huhu11");
-		// beanBinding.setPropertyPath("value");
-		// TODO Setting a bean later does not cause any sideeffects. See
-		// BeanBindingEndpointEditpart. The binding for the bean is not
-		// refreshed.
-		// beanBinding.setBean(bean);
-		// assertEquals("Huhu11", text1.getValue());
-		// assertEquals("Huhu11", yText1.getValue());
 
 		bean.setValue("Haha");
 		assertEquals("Haha", text1.getValue());
@@ -355,7 +340,6 @@ public class TextAreaPresentationTests {
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
-	
 
 	@Test
 	public void test_i18n() throws ContextException {
@@ -380,12 +364,10 @@ public class TextAreaPresentationTests {
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
-		ITextAreaEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTextArea);
-		TextAreaPresentation presentation = editpart
-				.getPresentation();
+		ITextAreaEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTextArea);
+		TextAreaPresentation presentation = editpart.getPresentation();
 
-		TextArea area = (TextArea) unwrapText(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
@@ -402,37 +384,36 @@ public class TextAreaPresentationTests {
 		yView.setContent(yLayout);
 		YTextArea yTextArea = factory.createTextArea();
 		yLayout.getElements().add(yTextArea);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ITextAreaEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTextArea);
+		ITextAreaEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTextArea);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		TextArea area = (TextArea) unwrapText(presentation.getWidget());		
-		
+		TextArea area = (TextArea) unwrapText(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yTextArea.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet
+				.addBinding(yTextArea.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yTextArea.isEditable());
 		assertFalse(!area.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yTextArea.isEditable());
 		assertTrue(!area.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -443,37 +424,35 @@ public class TextAreaPresentationTests {
 		yView.setContent(yLayout);
 		YTextArea yTextArea = factory.createTextArea();
 		yLayout.getElements().add(yTextArea);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ITextAreaEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTextArea);
+		ITextAreaEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTextArea);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		TextArea area = (TextArea) unwrapText(presentation.getWidget());		
-		
+		TextArea area = (TextArea) unwrapText(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yTextArea.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yTextArea.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yTextArea.isVisible());
 		assertFalse(area.getParent().isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yTextArea.isVisible());
 		assertTrue(area.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -484,31 +463,29 @@ public class TextAreaPresentationTests {
 		yView.setContent(yLayout);
 		YTextArea yTextArea = factory.createTextArea();
 		yLayout.getElements().add(yTextArea);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ITextAreaEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yTextArea);
+		ITextAreaEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yTextArea);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		TextArea area = (TextArea) unwrapText(presentation.getWidget());		
-		
+		TextArea area = (TextArea) unwrapText(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yTextArea.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yTextArea.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yTextArea.isEnabled());
 		assertFalse(area.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yTextArea.isEnabled());
 		assertTrue(area.isEnabled());

@@ -19,12 +19,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.context.II18nService;
@@ -66,13 +64,13 @@ import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 /**
  * Tests the {@link TablePresentation}.
@@ -653,11 +651,6 @@ public class TablePresentationTests {
 		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
 		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) table1
-				.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) table2
-				.getContainerDataSource();
-
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
@@ -955,11 +948,6 @@ public class TablePresentationTests {
 		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
 		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) table1
-				.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) table2
-				.getContainerDataSource();
-
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
@@ -1116,11 +1104,6 @@ public class TablePresentationTests {
 				.getWidget();
 		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
 		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
-
-		Container.Indexed indexedDs1 = (Indexed) table1
-				.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) table2
-				.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -1561,8 +1544,10 @@ public class TablePresentationTests {
 		YDetailValueBindingEndpoint yDetailEndpoint = yTable1
 				.createSelectionEndpoint().createDetailValueEndpoint();
 		yDetailEndpoint.setType(EmfBar.class);
-		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfBar_Myfoo());
-		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfFoo_Name());
+		yDetailEndpoint.getFeatures().add(
+				ModelPackage.eINSTANCE.getEmfBar_Myfoo());
+		yDetailEndpoint.getFeatures().add(
+				ModelPackage.eINSTANCE.getEmfFoo_Name());
 		yBindingSet.addBinding(yText.createValueEndpoint(), yDetailEndpoint);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1713,7 +1698,6 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		TablePresentation presentation = editpart.getPresentation();
 
-		Table table = (Table) unwrapTable(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
@@ -1739,8 +1723,6 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		Table table = (Table) unwrapTable(presentation.getWidget());
 
 		ValueBean bean = new ValueBean(false);
@@ -1781,8 +1763,6 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		Table table = (Table) unwrapTable(presentation.getWidget());
 
 		ValueBean bean = new ValueBean(false);
@@ -1823,8 +1803,6 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		Table table = (Table) unwrapTable(presentation.getWidget());
 
 		ValueBean bean = new ValueBean(false);

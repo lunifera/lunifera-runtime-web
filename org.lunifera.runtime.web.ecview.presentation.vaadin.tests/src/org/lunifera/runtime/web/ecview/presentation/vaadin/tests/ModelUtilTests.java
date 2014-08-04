@@ -14,8 +14,6 @@ import org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager;
 import org.eclipse.emf.ecp.ecview.common.context.ContextException;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.context.IViewSetContext;
-import org.eclipse.emf.ecp.ecview.common.context.ViewContext;
-import org.eclipse.emf.ecp.ecview.common.context.ViewSetContext;
 import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
@@ -116,7 +114,8 @@ public class ModelUtilTests {
 
 		yBindingSet = yView.getOrCreateBindingSet();
 		yView.setBindingSet(yBindingSet);
-		YBeanValueBindingEndpoint beanBinding1 = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding1 = factory
+				.createBeanBindingEndpoint();
 		bean1 = new ValueBean(9988.77);
 		beanBinding1.setPropertyPath("doubleValue");
 		beanBinding1.setBean(bean1);
@@ -125,7 +124,8 @@ public class ModelUtilTests {
 		yText1ValueBinding = yBindingSet.addBinding(yText1ValueEndpoint,
 				beanBinding1);
 
-		YBeanValueBindingEndpoint beanBinding2 = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding2 = factory
+				.createBeanBindingEndpoint();
 		bean2 = new ValueBean(9988.77);
 		beanBinding2.setPropertyPath("doubleValue");
 		beanBinding2.setBean(bean2);
@@ -324,7 +324,6 @@ public class ModelUtilTests {
 	public void test_URI_ForBeanSlot_ViewContext() {
 		IViewEditpart editpart = DelegatingEditPartManager.getInstance()
 				.createEditpart(CoreModelPackage.eNS_URI, IViewEditpart.class);
-		ViewContext context = new ViewContext(editpart);
 		YView yView = (YView) editpart.getModel();
 
 		YBeanSlot ySlot = factory.createBeanSlot();
@@ -340,7 +339,6 @@ public class ModelUtilTests {
 		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
 				.createEditpart(CoreModelPackage.eNS_URI,
 						IViewSetEditpart.class);
-		ViewSetContext context = new ViewSetContext(editpart);
 		YViewSet yViewSet = (YViewSet) editpart.getModel();
 
 		YBeanSlot ySlot = factory.createBeanSlot();
@@ -356,7 +354,6 @@ public class ModelUtilTests {
 	public void test_URI_ForBeanSlotBinding_ViewContext() {
 		IViewEditpart editpart = DelegatingEditPartManager.getInstance()
 				.createEditpart(CoreModelPackage.eNS_URI, IViewEditpart.class);
-		ViewContext context = new ViewContext(editpart);
 		YView yView = (YView) editpart.getModel();
 
 		YBeanSlot ySlot = factory.createBeanSlot();
@@ -378,7 +375,6 @@ public class ModelUtilTests {
 		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
 				.createEditpart(CoreModelPackage.eNS_URI,
 						IViewSetEditpart.class);
-		ViewSetContext context = new ViewSetContext(editpart);
 		YViewSet yViewSet = (YViewSet) editpart.getModel();
 
 		YBeanSlot ySlot = factory.createBeanSlot();
@@ -391,8 +387,8 @@ public class ModelUtilTests {
 		yEndpoint.setAttributePath("item.group.name");
 		yEndpoint.setBeanSlot(ySlot);
 
-		assertEquals("viewset://bean/slotNo1#item.group.name",
-				ModelUtil.getURI(yEndpoint).toString());
+		assertEquals("viewset://bean/slotNo1#item.group.name", ModelUtil
+				.getURI(yEndpoint).toString());
 	}
 
 	/**

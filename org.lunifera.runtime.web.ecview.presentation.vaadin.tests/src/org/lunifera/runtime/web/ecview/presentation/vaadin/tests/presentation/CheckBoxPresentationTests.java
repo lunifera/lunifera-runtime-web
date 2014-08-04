@@ -30,26 +30,19 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YBrowser;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ButtonPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.CheckBoxPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
-import com.vaadin.ui.BrowserFrame;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -310,15 +303,6 @@ public class CheckBoxPresentationTests {
 		assertTrue(yCheckBox1.isValue());
 		assertTrue(checkBox1.getValue());
 
-		// bean = new ValueBean("Huhu11");
-		// beanBinding.setPropertyPath("value");
-		// TODO Setting a bean later does not cause any sideeffects. See
-		// BeanBindingEndpointEditpart. The binding for the bean is not
-		// refreshed.
-		// beanBinding.setBean(bean);
-		// assertEquals("Huhu11", text1.getValue());
-		// assertEquals("Huhu11", yText1.getValue());
-
 		bean.setBoolValue(false);
 		assertFalse(checkBox1.getValue());
 		assertFalse(yCheckBox1.isValue());
@@ -392,7 +376,6 @@ public class CheckBoxPresentationTests {
 		CheckBoxPresentation presentation = editpart
 				.getPresentation();
 
-		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
@@ -455,8 +438,6 @@ public class CheckBoxPresentationTests {
 				.getInstance().getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
 		
 		ValueBean bean = new ValueBean(false);
@@ -496,8 +477,6 @@ public class CheckBoxPresentationTests {
 				.getInstance().getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
 		
 		ValueBean bean = new ValueBean(false);
@@ -537,8 +516,6 @@ public class CheckBoxPresentationTests {
 				.getInstance().getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
 		
 		ValueBean bean = new ValueBean(false);

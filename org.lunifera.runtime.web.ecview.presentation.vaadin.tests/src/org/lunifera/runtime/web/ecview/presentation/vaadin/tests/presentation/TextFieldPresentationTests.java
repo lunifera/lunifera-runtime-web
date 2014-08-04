@@ -37,29 +37,23 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YViewSet;
 import org.eclipse.emf.ecp.ecview.common.model.validation.ValidationFactory;
 import org.eclipse.emf.ecp.ecview.common.model.validation.YMaxLengthValidator;
 import org.eclipse.emf.ecp.ecview.common.model.validation.YMinLengthValidator;
-import org.eclipse.emf.ecp.ecview.common.model.validation.YValidator;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YTextDatatype;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ValidatorAdapter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -447,15 +441,6 @@ public class TextFieldPresentationTests {
 		assertEquals("Huhu", text1.getValue());
 		assertEquals("Huhu", yText1.getValue());
 
-		// bean = new ValueBean("Huhu11");
-		// beanBinding.setPropertyPath("value");
-		// TODO Setting a bean later does not cause any sideeffects. See
-		// BeanBindingEndpointEditpart. The binding for the bean is not
-		// refreshed.
-		// beanBinding.setBean(bean);
-		// assertEquals("Huhu11", text1.getValue());
-		// assertEquals("Huhu11", yText1.getValue());
-
 		bean.setValue("Haha");
 		assertEquals("Haha", text1.getValue());
 		assertEquals("Haha", yText1.getValue());
@@ -629,7 +614,6 @@ public class TextFieldPresentationTests {
 		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
 
-		TextField textField = (TextField) unwrapText(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
@@ -669,7 +653,6 @@ public class TextFieldPresentationTests {
 		AbstractFieldWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
 
-		TextField textField = (TextField) unwrapText(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		viewSetContext.setLocale(Locale.ENGLISH);
@@ -744,17 +727,18 @@ public class TextFieldPresentationTests {
 		assertEquals(0, presentation.getValidators().size());
 
 		yTextDt.setMaxLength(10);
-		YMaxLengthValidator internalValidator = (YMaxLengthValidator) yText.getInternalValidators().get(0);
+		YMaxLengthValidator internalValidator = (YMaxLengthValidator) yText
+				.getInternalValidators().get(0);
 		assertEquals(1, presentation.getValidators().size());
 		assertEquals(1, yText.getInternalValidators().size());
 		assertEquals(10, internalValidator.getMaxLength());
 
 		yTextDt.setMaxLength(5);
-		
+
 		assertEquals(1, presentation.getValidators().size());
 		assertEquals(1, yText.getInternalValidators().size());
 		assertEquals(5, internalValidator.getMaxLength());
-		
+
 	}
 
 	@Test
@@ -779,10 +763,10 @@ public class TextFieldPresentationTests {
 		assertEquals(0, presentation.getValidators().size());
 
 		yTextDt.setMaxLength(10);
-		
+
 		assertEquals(1, presentation.getValidators().size());
 		assertEquals(1, yText.getInternalValidators().size());
-		
+
 		yText.setDatatype(null);
 
 		assertEquals(0, yText.getInternalValidators().size());

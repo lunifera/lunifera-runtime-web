@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,12 +33,10 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoin
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
@@ -59,7 +56,6 @@ import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -642,11 +638,6 @@ public class ComboBoxPresentationTests {
 				.getWidget();
 		ComboBox comboBox1 = (ComboBox) unwrapText(comboBox1BaseComponentContainer);
 		ComboBox comboBox2 = (ComboBox) unwrapText(comboBox2BaseComponentContainer);
-
-		Container.Indexed indexedDs1 = (Indexed) comboBox1
-				.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) comboBox2
-				.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -1266,7 +1257,6 @@ public class ComboBoxPresentationTests {
 		ComboBoxPresentation presentation = editpart
 				.getPresentation();
 
-		ComboBox box = (ComboBox) unwrapText(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
@@ -1291,8 +1281,6 @@ public class ComboBoxPresentationTests {
 				.getInstance().getEditpart(yComboBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		ComboBox box = (ComboBox) unwrapText(presentation.getWidget());		
 		
 		ValueBean bean = new ValueBean(false);
@@ -1332,8 +1320,6 @@ public class ComboBoxPresentationTests {
 				.getInstance().getEditpart(yComboBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		ComboBox box = (ComboBox) unwrapText(presentation.getWidget());		
 		
 		ValueBean bean = new ValueBean(false);
@@ -1373,8 +1359,6 @@ public class ComboBoxPresentationTests {
 				.getInstance().getEditpart(yComboBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		ComboBox box = (ComboBox) unwrapText(presentation.getWidget());;		
 		
 		ValueBean bean = new ValueBean(false);

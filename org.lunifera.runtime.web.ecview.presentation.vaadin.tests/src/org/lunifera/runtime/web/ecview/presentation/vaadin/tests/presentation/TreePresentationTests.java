@@ -80,7 +80,7 @@ public class TreePresentationTests {
 	private CssLayout rootLayout = new CssLayout();
 
 	/**
-	 * Setup tests. 
+	 * Setup tests.
 	 * 
 	 * @throws ConfigurationException
 	 * @throws BundleException
@@ -631,9 +631,6 @@ public class TreePresentationTests {
 		Tree tree1 = (Tree) unwrapTree(tree1BaseComponentContainer);
 		Tree tree2 = (Tree) unwrapTree(tree2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) tree1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) tree2.getContainerDataSource();
-
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
@@ -1066,9 +1063,6 @@ public class TreePresentationTests {
 		Tree tree1 = (Tree) unwrapTree(tree1BaseComponentContainer);
 		Tree tree2 = (Tree) unwrapTree(tree2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) tree1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) tree2.getContainerDataSource();
-
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
@@ -1219,9 +1213,6 @@ public class TreePresentationTests {
 				.getWidget();
 		Tree tree1 = (Tree) unwrapTree(tree1BaseComponentContainer);
 		Tree tree2 = (Tree) unwrapTree(tree2BaseComponentContainer);
-
-		Container.Indexed indexedDs1 = (Indexed) tree1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) tree2.getContainerDataSource();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -1668,7 +1659,6 @@ public class TreePresentationTests {
 				.getEditpart(yTree1);
 		TreePresentation presentation = editpart.getPresentation();
 
-		Tree tree = (Tree) unwrapTree(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);

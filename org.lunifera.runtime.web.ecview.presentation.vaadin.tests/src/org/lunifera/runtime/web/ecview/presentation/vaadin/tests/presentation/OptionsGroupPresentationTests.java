@@ -132,7 +132,6 @@ public class OptionsGroupPresentationTests {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_InternalStructure() throws Exception {
@@ -733,8 +732,10 @@ public class OptionsGroupPresentationTests {
 		YDetailValueBindingEndpoint yDetailEndpoint = yOptionsGroup1
 				.createSelectionEndpoint().createDetailValueEndpoint();
 		yDetailEndpoint.setType(EmfBar.class);
-		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfBar_Myfoo());
-		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfFoo_Name());
+		yDetailEndpoint.getFeatures().add(
+				ModelPackage.eINSTANCE.getEmfBar_Myfoo());
+		yDetailEndpoint.getFeatures().add(
+				ModelPackage.eINSTANCE.getEmfFoo_Name());
 		yBindingSet.addBinding(yText.createValueEndpoint(), yDetailEndpoint);
 
 		VaadinRenderer renderer = new VaadinRenderer();

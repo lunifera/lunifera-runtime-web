@@ -416,8 +416,6 @@ public class ButtonPresentationTests {
 				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		Button button = (Button) unwrapButton(presentation.getWidget());
 
 		ValueBean bean = new ValueBean(false);
@@ -457,8 +455,6 @@ public class ButtonPresentationTests {
 				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		Button button = (Button) unwrapButton(presentation.getWidget());
 
 		ValueBean bean = new ValueBean(false);

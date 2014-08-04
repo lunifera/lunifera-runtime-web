@@ -32,29 +32,22 @@ import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
 import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.DateTimePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.LabelPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
@@ -101,8 +94,8 @@ public class LabelPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
+		ILabelEditpart textEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
 		assertTrue(presentation.isRendered());
@@ -133,8 +126,8 @@ public class LabelPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
+		ILabelEditpart textEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
@@ -172,10 +165,10 @@ public class LabelPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart text1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel1);
-		ILabelEditpart text2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel2);
+		ILabelEditpart text1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel1);
+		ILabelEditpart text2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel2);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
@@ -201,11 +194,10 @@ public class LabelPresentationTests {
 		// assert css id
 		assertEquals("ID_0815", text1BaseComponentContainer.getId());
 		assertNull(label1.getId());
-		assertEquals(text2Editpart.getId(),
-				text2BaseComponentContainer.getId());
+		assertEquals(text2Editpart.getId(), text2BaseComponentContainer.getId());
 		assertNull(label2.getId());
 	}
-	
+
 	/**
 	 * Test the internal structure based on CSS.
 	 * 
@@ -229,10 +221,10 @@ public class LabelPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart label1Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel1);
-		ILabelEditpart label2Editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel2);
+		ILabelEditpart label1Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel1);
+		ILabelEditpart label2Editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel2);
 		IWidgetPresentation<Component> text1Presentation = label1Editpart
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = label2Editpart
@@ -249,27 +241,26 @@ public class LabelPresentationTests {
 		assertTrue(label1.isVisible());
 		assertTrue(label1.isEnabled());
 		assertFalse(label1.isReadOnly());
-		
+
 		assertTrue(label2.isVisible());
 		assertTrue(label2.isEnabled());
 		assertFalse(label2.isReadOnly());
-		
+
 		yLabel1.setVisible(false);
 		assertFalse(label1.isVisible());
-		
+
 		yLabel1.setEnabled(false);
 		assertFalse(label1.isEnabled());
-		
+
 	}
-	
-	
+
 	/**
 	 * Test the automatic disposal of bindings
 	 * 
 	 * @throws ContextException
 	 */
 	@Test
-	public void testBindingIsDisposed() throws ContextException{
+	public void testBindingIsDisposed() throws ContextException {
 		YView yView = factory.createView();
 		YGridLayout yGridlayout = factory.createGridLayout();
 		yView.setContent(yGridlayout);
@@ -279,20 +270,19 @@ public class LabelPresentationTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart textEditpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
+		ILabelEditpart textEditpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 		assertEquals(3, presentation.getUIBindings().size());
-		
+
 		presentation.dispose();
 		assertFalse(presentation.isRendered());
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
-	
 
 	@Test
 	public void test_i18n() throws ContextException {
@@ -317,18 +307,16 @@ public class LabelPresentationTests {
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
-		ILabelEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
-		LabelPresentation presentation = editpart
-				.getPresentation();
+		ILabelEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel);
+		LabelPresentation presentation = editpart.getPresentation();
 
-		Label label = (Label) unwrapLabel(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
 		assertEquals("Age", presentation.getWidget().getCaption());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -339,37 +327,35 @@ public class LabelPresentationTests {
 		yView.setContent(yLayout);
 		YLabel yLabel = factory.createLabel();
 		yLayout.getElements().add(yLabel);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
+		ILabelEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		Label label = (Label) unwrapLabel(presentation.getWidget());		
-		
+		Label label = (Label) unwrapLabel(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yLabel.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yLabel.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yLabel.isEditable());
 		assertFalse(!label.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yLabel.isEditable());
 		assertTrue(!label.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -380,37 +366,35 @@ public class LabelPresentationTests {
 		yView.setContent(yLayout);
 		YLabel yLabel = factory.createLabel();
 		yLayout.getElements().add(yLabel);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
+		ILabelEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		Label label = (Label) unwrapLabel(presentation.getWidget());		
-		
+		Label label = (Label) unwrapLabel(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yLabel.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yLabel.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yLabel.isVisible());
 		assertFalse(label.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yLabel.isVisible());
 		assertTrue(label.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -421,31 +405,29 @@ public class LabelPresentationTests {
 		yView.setContent(yLayout);
 		YLabel yLabel = factory.createLabel();
 		yLayout.getElements().add(yLabel);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ILabelEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yLabel);
+		ILabelEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yLabel);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		Label label = (Label) unwrapLabel(presentation.getWidget());		
-		
+		Label label = (Label) unwrapLabel(presentation.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yLabel.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yLabel.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yLabel.isEnabled());
 		assertFalse(label.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yLabel.isEnabled());
 		assertTrue(label.isEnabled());
@@ -481,7 +463,8 @@ public class LabelPresentationTests {
 
 		IWidgetPresentation<Component> presentation = null;
 		if (editpart instanceof IViewEditpart) {
-			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart).getPresentation();
+			presentation = (IWidgetPresentation<Component>) ((IViewEditpart) editpart)
+					.getPresentation();
 		} else {
 			presentation = ((IEmbeddableEditpart) editpart).getPresentation();
 		}

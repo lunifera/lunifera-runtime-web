@@ -13,7 +13,6 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -70,7 +69,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 /**
  * Tests the {@link ListPresentation}.
@@ -729,8 +727,10 @@ public class ListPresentationTests {
 		YDetailValueBindingEndpoint yDetailEndpoint = yList1
 				.createSelectionEndpoint().createDetailValueEndpoint();
 		yDetailEndpoint.setType(EmfBar.class);
-		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfBar_Myfoo());
-		yDetailEndpoint.getFeatures().add(ModelPackage.eINSTANCE.getEmfFoo_Name());
+		yDetailEndpoint.getFeatures().add(
+				ModelPackage.eINSTANCE.getEmfBar_Myfoo());
+		yDetailEndpoint.getFeatures().add(
+				ModelPackage.eINSTANCE.getEmfFoo_Name());
 		yBindingSet.addBinding(yText.createValueEndpoint(), yDetailEndpoint);
 
 		VaadinRenderer renderer = new VaadinRenderer();
@@ -1483,9 +1483,6 @@ public class ListPresentationTests {
 		ListSelect list1 = (ListSelect) unwrapList(list1BaseComponentContainer);
 		ListSelect list2 = (ListSelect) unwrapList(list2BaseComponentContainer);
 
-		Container.Indexed indexedDs1 = (Indexed) list1.getContainerDataSource();
-		Container.Indexed indexedDs2 = (Indexed) list2.getContainerDataSource();
-
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		// start tests
@@ -1671,7 +1668,6 @@ public class ListPresentationTests {
 				.getEditpart(yList);
 		ListPresentation presentation = editpart.getPresentation();
 
-		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
@@ -1697,8 +1693,6 @@ public class ListPresentationTests {
 				.getEditpart(yList);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());
 
 		ValueBean bean = new ValueBean(false);
@@ -1739,8 +1733,6 @@ public class ListPresentationTests {
 				.getEditpart(yList);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());
 
 		ValueBean bean = new ValueBean(false);
@@ -1781,8 +1773,6 @@ public class ListPresentationTests {
 				.getEditpart(yList);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		ListSelect list = (ListSelect) unwrapList(presentation.getWidget());
 
 		ValueBean bean = new ValueBean(false);

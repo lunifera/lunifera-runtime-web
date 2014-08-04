@@ -34,14 +34,11 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YBrowser;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.BrowserPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
@@ -53,7 +50,6 @@ import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
 /**
@@ -265,15 +261,14 @@ public class BrowserPresentationTests {
 		text1.setReadOnly(false);
 		assertFalse(yBrowser1.isEditable());
 	}
-	
-	
+
 	/**
 	 * Test the automatic disposal of bindings
 	 * 
 	 * @throws ContextException
 	 */
 	@Test
-	public void testBindingIsDisposed() throws ContextException{
+	public void testBindingIsDisposed() throws ContextException {
 		// test that the binding is disposed if field is disposed
 		YView yView = factory.createView();
 		YBrowser yBrowser = factory.createBrowser();
@@ -289,12 +284,11 @@ public class BrowserPresentationTests {
 		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
 				.getWidget();
 
-		BrowserFrame text = (BrowserFrame) unwrapText(baseComponentContainer);
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
 		assertEquals(1, baseComponentContainer.getComponentCount());
 		assertEquals(3, presentation.getUIBindings().size());
-		
+
 		presentation.dispose();
 		assertFalse(presentation.isRendered());
 		assertTrue(presentation.isDisposed());
@@ -339,7 +333,7 @@ public class BrowserPresentationTests {
 		Component widget = presentation.getWidget();
 		return widget;
 	}
-	
+
 	@Test
 	public void test_i18n() throws ContextException {
 
@@ -363,18 +357,16 @@ public class BrowserPresentationTests {
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
-		IBrowserEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yBrowser);
-		BrowserPresentation presentation = editpart
-				.getPresentation();
+		IBrowserEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yBrowser);
+		BrowserPresentation presentation = editpart.getPresentation();
 
-		BrowserFrame browser = (BrowserFrame) unwrapText(presentation.getWidget());
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
 		assertEquals("Age", presentation.getWidget().getCaption());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -385,37 +377,36 @@ public class BrowserPresentationTests {
 		yView.setContent(yLayout);
 		YBrowser yBrowser = factory.createBrowser();
 		yLayout.getElements().add(yBrowser);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IBrowserEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yBrowser);
+		IBrowserEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yBrowser);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		BrowserFrame browser = (BrowserFrame) unwrapText(presentation.getWidget());		
-		
+		BrowserFrame browser = (BrowserFrame) unwrapText(presentation
+				.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yBrowser.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yBrowser.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yBrowser.isEditable());
 		assertFalse(!browser.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yBrowser.isEditable());
 		assertTrue(!browser.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -426,37 +417,36 @@ public class BrowserPresentationTests {
 		yView.setContent(yLayout);
 		YBrowser yBrowser = factory.createBrowser();
 		yLayout.getElements().add(yBrowser);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IBrowserEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yBrowser);
+		IBrowserEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yBrowser);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		BrowserFrame browser = (BrowserFrame) unwrapText(presentation.getWidget());		
-		
+		BrowserFrame browser = (BrowserFrame) unwrapText(presentation
+				.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yBrowser.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yBrowser.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yBrowser.isVisible());
 		assertFalse(browser.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yBrowser.isVisible());
 		assertTrue(browser.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -467,31 +457,30 @@ public class BrowserPresentationTests {
 		yView.setContent(yLayout);
 		YBrowser yBrowser = factory.createBrowser();
 		yLayout.getElements().add(yBrowser);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		IBrowserEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yBrowser);
+		IBrowserEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yBrowser);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		BrowserFrame browser = (BrowserFrame) unwrapText(presentation.getWidget());		
-		
+		BrowserFrame browser = (BrowserFrame) unwrapText(presentation
+				.getWidget());
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yBrowser.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yBrowser.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yBrowser.isEnabled());
 		assertFalse(browser.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yBrowser.isEnabled());
 		assertTrue(browser.isEnabled());

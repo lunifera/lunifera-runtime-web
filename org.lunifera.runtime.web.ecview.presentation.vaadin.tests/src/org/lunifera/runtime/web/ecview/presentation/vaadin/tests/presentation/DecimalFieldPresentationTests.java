@@ -316,15 +316,6 @@ public class DecimalFieldPresentationTests {
 		assertEquals("9.988,77", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
 
-		// bean = new ValueBean("Huhu11");
-		// beanBinding.setPropertyPath("value");
-		// TODO Setting a bean later does not cause any sideeffects. See
-		// BeanBindingEndpointEditpart. The binding for the bean is not
-		// refreshed.
-		// beanBinding.setBean(bean);
-		// assertEquals("Huhu11", text1.getValue());
-		// assertEquals("Huhu11", yText1.getValue());
-
 		bean.setDoubleValue(2233.44);
 		assertEquals("2.233,44", field1.getValue());
 		assertEquals(2233.44, yField1.getValue(), 0);
@@ -375,15 +366,6 @@ public class DecimalFieldPresentationTests {
 
 		assertEquals("9.988,77", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
-
-		// bean = new ValueBean("Huhu11");
-		// beanBinding.setPropertyPath("value");
-		// TODO Setting a bean later does not cause any sideeffects. See
-		// BeanBindingEndpointEditpart. The binding for the bean is not
-		// refreshed.
-		// beanBinding.setBean(bean);
-		// assertEquals("Huhu11", text1.getValue());
-		// assertEquals("Huhu11", yText1.getValue());
 
 		bean.setDoubleValue(2233.44);
 		assertEquals("2.233,44", field1.getValue());
@@ -1105,8 +1087,6 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yDecimal);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		DecimalField decimalField = (DecimalField) unwrapText(presentation
 				.getWidget());
 
@@ -1147,8 +1127,6 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yDecimal);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		DecimalField decimalField = (DecimalField) unwrapText(presentation
 				.getWidget());
 
@@ -1189,8 +1167,6 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yDecimal);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 		DecimalField decimalField = (DecimalField) unwrapText(presentation
 				.getWidget());
 
