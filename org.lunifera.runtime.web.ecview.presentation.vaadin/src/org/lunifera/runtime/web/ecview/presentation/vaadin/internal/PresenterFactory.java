@@ -58,7 +58,8 @@ public class PresenterFactory implements IPresentationFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <A extends IWidgetPresentation<?>> A createPresentation(
-			IViewContext uiContext, IElementEditpart editpart) {
+			IViewContext uiContext, IElementEditpart editpart)
+			throws IllegalArgumentException {
 		if (editpart instanceof IViewEditpart) {
 			return (A) new ViewPresentation((IViewEditpart) editpart);
 		} else if (editpart instanceof ITextFieldEditpart) {

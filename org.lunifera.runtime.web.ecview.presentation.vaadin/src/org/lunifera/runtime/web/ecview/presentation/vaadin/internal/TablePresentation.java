@@ -87,7 +87,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			}
 			
 			associateWidget(componentBase, modelAccess.yTable);
-
+			
 			table = new Table();
 			table.addStyleName(CSS_CLASS_CONTROL);
 			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
