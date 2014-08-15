@@ -14,12 +14,11 @@
 	<parent>
 		<groupId>org.lunifera.runtime.web</groupId>
 		<artifactId>org.lunifera.runtime.web.parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.7.3-SNAPSHOT</version>
 		<relativePath>../org.lunifera.runtime.web.parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>org.lunifera.runtime.web.vaadin.osgi</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>0.7.1-SNAPSHOT</version>
 	<name>Vaadin 7 OSGi bridge</name>
 	<description>This feature contains implementations to run Vaadin UIs using the OSGi-HttpService based on DS (Declarative Services).</description>
 </project>

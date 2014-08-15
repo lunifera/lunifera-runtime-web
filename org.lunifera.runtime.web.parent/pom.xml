@@ -77,5 +77,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.7.3-SNAPSHOT</version>
 </project>

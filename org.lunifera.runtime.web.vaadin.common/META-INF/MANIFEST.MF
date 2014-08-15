@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin common stuff
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.common
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 0.7.3.qualifier
 Bundle-ActivationPolicy: lazy
 Import-Package: org.json,
  org.lunifera.runtime.common.dispose,
@@ -16,5 +16,5 @@ Import-Package: org.json,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.runtime.web.vaadin.common
 Bundle-Vendor: Lunifera.org
-Require-Bundle: com.vaadin.server;bundle-version="7.1.1",
- com.vaadin.shared;bundle-version="7.1.1"
+Require-Bundle: com.vaadin.server;bundle-version="7.2.0",
+ com.vaadin.shared;bundle-version="7.2.0"

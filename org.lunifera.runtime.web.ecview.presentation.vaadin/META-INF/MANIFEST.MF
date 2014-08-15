@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ECView presentation layer for Vaadin
 Bundle-SymbolicName: org.lunifera.runtime.web.ecview.presentation.vaadin
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 0.7.3.qualifier
 Require-Bundle: org.eclipse.emf.ecp.ecview.extension.editparts;bundle-version="0.0.1";visibility:=reexport,
  org.eclipse.emf.ecp.ecview.extension.model;bundle-version="0.0.1";visibility:=reexport,
  com.vaadin.shared;bundle-version="7.1.0";visibility:=reexport,
