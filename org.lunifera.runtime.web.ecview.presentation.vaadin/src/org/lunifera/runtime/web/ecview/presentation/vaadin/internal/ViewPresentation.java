@@ -21,6 +21,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
+import org.eclipse.emf.ecp.ecview.common.editpart.IDialogEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
@@ -39,6 +40,7 @@ import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Window;
 
 /**
  * This presenter is responsible to render a text field on the given layout.
@@ -274,6 +276,28 @@ public class ViewPresentation extends AbstractDisposable implements
 
 	public void click(ClickEvent event) {
 
+	}
+
+	@Override
+	public void openDialog(IDialogEditpart dialogEditpart) {
+		if (!isRendered()) {
+			return;
+		}
+
+		Window dialog = (Window) dialogEditpart.render(null);
+		componentBase.getUI().addWindow(dialog);
+	}
+
+	@Override
+	public void closeDialog(IDialogEditpart dialogEditpart) {
+		if (!isRendered()) {
+			return;
+		}
+
+		Window dialog = (Window) dialogEditpart.getWidget();
+		if (dialog != null) {
+			componentBase.getUI().removeWindow(dialog);
+		}
 	}
 
 	/**

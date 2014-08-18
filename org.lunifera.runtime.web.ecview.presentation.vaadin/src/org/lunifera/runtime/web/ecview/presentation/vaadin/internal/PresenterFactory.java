@@ -24,6 +24,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditp
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IFormLayoutEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IGridLayoutEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IHorizontalLayoutEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IImageEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IMasterDetailEditpart;
@@ -106,6 +107,8 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new TabPresentation(editpart);
 		} else if (editpart instanceof IMasterDetailEditpart) {
 			return (A) new MasterDetailPresentation(editpart);
+		} else if (editpart instanceof IImageEditpart) {
+			return (A) new ImagePresentation(editpart);
 		}
 
 		throw new IllegalArgumentException(String.format(

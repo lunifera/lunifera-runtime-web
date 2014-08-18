@@ -37,7 +37,6 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
@@ -191,7 +190,6 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * 
 	 * @param yEmbeddable
 	 * @param container
-	 *            TODO
 	 * @param field
 	 * @return Binding - the created binding
 	 */
@@ -227,7 +225,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * @param target
 	 * @param model
 	 * 
-	 * @return Binding - the created binding
+	 * @return binding - the created binding
 	 */
 	protected Binding createBindings(IObservableValue target,
 			IObservableValue model) {
@@ -237,6 +235,26 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 								.getName());
 
 		return bindingManger.bindValue(target, model);
+	}
+
+	/**
+	 * Creates the binding.
+	 * 
+	 * @param target
+	 * @param model
+	 * @param targetToModel
+	 * @param modelToTarget
+	 * @return binding - the created binding
+	 */
+	protected Binding createBindings(IObservableValue target,
+			IObservableValue model, UpdateValueStrategy targetToModel,
+			UpdateValueStrategy modelToTarget) {
+		bindingManger = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		return bindingManger.bindValue(target, model, targetToModel,
+				modelToTarget);
 	}
 
 	/**

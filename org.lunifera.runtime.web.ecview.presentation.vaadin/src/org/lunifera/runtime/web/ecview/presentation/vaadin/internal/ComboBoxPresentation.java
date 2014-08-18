@@ -26,7 +26,12 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackag
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -71,17 +76,39 @@ public class ComboBoxPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
+
 			associateWidget(componentBase, modelAccess.yCombo);
 
-			combo = new ComboBox();
+			combo = new CustomComboBox();
 			combo.addStyleName(CSS_CLASS_CONTROL);
 			combo.setImmediate(true);
-			
+
 			associateWidget(combo, modelAccess.yCombo);
 
 			property = new ObjectProperty(null, modelAccess.yCombo.getType());
 			combo.setPropertyDataSource(property);
+
+			if (modelAccess.yCombo.getType() != null) {
+				BeanItemContainer datasource = null;
+				datasource = new BeanItemContainer(
+						modelAccess.yCombo.getType());
+				combo.setContainerDataSource(datasource);
+			}
+			
+			String itemCaptionProperty = modelAccess.yCombo
+					.getItemCaptionProperty();
+			if (itemCaptionProperty != null && !itemCaptionProperty.equals("")) {
+				combo.setItemCaptionPropertyId(itemCaptionProperty);
+				combo.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+			} else {
+				combo.setItemCaptionMode(ItemCaptionMode.ID);
+			}
+
+			String itemImageProperty = modelAccess.yCombo
+					.getItemImageProperty();
+			if (itemImageProperty != null && !itemImageProperty.equals("")) {
+				combo.setItemIconPropertyId(itemImageProperty);
+			}
 
 			// creates the binding for the field
 			createBindings(modelAccess.yCombo, combo);
@@ -326,4 +353,49 @@ public class ComboBoxPresentation extends
 			return yCombo.getDatadescription().getLabelI18nKey();
 		}
 	}
+
+	/**
+	 * Converts the string value of the item icon property to
+	 * {@link ThemeResource}.
+	 */
+	private static class CustomComboBox extends ComboBox {
+		private Object itemIconPropertyId;
+
+		@Override
+		public void setItemIconPropertyId(Object propertyId)
+				throws IllegalArgumentException {
+			if (propertyId == null) {
+				super.setItemIconPropertyId(propertyId);
+			} else if (!getContainerPropertyIds().contains(propertyId)) {
+				super.setItemIconPropertyId(propertyId);
+			} else if (String.class.isAssignableFrom(getType(propertyId))) {
+				itemIconPropertyId = propertyId;
+			} else {
+				super.setItemIconPropertyId(propertyId);
+			}
+		}
+
+		public Object getItemIconPropertyId() {
+			return itemIconPropertyId != null ? itemIconPropertyId : super
+					.getItemIconPropertyId();
+		}
+
+		public Resource getItemIcon(Object itemId) {
+			if (itemIconPropertyId == null) {
+				return super.getItemIcon(itemId);
+			} else {
+				final Property<?> ip = getContainerProperty(itemId,
+						getItemIconPropertyId());
+				if (ip == null) {
+					return null;
+				}
+				final Object icon = ip.getValue();
+				if (icon instanceof String) {
+					return new ThemeResource((String) icon);
+				}
+			}
+			return null;
+		}
+	}
+
 }

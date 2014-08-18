@@ -36,9 +36,11 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
@@ -47,6 +49,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
+import com.vaadin.ui.Table.RowHeaderMode;
 
 /**
  * This presenter is responsible to render a table on the given layout.
@@ -85,15 +88,15 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
+
 			associateWidget(componentBase, modelAccess.yTable);
-			
-			table = new Table();
+
+			table = new CustomTable();
 			table.addStyleName(CSS_CLASS_CONTROL);
 			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
 			table.setSelectable(true);
 			table.setImmediate(true);
-			
+
 			associateWidget(table, modelAccess.yTable);
 
 			if (table.isMultiSelect()) {
@@ -130,6 +133,13 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 					container.addItem(new String[] { "Some value", "other" });
 					table.setContainerDataSource(container);
 				}
+			}
+
+			String itemImageProperty = modelAccess.yTable
+					.getItemImageProperty();
+			if (itemImageProperty != null && !itemImageProperty.equals("")) {
+				table.setItemIconPropertyId(itemImageProperty);
+				table.setRowHeaderMode(RowHeaderMode.PROPERTY);
 			}
 
 			// creates the binding for the field
@@ -449,6 +459,50 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		 */
 		public String getLabelI18nKey() {
 			return yTable.getDatadescription().getLabelI18nKey();
+		}
+	}
+
+	/**
+	 * Converts the string value of the item icon property to
+	 * {@link ThemeResource}.
+	 */
+	private static class CustomTable extends Table {
+		private Object itemIconPropertyId;
+
+		@Override
+		public void setItemIconPropertyId(Object propertyId)
+				throws IllegalArgumentException {
+			if (propertyId == null) {
+				super.setItemIconPropertyId(propertyId);
+			} else if (!getContainerPropertyIds().contains(propertyId)) {
+				super.setItemIconPropertyId(propertyId);
+			} else if (String.class.isAssignableFrom(getType(propertyId))) {
+				itemIconPropertyId = propertyId;
+			} else {
+				super.setItemIconPropertyId(propertyId);
+			}
+		}
+
+		public Object getItemIconPropertyId() {
+			return itemIconPropertyId != null ? itemIconPropertyId : super
+					.getItemIconPropertyId();
+		}
+
+		public Resource getItemIcon(Object itemId) {
+			if (itemIconPropertyId == null) {
+				return super.getItemIcon(itemId);
+			} else {
+				final Property<?> ip = getContainerProperty(itemId,
+						getItemIconPropertyId());
+				if (ip == null) {
+					return null;
+				}
+				final Object icon = ip.getValue();
+				if (icon instanceof String) {
+					return new ThemeResource((String) icon);
+				}
+			}
+			return null;
 		}
 	}
 }
