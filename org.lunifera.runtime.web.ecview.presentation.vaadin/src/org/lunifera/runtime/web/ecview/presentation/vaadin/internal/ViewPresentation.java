@@ -24,6 +24,7 @@ import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.IDialogEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
+import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindableEndpointEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
@@ -33,6 +34,7 @@ import org.eclipse.emf.ecp.ecview.common.tooling.IWidgetMouseClickService;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetMouseClickService;
+import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -279,11 +281,14 @@ public class ViewPresentation extends AbstractDisposable implements
 	}
 
 	@Override
-	public void openDialog(IDialogEditpart dialogEditpart) {
+	public void openDialog(IDialogEditpart dialogEditpart, IBindableEndpointEditpart inputData) {
 		if (!isRendered()) {
 			return;
 		}
 
+//		VaadinObservables.activateRealm(navigationView.getUI());
+		// set the input data to the child nav page
+		dialogEditpart.setInputDataBindingEndpoint(inputData);
 		Window dialog = (Window) dialogEditpart.render(null);
 		componentBase.getUI().addWindow(dialog);
 	}
@@ -297,6 +302,7 @@ public class ViewPresentation extends AbstractDisposable implements
 		Window dialog = (Window) dialogEditpart.getWidget();
 		if (dialog != null) {
 			componentBase.getUI().removeWindow(dialog);
+			dialogEditpart.unrender();
 		}
 	}
 

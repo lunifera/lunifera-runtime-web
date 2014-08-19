@@ -11,6 +11,7 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
+import org.eclipse.emf.ecp.ecview.common.editpart.IDialogEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.presentation.IPresentationFactory;
@@ -109,6 +110,8 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new MasterDetailPresentation(editpart);
 		} else if (editpart instanceof IImageEditpart) {
 			return (A) new ImagePresentation(editpart);
+		} else if (editpart instanceof IDialogEditpart) {
+			return (A) new DialogPresentation(editpart);
 		}
 
 		throw new IllegalArgumentException(String.format(
