@@ -10,6 +10,7 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -29,12 +30,19 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YOptionsGroup;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.Table;
 
 /**
  * This presenter is responsible to render a list on the given layout.
@@ -72,26 +80,58 @@ public class OptionsGroupPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
+
 			associateWidget(componentBase, modelAccess.yOptionsGroup);
 
-			optionsGroup = new OptionGroup();
+			optionsGroup = new CustomOptionGroup();
 			optionsGroup.addStyleName(CSS_CLASS_CONTROL);
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
 			optionsGroup.setImmediate(true);
-			
+
 			associateWidget(optionsGroup, modelAccess.yOptionsGroup);
 
-			if (modelAccess.yOptionsGroup.getSelectionType() == YSelectionType.MULTI) {
-				// multi selections need to be of type Set.class
-				property = new ObjectProperty(null, Set.class);
+			if (optionsGroup.isMultiSelect()) {
+				property = new ObjectProperty(new HashSet(), Set.class);
 			} else {
-				property = new ObjectProperty(null,
-						modelAccess.yOptionsGroup.getType());
+				if (modelAccess.yOptionsGroup.getType() != null) {
+					property = new ObjectProperty(null,
+							modelAccess.yOptionsGroup.getType());
+				} else {
+					property = new ObjectProperty(null, Object.class);
+				}
+			}
+			optionsGroup.setPropertyDataSource(property);
+
+			if (modelAccess.yOptionsGroup.getType() == String.class) {
+				IndexedContainer datasource = new IndexedContainer();
+				optionsGroup.setContainerDataSource(datasource);
+				optionsGroup.setItemCaptionMode(ItemCaptionMode.ID);
+			} else {
+				if (modelAccess.yOptionsGroup.getType() != null) {
+					BeanItemContainer datasource = null;
+					datasource = new BeanItemContainer(
+							modelAccess.yOptionsGroup.getType());
+					optionsGroup.setContainerDataSource(datasource);
+
+					// // applies the column properties
+					// applyColumns();
+
+				} else {
+					IndexedContainer container = new IndexedContainer();
+					container.addContainerProperty("for", String.class, null);
+					container.addContainerProperty("preview", String.class,
+							null);
+					container.addItem(new String[] { "Some value", "other" });
+					optionsGroup.setContainerDataSource(container);
+				}
 			}
 
-			optionsGroup.setPropertyDataSource(property);
+			String itemImageProperty = modelAccess.yOptionsGroup
+					.getItemImageProperty();
+			if (itemImageProperty != null && !itemImageProperty.equals("")) {
+				optionsGroup.setItemIconPropertyId(itemImageProperty);
+			}
 
 			// creates the binding for the field
 			createBindings(modelAccess.yOptionsGroup, optionsGroup);
@@ -358,6 +398,50 @@ public class OptionsGroupPresentation extends
 		 */
 		public String getLabelI18nKey() {
 			return yOptionsGroup.getDatadescription().getLabelI18nKey();
+		}
+	}
+	
+	/**
+	 * Converts the string value of the item icon property to
+	 * {@link ThemeResource}.
+	 */
+	private static class CustomOptionGroup extends OptionGroup {
+		private Object itemIconPropertyId;
+
+		@Override
+		public void setItemIconPropertyId(Object propertyId)
+				throws IllegalArgumentException {
+			if (propertyId == null) {
+				super.setItemIconPropertyId(propertyId);
+			} else if (!getContainerPropertyIds().contains(propertyId)) {
+				super.setItemIconPropertyId(propertyId);
+			} else if (String.class.isAssignableFrom(getType(propertyId))) {
+				itemIconPropertyId = propertyId;
+			} else {
+				super.setItemIconPropertyId(propertyId);
+			}
+		}
+
+		public Object getItemIconPropertyId() {
+			return itemIconPropertyId != null ? itemIconPropertyId : super
+					.getItemIconPropertyId();
+		}
+
+		public Resource getItemIcon(Object itemId) {
+			if (itemIconPropertyId == null) {
+				return super.getItemIcon(itemId);
+			} else {
+				final Property<?> ip = getContainerProperty(itemId,
+						getItemIconPropertyId());
+				if (ip == null) {
+					return null;
+				}
+				final Object icon = ip.getValue();
+				if (icon instanceof String) {
+					return new ThemeResource((String) icon);
+				}
+			}
+			return null;
 		}
 	}
 }
