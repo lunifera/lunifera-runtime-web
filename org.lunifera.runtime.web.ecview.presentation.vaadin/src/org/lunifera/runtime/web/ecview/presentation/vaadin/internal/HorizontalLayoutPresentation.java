@@ -103,6 +103,9 @@ public class HorizontalLayoutPresentation extends
 			fillerLayout.setSizeFull();
 			horizontalLayout.addComponent(fillerLayout);
 			horizontalLayout.setExpandRatio(fillerLayout, 1.0f);
+		} else{
+			componentBase.setSizeFull();
+			horizontalLayout.setSizeFull();
 		}
 
 	}
@@ -321,7 +324,7 @@ public class HorizontalLayoutPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-
+			
 			associateWidget(componentBase, modelAccess.yLayout);
 
 			horizontalLayout = new HorizontalLayout();

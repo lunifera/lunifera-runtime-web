@@ -71,6 +71,7 @@ public class TextAreaPresentation extends
 			textArea = new TextArea();
 			textArea.addStyleName(CSS_CLASS_CONTROL);
 			textArea.setImmediate(true);
+			textArea.setNullRepresentation("");
 
 			associateWidget(textArea, modelAccess.yTextArea);
 			
