@@ -183,12 +183,18 @@ public class GridLayoutPresentation extends
 			int packingHelperRowIndex = gridlayout.getRows();
 			gridlayout.setRows(packingHelperRowIndex + 1);
 			gridlayout.setRowExpandRatio(packingHelperRowIndex, 1.0f);
+		} else{
+			componentBase.setHeight("100%");
+			gridlayout.setHeight("100%");
 		}
 
 		if (!expandHorizontalFound && !modelAccess.isFillHorizontal()) {
 			int packingHelperColumnIndex = gridlayout.getColumns();
 			gridlayout.setColumns(packingHelperColumnIndex + 1);
 			gridlayout.setColumnExpandRatio(packingHelperColumnIndex, 1.0f);
+		} else{
+			componentBase.setWidth("100%");
+			gridlayout.setWidth("100%");
 		}
 
 	}

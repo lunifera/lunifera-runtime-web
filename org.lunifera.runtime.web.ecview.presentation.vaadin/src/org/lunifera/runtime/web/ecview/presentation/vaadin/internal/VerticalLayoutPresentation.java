@@ -104,6 +104,9 @@ public class VerticalLayoutPresentation extends
 			fillerLayout.setSizeFull();
 			verticalLayout.addComponent(fillerLayout);
 			verticalLayout.setExpandRatio(fillerLayout, 1.0f);
+		} else{
+			componentBase.setSizeFull();
+			verticalLayout.setSizeFull();
 		}
 
 	}
