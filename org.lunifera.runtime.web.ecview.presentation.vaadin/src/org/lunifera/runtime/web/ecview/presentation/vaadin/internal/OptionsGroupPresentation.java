@@ -42,7 +42,6 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Table;
 
 /**
  * This presenter is responsible to render a list on the given layout.
@@ -125,6 +124,12 @@ public class OptionsGroupPresentation extends
 					container.addItem(new String[] { "Some value", "other" });
 					optionsGroup.setContainerDataSource(container);
 				}
+			}
+
+			String itemCaptionProperty = modelAccess.yOptionsGroup
+					.getItemCaptionProperty();
+			if (itemCaptionProperty != null && !itemCaptionProperty.equals("")) {
+				optionsGroup.setItemCaptionPropertyId(itemCaptionProperty);
 			}
 
 			String itemImageProperty = modelAccess.yOptionsGroup
@@ -400,7 +405,7 @@ public class OptionsGroupPresentation extends
 			return yOptionsGroup.getDatadescription().getLabelI18nKey();
 		}
 	}
-	
+
 	/**
 	 * Converts the string value of the item icon property to
 	 * {@link ThemeResource}.
