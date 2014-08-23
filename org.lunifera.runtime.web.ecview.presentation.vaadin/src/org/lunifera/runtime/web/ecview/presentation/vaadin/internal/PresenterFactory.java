@@ -16,6 +16,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.presentation.IPresentationFactory;
 import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBooleanSearchFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IListEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IMasterDetailEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericSearchFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
@@ -37,6 +39,7 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextAreaEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextSearchFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITreeEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IVerticalLayoutEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
@@ -112,6 +115,12 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new ImagePresentation(editpart);
 		} else if (editpart instanceof IDialogEditpart) {
 			return (A) new DialogPresentation(editpart);
+		} else if (editpart instanceof ITextSearchFieldEditpart) {
+			return (A) new TextSearchFieldPresentation(editpart);
+		} else if (editpart instanceof INumericSearchFieldEditpart) {
+			return (A) new NumericSearchFieldPresentation(editpart);
+		} else if (editpart instanceof IBooleanSearchFieldEditpart) {
+			return (A) new BooleanSearchFieldPresentation(editpart);
 		}
 
 		throw new IllegalArgumentException(String.format(

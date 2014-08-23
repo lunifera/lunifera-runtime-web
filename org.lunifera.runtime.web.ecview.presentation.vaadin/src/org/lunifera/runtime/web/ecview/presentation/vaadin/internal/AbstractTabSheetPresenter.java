@@ -17,8 +17,8 @@ import java.util.List;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabSheetPresentation;
 
 import com.vaadin.ui.ComponentContainer;
@@ -30,7 +30,7 @@ public abstract class AbstractTabSheetPresenter<A extends ComponentContainer>
 		extends AbstractVaadinWidgetPresenter<A> implements
 		ITabSheetPresentation<A> {
 
-	private List<ITabPresentation<?>> tabs;
+	private List<ITabEditpart> tabs;
 
 	public AbstractTabSheetPresenter(ITabSheetEditpart editpart) {
 		super(editpart);
@@ -60,128 +60,128 @@ public abstract class AbstractTabSheetPresenter<A extends ComponentContainer>
 	}
 
 	@Override
-	public List<ITabPresentation<?>> getTabs() {
+	public List<ITabEditpart> getTabs() {
 		return tabs != null ? Collections.unmodifiableList(tabs) : Collections
-				.<ITabPresentation<?>> emptyList();
+				.<ITabEditpart> emptyList();
 	}
 
 	@Override
-	public boolean contains(ITabPresentation<?> presentation) {
-		return tabs != null && tabs.contains(presentation);
+	public boolean contains(ITabEditpart editpart) {
+		return tabs != null && tabs.contains(editpart);
 	}
 
 	@Override
-	public void add(ITabPresentation<?> presentation) {
+	public void add(ITabEditpart editpart) {
 		ensureChildren();
 
-		if (!tabs.contains(presentation)) {
-			tabs.add(presentation);
+		if (!tabs.contains(editpart)) {
+			tabs.add(editpart);
 
-			internalAdd(presentation);
+			internalAdd(editpart);
 		}
 	}
 
 	/**
-	 * This method is called after the presentation was successfully added to
-	 * the children collection.<br>
+	 * This method is called after the editpart was successfully added to the
+	 * children collection.<br>
 	 * Subclasses should handle the add of the UI element in that method.
 	 * 
-	 * @param presentation
-	 *            The presentation to be added
+	 * @param editpart
+	 *            The editpart to be added
 	 */
-	protected void internalAdd(ITabPresentation<?> presentation) {
+	protected void internalAdd(ITabEditpart editpart) {
 
 	}
 
 	@Override
-	public void remove(ITabPresentation<?> presentation) {
+	public void remove(ITabEditpart editpart) {
 		if (tabs == null) {
 			return;
 		}
 
-		if (tabs.remove(presentation)) {
-			internalRemove(presentation);
+		if (tabs.remove(editpart)) {
+			internalRemove(editpart);
 		}
 	}
 
 	/**
-	 * This method is called after the presentation was successfully removed
-	 * from the children collection.<br>
+	 * This method is called after the editpart was successfully removed from
+	 * the children collection.<br>
 	 * Subclasses should handle the unrendering of the UI element in that
 	 * method.
 	 * 
-	 * @param presentation
-	 *            The presentation to be removed
+	 * @param editpart
+	 *            The editpart to be removed
 	 */
-	protected void internalRemove(ITabPresentation<?> presentation) {
+	protected void internalRemove(ITabEditpart editpart) {
 
 	}
 
 	@Override
-	public void insert(ITabPresentation<?> presentation, int index) {
+	public void insert(ITabEditpart editpart, int index) {
 		ensureChildren();
 
-		int currentIndex = tabs.indexOf(presentation);
+		int currentIndex = tabs.indexOf(editpart);
 		if (currentIndex > -1 && currentIndex != index) {
 			throw new RuntimeException(
 					String.format(
-							"Insert at index %d not possible since presentation already contained at index %d",
+							"Insert at index %d not possible since editpart already contained at index %d",
 							index, currentIndex));
 		}
 
-		tabs.add(index, presentation);
-		internalInsert(presentation, index);
+		tabs.add(index, editpart);
+		internalInsert(editpart, index);
 	}
 
 	/**
-	 * This method is called after the presentation was successfully inserted to
-	 * the children collection.<br>
+	 * This method is called after the editpart was successfully inserted to the
+	 * children collection.<br>
 	 * Subclasses should handle the insert of the UI element in that method.
 	 * 
-	 * @param presentation
-	 *            The presentation to be inserted
+	 * @param editpart
+	 *            The editpart to be inserted
 	 * @param index
-	 *            The index where the presentation should be inserted
+	 *            The index where the editpart should be inserted
 	 */
-	protected void internalInsert(ITabPresentation<?> presentation, int index) {
+	protected void internalInsert(ITabEditpart editpart, int index) {
 
 	}
 
 	@Override
-	public void move(ITabPresentation<?> presentation, int index) {
+	public void move(ITabEditpart editpart, int index) {
 		if (tabs == null) {
 			throw new RuntimeException(
 					"Move not possible. No children present.");
 		}
 
-		if (!tabs.contains(presentation)) {
+		if (!tabs.contains(editpart)) {
 			throw new RuntimeException(
 					String.format(
-							"Move to index %d not possible since presentation not added yet!",
+							"Move to index %d not possible since editpart not added yet!",
 							index));
 		}
 
-		int currentIndex = tabs.indexOf(presentation);
-		tabs.remove(presentation);
-		tabs.add(index, presentation);
+		int currentIndex = tabs.indexOf(editpart);
+		tabs.remove(editpart);
+		tabs.add(index, editpart);
 
-		internalMove(presentation, currentIndex, index);
+		internalMove(editpart, currentIndex, index);
 	}
 
 	/**
-	 * This method is called after the presentation was successfully moved
-	 * inside the children collection.<br>
+	 * This method is called after the editpart was successfully moved inside
+	 * the children collection.<br>
 	 * Subclasses should handle the move of the UI element in that method.
 	 * 
-	 * @param presentation
-	 *            The presentation to be moved.
+	 * @param editpart
+	 *            The editpart to be moved.
 	 * @param oldIndex
 	 *            The old index where the control was located.
 	 * @param newIndex
 	 *            The new index where the control should be located after the
 	 *            move operation.
 	 */
-	protected void internalMove(ITabPresentation<?> presentation, int oldIndex,
+	protected void internalMove(ITabEditpart editpart, int oldIndex,
 			int newIndex) {
 
 	}
@@ -191,7 +191,7 @@ public abstract class AbstractTabSheetPresenter<A extends ComponentContainer>
 	 */
 	protected void ensureChildren() {
 		if (tabs == null) {
-			tabs = new ArrayList<ITabPresentation<?>>();
+			tabs = new ArrayList<ITabEditpart>();
 		}
 	}
 

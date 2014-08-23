@@ -1,14 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin Components
-Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components
+Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.widgetset
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.vaadin.components.converter,
- org.lunifera.runtime.web.vaadin.components.fields,
- org.lunifera.runtime.web.vaadin.components.fields.search,
- org.lunifera.runtime.web.vaadin.components.fields.search.filter,
- org.lunifera.runtime.web.vaadin.components.validator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Lunifera.org
 Import-Package: com.vaadin.data;version="7.0.0",
@@ -31,3 +26,4 @@ Require-Bundle: com.vaadin.client;bundle-version="7.1.9",
  org.eclipse.core.databinding.observable;bundle-version="1.4.1",
  org.eclipse.core.databinding.property;bundle-version="1.4.200",
  org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.0.1"
+Export-Package: org.lunifera.runtime.web.vaadin.widgetset

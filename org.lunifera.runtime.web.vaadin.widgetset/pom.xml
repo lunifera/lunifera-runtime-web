@@ -17,11 +17,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../org.lunifera.runtime.web.parent/pom.xml</relativePath>
 	</parent>
-	<artifactId>org.lunifera.runtime.web.vaadin.components</artifactId>
+	<artifactId>org.lunifera.runtime.web.vaadin.widgetset</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<name>Vaadin components for Lunifera</name>
-	<description>Contains different fields like NumericField, DecimalField,…</description>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -86,6 +84,75 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<version>7.2-SNAPSHOT</version>
+				<configuration>
+					<extraJvmArgs>-Xmx1024M -Xss1024k</extraJvmArgs>
+					<!-- <runTarget>mobilemail</runTarget> -->
+					<!-- We are doing "inplace" but into subdir VAADIN/widgetsets. This 
+						way compatible with Vaadin eclipse plugin. -->
+					<webappDirectory>${basedir}/VAADIN/widgetsets
+					</webappDirectory>
+					<hostedWebapp>${basedir}/VAADIN/widgetsets
+					</hostedWebapp>
+					<noServer>true</noServer>
+					<!-- Remove draftCompile when project is ready -->
+					<draftCompile>true</draftCompile>
+					<strict>true</strict>
+					<compileReport>false</compileReport>
+					<style>PRETTY</style>
+					<runTarget>http://localhost:8080/</runTarget>
+
+					<!-- Remove these when going to release dependencies -->
+					<force>true</force>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>resources</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- As we are doing "inplace" GWT compilation, ensure the widgetset -->
+			<!-- directory is cleaned properly -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>VAADIN/gwt-unitCache</directory>
+						</fileset>
+						<fileset>
+							<directory>VAADIN/widgetsets</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<excludeDefaultDirectories>true</excludeDefaultDirectories>
+					<filesets>
+						<fileset>
+							<directory>VAADIN/gwt-unitCache</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+				<executions>
+					<execution>
+						<id>cleanUnitCache</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<executions>
@@ -97,6 +164,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -142,4 +210,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<name>Vaadin components for Lunifera</name>
+	<description>Contains different fields like NumericField, DecimalField,…</description>
 </project>

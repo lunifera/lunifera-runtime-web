@@ -16,7 +16,6 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabPresentation;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabSheetPresentation;
 
 import com.vaadin.ui.Component;
@@ -39,7 +38,7 @@ public class TabSheetPresentation extends
 	 * The constructor.
 	 * 
 	 * @param editpart
-	 *            The editpart of that presentation.
+	 *            The editpart of that editpart.
 	 */
 	public TabSheetPresentation(IElementEditpart editpart) {
 		super((ITabSheetEditpart) editpart);
@@ -47,29 +46,29 @@ public class TabSheetPresentation extends
 	}
 
 	@Override
-	public void add(ITabPresentation<?> presentation) {
-		super.add(presentation);
+	public void add(ITabEditpart editpart) {
+		super.add(editpart);
 
-		addTab(presentation);
+		addTab(editpart);
 	}
 
 	@Override
-	public void remove(ITabPresentation<?> presentation) {
-		super.remove(presentation);
+	public void remove(ITabEditpart editpart) {
+		super.remove(editpart);
 
-		tabSheet.removeComponent((Component) presentation.getWidget());
+		tabSheet.removeComponent((Component) editpart.getWidget());
 	}
 
 	@Override
-	public void insert(ITabPresentation<?> presentation, int index) {
-		super.insert(presentation, index);
+	public void insert(ITabEditpart editpart, int index) {
+		super.insert(editpart, index);
 
 		refreshUI();
 	}
 
 	@Override
-	public void move(ITabPresentation<?> presentation, int index) {
-		super.move(presentation, index);
+	public void move(ITabEditpart editpart, int index) {
+		super.move(editpart, index);
 
 		refreshUI();
 	}
@@ -99,19 +98,17 @@ public class TabSheetPresentation extends
 		// iterate all elements and build the tab element
 		//
 		for (ITabEditpart editPart : getEditpart().getTabs()) {
-			ITabPresentation<?> tabPresentation = editPart.getPresentation();
-			addTab(tabPresentation);
+			addTab(editPart);
 		}
-
 	}
 
 	/**
 	 * Is called to create the tab component and apply layouting defaults to it.
 	 * 
-	 * @param presentation
+	 * @param editpart
 	 */
-	protected void addTab(ITabPresentation<?> presentation) {
-		presentation.createWidget(tabSheet);
+	protected void addTab(ITabEditpart editpart) {
+		editpart.render(tabSheet);
 	}
 
 	@Override
@@ -185,7 +182,7 @@ public class TabSheetPresentation extends
 			tabSheet = null;
 
 			// unrender the tabs
-			for (ITabPresentation<?> tab : getTabs()) {
+			for (ITabEditpart tab : getTabs()) {
 				tab.unrender();
 			}
 		}
@@ -204,9 +201,9 @@ public class TabSheetPresentation extends
 	 * Will unrender all tabs.
 	 */
 	protected void unrenderTabs() {
-		for (ITabPresentation<?> presentation : getTabs()) {
-			if (presentation.isRendered()) {
-				presentation.unrender();
+		for (ITabEditpart editpart : getTabs()) {
+			if (editpart.isRendered()) {
+				editpart.unrender();
 			}
 		}
 	}

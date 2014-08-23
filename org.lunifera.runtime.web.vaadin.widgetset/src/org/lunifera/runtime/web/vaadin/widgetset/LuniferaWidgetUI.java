@@ -9,7 +9,7 @@
  * 		Florian Pirchner - Initial implementation
  */
 
-package org.lunifera.runtime.web.vaadin.components.widgetset;
+package org.lunifera.runtime.web.vaadin.widgetset;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
@@ -21,7 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 @Theme("clientsidewidget")
-public class LuniferaWidgetsUI extends UI {
+public class LuniferaWidgetUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
