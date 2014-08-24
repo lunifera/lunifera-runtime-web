@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target includeMode="feature" name="org.lunifera.xtext.builder.target.luna" sequenceNumber="105">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.lang3" version="3.1.0.v201403281430"/>
+<unit id="org.apache.commons.collections.source" version="3.2.0.v2013030210310"/>
+<unit id="org.apache.commons.beanutils.source" version="1.8.0.v201205091237"/>
+<unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
+<unit id="org.apache.commons.lang3.source" version="3.1.0.v201403281430"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+</location>
+<location path="${eclipse_home}" type="Profile"/>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.lunifera.dependencies.feature.atmosphere.feature.group" version="2.1.2.vaadin3"/>
+<unit id="org.lunifera.runtime.web.feature.vaadin.databinding.feature.group" version="0.0.1.201408110750"/>
+<unit id="org.lunifera.xtext.builder.feature.service.xbase.source.feature.group" version="0.8.2.201408121142"/>
+<unit id="org.lunifera.runtime.web.feature.vaadin.common.source.feature.group" version="0.0.1.201408110750"/>
+<unit id="org.lunifera.xtext.builder.feature.service.jvmtypes.source.feature.group" version="0.8.2.201408121142"/>
+<unit id="org.lunifera.dependencies.feature.vaadin.feature.group" version="7.2.5"/>
+<unit id="org.lunifera.xtext.builder.feature.types.feature.group" version="0.8.2.201408121142"/>
+<unit id="org.lunifera.dependencies.feature.jetty.websockets.feature.group" version="8.1.14"/>
+<unit id="org.lunifera.runtime.web.feature.vaadin.components.source.feature.group" version="0.0.1.201408110750"/>
+<unit id="org.lunifera.runtime.web.feature.vaadin.common.feature.group" version="0.0.1.201408110750"/>
+<unit id="org.lunifera.runtime.web.feature.vaadin.components.feature.group" version="0.0.1.201408110750"/>
+<unit id="org.lunifera.runtime.web.feature.ecview.presentation.vaadin.feature.group" version="0.0.1.201408110750"/>
+<unit id="org.lunifera.runtime.feature.common.source.feature.group" version="0.7.1.201407011710"/>
+<unit id="org.lunifera.xtext.builder.feature.service.jvmtypes.feature.group" version="0.8.2.201408121142"/>
+<unit id="org.lunifera.xtext.builder.feature.types.source.feature.group" version="0.8.2.201408121142"/>
+<unit id="org.lunifera.runtime.feature.common.feature.group" version="0.7.1.201407011710"/>
+<unit id="org.lunifera.xtext.builder.feature.service.xbase.feature.group" version="0.8.2.201408121142"/>
+<unit id="org.lunifera.runtime.web.feature.ecview.presentation.vaadin.source.feature.group" version="0.0.1.201408110750"/>
+<unit id="org.lunifera.runtime.web.feature.vaadin.databinding.source.feature.group" version="0.0.1.201408110750"/>
+<repository location="http://lun.lunifera.org/downloads/p2/lunifera/luna/latest/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.collections.source" version="3.2.0.v2013030210310"/>
+<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
+<unit id="org.apache.commons.collections" version="3.2.0.v2013030210310"/>
+<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="javax.activation.source" version="1.1.0.v201211130549"/>
+<unit id="javax.activation" version="1.1.0.v201211130549"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.feature.group" version="0.7.0"/>
+<unit id="org.eclipse.emf.ecp.ecview.feature.core.source.feature.group" version="0.7.0"/>
+<repository location="http://lun.lunifera.org/downloads/p2/ecview/nightly/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.lunifera.dependencies.feature.security.shiro.feature.group" version="1.2.3"/>
+<repository location="http://lun.lunifera.org/downloads/p2/lunifera/luna/latest/"/>
+</location>
+</locations>
+</target>

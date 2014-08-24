@@ -13,8 +13,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.lunifera.releng.maven</groupId>
-		<artifactId>org.lunifera.releng.maven.parent.tycho.repository.p2</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<artifactId>lunifera-releng-maven-parent-tycho</artifactId>
+		<version>0.10.1-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.lunifera.runtime.web</groupId>
@@ -147,7 +147,7 @@
 			<dependency>
 				<groupId>org.lunifera.runtime.web</groupId>
 				<artifactId>org.lunifera.runtime.web.parent</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>0.7.3-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -158,4 +158,5 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+<version>0.7.3-SNAPSHOT</version>
 </project>
