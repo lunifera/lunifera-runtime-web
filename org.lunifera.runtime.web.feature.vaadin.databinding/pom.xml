@@ -19,6 +19,8 @@
 	</parent>
 	<artifactId>org.lunifera.runtime.web.feature.vaadin.databinding</artifactId>
 	<packaging>eclipse-feature</packaging>
+	<name>Feature - Eclipse Databinding for Vaadin</name>
+	<description>An implementation of Eclipse Databinding for Vaadin widgets. Using the VaadinObservables static methods, IObservables can be created and used in Eclipse Databinding.</description>
 	<build>
 		<plugins>
 			<plugin>
@@ -56,6 +58,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	<name>Feature - Eclipse Databinding for Vaadin</name>
-	<description>An implementation of Eclipse Databinding for Vaadin widgets. Using the VaadinObservables static methods, IObservables can be created and used in Eclipse Databinding.</description>
+
 </project>

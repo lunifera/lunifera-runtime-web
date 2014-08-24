@@ -142,21 +142,21 @@
 		</profile>
 	</profiles>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.lunifera.runtime.web</groupId>
-				<artifactId>org.lunifera.runtime.web.parent</artifactId>
-				<version>0.7.3-SNAPSHOT</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.lunifera.runtime.web</groupId>
-				<artifactId>org.lunifera.runtime.web.ecview.presentation.vaadin</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+<!-- 	<dependencyManagement> -->
+<!-- 		<dependencies> -->
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.lunifera.runtime.web</groupId> -->
+<!-- 				<artifactId>org.lunifera.runtime.web.parent</artifactId> -->
+<!-- 				<version>0.7.3-SNAPSHOT</version> -->
+<!-- 				<type>pom</type> -->
+<!-- 				<scope>import</scope> -->
+<!-- 			</dependency> -->
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.lunifera.runtime.web</groupId> -->
+<!-- 				<artifactId>org.lunifera.runtime.web.ecview.presentation.vaadin</artifactId> -->
+<!-- 				<version>0.7.3-SNAPSHOT</version> -->
+<!-- 			</dependency> -->
+<!-- 		</dependencies> -->
+<!-- 	</dependencyManagement> -->
 <version>0.7.3-SNAPSHOT</version>
 </project>
