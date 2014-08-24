@@ -28,36 +28,7 @@
 	<!-- <lunifera.build.p2.project.name>org.lunifera.runtime.web.p2</lunifera.build.p2.project.name> -->
 	<!-- </properties> -->
 
-	<!-- <modules> -->
-	<!-- <module>org.lunifera.runtime.web.parent</module> -->
-	<!-- <module>org.lunifera.runtime.web.vaadin.common</module> -->
-	<!-- <module>org.lunifera.runtime.web.vaadin.components</module> -->
-	<!-- <module>org.lunifera.runtime.web.ecview.presentation.vaadin</module> -->
-
-	<!-- <module>org.lunifera.runtime.web.vaadin.osgi</module> -->
-	<!-- <module>org.lunifera.runtime.web.vaadin.databinding</module> -->
-	<!-- <module>org.lunifera.runtime.web.ecview.services.vaadin</module> -->
-
-	<!-- <module>org.lunifera.runtime.web.feature.vaadin.common</module> -->
-	<!-- <module>org.lunifera.runtime.web.feature.vaadin.components</module> -->
-	<!-- <module>org.lunifera.runtime.web.feature.vaadin.databinding</module> -->
-	<!-- <module>org.lunifera.runtime.web.feature.vaadin.osgi</module> -->
-	<!-- <module>org.lunifera.runtime.web.feature.vaadin.addon.osgi</module> -->
-	<!-- <module>org.lunifera.runtime.web.feature.ecview.presentation.vaadin</module> -->
-
-	<!-- <module>org.lunifera.runtime.web.p2</module> -->
-	<!-- </modules> -->
-
-	<profiles>
-		<profile>
-			<id>build.features</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<defaultGoal>clean verify</defaultGoal>
-			</build>
-			<modules>
+	<modules>
 				<module>org.lunifera.runtime.web.parent</module>
 
 				<module>org.lunifera.runtime.web.common</module>
@@ -82,7 +53,9 @@
 				<!-- <module>org.lunifera.runtime.web.vaadin.osgi.tests</module> -->
 				<module>org.lunifera.runtime.web.vaadin.widgetset</module>
 			</modules>
-		</profile>
+
+	<profiles>
+		
 		<profile>
 			<id>prepare-for-next-release</id>
 			<activation>
@@ -114,6 +87,7 @@
 				</plugins>
 			</build>
 		</profile>
+		
 		<profile>
 			<id>build.widgetset</id>
 			<activation>
@@ -127,27 +101,19 @@
 				<module>org.lunifera.runtime.web.vaadin.widgetset</module>
 			</modules>
 		</profile>
+		
 		<profile>
 			<id>build.p2</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<defaultGoal>clean verify</defaultGoal>
-			</build>
-			<modules>
-				<module>org.lunifera.runtime.web.p2</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>stage.p2</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>lunifera.build.p2</name>
+				</property>
 			</activation>
 			<modules>
 				<module>org.lunifera.runtime.web.p2</module>
 			</modules>
 		</profile>
+		
 	</profiles>
 	<version>0.7.3-SNAPSHOT</version>
 </project>
