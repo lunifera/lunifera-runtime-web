@@ -8,7 +8,7 @@
  * Contributors: 
  * 		Florian Pirchner - Initial implementation
  */
- */
+
 package org.lunifera.runtime.web.common.context;
 
 import org.lunifera.runtime.common.user.IUserInfo;

@@ -56,7 +56,16 @@
 				</executions>
 			</plugin>
 		</plugins>
-	</build>	
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.emf.ecp.ecview</groupId>
+			<artifactId>org.eclipse.emf.ecp.ecview.common</artifactId>
+			<version>0.7.0</version>
+		</dependency>
+	</dependencies>
+
 	<name>Feature - ECView presentation for Vaadin</name>
 	<description>This features contains the implementation of the Vaadin presentation used by ECView to render a Vaadin UI based on a given UI-Model.
 

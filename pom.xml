@@ -60,8 +60,10 @@
 			<modules>
 				<module>org.lunifera.runtime.web.parent</module>
 
+				<module>org.lunifera.runtime.web.common</module>
+				<!-- <module>org.lunifera.runtime.web.common.tests</module> -->
 				<module>org.lunifera.runtime.web.ecview.presentation.vaadin</module>
-				<module>org.lunifera.runtime.web.ecview.presentation.vaadin.tests</module>
+				<!-- <module>org.lunifera.runtime.web.ecview.presentation.vaadin.tests</module> -->
 				<module>org.lunifera.runtime.web.ecview.services.vaadin</module>
 
 				<module>org.lunifera.runtime.web.feature.ecview.presentation.vaadin</module>
@@ -72,12 +74,12 @@
 				<module>org.lunifera.runtime.web.feature.vaadin.osgi</module>
 
 				<module>org.lunifera.runtime.web.vaadin.common</module>
-				<module>org.lunifera.runtime.web.vaadin.common.tests</module>
+				<!-- <module>org.lunifera.runtime.web.vaadin.common.tests</module> -->
 				<module>org.lunifera.runtime.web.vaadin.components</module>
 				<module>org.lunifera.runtime.web.vaadin.databinding</module>
 				<module>org.lunifera.runtime.web.vaadin.databinding.tests</module>
 				<module>org.lunifera.runtime.web.vaadin.osgi</module>
-				<module>org.lunifera.runtime.web.vaadin.osgi.tests</module>
+				<!-- <module>org.lunifera.runtime.web.vaadin.osgi.tests</module> -->
 				<module>org.lunifera.runtime.web.vaadin.widgetset</module>
 			</modules>
 		</profile>
