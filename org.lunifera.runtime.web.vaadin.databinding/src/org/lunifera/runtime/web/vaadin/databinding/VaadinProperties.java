@@ -12,6 +12,7 @@
  */
 package org.lunifera.runtime.web.vaadin.databinding;
 
+import org.lunifera.runtime.web.vaadin.databinding.component.internal.ButtonClickProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPickerGradientColorProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPickerGridColorProperty;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ColorPickerHistoryColorProperty;
@@ -84,6 +85,15 @@ public class VaadinProperties {
 	 */
 	public static IVaadinValueProperty focus() {
 		return new ComponentFocusedProperty();
+	}
+
+	/**
+	 * Returns a property that observes a button click.
+	 * 
+	 * @return
+	 */
+	public static IVaadinValueProperty buttonClick() {
+		return new ButtonClickProperty();
 	}
 
 	/**

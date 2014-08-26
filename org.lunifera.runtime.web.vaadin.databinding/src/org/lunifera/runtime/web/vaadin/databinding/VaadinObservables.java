@@ -1304,6 +1304,17 @@ public class VaadinObservables {
 				.observe(component);
 	}
 
+	/**
+	 * Button clicks will send the current activation time in ms as Long-value
+	 * to the receiver. So the type is long.
+	 * 
+	 * @param button
+	 * @return
+	 */
+	public static IVaadinObservableValue observeButtonClick(Button button) {
+		return VaadinProperties.buttonClick().observe(button);
+	}
+
 	public static IVaadinObservableValue observeButtonCaption(Upload component) {
 		return VaadinProperties.accessor(PopupView.class, "buttonCaption")
 				.observe(component);
