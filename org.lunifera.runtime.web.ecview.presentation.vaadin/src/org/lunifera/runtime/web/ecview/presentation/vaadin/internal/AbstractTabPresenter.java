@@ -11,11 +11,14 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
+import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
 import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
 import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
 import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
@@ -36,7 +39,8 @@ import com.vaadin.ui.Component;
  * An abstract implementation of the {@link IWidgetPresentation}.
  */
 public abstract class AbstractTabPresenter<A extends Component> extends
-		AbstractDisposable implements IWidgetPresentation<A> {
+		AbstractDisposable implements IWidgetPresentation<A>,
+		ILocaleChangedService.LocaleListener {
 
 	/**
 	 * See {@link IConstants#CSS_CLASS_CONTROL_BASE}.
@@ -83,6 +87,36 @@ public abstract class AbstractTabPresenter<A extends Component> extends
 	public IViewContext getViewContext() {
 		return viewContext;
 	}
+
+	/**
+	 * Returns the active locale for the view.
+	 * 
+	 * @return
+	 */
+	protected Locale getLocale() {
+		return viewContext.getLocale();
+	}
+
+	/**
+	 * Returns the i18n service or <code>null</code> if no service is available.
+	 * 
+	 * @return
+	 */
+	protected II18nService getI18nService() {
+		return viewContext.getService(II18nService.ID);
+	}
+
+	@Override
+	public void localeChanged(Locale locale) {
+		doUpdateLocale(locale);
+	}
+
+	/**
+	 * Needs to be overridden by subclasses to update the locale.
+	 * 
+	 * @param locale
+	 */
+	protected abstract void doUpdateLocale(Locale locale);
 
 	@Override
 	public void apply(IVisibilityPropertiesEditpart properties) {

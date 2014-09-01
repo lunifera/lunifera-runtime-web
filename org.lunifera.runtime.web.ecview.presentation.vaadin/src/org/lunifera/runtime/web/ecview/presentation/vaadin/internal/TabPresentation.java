@@ -10,6 +10,9 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.emf.ElementEditpart;
@@ -34,7 +37,7 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 	private Tab tab;
 	private ModelAccess modelAccess;
 
-	/**
+	/** 
 	 * The constructor.
 	 * 
 	 * @param editpart
@@ -66,11 +69,30 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 		childLayout.addComponent(childContent);
 
 		tab = tabSheet.addTab(childLayout);
-		if (modelAccess.isLabelValid()) {
-			tab.setCaption(modelAccess.getLabel());
-		}
-
+		applyCaptions();	
+		
 		return null;
+	}
+	
+	@Override
+	protected void doUpdateLocale(Locale locale) {
+		// update the captions
+		applyCaptions();
+	}
+
+	/**
+	 * Applies the labels to the widgets.
+	 */
+	protected void applyCaptions() {
+		II18nService service = getI18nService();
+		if (service != null && modelAccess.isLabelI18nKeyValid()) {
+			tab.setCaption(service.getValue(
+					modelAccess.getLabelI18nKey(), getLocale()));
+		} else {
+			if (modelAccess.isLabelValid()) {
+				tab.setCaption(modelAccess.getLabel());
+			}
+		}
 	}
 
 	@Override
@@ -172,6 +194,25 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 		 */
 		public String getLabel() {
 			return yTab.getDatadescription().getLabel();
+		}
+		
+		/**
+		 * Returns true, if the label is valid.
+		 * 
+		 * @return
+		 */
+		public boolean isLabelI18nKeyValid() {
+			return yTab.getDatadescription() != null
+					&& yTab.getDatadescription().getLabelI18nKey() != null;
+		}
+
+		/**
+		 * Returns the label.
+		 * 
+		 * @return
+		 */
+		public String getLabelI18nKey() {
+			return yTab.getDatadescription().getLabelI18nKey();
 		}
 	}
 }
