@@ -79,6 +79,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 			tree.addStyleName(CSS_CLASS_CONTROL);
 			tree.setMultiSelect(modelAccess.yTree.getSelectionType() == YSelectionType.MULTI);
 			tree.setImmediate(true);
+			tree.setSizeFull();
 			
 			associateWidget(tree, modelAccess.yTree);
 

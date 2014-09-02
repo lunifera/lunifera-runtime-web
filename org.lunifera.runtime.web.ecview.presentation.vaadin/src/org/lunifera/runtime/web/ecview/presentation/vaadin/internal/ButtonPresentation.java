@@ -62,6 +62,7 @@ public class ButtonPresentation extends
 			button = new Button();
 			button.addStyleName(CSS_CLASS_CONTROL);
 			button.setImmediate(true);
+			button.setSizeFull();
 			
 			associateWidget(button, modelAccess.yButton);
 

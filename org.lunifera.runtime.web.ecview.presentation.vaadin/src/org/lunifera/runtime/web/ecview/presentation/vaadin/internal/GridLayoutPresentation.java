@@ -277,8 +277,7 @@ public class GridLayoutPresentation extends
 	protected void applyAlignment(Component child, YAlignment yAlignment) {
 
 		if (yAlignment != null) {
-			child.setWidth("-1%");
-			child.setHeight("-1%");
+			child.setSizeUndefined();
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
 				gridlayout
@@ -327,8 +326,8 @@ public class GridLayoutPresentation extends
 				break;
 			case FILL_FILL:
 				gridlayout.setComponentAlignment(child, Alignment.TOP_LEFT);
-				child.setWidth("100%");
-				child.setHeight("100%");
+				child.setSizeFull();
+//				child.setHeight("100%");
 				break;
 			case FILL_LEFT:
 				gridlayout.setComponentAlignment(child, Alignment.TOP_LEFT);
@@ -440,6 +439,7 @@ public class GridLayoutPresentation extends
 			gridlayout = new GridLayout(modelAccess.getColumns(), 1);
 			gridlayout.setSpacing(false);
 			gridlayout.setImmediate(true);
+			gridlayout.setSizeFull();
 			componentBase.addComponent(gridlayout);
 
 			associateWidget(gridlayout, modelAccess.yLayout);

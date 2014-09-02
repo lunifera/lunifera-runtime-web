@@ -126,6 +126,7 @@ public class TabSheetPresentation extends
 			associateWidget(componentBase, modelAccess.yLayout);
 
 			tabSheet = new TabSheet();
+			tabSheet.setSizeFull();
 			componentBase.addComponent(tabSheet);
 			
 			associateWidget(tabSheet, modelAccess.yLayout);

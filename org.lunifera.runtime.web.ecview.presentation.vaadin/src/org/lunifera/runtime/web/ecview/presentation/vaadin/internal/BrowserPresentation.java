@@ -62,6 +62,7 @@ public class BrowserPresentation extends
 			browser = new BrowserFrame();
 			browser.addStyleName(CSS_CLASS_CONTROL);
 			browser.setImmediate(true);
+			browser.setSizeFull();
 			
 			associateWidget(browser, modelAccess.yBrowser);
 

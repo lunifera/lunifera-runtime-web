@@ -27,6 +27,7 @@ import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
+import org.eclipse.emf.ecp.ecview.common.model.datatypes.YDatadescription;
 import org.eclipse.emf.ecp.ecview.databinding.emf.model.ECViewModelBindable;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YColumn;
@@ -49,7 +50,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
-import com.vaadin.ui.Table.RowHeaderMode;
 
 /**
  * This presenter is responsible to render a table on the given layout.
@@ -62,6 +62,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	private Table table;
 	@SuppressWarnings("rawtypes")
 	private ObjectProperty property;
+	private boolean applyColumns;
 
 	/**
 	 * Constructor.
@@ -96,6 +97,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
 			table.setSelectable(true);
 			table.setImmediate(true);
+			// table.setSizeFull();
 
 			associateWidget(table, modelAccess.yTable);
 
@@ -111,6 +113,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			}
 			table.setPropertyDataSource(property);
 
+			applyColumns = false;
 			if (modelAccess.yTable.getType() == String.class) {
 				IndexedContainer datasource = new IndexedContainer();
 				table.setContainerDataSource(datasource);
@@ -122,8 +125,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 							modelAccess.yTable.getType());
 					table.setContainerDataSource(datasource);
 
-					// applies the column properties
-					applyColumns();
+					applyColumns = true;
 
 				} else {
 					IndexedContainer container = new IndexedContainer();
@@ -139,7 +141,6 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 					.getItemImageProperty();
 			if (itemImageProperty != null && !itemImageProperty.equals("")) {
 				table.setItemIconPropertyId(itemImageProperty);
-				table.setRowHeaderMode(RowHeaderMode.PROPERTY);
 			}
 
 			// creates the binding for the field
@@ -179,6 +180,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		// traverse the columns again and set other properties
 		for (YColumn yColumn : modelAccess.yTable.getColumns()) {
 			if (yColumn.isVisible() && propertyIds.contains(yColumn.getName())) {
+				table.setColumnHeader(yColumn.getName(),
+						getColumnHeader(yColumn));
 				table.setColumnAlignment(yColumn.getName(),
 						toAlign(yColumn.getAlignment()));
 				table.setColumnCollapsed(yColumn.getName(),
@@ -194,6 +197,26 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 							yColumn.getIcon()));
 				}
 			}
+		}
+	}
+
+	/**
+	 * Returns the column header
+	 * 
+	 * @param yColumn
+	 * @return
+	 */
+	private String getColumnHeader(YColumn yColumn) {
+		YDatadescription yDt = yColumn.getDatadescription();
+		if (yDt == null) {
+			return yColumn.getName();
+		}
+
+		II18nService service = getI18nService();
+		if (service != null && yDt.getLabelI18nKey() != null) {
+			return service.getValue(yDt.getLabelI18nKey(), getLocale());
+		} else {
+			return yDt.getLabel();
 		}
 	}
 
@@ -222,6 +245,12 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
+
+		// applies the column properties
+		if (applyColumns) {
+			applyColumns();
+		}
+
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
 			componentBase.setCaption(service.getValue(

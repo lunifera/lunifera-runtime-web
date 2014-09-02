@@ -12,6 +12,7 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -94,17 +95,26 @@ public class VerticalLayoutPresentation extends
 
 		// iterate all elements and build the child element
 		//
+		List<Cell> cells = new ArrayList<Cell>();
 		for (IEmbeddableEditpart childPresentation : getChildren()) {
 			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
-			addChild(childPresentation, yStyles.get(yChild));
+			cells.add(addChild(childPresentation, yStyles.get(yChild)));
 		}
 
-		if (!modelAccess.isFillVertical()) {
+		boolean expandVerticalFound = false;
+		for (Cell cell : cells) {
+			if (cell.isExpandVertical()) {
+				expandVerticalFound = true;
+				verticalLayout.setExpandRatio(cell.getComponent(), 1.0f);
+			}
+		}
+
+		if (!expandVerticalFound && !modelAccess.isFillVertical()) {
 			fillerLayout = new CssLayout();
 			fillerLayout.setSizeFull();
 			verticalLayout.addComponent(fillerLayout);
 			verticalLayout.setExpandRatio(fillerLayout, 1.0f);
-		} else{
+		} else {
 			componentBase.setSizeFull();
 			verticalLayout.setSizeFull();
 		}
@@ -153,8 +163,7 @@ public class VerticalLayoutPresentation extends
 	protected void applyAlignment(Component child, YAlignment yAlignment) {
 
 		if (yAlignment != null) {
-			child.setWidth("-1%");
-			child.setHeight("-1%");
+			child.setSizeUndefined();
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
 				verticalLayout.setComponentAlignment(child,
@@ -325,6 +334,7 @@ public class VerticalLayoutPresentation extends
 
 			verticalLayout = new VerticalLayout();
 			componentBase.addComponent(verticalLayout);
+			verticalLayout.setSizeFull();
 
 			associateWidget(verticalLayout, modelAccess.yLayout);
 
@@ -564,5 +574,16 @@ public class VerticalLayoutPresentation extends
 			return alignment;
 		}
 
+		protected boolean isExpandVertical() {
+			switch (alignment) {
+			case FILL_CENTER:
+			case FILL_FILL:
+			case FILL_LEFT:
+			case FILL_RIGHT:
+				return true;
+			default:
+				return false;
+			}
+		}
 	}
 }

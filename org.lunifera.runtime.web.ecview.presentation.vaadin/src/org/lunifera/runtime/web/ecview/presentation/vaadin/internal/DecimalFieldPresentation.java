@@ -86,6 +86,7 @@ public class DecimalFieldPresentation extends
 			decimalField = new DecimalField();
 			decimalField.addStyleName(CSS_CLASS_CONTROL);
 			decimalField.setImmediate(true);
+			decimalField.setWidth("100%");
 			
 			associateWidget(decimalField, modelAccess.yDecimalField);
 

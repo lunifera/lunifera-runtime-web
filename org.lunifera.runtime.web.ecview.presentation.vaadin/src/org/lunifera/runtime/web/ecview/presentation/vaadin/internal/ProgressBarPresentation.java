@@ -71,6 +71,7 @@ public class ProgressBarPresentation extends
 			progressBar = new ProgressBar();
 			progressBar.addStyleName(CSS_CLASS_CONTROL);
 			progressBar.setImmediate(true);
+			progressBar.setWidth("100%");
 			
 			associateWidget(progressBar, modelAccess.yProgressBar);
 

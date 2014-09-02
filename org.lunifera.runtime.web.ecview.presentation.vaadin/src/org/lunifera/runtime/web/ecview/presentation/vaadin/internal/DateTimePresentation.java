@@ -76,6 +76,7 @@ public class DateTimePresentation extends
 			dateField = new DateField();
 			dateField.addStyleName(CSS_CLASS_CONTROL);
 			dateField.setImmediate(true);
+			dateField.setWidth("100%");
 			
 			associateWidget(dateField, modelAccess.yDateTime);
 

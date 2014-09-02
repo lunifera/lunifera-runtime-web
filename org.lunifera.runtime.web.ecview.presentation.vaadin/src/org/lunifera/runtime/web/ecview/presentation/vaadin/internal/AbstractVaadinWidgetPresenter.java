@@ -58,6 +58,7 @@ import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
@@ -367,6 +368,50 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 */
 	protected Binding createBindingsValue(EObject model,
 			EStructuralFeature modelFeature, Field<?> field,
+			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
+		IBindingManager bindingManager = getViewContext()
+				.getService(
+						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+								.getName());
+		if (bindingManager != null) {
+			// bind the value of yText to textRidget
+			IObservableValue modelObservable = EMFObservables.observeValue(
+					model, modelFeature);
+			IObservableValue uiObservable = VaadinObservables
+					.observeValue(field);
+			return bindingManager.bindValue(uiObservable, modelObservable,
+					targetToModel, modelToTarget);
+		}
+		return null;
+	}
+
+	/**
+	 * Creates a binding for the value attribute from the ECView-UI-model to the
+	 * UI element.
+	 * 
+	 * @param model
+	 * @param modelFeature
+	 * @param field
+	 * @return binding
+	 * @@return Binding - the created binding
+	 */
+	protected Binding createBindings_Value(EObject model,
+			EStructuralFeature modelFeature, ValueChangeNotifier field) {
+		return createBindingsValue(model, modelFeature, field, null, null);
+	}
+
+	/**
+	 * Binds the value attribute from the ecview model to the ui element.
+	 * 
+	 * @param model
+	 * @param modelFeature
+	 * @param field
+	 * @return binding
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindingsValue(EObject model,
+			EStructuralFeature modelFeature, ValueChangeNotifier field,
 			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(

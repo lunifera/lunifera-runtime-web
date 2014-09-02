@@ -86,6 +86,7 @@ public class NumericFieldPresentation extends
 			numberField = new NumberField();
 			numberField.addStyleName(CSS_CLASS_CONTROL);
 			numberField.setImmediate(true);
+			numberField.setWidth("100%");
 			
 			associateWidget(numberField, modelAccess.yNumericField);
 

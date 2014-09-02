@@ -76,6 +76,7 @@ public class BooleanSearchFieldPresentation extends
 					bm.getDatabindingContext());
 			text.addStyleName(CSS_CLASS_CONTROL);
 			text.setImmediate(true);
+			text.setWidth("100%");
 
 			associateWidget(text, modelAccess.yText);
 

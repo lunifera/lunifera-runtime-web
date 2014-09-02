@@ -82,6 +82,7 @@ public class ComboBoxPresentation extends
 			combo = new CustomComboBox();
 			combo.addStyleName(CSS_CLASS_CONTROL);
 			combo.setImmediate(true);
+			combo.setWidth("100%");
 
 			associateWidget(combo, modelAccess.yCombo);
 

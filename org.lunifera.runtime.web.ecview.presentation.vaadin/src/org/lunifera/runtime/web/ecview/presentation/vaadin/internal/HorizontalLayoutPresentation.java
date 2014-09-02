@@ -12,6 +12,7 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -93,17 +94,26 @@ public class HorizontalLayoutPresentation extends
 
 		// iterate all elements and build the child element
 		//
+		List<Cell> cells = new ArrayList<Cell>();
 		for (IEmbeddableEditpart child : getChildren()) {
 			YEmbeddable yChild = (YEmbeddable) child.getModel();
-			addChild(child, yStyles.get(yChild));
+			cells.add(addChild(child, yStyles.get(yChild)));
 		}
 
-		if (!modelAccess.isFillHorizontal()) {
+		boolean expandHorizontalFound = false;
+		for (Cell cell : cells) {
+			if (cell.isExpandHorizontal()) {
+				expandHorizontalFound = true;
+				horizontalLayout.setExpandRatio(cell.getComponent(), 1.0f);
+			}
+		}
+
+		if (!expandHorizontalFound && !modelAccess.isFillHorizontal()) {
 			fillerLayout = new CssLayout();
 			fillerLayout.setSizeFull();
 			horizontalLayout.addComponent(fillerLayout);
 			horizontalLayout.setExpandRatio(fillerLayout, 1.0f);
-		} else{
+		} else {
 			componentBase.setSizeFull();
 			horizontalLayout.setSizeFull();
 		}
@@ -324,10 +334,11 @@ public class HorizontalLayoutPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
+
 			associateWidget(componentBase, modelAccess.yLayout);
 
 			horizontalLayout = new HorizontalLayout();
+			horizontalLayout.setSizeFull();
 			componentBase.addComponent(horizontalLayout);
 
 			associateWidget(horizontalLayout, modelAccess.yLayout);
@@ -566,5 +577,16 @@ public class HorizontalLayoutPresentation extends
 			return alignment;
 		}
 
+		protected boolean isExpandHorizontal() {
+			switch (alignment) {
+			case BOTTOM_FILL:
+			case FILL_FILL:
+			case MIDDLE_FILL:
+			case TOP_FILL:
+				return true;
+			default:
+				return false;
+			}
+		}
 	}
 }

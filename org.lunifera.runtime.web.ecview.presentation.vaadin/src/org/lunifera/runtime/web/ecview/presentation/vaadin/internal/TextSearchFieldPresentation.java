@@ -78,6 +78,7 @@ public class TextSearchFieldPresentation extends
 			text.addStyleName(CSS_CLASS_CONTROL);
 			text.setNullRepresentation("");
 			text.setImmediate(true);
+			text.setWidth("100%");
 
 			associateWidget(text, modelAccess.yText);
 

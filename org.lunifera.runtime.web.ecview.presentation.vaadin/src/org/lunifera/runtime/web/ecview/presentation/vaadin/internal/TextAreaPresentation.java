@@ -69,6 +69,7 @@ public class TextAreaPresentation extends
 			associateWidget(componentBase, modelAccess.yTextArea);
 
 			textArea = new TextArea();
+			textArea.setSizeFull();
 			textArea.addStyleName(CSS_CLASS_CONTROL);
 			textArea.setImmediate(true);
 			textArea.setNullRepresentation("");

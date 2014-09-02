@@ -14,10 +14,12 @@ import java.util.Locale;
 
 import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -58,20 +60,21 @@ public class LabelPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
+
 			associateWidget(componentBase, modelAccess.yLabel);
 
 			label = new Label();
 			label.addStyleName(CSS_CLASS_CONTROL);
 			label.setImmediate(true);
-			
+			label.setSizeFull();
+
 			associateWidget(label, modelAccess.yLabel);
 
 			property = new ObjectProperty<String>("", String.class);
 			label.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yLabel, label, null);
+			createBindings(modelAccess.yLabel, label, componentBase);
 
 			componentBase.addComponent(label);
 
@@ -82,6 +85,21 @@ public class LabelPresentation extends
 			applyCaptions();
 		}
 		return componentBase;
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YLabel yField, Label field,
+			AbstractComponent componentBase) {
+		// create the model binding from ridget to ECView-model
+		registerBinding(createBindings_Value(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YLABEL__VALUE, field));
+
+		super.createBindings(yField, field, componentBase);
 	}
 
 	@Override

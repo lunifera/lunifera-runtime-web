@@ -313,6 +313,7 @@ public class FormLayoutPresentation extends
 			associateWidget(componentBase, modelAccess.yLayout);
 
 			formLayout = new FormLayout();
+			formLayout.setSizeFull();
 			componentBase.addComponent(formLayout);
 
 			associateWidget(formLayout, modelAccess.yLayout);

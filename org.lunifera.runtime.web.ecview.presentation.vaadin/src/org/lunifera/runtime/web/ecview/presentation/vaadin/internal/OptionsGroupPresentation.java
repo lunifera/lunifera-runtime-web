@@ -87,6 +87,7 @@ public class OptionsGroupPresentation extends
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
 			optionsGroup.setImmediate(true);
+			optionsGroup.setSizeFull();
 
 			associateWidget(optionsGroup, modelAccess.yOptionsGroup);
 

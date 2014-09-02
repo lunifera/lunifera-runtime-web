@@ -24,8 +24,6 @@ import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.event.MouseEvents;
-import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -74,12 +72,13 @@ public class TextFieldPresentation extends
 			text.addStyleName(CSS_CLASS_CONTROL);
 			text.setNullRepresentation("");
 			text.setImmediate(true);
+			text.setWidth("100%");
 
 			associateWidget(text, modelAccess.yText);
 
 			property = new ObjectProperty<String>(null, String.class);
 			text.setPropertyDataSource(property);
-			
+
 			// creates the binding for the field
 			createBindings(modelAccess.yText, text);
 

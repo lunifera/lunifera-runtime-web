@@ -72,6 +72,7 @@ public class ImagePresentation extends
 			image = new Embedded();
 			image.addStyleName(CSS_CLASS_CONTROL);
 			image.setImmediate(true);
+			image.setSizeFull();
 
 			associateWidget(image, modelAccess.yImage);
 
