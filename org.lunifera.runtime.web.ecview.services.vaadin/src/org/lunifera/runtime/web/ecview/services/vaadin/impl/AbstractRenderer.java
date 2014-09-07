@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
+import org.lunifera.ecview.core.common.model.core.YLayout;
 import org.lunifera.dsl.semantic.common.types.LDataType;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;

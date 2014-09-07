@@ -14,9 +14,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.presentation.IFieldPresentation;
-import org.eclipse.emf.ecp.ecview.common.validation.IValidator;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.presentation.IFieldPresentation;
+import org.lunifera.ecview.core.common.validation.IValidator;
 
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Component;

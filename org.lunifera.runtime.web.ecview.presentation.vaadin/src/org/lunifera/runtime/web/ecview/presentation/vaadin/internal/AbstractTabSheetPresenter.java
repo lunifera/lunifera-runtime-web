@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabSheetPresentation;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.presentation.ILayoutPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YTabSheet;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ITabEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ITabSheetEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.presentation.ITabSheetPresentation;
 
 import com.vaadin.ui.ComponentContainer;
 

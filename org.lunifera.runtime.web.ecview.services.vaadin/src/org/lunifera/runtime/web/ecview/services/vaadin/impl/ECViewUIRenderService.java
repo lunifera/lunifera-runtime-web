@@ -13,9 +13,9 @@ package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.model.core.YView;
 import org.lunifera.dsl.semantic.dto.LDto;
 import org.lunifera.dsl.semantic.entity.LEntity;
 import org.lunifera.dsl.xtext.builder.participant.IDtoMetadataService;

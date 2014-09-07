@@ -14,9 +14,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.services.IWidgetAssocationsService;
-import org.eclipse.emf.ecp.ecview.common.tooling.IWidgetMouseClickService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
+import org.lunifera.ecview.core.common.tooling.IWidgetMouseClickService;
 
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;

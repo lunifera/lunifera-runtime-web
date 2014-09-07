@@ -13,7 +13,7 @@ package org.lunifera.runtime.web.ecview.services.vaadin;
 
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
+import org.lunifera.ecview.core.common.model.core.YView;
 import org.lunifera.dsl.semantic.entity.LEntity;
 
 public interface ILEntityRenderStrategy {

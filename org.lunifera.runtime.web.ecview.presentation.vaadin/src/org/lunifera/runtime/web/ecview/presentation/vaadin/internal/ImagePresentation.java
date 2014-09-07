@@ -17,11 +17,11 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YImage;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IImageEditpart;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
+import org.lunifera.ecview.core.extension.model.extension.YImage;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IImageEditpart;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.server.Resource;
@@ -205,7 +205,7 @@ public class ImagePresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yImage.getCssClass();
@@ -222,7 +222,7 @@ public class ImagePresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yImage.getCssID();

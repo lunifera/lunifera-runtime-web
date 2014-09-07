@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YLayout;
-import org.eclipse.emf.ecp.ecview.common.presentation.ILayoutPresentation;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.ILayoutEditpart;
+import org.lunifera.ecview.core.common.model.core.YLayout;
+import org.lunifera.ecview.core.common.presentation.ILayoutPresentation;
 
 import com.vaadin.ui.ComponentContainer;
 

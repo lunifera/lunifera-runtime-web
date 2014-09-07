@@ -11,9 +11,9 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin;
 
 import org.eclipse.core.databinding.Binding;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
-import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
+import org.lunifera.ecview.core.common.model.core.YEditable;
+import org.lunifera.ecview.core.common.model.core.YEnable;
+import org.lunifera.ecview.core.common.model.core.YVisibleable;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
@@ -25,7 +25,7 @@ import com.vaadin.ui.Component;
  * contained are bindings related to the associated view.
  */
 public interface IBindingManager extends
-		org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager {
+		org.lunifera.ecview.core.common.binding.IECViewBindingManager {
 
 	/**
 	 * Binds the visible option.

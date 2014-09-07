@@ -22,13 +22,13 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFUpdateListStrategy;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
-import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
-import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewDatabindingContext;
-import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewUpdateValueStrategy;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.model.core.CoreModelPackage;
+import org.lunifera.ecview.core.common.model.core.YEditable;
+import org.lunifera.ecview.core.common.model.core.YEnable;
+import org.lunifera.ecview.core.common.model.core.YVisibleable;
+import org.lunifera.ecview.core.databinding.emf.common.ECViewDatabindingContext;
+import org.lunifera.ecview.core.databinding.emf.common.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableValue;
@@ -41,7 +41,7 @@ import com.vaadin.ui.Component;
  * Is used to bind values.
  */
 public class BindingManager extends
-		org.eclipse.emf.ecp.ecview.common.binding.AbstractBindingManager
+		org.lunifera.ecview.core.common.binding.AbstractBindingManager
 		implements IBindingManager {
 
 	public BindingManager(IViewContext viewContext, Realm validationRealm) {

@@ -19,17 +19,17 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YValueBindable;
-import org.eclipse.emf.ecp.ecview.common.model.datatypes.YDatatype;
-import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
-import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
+import org.lunifera.ecview.core.common.model.core.YValueBindable;
+import org.lunifera.ecview.core.common.model.datatypes.YDatatype;
+import org.lunifera.ecview.core.extension.model.datatypes.YDecimalDatatype;
+import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
+import org.lunifera.ecview.core.extension.model.extension.YDecimalField;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -234,7 +234,7 @@ public class DecimalFieldPresentation extends
 			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget
@@ -323,7 +323,7 @@ public class DecimalFieldPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yDecimalField.getCssClass();
@@ -340,7 +340,7 @@ public class DecimalFieldPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yDecimalField.getCssID();

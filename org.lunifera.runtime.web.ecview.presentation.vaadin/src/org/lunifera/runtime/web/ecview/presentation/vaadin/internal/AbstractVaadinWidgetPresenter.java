@@ -29,28 +29,28 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
-import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEditable;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEnable;
-import org.eclipse.emf.ecp.ecview.common.model.core.YVisibleable;
-import org.eclipse.emf.ecp.ecview.common.model.core.util.CoreModelUtil;
-import org.eclipse.emf.ecp.ecview.common.model.datatypes.YDatatype;
-import org.eclipse.emf.ecp.ecview.common.model.visibility.YColor;
-import org.eclipse.emf.ecp.ecview.common.model.visibility.YVisibilityProperties;
-import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleEvent;
-import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleService;
-import org.eclipse.emf.ecp.ecview.common.notification.LifecycleEvent;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.common.services.IWidgetAssocationsService;
-import org.eclipse.emf.ecp.ecview.databinding.emf.common.ECViewUpdateValueStrategy;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.ILocaleChangedService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.disposal.AbstractDisposable;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
+import org.lunifera.ecview.core.common.editpart.visibility.IVisibilityPropertiesEditpart;
+import org.lunifera.ecview.core.common.model.core.YEditable;
+import org.lunifera.ecview.core.common.model.core.YEmbeddable;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
+import org.lunifera.ecview.core.common.model.core.YEnable;
+import org.lunifera.ecview.core.common.model.core.YVisibleable;
+import org.lunifera.ecview.core.common.model.core.util.CoreModelUtil;
+import org.lunifera.ecview.core.common.model.datatypes.YDatatype;
+import org.lunifera.ecview.core.common.model.visibility.YColor;
+import org.lunifera.ecview.core.common.model.visibility.YVisibilityProperties;
+import org.lunifera.ecview.core.common.notification.ILifecycleEvent;
+import org.lunifera.ecview.core.common.notification.ILifecycleService;
+import org.lunifera.ecview.core.common.notification.LifecycleEvent;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
+import org.lunifera.ecview.core.databinding.emf.common.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -204,7 +204,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 
 		bindingManger = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 		applyDefaults(yEmbeddable);
 
@@ -237,7 +237,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			IObservableValue model) {
 		bindingManger = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 
 		return bindingManger.bindValue(target, model);
@@ -257,7 +257,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			UpdateValueStrategy modelToTarget) {
 		bindingManger = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 		return bindingManger.bindValue(target, model, targetToModel,
 				modelToTarget);
@@ -275,7 +275,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			IObservableList model) {
 		bindingManger = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 
 		return bindingManger.bindList(target, model);
@@ -339,7 +339,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			AbstractComponent abstractComponent) {
 		IBindingManager bindingManger = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 
 		// bind enabled
@@ -376,7 +376,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget
@@ -420,7 +420,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget
@@ -454,7 +454,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			Class<?> type) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget
@@ -535,7 +535,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			Class<?> collectionType) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget
@@ -598,7 +598,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			UpdateListStrategy targetToModel, UpdateListStrategy modelToTarget) {
 		IBindingManager bindingManager = getViewContext()
 				.getService(
-						org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 								.getName());
 		if (bindingManager != null) {
 			// bind the value of yText to textRidget

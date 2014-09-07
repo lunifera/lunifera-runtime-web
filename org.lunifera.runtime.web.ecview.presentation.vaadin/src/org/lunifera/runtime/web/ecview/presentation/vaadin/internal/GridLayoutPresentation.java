@@ -17,14 +17,14 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YAlignment;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayoutCellStyle;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YSpanInfo;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.ILayoutEditpart;
+import org.lunifera.ecview.core.common.model.core.YAlignment;
+import org.lunifera.ecview.core.common.model.core.YEmbeddable;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayoutCellStyle;
+import org.lunifera.ecview.core.extension.model.extension.YSpanInfo;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -537,7 +537,7 @@ public class GridLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLayout.getCssClass();
@@ -554,7 +554,7 @@ public class GridLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isSpacing()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#isSpacing()
 		 */
 		public boolean isSpacing() {
 			return yLayout.isSpacing();
@@ -562,7 +562,7 @@ public class GridLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLayout.getCssID();
@@ -579,7 +579,7 @@ public class GridLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isMargin()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yLayout.isMargin();
@@ -587,7 +587,7 @@ public class GridLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#getColumns()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#getColumns()
 		 */
 		public int getColumns() {
 			int columns = yLayout.getColumns();
@@ -596,7 +596,7 @@ public class GridLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#getCellStyles()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#getCellStyles()
 		 */
 		public EList<YGridLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
@@ -604,7 +604,7 @@ public class GridLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isFillHorizontal()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#isFillHorizontal()
 		 */
 		public boolean isFillHorizontal() {
 			return yLayout.isFillHorizontal();
@@ -612,7 +612,7 @@ public class GridLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isFillVertical()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#isFillVertical()
 		 */
 		public boolean isFillVertical() {
 			return yLayout.isFillVertical();

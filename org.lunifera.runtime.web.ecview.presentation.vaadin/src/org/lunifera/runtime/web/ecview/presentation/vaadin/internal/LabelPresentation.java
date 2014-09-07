@@ -12,11 +12,11 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Locale;
 
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YLabel;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ILabelEditpart;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
+import org.lunifera.ecview.core.extension.model.extension.YLabel;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ILabelEditpart;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractComponent;
@@ -186,7 +186,7 @@ public class LabelPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLabel.getCssClass();
@@ -203,7 +203,7 @@ public class LabelPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLabel.getCssID();

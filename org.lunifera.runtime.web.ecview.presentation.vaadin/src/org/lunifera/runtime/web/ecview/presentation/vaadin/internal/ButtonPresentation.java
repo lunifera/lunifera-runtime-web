@@ -11,11 +11,11 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.listener.YButtonClickListener;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.extension.model.extension.YButton;
+import org.lunifera.ecview.core.extension.model.extension.listener.YButtonClickListener;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IButtonEditpart;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -187,7 +187,7 @@ public class ButtonPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yButton.getCssClass();
@@ -204,7 +204,7 @@ public class ButtonPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yButton.getCssID();

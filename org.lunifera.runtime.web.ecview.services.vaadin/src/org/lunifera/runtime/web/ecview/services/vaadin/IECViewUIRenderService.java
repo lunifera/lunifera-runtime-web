@@ -13,7 +13,7 @@ package org.lunifera.runtime.web.ecview.services.vaadin;
 
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
+import org.lunifera.ecview.core.common.context.IViewContext;
 
 import com.vaadin.ui.ComponentContainer;
 

@@ -12,11 +12,11 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Locale;
 
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.presentation.ITabSheetPresentation;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.extension.model.extension.YTabSheet;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ITabEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ITabSheetEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.presentation.ITabSheetPresentation;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -222,7 +222,7 @@ public class TabSheetPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLayout.getCssClass();
@@ -239,7 +239,7 @@ public class TabSheetPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLayout.getCssID();

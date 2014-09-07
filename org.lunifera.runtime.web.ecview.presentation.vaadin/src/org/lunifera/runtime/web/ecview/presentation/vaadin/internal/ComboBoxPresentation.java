@@ -16,15 +16,15 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFProperties;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
-import org.eclipse.emf.ecp.ecview.databinding.emf.model.ECViewModelBindable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.ExtensionModelPackage;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YComboBox;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IComboBoxEditpart;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableSelectionEndpoint;
+import org.lunifera.ecview.core.databinding.emf.model.ECViewModelBindable;
+import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
+import org.lunifera.ecview.core.extension.model.extension.YComboBox;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IComboBoxEditpart;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
@@ -284,7 +284,7 @@ public class ComboBoxPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yCombo.getCssClass();
@@ -301,7 +301,7 @@ public class ComboBoxPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yCombo.getCssID();

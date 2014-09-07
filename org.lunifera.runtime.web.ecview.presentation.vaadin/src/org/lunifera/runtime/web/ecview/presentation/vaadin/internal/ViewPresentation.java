@@ -18,21 +18,21 @@ import java.util.concurrent.Future;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
-import org.eclipse.emf.ecp.ecview.common.context.ILocaleChangedService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
-import org.eclipse.emf.ecp.ecview.common.editpart.IDialogEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindableEndpointEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
-import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YAlignment;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
-import org.eclipse.emf.ecp.ecview.common.services.IUiKitBasedService;
-import org.eclipse.emf.ecp.ecview.common.tooling.IWidgetMouseClickService;
-import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
+import org.lunifera.ecview.core.common.context.ILocaleChangedService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.disposal.AbstractDisposable;
+import org.lunifera.ecview.core.common.editpart.IDialogEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.editpart.binding.IBindableEndpointEditpart;
+import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
+import org.lunifera.ecview.core.common.editpart.visibility.IVisibilityPropertiesEditpart;
+import org.lunifera.ecview.core.common.model.core.YAlignment;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IViewPresentation;
+import org.lunifera.ecview.core.common.services.IUiKitBasedService;
+import org.lunifera.ecview.core.common.tooling.IWidgetMouseClickService;
+import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetMouseClickService;
 import org.slf4j.Logger;
@@ -522,7 +522,7 @@ public class ViewPresentation extends AbstractDisposable implements
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yView.getCssClass();
@@ -539,7 +539,7 @@ public class ViewPresentation extends AbstractDisposable implements
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yView.getCssID();
@@ -556,7 +556,7 @@ public class ViewPresentation extends AbstractDisposable implements
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YGridLayout#isMargin()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yView.isMargin();

@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YFormLayout;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.ILayoutEditpart;
+import org.lunifera.ecview.core.common.model.core.YEmbeddable;
+import org.lunifera.ecview.core.extension.model.extension.YFormLayout;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -270,7 +270,7 @@ public class FormLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLayout.getCssClass();
@@ -287,7 +287,7 @@ public class FormLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YFormLayout#isSpacing()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YFormLayout#isSpacing()
 		 */
 		public boolean isSpacing() {
 			return yLayout.isSpacing();
@@ -295,7 +295,7 @@ public class FormLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLayout.getCssID();
@@ -312,7 +312,7 @@ public class FormLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YFormLayout#isMargin()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YFormLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yLayout.isMargin();
@@ -320,7 +320,7 @@ public class FormLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YFormLayout#isFillVertical()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YFormLayout#isFillVertical()
 		 */
 		public boolean isFillVertical() {
 			return yLayout.isFillVertical();
@@ -328,7 +328,7 @@ public class FormLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YFormLayout#isFillHorizontal()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YFormLayout#isFillHorizontal()
 		 */
 		public boolean isFillHorizontal() {
 			return yLayout.isFillHorizontal();

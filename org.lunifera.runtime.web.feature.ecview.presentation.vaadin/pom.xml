@@ -60,8 +60,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.eclipse.emf.ecp.ecview</groupId>
-			<artifactId>org.eclipse.emf.ecp.ecview.common</artifactId>
+			<groupId>org.lunifera.ecview.core</groupId>
+			<artifactId>org.lunifera.ecview.core.common</artifactId>
 			<version>0.7.0</version>
 		</dependency>
 	</dependencies>

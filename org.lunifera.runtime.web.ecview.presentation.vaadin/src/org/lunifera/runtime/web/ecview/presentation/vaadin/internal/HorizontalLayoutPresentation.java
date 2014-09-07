@@ -17,13 +17,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YAlignment;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayoutCellStyle;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.ILayoutEditpart;
+import org.lunifera.ecview.core.common.model.core.YAlignment;
+import org.lunifera.ecview.core.common.model.core.YEmbeddable;
+import org.lunifera.ecview.core.extension.model.extension.YHorizontalLayout;
+import org.lunifera.ecview.core.extension.model.extension.YHorizontalLayoutCellStyle;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -399,7 +399,7 @@ public class HorizontalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLayout.getCssClass();
@@ -416,7 +416,7 @@ public class HorizontalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YHorizontalLayout#isSpacing()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YHorizontalLayout#isSpacing()
 		 */
 		public boolean isSpacing() {
 			return yLayout.isSpacing();
@@ -424,7 +424,7 @@ public class HorizontalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLayout.getCssID();
@@ -441,7 +441,7 @@ public class HorizontalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YHorizontalLayout#isMargin()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YHorizontalLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yLayout.isMargin();
@@ -449,7 +449,7 @@ public class HorizontalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YHorizontalLayout#getCellStyles()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YHorizontalLayout#getCellStyles()
 		 */
 		public EList<YHorizontalLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
@@ -461,7 +461,7 @@ public class HorizontalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YHorizontalLayout#isFillHorizontal()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YHorizontalLayout#isFillHorizontal()
 		 */
 		public boolean isFillHorizontal() {
 			return yLayout.isFillHorizontal();

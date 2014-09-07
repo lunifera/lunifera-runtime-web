@@ -13,10 +13,10 @@ package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.lunifera.dsl.semantic.entity.LEntity;
 import org.lunifera.runtime.web.ecview.services.vaadin.ILEntityRenderStrategy;
 import org.osgi.service.component.annotations.Component;

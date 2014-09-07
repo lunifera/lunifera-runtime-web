@@ -17,13 +17,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YAlignment;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayoutCellStyle;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.ILayoutEditpart;
+import org.lunifera.ecview.core.common.model.core.YAlignment;
+import org.lunifera.ecview.core.common.model.core.YEmbeddable;
+import org.lunifera.ecview.core.extension.model.extension.YVerticalLayout;
+import org.lunifera.ecview.core.extension.model.extension.YVerticalLayoutCellStyle;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -396,7 +396,7 @@ public class VerticalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssClass()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
 			return yLayout.getCssClass();
@@ -413,7 +413,7 @@ public class VerticalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YVerticalLayout#isSpacing()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YVerticalLayout#isSpacing()
 		 */
 		public boolean isSpacing() {
 			return yLayout.isSpacing();
@@ -421,7 +421,7 @@ public class VerticalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
+		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
 			return yLayout.getCssID();
@@ -438,7 +438,7 @@ public class VerticalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YVerticalLayout#isMargin()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YVerticalLayout#isMargin()
 		 */
 		public boolean isMargin() {
 			return yLayout.isMargin();
@@ -446,7 +446,7 @@ public class VerticalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YVerticalLayout#getCellStyles()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YVerticalLayout#getCellStyles()
 		 */
 		public EList<YVerticalLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
@@ -458,7 +458,7 @@ public class VerticalLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YVerticalLayout#isFillVertical()
+		 * @see org.lunifera.ecview.core.ui.core.model.extension.YVerticalLayout#isFillVertical()
 		 */
 		public boolean isFillVertical() {
 			return yLayout.isFillVertical();

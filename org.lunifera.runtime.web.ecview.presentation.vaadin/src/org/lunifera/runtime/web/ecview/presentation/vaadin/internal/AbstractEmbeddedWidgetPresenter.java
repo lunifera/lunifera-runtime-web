@@ -10,8 +10,8 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;

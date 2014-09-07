@@ -11,10 +11,10 @@
 
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding;
 
-import org.eclipse.emf.ecp.ecview.common.context.IContext;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.disposal.IDisposable;
-import org.eclipse.emf.ecp.ecview.common.services.IServiceProvider;
+import org.lunifera.ecview.core.common.context.IContext;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.disposal.IDisposable;
+import org.lunifera.ecview.core.common.services.IServiceProvider;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
@@ -25,7 +25,7 @@ public class BindingManagerProvider implements IServiceProvider {
 	@Override
 	public boolean isFor(String selector, IContext context) {
 		if (context instanceof IViewContext) {
-			if (!org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager.class
+			if (!org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
 					.getName().equals(selector)) {
 				return false;
 			}

@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lunifera.runtime.web.ecview.presentation.vaadin.service.provider">
    <implementation class="org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding.BindingManagerProvider"/>
    <service>
-      <provide interface="org.eclipse.emf.ecp.ecview.common.services.IServiceProvider"/>
+      <provide interface="org.lunifera.ecview.core.common.services.IServiceProvider"/>
    </service>
    <property name="ecview.serviceprovider.level" type="String" value="view"/>
 </scr:component>  

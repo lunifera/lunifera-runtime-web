@@ -11,8 +11,8 @@
 
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
-import org.eclipse.emf.ecp.ecview.common.validation.IStatus;
-import org.eclipse.emf.ecp.ecview.common.validation.IValidator;
+import org.lunifera.ecview.core.common.validation.IStatus;
+import org.lunifera.ecview.core.common.validation.IValidator;
 
 import com.vaadin.data.validator.AbstractValidator;
 
