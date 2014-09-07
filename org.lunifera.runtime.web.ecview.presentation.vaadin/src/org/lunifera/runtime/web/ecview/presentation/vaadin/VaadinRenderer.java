@@ -30,7 +30,7 @@ public class VaadinRenderer implements IRenderer {
 	/**
 	 * URI specifying the simple SWT presentation.
 	 */
-	public static final String UI_KIT_URI = "http://lunifera.org/vaadin/v1";
+	public static final String UI_KIT_URI = "http://lunifera.org/ecview/v1/presentation/vaadin";
 
 	/**
 	 * Renders the UI for the given componentContainer and UI model.

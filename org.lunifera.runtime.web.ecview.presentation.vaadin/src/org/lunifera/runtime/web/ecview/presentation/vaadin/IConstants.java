@@ -21,13 +21,13 @@ public interface IConstants {
 	 * base composite is used to enable margins on a control and to allow a
 	 * control to rebuild its SWT controls at the "base composite parent".
 	 */
-	String CSS_CLASS_CONTROL_BASE = "controlbase";
+	String CSS_CLASS_CONTROL_BASE = "l-controlbase";
 
 	/**
 	 * This CSS class is applied to the control of a presentation as far as the
 	 * model element does not specify its own CSS class.
 	 */
-	public static final String CSS_CLASS_CONTROL = "control";
+	public static final String CSS_CLASS_CONTROL = "l-control";
 
 	/**
 	 * This CSS class marks the widget to show a margin.
@@ -42,10 +42,17 @@ public interface IConstants {
 	/**
 	 * This CSS class for master-detail master-base component.
 	 */
-	String CSS_CLASS_MASTER_BASE = "masterbase";
+	String CSS_CLASS_MASTER_BASE = "l-masterbase";
 
 	/**
 	 * This CSS class for master-detail detail-base component.
 	 */
-	String CSS_CLASS_DETAIL_BASE = "detailbase";
+	String CSS_CLASS_DETAIL_BASE = "l-detailbase";
+
+	/**
+	 * This CSS class is used to mark the compressor element. Compressor
+	 * elements are used to avoid elements from grapping access space during
+	 * window size changes.
+	 */
+	String CSS_CLASS_COMPRESSOR = "l-layout-compressor";
 }

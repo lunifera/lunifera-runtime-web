@@ -20,8 +20,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YAlignment;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayoutCellStyle;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
@@ -100,23 +100,26 @@ public class HorizontalLayoutPresentation extends
 			cells.add(addChild(child, yStyles.get(yChild)));
 		}
 
-		boolean expandHorizontalFound = false;
 		for (Cell cell : cells) {
-			if (cell.isExpandHorizontal()) {
-				expandHorizontalFound = true;
+			if (cell.isExpandVertical()) {
+				// expandVerticalFound = true;
 				horizontalLayout.setExpandRatio(cell.getComponent(), 1.0f);
 			}
 		}
 
-		if (!expandHorizontalFound && !modelAccess.isFillHorizontal()) {
+		if (!modelAccess.isFillHorizontal()) {
 			fillerLayout = new CssLayout();
 			fillerLayout.setSizeFull();
+			fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
 			horizontalLayout.addComponent(fillerLayout);
 			horizontalLayout.setExpandRatio(fillerLayout, 1.0f);
 		} else {
-			componentBase.setSizeFull();
-			horizontalLayout.setSizeFull();
+			componentBase.setWidth("100%");
+			horizontalLayout.setWidth("100%");
 		}
+
+		componentBase.setHeight("100%");
+		horizontalLayout.setHeight("100%");
 
 	}
 
@@ -136,16 +139,7 @@ public class HorizontalLayoutPresentation extends
 		// calculate and apply the alignment to be used
 		//
 		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle
-				.getAlignment() : null;
-		if (yAlignment == null) {
-			// use default
-			yAlignment = YAlignment.TOP_LEFT;
-
-			if (modelAccess.isFillHorizontal()) {
-				// ensure that horizontal alignment is FILL
-				yAlignment = mapToHorizontalFill(yAlignment);
-			}
-		}
+				.getAlignment() : YAlignment.TOP_LEFT;
 
 		horizontalLayout.addComponent(child);
 		applyAlignment(child, yAlignment);
@@ -162,8 +156,7 @@ public class HorizontalLayoutPresentation extends
 	protected void applyAlignment(Component child, YAlignment yAlignment) {
 
 		if (yAlignment != null) {
-			child.setWidth("-1%");
-			child.setHeight("-1%");
+			child.setSizeUndefined();
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
 				horizontalLayout.setComponentAlignment(child,
@@ -243,91 +236,13 @@ public class HorizontalLayoutPresentation extends
 		}
 	}
 
-	/**
-	 * Maps the vertical part of the alignment to FILL.
-	 * 
-	 * @param yAlignment
-	 *            the alignment
-	 * @return alignment the mapped alignment
-	 */
-	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YAlignment mapToVerticalFill(YAlignment yAlignment) {
-		// END SUPRESS CATCH EXCEPTION
-		if (yAlignment != null) {
-			switch (yAlignment) {
-			case BOTTOM_CENTER:
-			case MIDDLE_CENTER:
-			case TOP_CENTER:
-				return YAlignment.FILL_CENTER;
-			case BOTTOM_FILL:
-			case MIDDLE_FILL:
-			case TOP_FILL:
-				return YAlignment.FILL_FILL;
-			case BOTTOM_LEFT:
-			case MIDDLE_LEFT:
-			case TOP_LEFT:
-				return YAlignment.FILL_LEFT;
-			case BOTTOM_RIGHT:
-			case MIDDLE_RIGHT:
-			case TOP_RIGHT:
-				return YAlignment.FILL_RIGHT;
-			case FILL_FILL:
-			case FILL_LEFT:
-			case FILL_RIGHT:
-			case FILL_CENTER:
-				return YAlignment.FILL_FILL;
-			default:
-				break;
-			}
-		}
-		return YAlignment.FILL_FILL;
-	}
-
-	/**
-	 * Maps the horizontal part of the alignment to FILL.
-	 * 
-	 * @param yAlignment
-	 *            the alignment
-	 * @return alignment the mapped alignment
-	 */
-	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YAlignment mapToHorizontalFill(YAlignment yAlignment) {
-		// END SUPRESS CATCH EXCEPTION
-		if (yAlignment != null) {
-			switch (yAlignment) {
-			case BOTTOM_CENTER:
-			case BOTTOM_FILL:
-			case BOTTOM_LEFT:
-			case BOTTOM_RIGHT:
-				return YAlignment.BOTTOM_FILL;
-			case MIDDLE_CENTER:
-			case MIDDLE_FILL:
-			case MIDDLE_LEFT:
-			case MIDDLE_RIGHT:
-				return YAlignment.MIDDLE_FILL;
-			case TOP_CENTER:
-			case TOP_FILL:
-			case TOP_LEFT:
-			case TOP_RIGHT:
-				return YAlignment.TOP_FILL;
-			case FILL_FILL:
-			case FILL_LEFT:
-			case FILL_RIGHT:
-			case FILL_CENTER:
-				return YAlignment.FILL_FILL;
-			default:
-				break;
-			}
-		}
-		return YAlignment.FILL_FILL;
-	}
-
 	@Override
 	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			componentBase.setImmediate(true);
+			componentBase.setSizeUndefined();
 
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
@@ -575,6 +490,18 @@ public class HorizontalLayoutPresentation extends
 		 */
 		protected YAlignment getAlignment() {
 			return alignment;
+		}
+
+		protected boolean isExpandVertical() {
+			switch (alignment) {
+			case FILL_CENTER:
+			case FILL_FILL:
+			case FILL_LEFT:
+			case FILL_RIGHT:
+				return true;
+			default:
+				return false;
+			}
 		}
 
 		protected boolean isExpandHorizontal() {

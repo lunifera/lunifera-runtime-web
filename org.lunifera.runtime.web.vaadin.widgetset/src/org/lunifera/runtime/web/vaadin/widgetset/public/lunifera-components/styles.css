@@ -1,3 +1,32 @@
 .lun-negative-value {
 	color: red !important;
 }
+
+.l-debug-show-layout-bounds .l-controlbase {
+	border-width: 1px;
+	border-style: solid;
+	background-color: #8C698A;
+	border-color: #8C698A;
+}
+
+.l-debug-show-layout-bounds .l-controlbase .l-control {
+	background-color: #A68095;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #A68095;
+}
+ 
+.l-debug-show-layout-bounds .l-controlbase .l-control .v-slot, 
+.l-debug-show-layout-bounds .l-controlbase .l-control .v-gridlayout-slot {
+	background-color: #D9A9BF;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #D9A9BF;
+}
+
+.l-debug-show-layout-bounds .l-controlbase .l-control .v-slot-l-layout-compressor {
+	background-color: #BFA8B1;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #BFA8B1;
+}

@@ -20,8 +20,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YAlignment;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayoutCellStyle;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
@@ -101,23 +101,26 @@ public class VerticalLayoutPresentation extends
 			cells.add(addChild(childPresentation, yStyles.get(yChild)));
 		}
 
-		boolean expandVerticalFound = false;
 		for (Cell cell : cells) {
 			if (cell.isExpandVertical()) {
-				expandVerticalFound = true;
+				// expandVerticalFound = true;
 				verticalLayout.setExpandRatio(cell.getComponent(), 1.0f);
 			}
 		}
 
-		if (!expandVerticalFound && !modelAccess.isFillVertical()) {
+		if (!modelAccess.isFillVertical()) {
 			fillerLayout = new CssLayout();
 			fillerLayout.setSizeFull();
+			fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
 			verticalLayout.addComponent(fillerLayout);
 			verticalLayout.setExpandRatio(fillerLayout, 1.0f);
 		} else {
-			componentBase.setSizeFull();
-			verticalLayout.setSizeFull();
+			componentBase.setHeight("100%");
+			verticalLayout.setHeight("100%");
 		}
+
+		componentBase.setWidth("100%");
+		verticalLayout.setWidth("100%");
 
 	}
 
@@ -137,16 +140,7 @@ public class VerticalLayoutPresentation extends
 		// calculate and apply the alignment to be used
 		//
 		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle
-				.getAlignment() : null;
-		if (yAlignment == null) {
-			// use default
-			yAlignment = YAlignment.TOP_LEFT;
-
-			if (modelAccess.isFillVertical()) {
-				// ensure that vertical alignment is FILL
-				yAlignment = mapToVerticalFill(yAlignment);
-			}
-		}
+				.getAlignment() : YAlignment.TOP_LEFT;
 
 		verticalLayout.addComponent(child);
 		applyAlignment(child, yAlignment);
@@ -237,85 +231,6 @@ public class VerticalLayoutPresentation extends
 				break;
 			}
 		}
-	}
-
-	/**
-	 * Maps the vertical part of the alignment to FILL.
-	 * 
-	 * @param yAlignment
-	 *            the alignment
-	 * @return alignment the mapped alignment
-	 */
-	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YAlignment mapToVerticalFill(YAlignment yAlignment) {
-		// END SUPRESS CATCH EXCEPTION
-		if (yAlignment != null) {
-			switch (yAlignment) {
-			case BOTTOM_CENTER:
-			case MIDDLE_CENTER:
-			case TOP_CENTER:
-				return YAlignment.FILL_CENTER;
-			case BOTTOM_FILL:
-			case MIDDLE_FILL:
-			case TOP_FILL:
-				return YAlignment.FILL_FILL;
-			case BOTTOM_LEFT:
-			case MIDDLE_LEFT:
-			case TOP_LEFT:
-				return YAlignment.FILL_LEFT;
-			case BOTTOM_RIGHT:
-			case MIDDLE_RIGHT:
-			case TOP_RIGHT:
-				return YAlignment.FILL_RIGHT;
-			case FILL_FILL:
-			case FILL_LEFT:
-			case FILL_RIGHT:
-			case FILL_CENTER:
-				return YAlignment.FILL_FILL;
-			default:
-				break;
-			}
-		}
-		return YAlignment.FILL_FILL;
-	}
-
-	/**
-	 * Maps the horizontal part of the alignment to FILL.
-	 * 
-	 * @param yAlignment
-	 *            the alignment
-	 * @return alignment the mapped alignment
-	 */
-	// BEGIN SUPRESS CATCH EXCEPTION
-	protected YAlignment mapToHorizontalFill(YAlignment yAlignment) {
-		// END SUPRESS CATCH EXCEPTION
-		if (yAlignment != null) {
-			switch (yAlignment) {
-			case BOTTOM_CENTER:
-			case BOTTOM_FILL:
-			case BOTTOM_LEFT:
-			case BOTTOM_RIGHT:
-				return YAlignment.BOTTOM_FILL;
-			case MIDDLE_CENTER:
-			case MIDDLE_FILL:
-			case MIDDLE_LEFT:
-			case MIDDLE_RIGHT:
-				return YAlignment.MIDDLE_FILL;
-			case TOP_CENTER:
-			case TOP_FILL:
-			case TOP_LEFT:
-			case TOP_RIGHT:
-				return YAlignment.TOP_FILL;
-			case FILL_FILL:
-			case FILL_LEFT:
-			case FILL_RIGHT:
-			case FILL_CENTER:
-				return YAlignment.FILL_FILL;
-			default:
-				break;
-			}
-		}
-		return YAlignment.FILL_FILL;
 	}
 
 	@Override
@@ -580,6 +495,18 @@ public class VerticalLayoutPresentation extends
 			case FILL_FILL:
 			case FILL_LEFT:
 			case FILL_RIGHT:
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		protected boolean isExpandHorizontal() {
+			switch (alignment) {
+			case BOTTOM_FILL:
+			case FILL_FILL:
+			case MIDDLE_FILL:
+			case TOP_FILL:
 				return true;
 			default:
 				return false;

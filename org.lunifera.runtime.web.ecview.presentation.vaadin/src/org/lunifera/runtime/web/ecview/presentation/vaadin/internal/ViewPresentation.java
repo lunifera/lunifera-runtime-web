@@ -27,6 +27,7 @@ import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindableEndpointEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.eclipse.emf.ecp.ecview.common.editpart.visibility.IVisibilityPropertiesEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YAlignment;
 import org.eclipse.emf.ecp.ecview.common.model.core.YView;
 import org.eclipse.emf.ecp.ecview.common.presentation.IViewPresentation;
 import org.eclipse.emf.ecp.ecview.common.services.IUiKitBasedService;
@@ -34,14 +35,15 @@ import org.eclipse.emf.ecp.ecview.common.tooling.IWidgetMouseClickService;
 import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetMouseClickService;
-import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -56,7 +58,7 @@ public class ViewPresentation extends AbstractDisposable implements
 	private ModelAccess modelAccess;
 	private final IViewEditpart editpart;
 	private CssLayout componentBase;
-	private CssLayout component;
+	private GridLayout component;
 	private IEmbeddableEditpart content;
 
 	/**
@@ -107,8 +109,56 @@ public class ViewPresentation extends AbstractDisposable implements
 		if (content != null) {
 			Component contentComponent = (Component) content.render(component);
 			component.addComponent(contentComponent);
+
+			applyAlignment(contentComponent,
+					modelAccess.yView.getContentAlignment());
 		} else {
 			LOGGER.warn("Content is null");
+		}
+		
+		componentBase.setSizeFull();
+		component.setSizeFull();
+
+//		if (!isFillVertical(modelAccess.yView.getContentAlignment())) {
+//			int packingHelperRowIndex = component.getRows();
+//			component.setRows(packingHelperRowIndex + 1);
+//			component.setRowExpandRatio(packingHelperRowIndex, 1.0f);
+//		} else {
+//			componentBase.setHeight("100%");
+//			component.setHeight("100%");
+//		}
+//
+//		if (!isFillHorizontal(modelAccess.yView.getContentAlignment())) {
+//			int packingHelperColumnIndex = component.getColumns();
+//			component.setColumns(packingHelperColumnIndex + 1);
+//			component.setColumnExpandRatio(packingHelperColumnIndex, 1.0f);
+//		} else {
+//			componentBase.setWidth("100%");
+//			component.setWidth("100%");
+//		}
+	}
+
+	private boolean isFillVertical(YAlignment alignment) {
+		switch (alignment) {
+		case FILL_CENTER:
+		case FILL_FILL:
+		case FILL_LEFT:
+		case FILL_RIGHT:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	private boolean isFillHorizontal(YAlignment contentAlignment) {
+		switch (contentAlignment) {
+		case MIDDLE_FILL:
+		case FILL_FILL:
+		case BOTTOM_FILL:
+		case TOP_FILL:
+			return true;
+		default:
+			return false;
 		}
 	}
 
@@ -128,10 +178,10 @@ public class ViewPresentation extends AbstractDisposable implements
 			parentContainer.addComponent(componentBase);
 
 			// create the component
-			component = new CssLayout();
+			component = new GridLayout(1, 1);
 			component.addStyleName(IConstants.CSS_CLASS_CONTROL);
-			component.setSizeFull();
 			componentBase.addComponent(component);
+			component.setSizeFull();
 
 			if (modelAccess.isCssIdValid()) {
 				component.setId(modelAccess.getCssID());
@@ -282,12 +332,13 @@ public class ViewPresentation extends AbstractDisposable implements
 	}
 
 	@Override
-	public void openDialog(IDialogEditpart dialogEditpart, IBindableEndpointEditpart inputData) {
+	public void openDialog(IDialogEditpart dialogEditpart,
+			IBindableEndpointEditpart inputData) {
 		if (!isRendered()) {
 			return;
 		}
 
-//		VaadinObservables.activateRealm(navigationView.getUI());
+		// VaadinObservables.activateRealm(navigationView.getUI());
 		// set the input data to the child nav page
 		dialogEditpart.setInputDataBindingEndpoint(inputData);
 		Window dialog = (Window) dialogEditpart.render(null);
@@ -305,6 +356,157 @@ public class ViewPresentation extends AbstractDisposable implements
 			componentBase.getUI().removeWindow(dialog);
 			dialogEditpart.unrender();
 		}
+	}
+
+	/**
+	 * Sets the alignment to the component.
+	 * 
+	 * @param child
+	 * @param yAlignment
+	 */
+	protected void applyAlignment(Component child, YAlignment yAlignment) {
+
+		if (yAlignment != null) {
+			child.setSizeUndefined();
+			switch (yAlignment) {
+			case BOTTOM_CENTER:
+				component.setComponentAlignment(child, Alignment.BOTTOM_CENTER);
+				break;
+			case BOTTOM_FILL:
+				component.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
+				child.setWidth("100%");
+				break;
+			case BOTTOM_LEFT:
+				component.setComponentAlignment(child, Alignment.BOTTOM_LEFT);
+				break;
+			case BOTTOM_RIGHT:
+				component.setComponentAlignment(child, Alignment.BOTTOM_RIGHT);
+				break;
+			case MIDDLE_CENTER:
+				component.setComponentAlignment(child, Alignment.MIDDLE_CENTER);
+				break;
+			case MIDDLE_FILL:
+				component.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
+				child.setWidth("100%");
+				break;
+			case MIDDLE_LEFT:
+				component.setComponentAlignment(child, Alignment.MIDDLE_LEFT);
+				break;
+			case MIDDLE_RIGHT:
+				component.setComponentAlignment(child, Alignment.MIDDLE_RIGHT);
+				break;
+			case TOP_CENTER:
+				component.setComponentAlignment(child, Alignment.TOP_CENTER);
+				break;
+			case TOP_FILL:
+				component.setComponentAlignment(child, Alignment.TOP_LEFT);
+				child.setWidth("100%");
+				break;
+			case TOP_LEFT:
+				component.setComponentAlignment(child, Alignment.TOP_LEFT);
+				break;
+			case TOP_RIGHT:
+				component.setComponentAlignment(child, Alignment.TOP_RIGHT);
+				break;
+			case FILL_CENTER:
+				component.setComponentAlignment(child, Alignment.TOP_CENTER);
+				child.setHeight("100%");
+				break;
+			case FILL_FILL:
+				component.setComponentAlignment(child, Alignment.TOP_LEFT);
+				child.setSizeFull();
+				break;
+			case FILL_LEFT:
+				component.setComponentAlignment(child, Alignment.TOP_LEFT);
+				child.setHeight("100%");
+				break;
+			case FILL_RIGHT:
+				component.setComponentAlignment(child, Alignment.TOP_RIGHT);
+				child.setHeight("100%");
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Maps the vertical part of the alignment to FILL.
+	 * 
+	 * @param yAlignment
+	 *            the alignment
+	 * @return alignment the mapped alignment
+	 */
+	// BEGIN SUPRESS CATCH EXCEPTION
+	protected YAlignment mapToVerticalFill(YAlignment yAlignment) {
+		// END SUPRESS CATCH EXCEPTION
+		if (yAlignment != null) {
+			switch (yAlignment) {
+			case BOTTOM_CENTER:
+			case MIDDLE_CENTER:
+			case TOP_CENTER:
+				return YAlignment.FILL_CENTER;
+			case BOTTOM_FILL:
+			case MIDDLE_FILL:
+			case TOP_FILL:
+				return YAlignment.FILL_FILL;
+			case BOTTOM_LEFT:
+			case MIDDLE_LEFT:
+			case TOP_LEFT:
+				return YAlignment.FILL_LEFT;
+			case BOTTOM_RIGHT:
+			case MIDDLE_RIGHT:
+			case TOP_RIGHT:
+				return YAlignment.FILL_RIGHT;
+			case FILL_FILL:
+			case FILL_LEFT:
+			case FILL_RIGHT:
+			case FILL_CENTER:
+				return YAlignment.FILL_FILL;
+			default:
+				break;
+			}
+		}
+		return YAlignment.FILL_FILL;
+	}
+
+	/**
+	 * Maps the horizontal part of the alignment to FILL.
+	 * 
+	 * @param yAlignment
+	 *            the alignment
+	 * @return alignment the mapped alignment
+	 */
+	// BEGIN SUPRESS CATCH EXCEPTION
+	protected YAlignment mapToHorizontalFill(YAlignment yAlignment) {
+		// END SUPRESS CATCH EXCEPTION
+		if (yAlignment != null) {
+			switch (yAlignment) {
+			case BOTTOM_CENTER:
+			case BOTTOM_FILL:
+			case BOTTOM_LEFT:
+			case BOTTOM_RIGHT:
+				return YAlignment.BOTTOM_FILL;
+			case MIDDLE_CENTER:
+			case MIDDLE_FILL:
+			case MIDDLE_LEFT:
+			case MIDDLE_RIGHT:
+				return YAlignment.MIDDLE_FILL;
+			case TOP_CENTER:
+			case TOP_FILL:
+			case TOP_LEFT:
+			case TOP_RIGHT:
+				return YAlignment.TOP_FILL;
+			case FILL_FILL:
+			case FILL_LEFT:
+			case FILL_RIGHT:
+			case FILL_CENTER:
+				return YAlignment.FILL_FILL;
+			default:
+				break;
+			}
+		}
+		return YAlignment.FILL_FILL;
 	}
 
 	/**

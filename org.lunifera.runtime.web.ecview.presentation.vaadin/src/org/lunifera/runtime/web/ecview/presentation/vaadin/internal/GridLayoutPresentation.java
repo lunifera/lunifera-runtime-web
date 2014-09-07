@@ -20,8 +20,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
+import org.eclipse.emf.ecp.ecview.common.model.core.YAlignment;
 import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YAlignment;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayoutCellStyle;
 import org.eclipse.emf.ecp.ecview.extension.model.extension.YSpanInfo;
@@ -158,28 +158,19 @@ public class GridLayoutPresentation extends
 			}
 		}
 
-		boolean expandVerticalFound = false;
 		for (Row row : rows) {
 			if (row.isShouldExpandVertical()) {
-				expandVerticalFound = true;
 				gridlayout.setRowExpandRatio(row.getRowindex(), 1.0f);
 			}
 		}
 
-		boolean expandHorizontalFound = false;
 		for (Column col : columns) {
 			if (col.isShouldExpandHorizontal()) {
-				expandHorizontalFound = true;
 				gridlayout.setColumnExpandRatio(col.getColumnindex(), 1.0f);
 			}
 		}
 
-		// handle packaging - therefore a new row / column is added and set to
-		// expandRatio = 1.0f. This will cause the
-		// last row / column to grab excess space.
-		// If there is already a row / column that is expanded, we do not need
-		// to add a helper row
-		if (!expandVerticalFound && !modelAccess.isFillVertical()) {
+		if (!modelAccess.isFillVertical()) {
 			int packingHelperRowIndex = gridlayout.getRows();
 			gridlayout.setRows(packingHelperRowIndex + 1);
 			gridlayout.setRowExpandRatio(packingHelperRowIndex, 1.0f);
@@ -188,7 +179,7 @@ public class GridLayoutPresentation extends
 			gridlayout.setHeight("100%");
 		}
 
-		if (!expandHorizontalFound && !modelAccess.isFillHorizontal()) {
+		if (!modelAccess.isFillHorizontal()) {
 			int packingHelperColumnIndex = gridlayout.getColumns();
 			gridlayout.setColumns(packingHelperColumnIndex + 1);
 			gridlayout.setColumnExpandRatio(packingHelperColumnIndex, 1.0f);
@@ -196,7 +187,6 @@ public class GridLayoutPresentation extends
 			componentBase.setWidth("100%");
 			gridlayout.setWidth("100%");
 		}
-
 	}
 
 	/**
@@ -232,20 +222,20 @@ public class GridLayoutPresentation extends
 		// calculate and apply the alignment to be used
 		//
 		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle
-				.getAlignment() : null;
-		if (yAlignment == null) {
-			// use default
-			yAlignment = YAlignment.TOP_LEFT;
-
-			if (modelAccess.isFillVertical()) {
-				// ensure that vertical alignment is FILL
-				yAlignment = mapToVerticalFill(yAlignment);
-			}
-			if (modelAccess.isFillHorizontal()) {
-				// ensure that horizontal alignment is FILL
-				yAlignment = mapToHorizontalFill(yAlignment);
-			}
-		}
+				.getAlignment() : YAlignment.TOP_LEFT;
+//		if (yAlignment == null) {
+//			// use default
+//			yAlignment = YAlignment.TOP_LEFT;
+//
+//			if (modelAccess.isFillVertical()) {
+//				// ensure that vertical alignment is FILL
+//				yAlignment = mapToVerticalFill(yAlignment);
+//			}
+//			if (modelAccess.isFillHorizontal()) {
+//				// ensure that horizontal alignment is FILL
+//				yAlignment = mapToHorizontalFill(yAlignment);
+//			}
+//		}
 
 		// add the element to the grid layout
 		//
@@ -426,7 +416,7 @@ public class GridLayoutPresentation extends
 	public ComponentContainer doCreateWidget(Object parent) {
 		if (componentBase == null) {
 			componentBase = new CssLayout();
-			componentBase.setSizeFull();
+			componentBase.setSizeUndefined();
 			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
@@ -439,7 +429,7 @@ public class GridLayoutPresentation extends
 			gridlayout = new GridLayout(modelAccess.getColumns(), 1);
 			gridlayout.setSpacing(false);
 			gridlayout.setImmediate(true);
-			gridlayout.setSizeFull();
+			gridlayout.setSizeUndefined();
 			componentBase.addComponent(gridlayout);
 
 			associateWidget(gridlayout, modelAccess.yLayout);

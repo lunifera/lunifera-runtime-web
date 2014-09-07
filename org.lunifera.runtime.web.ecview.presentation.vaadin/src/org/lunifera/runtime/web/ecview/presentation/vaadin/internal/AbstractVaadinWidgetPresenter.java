@@ -82,6 +82,11 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * See {@link IConstants#CSS_CLASS_CONTROL}.
 	 */
 	public static final String CSS_CLASS_CONTROL = IConstants.CSS_CLASS_CONTROL;
+	
+	/**
+	 * See {@link IConstants#CSS_CLASS_COMPRESSOR}.
+	 */
+	public static final String CSS_CLASS_COMPRESSOR = IConstants.CSS_CLASS_COMPRESSOR;
 
 	private IViewContext viewContext;
 

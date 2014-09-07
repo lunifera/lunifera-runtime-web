@@ -37,7 +37,7 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 	private Tab tab;
 	private ModelAccess modelAccess;
 
-	/** 
+	/**
 	 * The constructor.
 	 * 
 	 * @param editpart
@@ -50,30 +50,32 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 
 	@Override
 	public Component createWidget(Object parent) {
-		TabSheet tabSheet = (TabSheet) parent;
+		if (tab == null) {
+			TabSheet tabSheet = (TabSheet) parent;
 
-		YTab yTab = (YTab) getModel();
-		@SuppressWarnings("restriction")
-		IEmbeddableEditpart childEditpart = ElementEditpart.getEditpart(yTab
-				.getEmbeddable());
+			YTab yTab = (YTab) getModel();
+			@SuppressWarnings("restriction")
+			IEmbeddableEditpart childEditpart = ElementEditpart
+					.getEditpart(yTab.getEmbeddable());
 
-		CssLayout childLayout = new CssLayout();
-		if (childEditpart == null) {
-			tab = tabSheet.addTab(childLayout, "content missing");
-			return childLayout;
+			CssLayout childLayout = new CssLayout();
+			if (childEditpart == null) {
+				tab = tabSheet.addTab(childLayout, "content missing");
+				return childLayout;
+			}
+			IWidgetPresentation<Component> childPresentation = childEditpart
+					.getPresentation();
+
+			Component childContent = childPresentation
+					.createWidget(childLayout);
+			childLayout.addComponent(childContent);
+
+			tab = tabSheet.addTab(childLayout);
+			applyCaptions();
 		}
-		IWidgetPresentation<Component> childPresentation = childEditpart
-				.getPresentation();
-
-		Component childContent = childPresentation.createWidget(childLayout);
-		childLayout.addComponent(childContent);
-
-		tab = tabSheet.addTab(childLayout);
-		applyCaptions();	
-		
-		return null;
+		return tab.getComponent();
 	}
-	
+
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// update the captions
@@ -86,8 +88,8 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			tab.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			tab.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
 				tab.setCaption(modelAccess.getLabel());
@@ -195,7 +197,7 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 		public String getLabel() {
 			return yTab.getDatadescription().getLabel();
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

@@ -33,7 +33,9 @@ import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IMasterDetailEditp
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.INumericSearchFieldEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IOptionsGroupEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IPanelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
+import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ISplitPanelEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITabSheetEditpart;
 import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
@@ -121,6 +123,10 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new NumericSearchFieldPresentation(editpart);
 		} else if (editpart instanceof IBooleanSearchFieldEditpart) {
 			return (A) new BooleanSearchFieldPresentation(editpart);
+		} else if (editpart instanceof ISplitPanelEditpart) {
+			return (A) new SplitPanelPresentation(editpart);
+		} else if (editpart instanceof IPanelEditpart) {
+			return (A) new PanelPresentation(editpart);
 		}
 
 		throw new IllegalArgumentException(String.format(

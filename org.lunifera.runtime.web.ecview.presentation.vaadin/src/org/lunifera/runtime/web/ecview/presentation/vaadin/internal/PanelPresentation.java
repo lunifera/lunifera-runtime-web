@@ -11,35 +11,35 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.emf.ecp.ecview.common.context.II18nService;
 import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
 import org.eclipse.emf.ecp.ecview.common.editpart.ILayoutEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YFormLayout;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.eclipse.emf.ecp.ecview.extension.model.extension.YPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Panel;
 
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class FormLayoutPresentation extends
+public class PanelPresentation extends
 		AbstractLayoutPresenter<ComponentContainer> {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(FormLayoutPresentation.class);
+			.getLogger(PanelPresentation.class);
 
 	private CssLayout componentBase;
-	private FormLayout formLayout;
+	private Panel panel;
 	private ModelAccess modelAccess;
+
+	// private CssLayout fillerLayout;
 
 	/**
 	 * The constructor.
@@ -47,15 +47,16 @@ public class FormLayoutPresentation extends
 	 * @param editpart
 	 *            The editpart of that presentation.
 	 */
-	public FormLayoutPresentation(IElementEditpart editpart) {
+	public PanelPresentation(IElementEditpart editpart) {
 		super((ILayoutEditpart) editpart);
-		this.modelAccess = new ModelAccess((YFormLayout) editpart.getModel());
+		this.modelAccess = new ModelAccess((YPanel) editpart.getModel());
 	}
 
 	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
 		// internally.
+
 		// update the captions
 		applyCaptions();
 	}
@@ -64,6 +65,15 @@ public class FormLayoutPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
+		II18nService service = getI18nService();
+		if (service != null && modelAccess.isLabelI18nKeyValid()) {
+			panel.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
+		} else {
+			if (modelAccess.isLabelValid()) {
+				panel.setCaption(modelAccess.getLabel());
+			}
+		}
 	}
 
 	/**
@@ -71,40 +81,13 @@ public class FormLayoutPresentation extends
 	 * layout and added to it again afterwards.
 	 */
 	protected void refreshUI() {
-		formLayout.removeAllComponents();
+		panel.setContent(null);
 
 		// iterate all elements and build the child element
 		//
-		List<Cell> cells = new ArrayList<Cell>();
 		for (IEmbeddableEditpart child : getChildren()) {
-			cells.add(addChild(child));
+			addChild(child);
 		}
-
-		if (modelAccess.isFillVertical()) {
-			componentBase.setHeight("100%");
-			formLayout.setHeight("100%");
-		}
-
-		if (modelAccess.isFillHorizontal()) {
-			componentBase.setWidth("100%");
-			formLayout.setWidth("100%");
-		}
-	}
-
-	/**
-	 * Is called to create the child component and apply layouting defaults to
-	 * it.
-	 * 
-	 * @param editpart
-	 * @param yStyle
-	 * @return
-	 */
-	protected Cell addChild(IEmbeddableEditpart editpart) {
-
-		Component child = (Component) editpart.render(formLayout);
-
-		formLayout.addComponent(child);
-		return new Cell(child);
 	}
 
 	@Override
@@ -121,32 +104,22 @@ public class FormLayoutPresentation extends
 
 			associateWidget(componentBase, modelAccess.yLayout);
 
-			formLayout = new FormLayout();
-			formLayout.setWidth("100%");
-			componentBase.addComponent(formLayout);
+			panel = new Panel();
+			panel.setSizeFull();
+			componentBase.addComponent(panel);
 
-			associateWidget(formLayout, modelAccess.yLayout);
-
-			if (modelAccess.isMargin()) {
-				formLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
-				formLayout.setMargin(true);
-			}
-
-			if (!modelAccess.isSpacing()) {
-				formLayout.setSpacing(false);
-			} else {
-				formLayout.setData(IConstants.CSS_CLASS_SPACING);
-				formLayout.setSpacing(true);
-			}
+			associateWidget(panel, modelAccess.yLayout);
 
 			if (modelAccess.isCssClassValid()) {
-				formLayout.addStyleName(modelAccess.getCssClass());
+				panel.addStyleName(modelAccess.getCssClass());
 			} else {
-				formLayout.addStyleName(CSS_CLASS_CONTROL);
+				panel.addStyleName(CSS_CLASS_CONTROL);
 			}
 
+			applyCaptions();
+			
 			// creates the binding for the field
-			createBindings(modelAccess.yLayout, formLayout, componentBase);
+			createBindings(modelAccess.yLayout, panel, componentBase);
 
 			// initialize all children
 			initializeChildren();
@@ -190,10 +163,10 @@ public class FormLayoutPresentation extends
 
 			// remove assocations
 			unassociateWidget(componentBase);
-			unassociateWidget(formLayout);
+			unassociateWidget(panel);
 
 			componentBase = null;
-			formLayout = null;
+			panel = null;
 		}
 	}
 
@@ -212,15 +185,26 @@ public class FormLayoutPresentation extends
 
 	@Override
 	protected void internalAdd(IEmbeddableEditpart editpart) {
-		YEmbeddable yChild = (YEmbeddable) editpart.getModel();
 		addChild(editpart);
+	}
+
+	private void addChild(IEmbeddableEditpart editpart) {
+		int index = getChildren().indexOf(editpart);
+		if (index > 0) {
+			LOGGER.warn("More than one element added to panel.");
+			return;
+		}
+
+		if (index == 0) {
+			panel.setContent((Component) editpart.render(panel));
+		}
 	}
 
 	@Override
 	protected void internalRemove(IEmbeddableEditpart child) {
-		if (formLayout != null && child.isRendered()) {
-			// will happen during disposal since children already disposed.
-			formLayout.removeComponent((Component) child.getWidget());
+		if (panel != null && child.isRendered()
+				&& panel.getContent() == child.getWidget()) {
+			panel.setContent(null);
 		}
 
 		child.unrender();
@@ -261,9 +245,9 @@ public class FormLayoutPresentation extends
 	 * An internal helper class.
 	 */
 	private static class ModelAccess {
-		private final YFormLayout yLayout;
+		private final YPanel yLayout;
 
-		public ModelAccess(YFormLayout yLayout) {
+		public ModelAccess(YPanel yLayout) {
 			super();
 			this.yLayout = yLayout;
 		}
@@ -287,14 +271,6 @@ public class FormLayoutPresentation extends
 
 		/**
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YFormLayout#isSpacing()
-		 */
-		public boolean isSpacing() {
-			return yLayout.isSpacing();
-		}
-
-		/**
-		 * @return
 		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
@@ -311,43 +287,41 @@ public class FormLayoutPresentation extends
 		}
 
 		/**
+		 * Returns true, if the label is valid.
+		 * 
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YFormLayout#isMargin()
 		 */
-		public boolean isMargin() {
-			return yLayout.isMargin();
+		public boolean isLabelValid() {
+			return yLayout.getDatadescription() != null
+					&& yLayout.getDatadescription().getLabel() != null;
 		}
 
 		/**
+		 * Returns the label.
+		 * 
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YFormLayout#isFillVertical()
 		 */
-		public boolean isFillVertical() {
-			return yLayout.isFillVertical();
+		public String getLabel() {
+			return yLayout.getDatadescription().getLabel();
 		}
 
 		/**
+		 * Returns true, if the label is valid.
+		 * 
 		 * @return
-		 * @see org.eclipse.emf.ecp.ecview.ui.core.model.extension.YFormLayout#isFillHorizontal()
 		 */
-		public boolean isFillHorizontal() {
-			return yLayout.isFillHorizontal();
-		}
-	}
-
-	public static class Cell {
-		private final Component component;
-
-		public Cell(Component component) {
-			super();
-			this.component = component;
+		public boolean isLabelI18nKeyValid() {
+			return yLayout.getDatadescription() != null
+					&& yLayout.getDatadescription().getLabelI18nKey() != null;
 		}
 
 		/**
-		 * @return the component
+		 * Returns the label.
+		 * 
+		 * @return
 		 */
-		protected Component getComponent() {
-			return component;
+		public String getLabelI18nKey() {
+			return yLayout.getDatadescription().getLabelI18nKey();
 		}
 	}
 }
