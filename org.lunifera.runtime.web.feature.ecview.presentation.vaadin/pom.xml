@@ -58,14 +58,6 @@
 		</plugins>
 	</build>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.lunifera.ecview.core</groupId>
-			<artifactId>org.lunifera.ecview.core.common</artifactId>
-			<version>0.7.0</version>
-		</dependency>
-	</dependencies>
-
 	<name>Feature - ECView presentation for Vaadin</name>
 	<description>This features contains the implementation of the Vaadin presentation used by ECView to render a Vaadin UI based on a given UI-Model.
 
