@@ -92,6 +92,17 @@ public class VaadinObservables {
 	 * @return the realm representing the UI thread for the given display
 	 */
 	public static Realm getRealm(final UI ui) {
+		return getRealm(ui, true);
+	}
+
+	/**
+	 * Returns the realm representing the UI thread for the given display.
+	 * 
+	 * @param ui
+	 * @param autoSynchronize synchronize multi vaadin ui's
+	 * @return the realm representing the UI thread for the given display
+	 */
+	public static Realm getRealm(final UI ui, boolean autoSynchronize) {
 		synchronized (realms) {
 			for (Iterator<UIRealm> it = realms.iterator(); it.hasNext();) {
 				UIRealm displayRealm = it.next();
@@ -100,7 +111,7 @@ public class VaadinObservables {
 					return displayRealm;
 				}
 			}
-			UIRealm result = new UIRealm(ui);
+			UIRealm result = new UIRealm(ui, autoSynchronize);
 			realms.add(result);
 			return result;
 		}
@@ -112,10 +123,19 @@ public class VaadinObservables {
 	 * @param ui
 	 */
 	public static void activateRealm(final UI ui) {
-		UIRealm uiRealm = (UIRealm) getRealm(ui);
-		uiRealm.makeDefault();
+		activateRealm(ui, true);
 	}
 
+	/**
+	 * Activates the realm for the current thread.
+	 * 
+	 * @param ui
+	 * @param autoSynchronize synchronize multi vaadin ui's
+	 */
+	public static void activateRealm(final UI ui, boolean autoSynchronize) {
+		UIRealm uiRealm = (UIRealm) getRealm(ui, autoSynchronize);
+		uiRealm.makeDefault();
+	}
 	/**
 	 * Returns the UI of the widget or the current UI.
 	 * 
@@ -1327,12 +1347,14 @@ public class VaadinObservables {
 
 	private static class UIRealm extends Realm {
 		private final UI ui;
+		private boolean autoSynchronize;
 
 		/**
 		 * @param ui
 		 */
-		private UIRealm(UI ui) {
+		private UIRealm(UI ui, boolean autoSynchronize) {
 			this.ui = ui;
+			this.autoSynchronize = autoSynchronize;
 			setDefault(this);
 		}
 
@@ -1350,8 +1372,9 @@ public class VaadinObservables {
 
 		@Override
 		public void asyncExec(final Runnable runnable) {
-
-			throw new UnsupportedOperationException("Not a valid call!");
+			if(autoSynchronize){
+				ui.access(runnable);
+			}
 		}
 
 		@Override

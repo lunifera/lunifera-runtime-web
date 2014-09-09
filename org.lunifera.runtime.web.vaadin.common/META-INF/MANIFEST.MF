@@ -16,5 +16,5 @@ Import-Package: org.json,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.runtime.web.vaadin.common
 Bundle-Vendor: Lunifera.org
-Require-Bundle: com.vaadin.server;bundle-version="7.1.1",
- com.vaadin.shared;bundle-version="7.1.1"
+Require-Bundle: com.vaadin.server;bundle-version="7.2.0",
+ com.vaadin.shared;bundle-version="7.2.0"

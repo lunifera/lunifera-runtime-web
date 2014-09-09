@@ -21,6 +21,7 @@
 
 	<groupId>org.lunifera.runtime.web</groupId>
 	<artifactId>org.lunifera.runtime.web.aggregator</artifactId>
+	<version>0.7.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<!-- <properties> -->
@@ -115,5 +116,4 @@
 		</profile>
 		
 	</profiles>
-	<version>0.7.3-SNAPSHOT</version>
 </project>
