@@ -33,7 +33,6 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.IListEditpart;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.ListSelect;
 
@@ -43,7 +42,6 @@ import com.vaadin.ui.ListSelect;
 public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private ListSelect list;
 	private ObjectProperty property;
 
@@ -64,23 +62,20 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yList);
+		if (list == null) {
 
 			list = new ListSelect();
 			list.addStyleName(CSS_CLASS_CONTROL);
 			list.setMultiSelect(modelAccess.yList.getSelectionType() == YSelectionType.MULTI);
 			list.setImmediate(true);
-			list.setSizeFull();
-			
+			setupComponent(list, getCastedModel());
+
+			if (modelAccess.isCssIdValid()) {
+				list.setId(modelAccess.getCssID());
+			} else {
+				list.setId(getEditpart().getId());
+			}
+
 			associateWidget(list, modelAccess.yList);
 
 			if (list.isMultiSelect()) {
@@ -93,8 +88,6 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 			// creates the binding for the field
 			createBindings(modelAccess.yList, list);
 
-			componentBase.addComponent(list);
-
 			if (modelAccess.isCssClassValid()) {
 				list.addStyleName(modelAccess.getCssClass());
 			}
@@ -103,7 +96,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 			initializeField(list);
 		}
-		return componentBase;
+		return list;
 	}
 
 	@Override
@@ -121,11 +114,11 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			list.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				list.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -223,17 +216,17 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		}
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return list;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return list != null;
 	}
 
 	/**
@@ -241,22 +234,19 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (list != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
+			ComponentContainer parent = ((ComponentContainer) list.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(list);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(list);
 
-			componentBase = null;
 			list = null;
 		}
 	}

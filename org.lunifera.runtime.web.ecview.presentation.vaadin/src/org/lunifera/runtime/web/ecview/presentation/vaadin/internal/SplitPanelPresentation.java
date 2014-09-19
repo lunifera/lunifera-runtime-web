@@ -38,7 +38,6 @@ public class SplitPanelPresentation extends
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SplitPanelPresentation.class);
 
-	private CssLayout componentBase;
 	private AbstractSplitPanel splitPanel;
 	private ModelAccess modelAccess;
 
@@ -70,11 +69,11 @@ public class SplitPanelPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
+			splitPanel.setCaption(service.getValue(
 					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				splitPanel.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -95,26 +94,20 @@ public class SplitPanelPresentation extends
 
 	@Override
 	public ComponentContainer doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yLayout);
+		if (splitPanel == null) {
 
 			splitPanel = modelAccess.yLayout.isVertical() ? new VerticalSplitPanel()
 					: new HorizontalSplitPanel();
-			splitPanel.setSizeFull();
+			setupComponent(splitPanel, getCastedModel());
 			splitPanel.setSplitPosition(modelAccess.yLayout.getSplitPosition(),
 					Unit.PERCENTAGE);
-			componentBase.addComponent(splitPanel);
 
 			associateWidget(splitPanel, modelAccess.yLayout);
+			if (modelAccess.isCssIdValid()) {
+				splitPanel.setId(modelAccess.getCssID());
+			} else {
+				splitPanel.setId(getEditpart().getId());
+			}
 
 			if (modelAccess.isCssClassValid()) {
 				splitPanel.addStyleName(modelAccess.getCssClass());
@@ -123,7 +116,7 @@ public class SplitPanelPresentation extends
 			}
 
 			// creates the binding for the field
-			createBindings(modelAccess.yLayout, splitPanel, componentBase);
+			createBindings(modelAccess.yLayout, splitPanel, null);
 
 			// initialize all children
 			initializeChildren();
@@ -131,7 +124,7 @@ public class SplitPanelPresentation extends
 			renderChildren(false);
 		}
 
-		return componentBase;
+		return splitPanel;
 	}
 
 	/**
@@ -150,26 +143,24 @@ public class SplitPanelPresentation extends
 
 	@Override
 	public ComponentContainer getWidget() {
-		return componentBase;
+		return splitPanel;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return splitPanel != null;
 	}
 
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (splitPanel != null) {
 
 			// unbind all active bindings
 			unbind();
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(splitPanel);
 
-			componentBase = null;
 			splitPanel = null;
 		}
 	}
@@ -312,7 +303,7 @@ public class SplitPanelPresentation extends
 		public String getLabel() {
 			return yLayout.getDatadescription().getLabel();
 		}
-		
+
 		/**
 		 * Returns true, if the label is valid.
 		 * 

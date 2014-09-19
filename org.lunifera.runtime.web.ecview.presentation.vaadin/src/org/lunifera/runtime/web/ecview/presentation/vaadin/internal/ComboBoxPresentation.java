@@ -35,7 +35,6 @@ import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 
 /**
@@ -46,7 +45,6 @@ public class ComboBoxPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private ComboBox combo;
 	@SuppressWarnings("rawtypes")
 	private ObjectProperty property;
@@ -68,34 +66,29 @@ public class ComboBoxPresentation extends
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yCombo);
+		if (combo == null) {
 
 			combo = new CustomComboBox();
 			combo.addStyleName(CSS_CLASS_CONTROL);
 			combo.setImmediate(true);
-			combo.setWidth("100%");
-
+			setupComponent(combo, getCastedModel());
+			
 			associateWidget(combo, modelAccess.yCombo);
+			if (modelAccess.isCssIdValid()) {
+				combo.setId(modelAccess.getCssID());
+			} else {
+				combo.setId(getEditpart().getId());
+			}
 
 			property = new ObjectProperty(null, modelAccess.yCombo.getType());
 			combo.setPropertyDataSource(property);
 
 			if (modelAccess.yCombo.getType() != null) {
 				BeanItemContainer datasource = null;
-				datasource = new BeanItemContainer(
-						modelAccess.yCombo.getType());
+				datasource = new BeanItemContainer(modelAccess.yCombo.getType());
 				combo.setContainerDataSource(datasource);
 			}
-			
+
 			String itemCaptionProperty = modelAccess.yCombo
 					.getItemCaptionProperty();
 			if (itemCaptionProperty != null && !itemCaptionProperty.equals("")) {
@@ -114,8 +107,6 @@ public class ComboBoxPresentation extends
 			// creates the binding for the field
 			createBindings(modelAccess.yCombo, combo);
 
-			componentBase.addComponent(combo);
-
 			if (modelAccess.isCssClassValid()) {
 				combo.addStyleName(modelAccess.getCssClass());
 			}
@@ -124,7 +115,7 @@ public class ComboBoxPresentation extends
 
 			initializeField(combo);
 		}
-		return componentBase;
+		return combo;
 	}
 
 	@Override
@@ -142,11 +133,11 @@ public class ComboBoxPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			combo.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				combo.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -221,17 +212,17 @@ public class ComboBoxPresentation extends
 				ExtensionModelPackage.Literals.YCOMBO_BOX__SELECTION, field,
 				yField.getType()));
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return combo;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return combo != null;
 	}
 
 	/**
@@ -239,22 +230,19 @@ public class ComboBoxPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (combo != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
+			ComponentContainer parent = ((ComponentContainer) combo.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(combo);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(combo);
 
-			componentBase = null;
 			combo = null;
 		}
 	}

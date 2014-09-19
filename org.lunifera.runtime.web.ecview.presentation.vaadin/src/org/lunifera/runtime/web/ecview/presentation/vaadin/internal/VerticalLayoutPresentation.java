@@ -43,11 +43,8 @@ public class VerticalLayoutPresentation extends
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(VerticalLayoutPresentation.class);
 
-	private CssLayout componentBase;
 	private VerticalLayout verticalLayout;
 	private ModelAccess modelAccess;
-
-	private CssLayout fillerLayout;
 
 	/**
 	 * The constructor.
@@ -108,19 +105,17 @@ public class VerticalLayoutPresentation extends
 			}
 		}
 
-		if (!modelAccess.isFillVertical()) {
-			fillerLayout = new CssLayout();
-			fillerLayout.setSizeFull();
-			fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
-			verticalLayout.addComponent(fillerLayout);
-			verticalLayout.setExpandRatio(fillerLayout, 1.0f);
-		} else {
-			componentBase.setHeight("100%");
-			verticalLayout.setHeight("100%");
-		}
-
-		componentBase.setWidth("100%");
-		verticalLayout.setWidth("100%");
+		// if (!modelAccess.isFillVertical()) {
+		// fillerLayout = new CssLayout();
+		// fillerLayout.setSizeFull();
+		// fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
+		// verticalLayout.addComponent(fillerLayout);
+		// verticalLayout.setExpandRatio(fillerLayout, 1.0f);
+		// } else {
+		// verticalLayout.setHeight("100%");
+		// }
+		//
+		// verticalLayout.setWidth("100%");
 
 	}
 
@@ -235,23 +230,17 @@ public class VerticalLayoutPresentation extends
 
 	@Override
 	public ComponentContainer doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yLayout);
-
+		if (verticalLayout == null) {
 			verticalLayout = new VerticalLayout();
-			componentBase.addComponent(verticalLayout);
-			verticalLayout.setSizeFull();
+			setupComponent(verticalLayout, getCastedModel());
 
 			associateWidget(verticalLayout, modelAccess.yLayout);
+
+			if (modelAccess.isCssIdValid()) {
+				verticalLayout.setId(modelAccess.getCssID());
+			} else {
+				verticalLayout.setId(getEditpart().getId());
+			}
 
 			if (modelAccess.isMargin()) {
 				verticalLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
@@ -270,9 +259,10 @@ public class VerticalLayoutPresentation extends
 			} else {
 				verticalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
+			verticalLayout.addStyleName(IConstants.CSS_CLASS_VERTICALLAYOUT);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yLayout, verticalLayout, componentBase);
+			createBindings(modelAccess.yLayout, verticalLayout, null);
 
 			// initialize all children
 			initializeChildren();
@@ -281,7 +271,7 @@ public class VerticalLayoutPresentation extends
 			renderChildren(false);
 		}
 
-		return componentBase;
+		return verticalLayout;
 	}
 
 	/**
@@ -300,12 +290,12 @@ public class VerticalLayoutPresentation extends
 
 	@Override
 	public ComponentContainer getWidget() {
-		return componentBase;
+		return verticalLayout;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return verticalLayout != null;
 	}
 
 	@Override
@@ -323,16 +313,14 @@ public class VerticalLayoutPresentation extends
 
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (verticalLayout != null) {
 
 			// unbind all active bindings
 			unbind();
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(verticalLayout);
 
-			componentBase = null;
 			verticalLayout = null;
 		}
 	}

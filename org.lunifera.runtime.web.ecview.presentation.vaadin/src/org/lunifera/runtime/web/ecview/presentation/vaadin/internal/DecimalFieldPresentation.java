@@ -40,7 +40,6 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 
 /**
@@ -50,7 +49,6 @@ public class DecimalFieldPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private DecimalField decimalField;
 	private Binding binding_valueToUI;
 	private ObjectProperty<Double> property;
@@ -72,23 +70,19 @@ public class DecimalFieldPresentation extends
 	@SuppressWarnings("serial")
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yDecimalField);
+		if (decimalField == null) {
 
 			decimalField = new DecimalField();
 			decimalField.addStyleName(CSS_CLASS_CONTROL);
 			decimalField.setImmediate(true);
-			decimalField.setWidth("100%");
-			
+			setupComponent(decimalField, getCastedModel());
+
 			associateWidget(decimalField, modelAccess.yDecimalField);
+			if (modelAccess.isCssIdValid()) {
+				decimalField.setId(modelAccess.getCssID());
+			} else {
+				decimalField.setId(getEditpart().getId());
+			}
 
 			property = new ObjectProperty<Double>(0d, Double.class);
 			decimalField.setPropertyDataSource(property);
@@ -102,8 +96,6 @@ public class DecimalFieldPresentation extends
 							}
 						}
 					});
-
-			componentBase.addComponent(decimalField);
 
 			if (modelAccess.isCssClassValid()) {
 				decimalField.addStyleName(modelAccess.getCssClass());
@@ -121,7 +113,7 @@ public class DecimalFieldPresentation extends
 			// send an event, that the content was rendered again
 			sendRenderedLifecycleEvent();
 		}
-		return componentBase;
+		return decimalField;
 	}
 
 	/**
@@ -171,11 +163,11 @@ public class DecimalFieldPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
+			decimalField.setCaption(service.getValue(
 					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				decimalField.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -226,7 +218,7 @@ public class DecimalFieldPresentation extends
 
 		registerBinding(binding_valueToUI);
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	protected Binding createModelBinding(EObject model,
@@ -250,12 +242,12 @@ public class DecimalFieldPresentation extends
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return decimalField;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return decimalField != null;
 	}
 
 	/**
@@ -263,22 +255,20 @@ public class DecimalFieldPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (decimalField != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
+			ComponentContainer parent = ((ComponentContainer) decimalField
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(decimalField);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(decimalField);
 
-			componentBase = null;
 			decimalField = null;
 
 			sendUnrenderedLifecycleEvent();

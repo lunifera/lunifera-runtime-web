@@ -26,7 +26,6 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.IProgressBarEditpart
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.ProgressBar;
 
@@ -37,7 +36,6 @@ public class ProgressBarPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private ProgressBar progressBar;
 	private ObjectProperty<Float> property;
 
@@ -57,31 +55,25 @@ public class ProgressBarPresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yProgressBar);
+		if (progressBar == null) {
 
 			progressBar = new ProgressBar();
 			progressBar.addStyleName(CSS_CLASS_CONTROL);
 			progressBar.setImmediate(true);
-			progressBar.setWidth("100%");
-			
+			setupComponent(progressBar, getCastedModel());
+
 			associateWidget(progressBar, modelAccess.yProgressBar);
+			if (modelAccess.isCssIdValid()) {
+				progressBar.setId(modelAccess.getCssID());
+			} else {
+				progressBar.setId(getEditpart().getId());
+			}
 
 			property = new ObjectProperty<Float>(0f, Float.class);
 			progressBar.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yProgressBar, progressBar);
-
-			componentBase.addComponent(progressBar);
 
 			if (modelAccess.isCssClassValid()) {
 				progressBar.addStyleName(modelAccess.getCssClass());
@@ -91,7 +83,7 @@ public class ProgressBarPresentation extends
 
 			initializeField(progressBar);
 		}
-		return componentBase;
+		return progressBar;
 	}
 
 	@Override
@@ -109,11 +101,11 @@ public class ProgressBarPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
+			progressBar.setCaption(service.getValue(
 					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				progressBar.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -161,17 +153,17 @@ public class ProgressBarPresentation extends
 				ExtensionModelPackage.Literals.YPROGRESS_BAR__VALUE,
 				progressBar));
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return progressBar;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return progressBar != null;
 	}
 
 	/**
@@ -179,22 +171,20 @@ public class ProgressBarPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (progressBar != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
+			ComponentContainer parent = ((ComponentContainer) progressBar
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(progressBar);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(progressBar);
 
-			componentBase = null;
 			progressBar = null;
 		}
 	}

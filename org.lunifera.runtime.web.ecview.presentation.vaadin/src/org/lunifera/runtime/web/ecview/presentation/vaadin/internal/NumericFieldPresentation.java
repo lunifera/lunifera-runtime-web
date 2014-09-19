@@ -40,7 +40,6 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 
 /**
@@ -50,7 +49,6 @@ public class NumericFieldPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private NumberField numberField;
 	private Binding binding_valueToUI;
 	private ObjectProperty<Double> property;
@@ -72,23 +70,19 @@ public class NumericFieldPresentation extends
 	@SuppressWarnings("serial")
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yNumericField);
+		if (numberField == null) {
 
 			numberField = new NumberField();
 			numberField.addStyleName(CSS_CLASS_CONTROL);
 			numberField.setImmediate(true);
-			numberField.setWidth("100%");
-			
+			setupComponent(numberField, getCastedModel());
+
 			associateWidget(numberField, modelAccess.yNumericField);
+			if (modelAccess.isCssIdValid()) {
+				numberField.setId(modelAccess.getCssID());
+			} else {
+				numberField.setId(getEditpart().getId());
+			}
 
 			property = new ObjectProperty<Double>(0d, Double.class);
 			numberField.setPropertyDataSource(property);
@@ -110,8 +104,6 @@ public class NumericFieldPresentation extends
 						}
 					});
 
-			componentBase.addComponent(numberField);
-
 			if (modelAccess.isCssClassValid()) {
 				numberField.addStyleName(modelAccess.getCssClass());
 			}
@@ -128,7 +120,7 @@ public class NumericFieldPresentation extends
 			sendRenderedLifecycleEvent();
 
 		}
-		return componentBase;
+		return numberField;
 	}
 
 	/**
@@ -165,11 +157,11 @@ public class NumericFieldPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
+			numberField.setCaption(service.getValue(
 					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				numberField.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -220,7 +212,7 @@ public class NumericFieldPresentation extends
 
 		registerBinding(binding_valueToUI);
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	protected Binding createModelBinding(EObject model,
@@ -244,12 +236,12 @@ public class NumericFieldPresentation extends
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return numberField;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return numberField != null;
 	}
 
 	/**
@@ -257,22 +249,20 @@ public class NumericFieldPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (numberField != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
+			ComponentContainer parent = ((ComponentContainer) numberField
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(numberField);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(numberField);
 
-			componentBase = null;
 			numberField = null;
 		}
 	}

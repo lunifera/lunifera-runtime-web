@@ -27,7 +27,6 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 
 /**
@@ -37,7 +36,6 @@ public class CheckBoxPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private CheckBox checkBox;
 	private ObjectProperty<Boolean> property;
 
@@ -57,30 +55,25 @@ public class CheckBoxPresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yCheckBox);
+		if (checkBox == null) {
 
 			checkBox = new CheckBox();
 			checkBox.addStyleName(CSS_CLASS_CONTROL);
 			checkBox.setImmediate(true);
+			setupComponent(checkBox, getCastedModel());
 			
 			associateWidget(checkBox, modelAccess.yCheckBox);
+			if (modelAccess.isCssIdValid()) {
+				checkBox.setId(modelAccess.getCssID());
+			} else {
+				checkBox.setId(getEditpart().getId());
+			}
 
 			property = new ObjectProperty<Boolean>(false, Boolean.class);
 			checkBox.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yCheckBox, checkBox);
-
-			componentBase.addComponent(checkBox);
 
 			if (modelAccess.isCssClassValid()) {
 				checkBox.addStyleName(modelAccess.getCssClass());
@@ -90,7 +83,7 @@ public class CheckBoxPresentation extends
 
 			initializeField(checkBox);
 		}
-		return componentBase;
+		return checkBox;
 	}
 
 	@Override
@@ -108,11 +101,11 @@ public class CheckBoxPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			checkBox.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				checkBox.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -159,17 +152,17 @@ public class CheckBoxPresentation extends
 		registerBinding(createBindings_Value(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YCHECK_BOX__VALUE, field));
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return checkBox;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return checkBox != null;
 	}
 
 	/**
@@ -177,22 +170,20 @@ public class CheckBoxPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (checkBox != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
+			ComponentContainer parent = ((ComponentContainer) checkBox
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(checkBox);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(checkBox);
 
-			componentBase = null;
 			checkBox = null;
 		}
 	}

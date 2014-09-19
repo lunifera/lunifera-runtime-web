@@ -29,7 +29,6 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Embedded;
 
 /**
@@ -39,7 +38,6 @@ public class ImagePresentation extends
 		AbstractEmbeddedWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private Embedded image;
 
 	/**
@@ -58,28 +56,22 @@ public class ImagePresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yImage);
+		if (image == null) {
 
 			image = new Embedded();
 			image.addStyleName(CSS_CLASS_CONTROL);
 			image.setImmediate(true);
-			image.setSizeFull();
+			setupComponent(image, getCastedModel());
 
 			associateWidget(image, modelAccess.yImage);
+			if (modelAccess.isCssIdValid()) {
+				image.setId(modelAccess.getCssID());
+			} else {
+				image.setId(getEditpart().getId());
+			}
 
 			// creates the binding for the field
 			createBindings(modelAccess.yImage, image, null);
-
-			componentBase.addComponent(image);
 
 			if (modelAccess.isCssClassValid()) {
 				image.addStyleName(modelAccess.getCssClass());
@@ -88,7 +80,7 @@ public class ImagePresentation extends
 			// set the captions
 			applyCaptions();
 		}
-		return componentBase;
+		return image;
 	}
 
 	/**
@@ -137,23 +129,23 @@ public class ImagePresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			image.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				image.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return image;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return image != null;
 	}
 
 	/**
@@ -161,21 +153,18 @@ public class ImagePresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (image != null) {
 
 			// unbind all active bindings
 			unbind();
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(image);
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
+			ComponentContainer parent = ((ComponentContainer) image.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(image);
 			}
-			componentBase = null;
 			image = null;
 		}
 	}

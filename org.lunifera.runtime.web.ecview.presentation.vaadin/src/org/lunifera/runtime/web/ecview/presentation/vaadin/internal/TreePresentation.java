@@ -33,7 +33,6 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.ITreeEditpart;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Tree;
 
@@ -43,7 +42,6 @@ import com.vaadin.ui.Tree;
 public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private Tree tree;
 	private ObjectProperty property;
 
@@ -64,24 +62,20 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yTree);
+		if (tree == null) {
 
 			tree = new Tree();
 			tree.addStyleName(CSS_CLASS_CONTROL);
 			tree.setMultiSelect(modelAccess.yTree.getSelectionType() == YSelectionType.MULTI);
 			tree.setImmediate(true);
-			tree.setSizeFull();
+			setupComponent(tree, getCastedModel());
 			
 			associateWidget(tree, modelAccess.yTree);
+			if (modelAccess.isCssIdValid()) {
+				tree.setId(modelAccess.getCssID());
+			} else {
+				tree.setId(getEditpart().getId());
+			}
 
 			if (tree.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
@@ -93,8 +87,6 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 			// creates the binding for the field
 			createBindings(modelAccess.yTree, tree);
 
-			componentBase.addComponent(tree);
-
 			if (modelAccess.isCssClassValid()) {
 				tree.addStyleName(modelAccess.getCssClass());
 			}
@@ -103,7 +95,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 			initializeField(tree);
 		}
-		return componentBase;
+		return tree;
 	}
 
 	@Override
@@ -121,11 +113,11 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			tree.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				tree.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -225,17 +217,17 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		}
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return tree;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return tree != null;
 	}
 
 	/**
@@ -243,22 +235,19 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (tree != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
+			ComponentContainer parent = ((ComponentContainer) tree.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(tree);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(tree);
 
-			componentBase = null;
 			tree = null;
 		}
 	}

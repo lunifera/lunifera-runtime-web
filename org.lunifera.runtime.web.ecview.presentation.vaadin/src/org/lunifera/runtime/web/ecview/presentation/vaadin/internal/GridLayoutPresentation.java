@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.Area;
 
@@ -45,7 +44,6 @@ public class GridLayoutPresentation extends
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(GridLayoutPresentation.class);
 
-	private CssLayout componentBase;
 	private GridLayout gridlayout;
 	private ModelAccess modelAccess;
 
@@ -170,23 +168,23 @@ public class GridLayoutPresentation extends
 			}
 		}
 
-		if (!modelAccess.isFillVertical()) {
-			int packingHelperRowIndex = gridlayout.getRows();
-			gridlayout.setRows(packingHelperRowIndex + 1);
-			gridlayout.setRowExpandRatio(packingHelperRowIndex, 1.0f);
-		} else{
-			componentBase.setHeight("100%");
-			gridlayout.setHeight("100%");
-		}
-
-		if (!modelAccess.isFillHorizontal()) {
-			int packingHelperColumnIndex = gridlayout.getColumns();
-			gridlayout.setColumns(packingHelperColumnIndex + 1);
-			gridlayout.setColumnExpandRatio(packingHelperColumnIndex, 1.0f);
-		} else{
-			componentBase.setWidth("100%");
-			gridlayout.setWidth("100%");
-		}
+		gridlayout.setSizeUndefined();
+//		if (!modelAccess.isFillVertical()) {
+//			// int packingHelperRowIndex = gridlayout.getRows();
+//			// gridlayout.setRows(packingHelperRowIndex + 1);
+//			// gridlayout.setRowExpandRatio(packingHelperRowIndex, 1.0f);
+//		} else {
+//			gridlayout.setHeight("100%");
+//		}
+//
+//		if (!modelAccess.isFillHorizontal()) {
+//			int packingHelperColumnIndex = gridlayout.getColumns();
+//			gridlayout.setColumns(packingHelperColumnIndex + 1);
+//			gridlayout.setColumnExpandRatio(packingHelperColumnIndex, 1.0f);
+//			gridlayout.setSizeUndefined();
+//		} else {
+//			gridlayout.setWidth("100%");
+//		}
 	}
 
 	/**
@@ -223,19 +221,19 @@ public class GridLayoutPresentation extends
 		//
 		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle
 				.getAlignment() : YAlignment.TOP_LEFT;
-//		if (yAlignment == null) {
-//			// use default
-//			yAlignment = YAlignment.TOP_LEFT;
-//
-//			if (modelAccess.isFillVertical()) {
-//				// ensure that vertical alignment is FILL
-//				yAlignment = mapToVerticalFill(yAlignment);
-//			}
-//			if (modelAccess.isFillHorizontal()) {
-//				// ensure that horizontal alignment is FILL
-//				yAlignment = mapToHorizontalFill(yAlignment);
-//			}
-//		}
+		// if (yAlignment == null) {
+		// // use default
+		// yAlignment = YAlignment.TOP_LEFT;
+		//
+		// if (modelAccess.isFillVertical()) {
+		// // ensure that vertical alignment is FILL
+		// yAlignment = mapToVerticalFill(yAlignment);
+		// }
+		// if (modelAccess.isFillHorizontal()) {
+		// // ensure that horizontal alignment is FILL
+		// yAlignment = mapToHorizontalFill(yAlignment);
+		// }
+		// }
 
 		// add the element to the grid layout
 		//
@@ -317,7 +315,7 @@ public class GridLayoutPresentation extends
 			case FILL_FILL:
 				gridlayout.setComponentAlignment(child, Alignment.TOP_LEFT);
 				child.setSizeFull();
-//				child.setHeight("100%");
+				// child.setHeight("100%");
 				break;
 			case FILL_LEFT:
 				gridlayout.setComponentAlignment(child, Alignment.TOP_LEFT);
@@ -414,25 +412,20 @@ public class GridLayoutPresentation extends
 
 	@Override
 	public ComponentContainer doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.setSizeUndefined();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yLayout);
+		if (gridlayout == null) {
 
 			gridlayout = new GridLayout(modelAccess.getColumns(), 1);
 			gridlayout.setSpacing(false);
 			gridlayout.setImmediate(true);
-			gridlayout.setSizeUndefined();
-			componentBase.addComponent(gridlayout);
-
+			setupComponent(gridlayout, getCastedModel());
+			
 			associateWidget(gridlayout, modelAccess.yLayout);
+
+			if (modelAccess.isCssIdValid()) {
+				gridlayout.setId(modelAccess.getCssID());
+			} else {
+				gridlayout.setId(getEditpart().getId());
+			}
 
 			if (modelAccess.isMargin()) {
 				gridlayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
@@ -449,21 +442,25 @@ public class GridLayoutPresentation extends
 			} else {
 				gridlayout.addStyleName(CSS_CLASS_CONTROL);
 			}
+			gridlayout.addStyleName(IConstants.CSS_CLASS_GRIDLAYOUT);
+
+			// creates the binding for the field
+			createBindings(modelAccess.yLayout, gridlayout, null);
 
 			renderChildren(false);
 		}
 
-		return componentBase;
+		return gridlayout;
 	}
 
 	@Override
 	public ComponentContainer getWidget() {
-		return componentBase;
+		return gridlayout;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return gridlayout != null;
 	}
 
 	@Override
@@ -479,22 +476,20 @@ public class GridLayoutPresentation extends
 
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (gridlayout != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
+			ComponentContainer parent = ((ComponentContainer) gridlayout
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(gridlayout);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(gridlayout);
 
-			componentBase = null;
 			gridlayout = null;
 
 			// unrender the childs

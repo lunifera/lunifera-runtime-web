@@ -19,12 +19,12 @@ import org.lunifera.ecview.core.common.editpart.ILayoutEditpart;
 import org.lunifera.ecview.core.common.model.core.YLayout;
 import org.lunifera.ecview.core.common.presentation.ILayoutPresentation;
 
-import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Component;
 
 /**
  * An abstract base class implementing {@link ILayoutPresentation}.
  */
-public abstract class AbstractLayoutPresenter<A extends ComponentContainer>
+public abstract class AbstractLayoutPresenter<A extends Component>
 		extends AbstractVaadinWidgetPresenter<A> implements
 		ILayoutPresentation<A> {
 

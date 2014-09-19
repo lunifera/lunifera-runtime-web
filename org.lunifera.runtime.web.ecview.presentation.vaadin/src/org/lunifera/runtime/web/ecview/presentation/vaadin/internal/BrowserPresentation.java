@@ -20,7 +20,6 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.IBrowserEditpart;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 
 /**
  * This presenter is responsible to render a text area on the given layout.
@@ -29,7 +28,6 @@ public class BrowserPresentation extends
 		AbstractEmbeddedWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private BrowserFrame browser;
 
 	/**
@@ -48,28 +46,23 @@ public class BrowserPresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yBrowser);
+		if (browser == null) {
 
 			browser = new BrowserFrame();
 			browser.addStyleName(CSS_CLASS_CONTROL);
 			browser.setImmediate(true);
-			browser.setSizeFull();
+			setupComponent(browser, getCastedModel());
 			
 			associateWidget(browser, modelAccess.yBrowser);
 
+			if (modelAccess.isCssIdValid()) {
+				browser.setId(modelAccess.getCssID());
+			} else {
+				browser.setId(getEditpart().getId());
+			}
+
 			// creates the binding for the field
 			createBindings(modelAccess.yBrowser, browser, null);
-
-			componentBase.addComponent(browser);
 
 			if (modelAccess.isCssClassValid()) {
 				browser.addStyleName(modelAccess.getCssClass());
@@ -78,7 +71,7 @@ public class BrowserPresentation extends
 			// set the captions
 			applyCaptions();
 		}
-		return componentBase;
+		return browser;
 	}
 
 	@Override
@@ -96,23 +89,23 @@ public class BrowserPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			browser.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				browser.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return browser;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return browser != null;
 	}
 
 	/**
@@ -120,21 +113,19 @@ public class BrowserPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (browser != null) {
 
 			// unbind all active bindings
 			unbind();
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(browser);
-			
-			ComponentContainer parent = ((ComponentContainer) componentBase
+
+			ComponentContainer parent = ((ComponentContainer) browser
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(browser);
 			}
-			componentBase = null;
 			browser = null;
 		}
 	}

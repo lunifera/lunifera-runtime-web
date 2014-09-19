@@ -20,7 +20,6 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.IButtonEditpart;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 
 /**
  * This presenter is responsible to render a text field on the given layout.
@@ -29,7 +28,6 @@ public class ButtonPresentation extends
 		AbstractVaadinWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private Button button;
 
 	/**
@@ -48,28 +46,23 @@ public class ButtonPresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yButton);
+		if (button == null) {
 
 			button = new Button();
 			button.addStyleName(CSS_CLASS_CONTROL);
 			button.setImmediate(true);
-			button.setSizeFull();
+			setupComponent(button, getCastedModel());
 			
 			associateWidget(button, modelAccess.yButton);
 
+			if (modelAccess.isCssIdValid()) {
+				button.setId(modelAccess.getCssID());
+			} else {
+				button.setId(getEditpart().getId());
+			}
+
 			// creates the binding for the field
 			createBindings(modelAccess.yButton, button);
-
-			componentBase.addComponent(button);
 
 			if (modelAccess.isCssClassValid()) {
 				button.addStyleName(modelAccess.getCssClass());
@@ -78,7 +71,7 @@ public class ButtonPresentation extends
 			applyCaptions();
 
 		}
-		return componentBase;
+		return button;
 	}
 
 	@Override
@@ -113,7 +106,7 @@ public class ButtonPresentation extends
 	 */
 	@SuppressWarnings("serial")
 	protected void createBindings(final YButton yButton, Button button) {
-		super.createBindings(yButton, button, componentBase);
+		super.createBindings(yButton, button, null);
 
 		button.addClickListener(new Button.ClickListener() {
 			@Override
@@ -129,12 +122,12 @@ public class ButtonPresentation extends
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return button;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return button != null;
 	}
 
 	/**
@@ -142,22 +135,20 @@ public class ButtonPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (button != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
+			ComponentContainer parent = ((ComponentContainer) button
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(button);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(button);
 
-			componentBase = null;
 			button = null;
 		}
 	}

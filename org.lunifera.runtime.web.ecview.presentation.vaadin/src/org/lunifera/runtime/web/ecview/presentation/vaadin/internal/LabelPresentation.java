@@ -22,7 +22,6 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 
 /**
@@ -32,7 +31,6 @@ public class LabelPresentation extends
 		AbstractEmbeddedWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private Label label;
 	private ObjectProperty<String> property;
 
@@ -52,21 +50,18 @@ public class LabelPresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yLabel);
+		if (label == null) {
 
 			label = new Label();
 			label.addStyleName(CSS_CLASS_CONTROL);
 			label.setImmediate(true);
-			label.setSizeFull();
+			setupComponent(label, getCastedModel());
+			
+			if (modelAccess.isCssIdValid()) {
+				label.setId(modelAccess.getCssID());
+			} else {
+				label.setId(getEditpart().getId());
+			}
 
 			associateWidget(label, modelAccess.yLabel);
 
@@ -74,9 +69,7 @@ public class LabelPresentation extends
 			label.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yLabel, label, componentBase);
-
-			componentBase.addComponent(label);
+			createBindings(modelAccess.yLabel, label, null);
 
 			if (modelAccess.isCssClassValid()) {
 				label.addStyleName(modelAccess.getCssClass());
@@ -84,7 +77,7 @@ public class LabelPresentation extends
 
 			applyCaptions();
 		}
-		return componentBase;
+		return label;
 	}
 
 	/**
@@ -117,23 +110,23 @@ public class LabelPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			label.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				label.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return label;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return label != null;
 	}
 
 	/**
@@ -141,22 +134,19 @@ public class LabelPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (label != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
+			ComponentContainer parent = ((ComponentContainer) label.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(label);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(label);
 
-			componentBase = null;
 			label = null;
 		}
 	}

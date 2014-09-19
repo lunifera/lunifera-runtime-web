@@ -29,7 +29,6 @@ import org.lunifera.runtime.web.vaadin.components.fields.search.NumericSearchFie
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 
 /**
@@ -39,8 +38,7 @@ public class NumericSearchFieldPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
-	private NumericSearchField text;
+	private NumericSearchField field;
 	private ObjectProperty<String> property;
 
 	/**
@@ -60,45 +58,39 @@ public class NumericSearchFieldPresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yText);
+		if (field == null) {
 
 			IBindingManager bm = getViewContext().getService(
 					IECViewBindingManager.class.getName());
-			text = new NumericSearchField(getEditpart().getId(),
+			field = new NumericSearchField(getEditpart().getId(),
 					bm.getDatabindingContext());
-			text.addStyleName(CSS_CLASS_CONTROL);
-			text.setNullRepresentation("");
-			text.setImmediate(true);
-			text.setWidth("100%");
+			field.addStyleName(CSS_CLASS_CONTROL);
+			field.setNullRepresentation("");
+			field.setImmediate(true);
+			setupComponent(field, getCastedModel());
 
-			associateWidget(text, modelAccess.yText);
+			associateWidget(field, modelAccess.yText);
+			if (modelAccess.isCssIdValid()) {
+				field.setId(modelAccess.getCssID());
+			} else {
+				field.setId(getEditpart().getId());
+			}
 
 			property = new ObjectProperty<String>(null, String.class);
-			text.setPropertyDataSource(property);
+			field.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yText, text);
-
-			componentBase.addComponent(text);
+			createBindings(modelAccess.yText, field);
 
 			if (modelAccess.isCssClassValid()) {
-				text.addStyleName(modelAccess.getCssClass());
+				field.addStyleName(modelAccess.getCssClass());
 			}
 
 			applyCaptions();
 
-			initializeField(text);
+			initializeField(field);
 		}
-		return componentBase;
+		return field;
 	}
 
 	@Override
@@ -116,18 +108,18 @@ public class NumericSearchFieldPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			field.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				field.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
 
 	@Override
 	protected Field<?> doGetField() {
-		return text;
+		return field;
 	}
 
 	@Override
@@ -167,19 +159,19 @@ public class NumericSearchFieldPresentation extends
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBindings_Value(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YNUMERIC_SEARCH_FIELD__VALUE,
-				text));
+				field));
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return field;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return field != null;
 	}
 
 	/**
@@ -187,23 +179,20 @@ public class NumericSearchFieldPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (field != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
+			ComponentContainer parent = ((ComponentContainer) field.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(field);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
-			unassociateWidget(text);
+			unassociateWidget(field);
 
-			componentBase = null;
-			text = null;
+			field = null;
 		}
 	}
 

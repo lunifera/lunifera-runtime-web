@@ -26,7 +26,6 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.ITextFieldEditpart;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
@@ -37,7 +36,6 @@ public class TextFieldPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private TextField text;
 	private ObjectProperty<String> property;
 
@@ -57,32 +55,26 @@ public class TextFieldPresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yText);
+		if (text == null) {
 
 			text = new TextField();
 			text.addStyleName(CSS_CLASS_CONTROL);
 			text.setNullRepresentation("");
 			text.setImmediate(true);
-			text.setWidth("100%");
+			setupComponent(text, getCastedModel());
 
 			associateWidget(text, modelAccess.yText);
+			if (modelAccess.isCssIdValid()) {
+				text.setId(modelAccess.getCssID());
+			} else {
+				text.setId(getEditpart().getId());
+			}
 
 			property = new ObjectProperty<String>(null, String.class);
 			text.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yText, text);
-
-			componentBase.addComponent(text);
 
 			if (modelAccess.isCssClassValid()) {
 				text.addStyleName(modelAccess.getCssClass());
@@ -92,7 +84,7 @@ public class TextFieldPresentation extends
 
 			initializeField(text);
 		}
-		return componentBase;
+		return text;
 	}
 
 	@Override
@@ -110,11 +102,11 @@ public class TextFieldPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			text.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				text.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -161,17 +153,17 @@ public class TextFieldPresentation extends
 		registerBinding(createBindings_Value(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YTEXT_FIELD__VALUE, text));
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return text;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return text != null;
 	}
 
 	/**
@@ -179,22 +171,19 @@ public class TextFieldPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (text != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
+			ComponentContainer parent = ((ComponentContainer) text.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(text);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(text);
 
-			componentBase = null;
 			text = null;
 		}
 	}

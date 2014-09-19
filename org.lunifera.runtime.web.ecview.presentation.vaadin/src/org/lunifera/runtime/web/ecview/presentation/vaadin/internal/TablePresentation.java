@@ -46,10 +46,10 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
+import com.vaadin.ui.Table.RowHeaderMode;
 
 /**
  * This presenter is responsible to render a table on the given layout.
@@ -58,7 +58,6 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		implements ITabPresentation<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private Table table;
 	@SuppressWarnings("rawtypes")
 	private ObjectProperty property;
@@ -81,25 +80,21 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yTable);
+		if (table == null) {
 
 			table = new CustomTable();
 			table.addStyleName(CSS_CLASS_CONTROL);
 			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
 			table.setSelectable(true);
 			table.setImmediate(true);
-			// table.setSizeFull();
+			setupComponent(table, getCastedModel());
 
 			associateWidget(table, modelAccess.yTable);
+			if (modelAccess.isCssIdValid()) {
+				table.setId(modelAccess.getCssID());
+			} else {
+				table.setId(getEditpart().getId());
+			}
 
 			if (table.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
@@ -126,7 +121,6 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 					table.setContainerDataSource(datasource);
 
 					applyColumns = true;
-
 				} else {
 					IndexedContainer container = new IndexedContainer();
 					container.addContainerProperty("for", String.class, null);
@@ -141,12 +135,11 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 					.getItemImageProperty();
 			if (itemImageProperty != null && !itemImageProperty.equals("")) {
 				table.setItemIconPropertyId(itemImageProperty);
+				table.setRowHeaderMode(RowHeaderMode.EXPLICIT);
 			}
 
 			// creates the binding for the field
 			createBindings(modelAccess.yTable, table);
-
-			componentBase.addComponent(table);
 
 			if (modelAccess.isCssClassValid()) {
 				table.addStyleName(modelAccess.getCssClass());
@@ -156,7 +149,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 
 			initializeField(table);
 		}
-		return componentBase;
+		return table;
 	}
 
 	/**
@@ -253,11 +246,11 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
+			table.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
+					getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				table.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -357,17 +350,17 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 
 		}
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return table;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return table != null;
 	}
 
 	/**
@@ -375,22 +368,19 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (table != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
-					.getParent());
+			ComponentContainer parent = ((ComponentContainer) table.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(table);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(table);
 
-			componentBase = null;
 			table = null;
 		}
 	}
@@ -495,6 +485,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	 * Converts the string value of the item icon property to
 	 * {@link ThemeResource}.
 	 */
+	@SuppressWarnings("serial")
 	private static class CustomTable extends Table {
 		private Object itemIconPropertyId;
 
@@ -504,7 +495,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			if (propertyId == null) {
 				super.setItemIconPropertyId(propertyId);
 			} else if (!getContainerPropertyIds().contains(propertyId)) {
-				super.setItemIconPropertyId(propertyId);
+				// super.setItemIconPropertyId(propertyId);
 			} else if (String.class.isAssignableFrom(getType(propertyId))) {
 				itemIconPropertyId = propertyId;
 			} else {

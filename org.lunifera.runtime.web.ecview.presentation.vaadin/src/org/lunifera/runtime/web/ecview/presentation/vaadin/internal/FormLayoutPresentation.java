@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 
 /**
@@ -37,7 +36,6 @@ public class FormLayoutPresentation extends
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(FormLayoutPresentation.class);
 
-	private CssLayout componentBase;
 	private FormLayout formLayout;
 	private ModelAccess modelAccess;
 
@@ -81,13 +79,14 @@ public class FormLayoutPresentation extends
 		}
 
 		if (modelAccess.isFillVertical()) {
-			componentBase.setHeight("100%");
 			formLayout.setHeight("100%");
 		}
 
 		if (modelAccess.isFillHorizontal()) {
-			componentBase.setWidth("100%");
 			formLayout.setWidth("100%");
+		} else {
+			formLayout.addStyleName("l-form-defaultwidth");
+//			formLayout.setWidth("350px");
 		}
 	}
 
@@ -109,23 +108,18 @@ public class FormLayoutPresentation extends
 
 	@Override
 	public ComponentContainer doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yLayout);
+		if (formLayout == null) {
 
 			formLayout = new FormLayout();
-			formLayout.setWidth("100%");
-			componentBase.addComponent(formLayout);
+			setupComponent(formLayout, getCastedModel());
 
 			associateWidget(formLayout, modelAccess.yLayout);
+
+			if (modelAccess.isCssIdValid()) {
+				formLayout.setId(modelAccess.getCssID());
+			} else {
+				formLayout.setId(getEditpart().getId());
+			}
 
 			if (modelAccess.isMargin()) {
 				formLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
@@ -144,9 +138,10 @@ public class FormLayoutPresentation extends
 			} else {
 				formLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
+			formLayout.addStyleName(IConstants.CSS_CLASS_FORMLAYOUT);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yLayout, formLayout, componentBase);
+			createBindings(modelAccess.yLayout, formLayout, null);
 
 			// initialize all children
 			initializeChildren();
@@ -154,7 +149,7 @@ public class FormLayoutPresentation extends
 			renderChildren(false);
 		}
 
-		return componentBase;
+		return formLayout;
 	}
 
 	/**
@@ -173,26 +168,24 @@ public class FormLayoutPresentation extends
 
 	@Override
 	public ComponentContainer getWidget() {
-		return componentBase;
+		return formLayout;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return formLayout != null;
 	}
 
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (formLayout != null) {
 
 			// unbind all active bindings
 			unbind();
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(formLayout);
 
-			componentBase = null;
 			formLayout = null;
 		}
 	}

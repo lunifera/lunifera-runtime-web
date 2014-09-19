@@ -37,6 +37,7 @@ import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.lunifera.ecview.core.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.lunifera.ecview.core.common.model.core.YEditable;
+import org.lunifera.ecview.core.common.model.core.YElement;
 import org.lunifera.ecview.core.common.model.core.YEmbeddable;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEnable;
@@ -48,6 +49,7 @@ import org.lunifera.ecview.core.common.model.visibility.YVisibilityProperties;
 import org.lunifera.ecview.core.common.notification.ILifecycleEvent;
 import org.lunifera.ecview.core.common.notification.ILifecycleService;
 import org.lunifera.ecview.core.common.notification.LifecycleEvent;
+import org.lunifera.ecview.core.common.presentation.IInitializerService;
 import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
 import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
 import org.lunifera.ecview.core.databinding.emf.common.ECViewUpdateValueStrategy;
@@ -82,7 +84,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * See {@link IConstants#CSS_CLASS_CONTROL}.
 	 */
 	public static final String CSS_CLASS_CONTROL = IConstants.CSS_CLASS_CONTROL;
-	
+
 	/**
 	 * See {@link IConstants#CSS_CLASS_COMPRESSOR}.
 	 */
@@ -116,6 +118,10 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		return getEditpart().getModel();
 	}
 
+	protected YElement getCastedModel(){
+		return (YElement) getModel();
+	}
+	
 	/**
 	 * Returns the view context.
 	 * 
@@ -189,6 +195,19 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 */
 	protected VisibilityOptionsApplier createVisibilityOptionsApplier() {
 		return new VisibilityOptionsApplier(getWidget());
+	}
+
+	/**
+	 * Is called to initialize the newly created component.
+	 * 
+	 * @param component
+	 */
+	protected void setupComponent(Component component, YElement model) {
+		IInitializerService service = getViewContext().getService(
+				IInitializerService.class.getName());
+		if (service != null) {
+			service.initialize(component, model);
+		}
 	}
 
 	/**

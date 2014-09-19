@@ -33,8 +33,8 @@ import com.vaadin.ui.TabSheet.Tab;
 public class TabPresentation extends AbstractTabPresenter<Component> implements
 		ITabPresentation<Component> {
 
-	private CssLayout tabContent;
 	private Tab tab;
+	private CssLayout tabContent;
 	private ModelAccess modelAccess;
 
 	/**

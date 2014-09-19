@@ -23,14 +23,16 @@ import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
 import org.lunifera.ecview.core.common.model.datatypes.YDatatype;
 import org.lunifera.ecview.core.extension.model.datatypes.YDateTimeDatatype;
+import org.lunifera.ecview.core.extension.model.datatypes.YDateTimeFormat;
+import org.lunifera.ecview.core.extension.model.datatypes.YDateTimeResolution;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YDateTime;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IDateTimeEditpart;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
 
@@ -41,10 +43,11 @@ public class DateTimePresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private DateField dateField;
 	private Binding binding_valueToUI;
 	private ObjectProperty<Date> property;
+	private String dateFormat;
+	private Resolution resolution;
 
 	/**
 	 * Constructor.
@@ -62,31 +65,26 @@ public class DateTimePresentation extends
 	 */
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-			
-			associateWidget(componentBase, modelAccess.yDateTime);
+		if (dateField == null) {
 
 			dateField = new DateField();
 			dateField.addStyleName(CSS_CLASS_CONTROL);
 			dateField.setImmediate(true);
-			dateField.setWidth("100%");
-			
+			setupComponent(dateField, getCastedModel());
+
 			associateWidget(dateField, modelAccess.yDateTime);
+
+			if (modelAccess.isCssIdValid()) {
+				dateField.setId(modelAccess.getCssID());
+			} else {
+				dateField.setId(getEditpart().getId());
+			}
 
 			property = new ObjectProperty<Date>(null, Date.class);
 			dateField.setPropertyDataSource(property);
 
 			// creates the binding for the field
 			createBindings(modelAccess.yDateTime, dateField);
-
-			componentBase.addComponent(dateField);
 
 			if (modelAccess.isCssClassValid()) {
 				dateField.addStyleName(modelAccess.getCssClass());
@@ -98,7 +96,7 @@ public class DateTimePresentation extends
 
 			initializeField(dateField);
 		}
-		return componentBase;
+		return dateField;
 	}
 
 	/**
@@ -111,28 +109,145 @@ public class DateTimePresentation extends
 			return;
 		}
 
-		dateField.setDateFormat(getDateformat((YDateTimeDatatype) yDt));
+		calcResolutionAndFormat((YDateTimeDatatype) yDt);
+
+		dateField.setDateFormat(dateFormat);
+		dateField.setResolution(resolution);
 	}
 
-	/**
-	 * Returns the date format.
-	 * 
-	 * @return
-	 */
-	public String getDateformat(YDateTimeDatatype yDt) {
+	private void calcResolutionAndFormat(YDateTimeDatatype yDt) {
 		if (yDt == null) {
-			return "yyyy.MM.dd HH:mm";
+			dateFormat = "yyyy.MM.dd HH:mm";
+			resolution = Resolution.MINUTE;
+			return;
 		}
 
-		switch (yDt.getFormat()) {
-		case DATE:
-			return "yyyy.MM.dd";
-		case DATE_TIME:
-			return "yyyy.MM.dd HH:mm";
-		case TIME:
-			return "HH:mm:ss";
+		Resolution resolution = calcResolution(yDt);
+		YDateTimeFormat yFormat = yDt.getFormat();
+		if (yFormat != null) {
+			switch (yFormat) {
+			case DATE:
+				switch (resolution) {
+				case YEAR:
+					dateFormat = "yyyy";
+					break;
+				case MONTH:
+					dateFormat = "yyyy.MM";
+					break;
+				case DAY:
+					dateFormat = "yyyy.MM.dd";
+					break;
+				default:
+					throw new IllegalArgumentException(resolution
+							+ " is not a valid resolution for " + yFormat);
+				}
+				break;
+			case DATE_TIME:
+				switch (resolution) {
+				case YEAR:
+					dateFormat = "yyyy";
+					break;
+				case MONTH:
+					dateFormat = "yyyy.MM";
+					break;
+				case DAY:
+					dateFormat = "yyyy.MM.dd";
+					break;
+				case HOUR:
+					dateFormat = "yyyy.MM.dd HH";
+					break;
+				case MINUTE:
+					dateFormat = "yyyy.MM.dd HH:mm";
+					break;
+				case SECOND:
+					dateFormat = "yyyy.MM.dd  HH:mm:ss";
+					break;
+				default:
+					throw new IllegalArgumentException(resolution
+							+ " is not a valid resolution for " + yFormat);
+				}
+				break;
+			case TIME:
+				switch (resolution) {
+				case HOUR:
+					dateFormat = "HH";
+					break;
+				case MINUTE:
+					dateFormat = "HH:mm";
+					break;
+				case SECOND:
+					dateFormat = "HH:mm:ss";
+					break;
+				default:
+					throw new IllegalArgumentException(resolution
+							+ " is not a valid resolution for " + yFormat);
+				}
+				break;
+			}
 		}
-		return "yyyy.MM.dd HH:mm";
+	}
+
+	private Resolution calcResolution(YDateTimeDatatype yDt) {
+		YDateTimeFormat yFormat = yDt.getFormat();
+		if (yFormat != null) {
+			YDateTimeResolution yResolution = yDt.getResolution();
+			switch (yFormat) {
+			case DATE:
+				if (yResolution == YDateTimeResolution.UNDEFINED
+						|| yResolution == YDateTimeResolution.SECOND
+						|| yResolution == YDateTimeResolution.MINUTE
+						|| yResolution == YDateTimeResolution.HOUR) {
+					resolution = Resolution.DAY;
+				}
+				break;
+			case DATE_TIME:
+				if (yResolution == YDateTimeResolution.UNDEFINED
+						|| yResolution == YDateTimeResolution.DAY
+						|| yResolution == YDateTimeResolution.MONTH
+						|| yResolution == YDateTimeResolution.YEAR) {
+					resolution = Resolution.MINUTE;
+				}
+				break;
+			case TIME:
+				if (yResolution == YDateTimeResolution.UNDEFINED
+						|| yResolution == YDateTimeResolution.DAY
+						|| yResolution == YDateTimeResolution.MONTH
+						|| yResolution == YDateTimeResolution.YEAR) {
+					resolution = Resolution.MINUTE;
+				}
+				break;
+			}
+		}
+
+		if (resolution == null) {
+			switch (yDt.getResolution()) {
+			case SECOND:
+				resolution = Resolution.SECOND;
+				break;
+			case MINUTE:
+				resolution = Resolution.MINUTE;
+				break;
+			case HOUR:
+				resolution = Resolution.HOUR;
+				break;
+			case DAY:
+				resolution = Resolution.DAY;
+				break;
+			case MONTH:
+				resolution = Resolution.MONTH;
+				break;
+			case YEAR:
+				resolution = Resolution.YEAR;
+				break;
+			case UNDEFINED:
+				resolution = Resolution.MINUTE;
+				break;
+			default:
+				resolution = Resolution.MINUTE;
+			}
+		}
+
+		return resolution;
 	}
 
 	@Override
@@ -150,11 +265,11 @@ public class DateTimePresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
+			dateField.setCaption(service.getValue(
 					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				dateField.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -203,17 +318,17 @@ public class DateTimePresentation extends
 				null);
 		registerBinding(binding_valueToUI);
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return dateField;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return dateField != null;
 	}
 
 	/**
@@ -221,22 +336,20 @@ public class DateTimePresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (dateField != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
+			ComponentContainer parent = ((ComponentContainer) dateField
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(dateField);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(dateField);
 
-			componentBase = null;
 			dateField = null;
 		}
 	}

@@ -22,20 +22,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Panel;
 
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
-public class PanelPresentation extends
-		AbstractLayoutPresenter<ComponentContainer> {
+public class PanelPresentation extends AbstractLayoutPresenter<Component> {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PanelPresentation.class);
 
-	private CssLayout componentBase;
 	private Panel panel;
 	private ModelAccess modelAccess;
 
@@ -91,24 +87,18 @@ public class PanelPresentation extends
 	}
 
 	@Override
-	public ComponentContainer doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yLayout);
+	public Component doCreateWidget(Object parent) {
+		if (panel == null) {
 
 			panel = new Panel();
-			panel.setSizeFull();
-			componentBase.addComponent(panel);
-
+			setupComponent(panel, getCastedModel());
+			
 			associateWidget(panel, modelAccess.yLayout);
+			if (modelAccess.isCssIdValid()) {
+				panel.setId(modelAccess.getCssID());
+			} else {
+				panel.setId(getEditpart().getId());
+			}
 
 			if (modelAccess.isCssClassValid()) {
 				panel.addStyleName(modelAccess.getCssClass());
@@ -117,9 +107,9 @@ public class PanelPresentation extends
 			}
 
 			applyCaptions();
-			
+
 			// creates the binding for the field
-			createBindings(modelAccess.yLayout, panel, componentBase);
+			createBindings(modelAccess.yLayout, panel, null);
 
 			// initialize all children
 			initializeChildren();
@@ -127,7 +117,7 @@ public class PanelPresentation extends
 			renderChildren(false);
 		}
 
-		return componentBase;
+		return panel;
 	}
 
 	/**
@@ -145,27 +135,25 @@ public class PanelPresentation extends
 	}
 
 	@Override
-	public ComponentContainer getWidget() {
-		return componentBase;
+	public Component getWidget() {
+		return panel;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return panel != null;
 	}
 
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (panel != null) {
 
 			// unbind all active bindings
 			unbind();
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(panel);
 
-			componentBase = null;
 			panel = null;
 		}
 	}

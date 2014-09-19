@@ -39,7 +39,6 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.OptionGroup;
 
@@ -50,7 +49,6 @@ public class OptionsGroupPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private CssLayout componentBase;
 	private OptionGroup optionsGroup;
 	private ObjectProperty property;
 
@@ -71,25 +69,21 @@ public class OptionsGroupPresentation extends
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Component doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yOptionsGroup);
+		if (optionsGroup == null) {
 
 			optionsGroup = new CustomOptionGroup();
 			optionsGroup.addStyleName(CSS_CLASS_CONTROL);
 			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
 					.getSelectionType() == YSelectionType.MULTI);
 			optionsGroup.setImmediate(true);
-			optionsGroup.setSizeFull();
-
+			setupComponent(optionsGroup, getCastedModel());
 			associateWidget(optionsGroup, modelAccess.yOptionsGroup);
+			
+			if (modelAccess.isCssIdValid()) {
+				optionsGroup.setId(modelAccess.getCssID());
+			} else {
+				optionsGroup.setId(getEditpart().getId());
+			}
 
 			if (optionsGroup.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
@@ -142,8 +136,6 @@ public class OptionsGroupPresentation extends
 			// creates the binding for the field
 			createBindings(modelAccess.yOptionsGroup, optionsGroup);
 
-			componentBase.addComponent(optionsGroup);
-
 			if (modelAccess.isCssClassValid()) {
 				optionsGroup.addStyleName(modelAccess.getCssClass());
 			}
@@ -152,7 +144,7 @@ public class OptionsGroupPresentation extends
 
 			initializeField(optionsGroup);
 		}
-		return componentBase;
+		return optionsGroup;
 	}
 
 	@Override
@@ -170,11 +162,11 @@ public class OptionsGroupPresentation extends
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
 		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			componentBase.setCaption(service.getValue(
+			optionsGroup.setCaption(service.getValue(
 					modelAccess.getLabelI18nKey(), getLocale()));
 		} else {
 			if (modelAccess.isLabelValid()) {
-				componentBase.setCaption(modelAccess.getLabel());
+				optionsGroup.setCaption(modelAccess.getLabel());
 			}
 		}
 	}
@@ -273,17 +265,17 @@ public class OptionsGroupPresentation extends
 
 		}
 
-		super.createBindings(yField, field, componentBase);
+		super.createBindings(yField, field, null);
 	}
 
 	@Override
 	public Component getWidget() {
-		return componentBase;
+		return optionsGroup;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return optionsGroup != null;
 	}
 
 	/**
@@ -291,22 +283,20 @@ public class OptionsGroupPresentation extends
 	 */
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (optionsGroup != null) {
 
 			// unbind all active bindings
 			unbind();
 
-			ComponentContainer parent = ((ComponentContainer) componentBase
+			ComponentContainer parent = ((ComponentContainer) optionsGroup
 					.getParent());
 			if (parent != null) {
-				parent.removeComponent(componentBase);
+				parent.removeComponent(optionsGroup);
 			}
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(optionsGroup);
 
-			componentBase = null;
 			optionsGroup = null;
 		}
 	}

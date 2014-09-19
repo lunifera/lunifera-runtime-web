@@ -28,6 +28,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -43,7 +44,6 @@ public class HorizontalLayoutPresentation extends
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HorizontalLayoutPresentation.class);
 
-	private CssLayout componentBase;
 	private HorizontalLayout horizontalLayout;
 	private ModelAccess modelAccess;
 	private CssLayout fillerLayout;
@@ -101,25 +101,22 @@ public class HorizontalLayoutPresentation extends
 		}
 
 		for (Cell cell : cells) {
-			if (cell.isExpandVertical()) {
-				// expandVerticalFound = true;
+			if (cell.isExpandHorizontal()) {
 				horizontalLayout.setExpandRatio(cell.getComponent(), 1.0f);
 			}
 		}
 
-		if (!modelAccess.isFillHorizontal()) {
-			fillerLayout = new CssLayout();
-			fillerLayout.setSizeFull();
-			fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
-			horizontalLayout.addComponent(fillerLayout);
-			horizontalLayout.setExpandRatio(fillerLayout, 1.0f);
-		} else {
-			componentBase.setWidth("100%");
-			horizontalLayout.setWidth("100%");
-		}
-
-		componentBase.setHeight("100%");
-		horizontalLayout.setHeight("100%");
+//		if (!modelAccess.isFillHorizontal()) {
+//			fillerLayout = new CssLayout();
+//			fillerLayout.setSizeFull();
+//			fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
+//			horizontalLayout.addComponent(fillerLayout);
+//			horizontalLayout.setExpandRatio(fillerLayout, 1.0f);
+//		} else {
+//			horizontalLayout.setWidth("100%");
+//		}
+//
+//		horizontalLayout.setHeight("100%");
 
 	}
 
@@ -156,7 +153,7 @@ public class HorizontalLayoutPresentation extends
 	protected void applyAlignment(Component child, YAlignment yAlignment) {
 
 		if (yAlignment != null) {
-			child.setSizeUndefined();
+			 child.setSizeUndefined();
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
 				horizontalLayout.setComponentAlignment(child,
@@ -217,8 +214,12 @@ public class HorizontalLayoutPresentation extends
 			case FILL_FILL:
 				horizontalLayout.setComponentAlignment(child,
 						Alignment.TOP_LEFT);
-				child.setWidth("100%");
-				child.setHeight("100%");
+				if (child.getWidth() == -1
+						|| child.getWidthUnits() == Unit.PERCENTAGE)
+					child.setWidth("100%");
+				if (child.getHeight() == -1
+						|| child.getHeightUnits() == Unit.PERCENTAGE)
+					child.setHeight("100%");
 				break;
 			case FILL_LEFT:
 				horizontalLayout.setComponentAlignment(child,
@@ -238,25 +239,18 @@ public class HorizontalLayoutPresentation extends
 
 	@Override
 	public ComponentContainer doCreateWidget(Object parent) {
-		if (componentBase == null) {
-			componentBase = new CssLayout();
-			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
-			componentBase.setImmediate(true);
-			componentBase.setSizeUndefined();
-
-			if (modelAccess.isCssIdValid()) {
-				componentBase.setId(modelAccess.getCssID());
-			} else {
-				componentBase.setId(getEditpart().getId());
-			}
-
-			associateWidget(componentBase, modelAccess.yLayout);
+		if (horizontalLayout == null) {
 
 			horizontalLayout = new HorizontalLayout();
-			horizontalLayout.setSizeFull();
-			componentBase.addComponent(horizontalLayout);
-
+			setupComponent(horizontalLayout, getCastedModel());
+			
 			associateWidget(horizontalLayout, modelAccess.yLayout);
+
+			if (modelAccess.isCssIdValid()) {
+				horizontalLayout.setId(modelAccess.getCssID());
+			} else {
+				horizontalLayout.setId(getEditpart().getId());
+			}
 
 			if (modelAccess.isMargin()) {
 				horizontalLayout.addStyleName(IConstants.CSS_CLASS_MARGIN);
@@ -275,9 +269,11 @@ public class HorizontalLayoutPresentation extends
 			} else {
 				horizontalLayout.addStyleName(CSS_CLASS_CONTROL);
 			}
+			horizontalLayout
+					.addStyleName(IConstants.CSS_CLASS_HORIZONTALLAYOUT);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yLayout, horizontalLayout, componentBase);
+			createBindings(modelAccess.yLayout, horizontalLayout, null);
 
 			// initialize all children
 			initializeChildren();
@@ -286,7 +282,7 @@ public class HorizontalLayoutPresentation extends
 			renderChildren(false);
 		}
 
-		return componentBase;
+		return horizontalLayout;
 	}
 
 	/**
@@ -305,12 +301,12 @@ public class HorizontalLayoutPresentation extends
 
 	@Override
 	public ComponentContainer getWidget() {
-		return componentBase;
+		return horizontalLayout;
 	}
 
 	@Override
 	public boolean isRendered() {
-		return componentBase != null;
+		return horizontalLayout != null;
 	}
 
 	@Override
@@ -324,17 +320,15 @@ public class HorizontalLayoutPresentation extends
 
 	@Override
 	public void doUnrender() {
-		if (componentBase != null) {
+		if (horizontalLayout != null) {
 
 			// unbind all active bindings
 			unbind();
 
 			// remove assocations
-			unassociateWidget(componentBase);
 			unassociateWidget(horizontalLayout);
 
 			horizontalLayout.removeAllComponents();
-			componentBase = null;
 			horizontalLayout = null;
 		}
 	}

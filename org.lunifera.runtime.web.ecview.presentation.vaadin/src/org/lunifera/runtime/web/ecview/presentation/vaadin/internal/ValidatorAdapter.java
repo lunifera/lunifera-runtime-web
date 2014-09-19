@@ -11,6 +11,9 @@
 
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.util.Locale;
+
+import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.validation.IStatus;
 import org.lunifera.ecview.core.common.validation.IValidator;
 
@@ -50,6 +53,36 @@ public class ValidatorAdapter extends AbstractValidator implements IValidator {
 
 	public String getErrorMessage() {
 		return status != null ? status.getMessage() : null;
+	}
+
+	@Override
+	public boolean isDisposed() {
+		return false;
+	}
+
+	@Override
+	public void dispose() {
+
+	}
+
+	@Override
+	public void addDisposeListener(Listener listener) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void removeDisposeListener(Listener listener) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setLocale(Locale locale) {
+		wrappedValidator.setLocale(locale);
+	}
+
+	@Override
+	public void setI18nService(II18nService i18nService) {
+		wrappedValidator.setI18nService(i18nService);
 	}
 
 }

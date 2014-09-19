@@ -55,4 +55,10 @@ public interface IConstants {
 	 * window size changes.
 	 */
 	String CSS_CLASS_COMPRESSOR = "l-layout-compressor";
+
+	// css classes for the different layouts
+	String CSS_CLASS_FORMLAYOUT = "l-formlayout";
+	String CSS_CLASS_GRIDLAYOUT = "l-gridlayout";
+	String CSS_CLASS_VERTICALLAYOUT = "l-verticallayout";
+	String CSS_CLASS_HORIZONTALLAYOUT = "l-horizontallayout";
 }
