@@ -37,7 +37,6 @@ public class LEntityRenderStrategy implements ILEntityRenderStrategy {
 		// create a main layout
 		YGridLayout yLayout = factory.createGridLayout();
 		yLayout.setColumns(4);
-		yLayout.setFillHorizontal(true);
 		yView.setContent(yLayout);
 
 		// Use the entity renderer to build the UI model
