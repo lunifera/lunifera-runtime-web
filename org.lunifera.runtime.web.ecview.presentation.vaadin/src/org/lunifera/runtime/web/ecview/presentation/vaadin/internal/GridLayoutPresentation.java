@@ -133,8 +133,7 @@ public class GridLayoutPresentation extends
 
 		// Build a model of rows and columns.
 		// Each coordinate (row/column) has an assigned cell. If a cell is
-		// spanned,
-		// it will be assigned to many coordinates.
+		// spanned, it will be assigned to many coordinates.
 		List<Row> rows = new ArrayList<Row>();
 		for (int i = 0; i < gridlayout.getRows(); i++) {
 			rows.add(new Row(i, gridlayout.getColumns()));
@@ -169,22 +168,6 @@ public class GridLayoutPresentation extends
 		}
 
 		gridlayout.setSizeUndefined();
-//		if (!modelAccess.isFillVertical()) {
-//			// int packingHelperRowIndex = gridlayout.getRows();
-//			// gridlayout.setRows(packingHelperRowIndex + 1);
-//			// gridlayout.setRowExpandRatio(packingHelperRowIndex, 1.0f);
-//		} else {
-//			gridlayout.setHeight("100%");
-//		}
-//
-//		if (!modelAccess.isFillHorizontal()) {
-//			int packingHelperColumnIndex = gridlayout.getColumns();
-//			gridlayout.setColumns(packingHelperColumnIndex + 1);
-//			gridlayout.setColumnExpandRatio(packingHelperColumnIndex, 1.0f);
-//			gridlayout.setSizeUndefined();
-//		} else {
-//			gridlayout.setWidth("100%");
-//		}
 	}
 
 	/**
@@ -221,19 +204,6 @@ public class GridLayoutPresentation extends
 		//
 		YAlignment yAlignment = yStyle != null && yStyle.getAlignment() != null ? yStyle
 				.getAlignment() : YAlignment.TOP_LEFT;
-		// if (yAlignment == null) {
-		// // use default
-		// yAlignment = YAlignment.TOP_LEFT;
-		//
-		// if (modelAccess.isFillVertical()) {
-		// // ensure that vertical alignment is FILL
-		// yAlignment = mapToVerticalFill(yAlignment);
-		// }
-		// if (modelAccess.isFillHorizontal()) {
-		// // ensure that horizontal alignment is FILL
-		// yAlignment = mapToHorizontalFill(yAlignment);
-		// }
-		// }
 
 		// add the element to the grid layout
 		//
@@ -418,7 +388,7 @@ public class GridLayoutPresentation extends
 			gridlayout.setSpacing(false);
 			gridlayout.setImmediate(true);
 			setupComponent(gridlayout, getCastedModel());
-			
+
 			associateWidget(gridlayout, modelAccess.yLayout);
 
 			if (modelAccess.isCssIdValid()) {
@@ -595,22 +565,6 @@ public class GridLayoutPresentation extends
 		 */
 		public EList<YGridLayoutCellStyle> getCellStyles() {
 			return yLayout.getCellStyles();
-		}
-
-		/**
-		 * @return
-		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#isFillHorizontal()
-		 */
-		public boolean isFillHorizontal() {
-			return yLayout.isFillHorizontal();
-		}
-
-		/**
-		 * @return
-		 * @see org.lunifera.ecview.core.ui.core.model.extension.YGridLayout#isFillVertical()
-		 */
-		public boolean isFillVertical() {
-			return yLayout.isFillVertical();
 		}
 
 	}

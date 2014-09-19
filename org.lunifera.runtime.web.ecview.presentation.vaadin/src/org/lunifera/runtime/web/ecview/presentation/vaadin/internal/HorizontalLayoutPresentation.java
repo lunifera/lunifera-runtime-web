@@ -106,17 +106,17 @@ public class HorizontalLayoutPresentation extends
 			}
 		}
 
-//		if (!modelAccess.isFillHorizontal()) {
-//			fillerLayout = new CssLayout();
-//			fillerLayout.setSizeFull();
-//			fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
-//			horizontalLayout.addComponent(fillerLayout);
-//			horizontalLayout.setExpandRatio(fillerLayout, 1.0f);
-//		} else {
-//			horizontalLayout.setWidth("100%");
-//		}
-//
-//		horizontalLayout.setHeight("100%");
+		// if (!modelAccess.isFillHorizontal()) {
+		// fillerLayout = new CssLayout();
+		// fillerLayout.setSizeFull();
+		// fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
+		// horizontalLayout.addComponent(fillerLayout);
+		// horizontalLayout.setExpandRatio(fillerLayout, 1.0f);
+		// } else {
+		// horizontalLayout.setWidth("100%");
+		// }
+		//
+		// horizontalLayout.setHeight("100%");
 
 	}
 
@@ -153,7 +153,7 @@ public class HorizontalLayoutPresentation extends
 	protected void applyAlignment(Component child, YAlignment yAlignment) {
 
 		if (yAlignment != null) {
-			 child.setSizeUndefined();
+			child.setSizeUndefined();
 			switch (yAlignment) {
 			case BOTTOM_CENTER:
 				horizontalLayout.setComponentAlignment(child,
@@ -243,7 +243,7 @@ public class HorizontalLayoutPresentation extends
 
 			horizontalLayout = new HorizontalLayout();
 			setupComponent(horizontalLayout, getCastedModel());
-			
+
 			associateWidget(horizontalLayout, modelAccess.yLayout);
 
 			if (modelAccess.isCssIdValid()) {
@@ -453,13 +453,6 @@ public class HorizontalLayoutPresentation extends
 			return yLayout.getCellStyle(element);
 		}
 
-		/**
-		 * @return
-		 * @see org.lunifera.ecview.core.ui.core.model.extension.YHorizontalLayout#isFillHorizontal()
-		 */
-		public boolean isFillHorizontal() {
-			return yLayout.isFillHorizontal();
-		}
 	}
 
 	public static class Cell {

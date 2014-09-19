@@ -17,7 +17,6 @@ import java.util.Locale;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.editpart.ILayoutEditpart;
-import org.lunifera.ecview.core.common.model.core.YEmbeddable;
 import org.lunifera.ecview.core.extension.model.extension.YFormLayout;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.slf4j.Logger;
@@ -77,17 +76,6 @@ public class FormLayoutPresentation extends
 		for (IEmbeddableEditpart child : getChildren()) {
 			cells.add(addChild(child));
 		}
-
-		if (modelAccess.isFillVertical()) {
-			formLayout.setHeight("100%");
-		}
-
-		if (modelAccess.isFillHorizontal()) {
-			formLayout.setWidth("100%");
-		} else {
-			formLayout.addStyleName("l-form-defaultwidth");
-//			formLayout.setWidth("350px");
-		}
 	}
 
 	/**
@@ -102,7 +90,10 @@ public class FormLayoutPresentation extends
 
 		Component child = (Component) editpart.render(formLayout);
 
+		child.setSizeUndefined();
+		child.setWidth("100%");
 		formLayout.addComponent(child);
+
 		return new Cell(child);
 	}
 
@@ -205,7 +196,6 @@ public class FormLayoutPresentation extends
 
 	@Override
 	protected void internalAdd(IEmbeddableEditpart editpart) {
-		YEmbeddable yChild = (YEmbeddable) editpart.getModel();
 		addChild(editpart);
 	}
 
@@ -309,22 +299,6 @@ public class FormLayoutPresentation extends
 		 */
 		public boolean isMargin() {
 			return yLayout.isMargin();
-		}
-
-		/**
-		 * @return
-		 * @see org.lunifera.ecview.core.ui.core.model.extension.YFormLayout#isFillVertical()
-		 */
-		public boolean isFillVertical() {
-			return yLayout.isFillVertical();
-		}
-
-		/**
-		 * @return
-		 * @see org.lunifera.ecview.core.ui.core.model.extension.YFormLayout#isFillHorizontal()
-		 */
-		public boolean isFillHorizontal() {
-			return yLayout.isFillHorizontal();
 		}
 	}
 

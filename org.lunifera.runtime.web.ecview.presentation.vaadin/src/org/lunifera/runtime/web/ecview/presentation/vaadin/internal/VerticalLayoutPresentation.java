@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -104,18 +103,6 @@ public class VerticalLayoutPresentation extends
 				verticalLayout.setExpandRatio(cell.getComponent(), 1.0f);
 			}
 		}
-
-		// if (!modelAccess.isFillVertical()) {
-		// fillerLayout = new CssLayout();
-		// fillerLayout.setSizeFull();
-		// fillerLayout.addStyleName(CSS_CLASS_COMPRESSOR);
-		// verticalLayout.addComponent(fillerLayout);
-		// verticalLayout.setExpandRatio(fillerLayout, 1.0f);
-		// } else {
-		// verticalLayout.setHeight("100%");
-		// }
-		//
-		// verticalLayout.setWidth("100%");
 
 	}
 
@@ -444,13 +431,6 @@ public class VerticalLayoutPresentation extends
 			return yLayout.getCellStyle(element);
 		}
 
-		/**
-		 * @return
-		 * @see org.lunifera.ecview.core.ui.core.model.extension.YVerticalLayout#isFillVertical()
-		 */
-		public boolean isFillVertical() {
-			return yLayout.isFillVertical();
-		}
 	}
 
 	public static class Cell {
