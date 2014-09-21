@@ -64,6 +64,7 @@ import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
@@ -118,10 +119,10 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		return getEditpart().getModel();
 	}
 
-	protected YElement getCastedModel(){
+	protected YElement getCastedModel() {
 		return (YElement) getModel();
 	}
-	
+
 	/**
 	 * Returns the view context.
 	 * 
@@ -403,6 +404,50 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 					model, modelFeature);
 			IObservableValue uiObservable = VaadinObservables
 					.observeValue(field);
+			return bindingManager.bindValue(uiObservable, modelObservable,
+					targetToModel, modelToTarget);
+		}
+		return null;
+	}
+
+	/**
+	 * Creates a binding for the value attribute from the ECView-UI-model to the
+	 * UI element.
+	 * 
+	 * @param model
+	 * @param modelFeature
+	 * @param field
+	 * @return binding
+	 * @@return Binding - the created binding
+	 */
+	protected Binding createBindingsButtonClick(EObject model,
+			EStructuralFeature modelFeature, Button field) {
+		return createBindingsButtonClick(model, modelFeature, field, null, null);
+	}
+
+	/**
+	 * Binds the value attribute from the ecview model to the ui element.
+	 * 
+	 * @param model
+	 * @param modelFeature
+	 * @param field
+	 * @return binding
+	 * 
+	 * @return Binding - the created binding
+	 */
+	protected Binding createBindingsButtonClick(EObject model,
+			EStructuralFeature modelFeature, Button field,
+			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
+		IBindingManager bindingManager = getViewContext()
+				.getService(
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
+								.getName());
+		if (bindingManager != null) {
+			// bind the value of yText to textRidget
+			IObservableValue modelObservable = EMFObservables.observeValue(
+					model, modelFeature);
+			IObservableValue uiObservable = VaadinObservables
+					.observeButtonClick(field);
 			return bindingManager.bindValue(uiObservable, modelObservable,
 					targetToModel, modelToTarget);
 		}

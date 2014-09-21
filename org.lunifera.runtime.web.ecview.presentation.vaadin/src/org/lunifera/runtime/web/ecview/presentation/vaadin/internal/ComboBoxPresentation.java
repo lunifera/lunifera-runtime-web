@@ -25,6 +25,8 @@ import org.lunifera.ecview.core.databinding.emf.model.ECViewModelBindable;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YComboBox;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IComboBoxEditpart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
@@ -43,6 +45,9 @@ import com.vaadin.ui.Field;
 @SuppressWarnings("restriction")
 public class ComboBoxPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ComboBoxPresentation.class);
 
 	private final ModelAccess modelAccess;
 	private ComboBox combo;
@@ -72,7 +77,7 @@ public class ComboBoxPresentation extends
 			combo.addStyleName(CSS_CLASS_CONTROL);
 			combo.setImmediate(true);
 			setupComponent(combo, getCastedModel());
-			
+
 			associateWidget(combo, modelAccess.yCombo);
 			if (modelAccess.isCssIdValid()) {
 				combo.setId(modelAccess.getCssID());
@@ -80,40 +85,47 @@ public class ComboBoxPresentation extends
 				combo.setId(getEditpart().getId());
 			}
 
-			property = new ObjectProperty(null, modelAccess.yCombo.getType());
-			combo.setPropertyDataSource(property);
+			try {
+				property = new ObjectProperty(null,
+						modelAccess.yCombo.getType());
+				combo.setPropertyDataSource(property);
 
-			if (modelAccess.yCombo.getType() != null) {
-				BeanItemContainer datasource = null;
-				datasource = new BeanItemContainer(modelAccess.yCombo.getType());
-				combo.setContainerDataSource(datasource);
+				if (modelAccess.yCombo.getType() != null) {
+					BeanItemContainer datasource = null;
+					datasource = new BeanItemContainer(
+							modelAccess.yCombo.getType());
+					combo.setContainerDataSource(datasource);
+				}
+
+				String itemCaptionProperty = modelAccess.yCombo
+						.getItemCaptionProperty();
+				if (itemCaptionProperty != null
+						&& !itemCaptionProperty.equals("")) {
+					combo.setItemCaptionPropertyId(itemCaptionProperty);
+					combo.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+				} else {
+					combo.setItemCaptionMode(ItemCaptionMode.ID);
+				}
+
+				String itemImageProperty = modelAccess.yCombo
+						.getItemImageProperty();
+				if (itemImageProperty != null && !itemImageProperty.equals("")) {
+					combo.setItemIconPropertyId(itemImageProperty);
+				}
+
+				// creates the binding for the field
+				createBindings(modelAccess.yCombo, combo);
+
+				if (modelAccess.isCssClassValid()) {
+					combo.addStyleName(modelAccess.getCssClass());
+				}
+
+				applyCaptions();
+
+				initializeField(combo);
+			} catch (Exception e) {
+				LOGGER.error("{}", e);
 			}
-
-			String itemCaptionProperty = modelAccess.yCombo
-					.getItemCaptionProperty();
-			if (itemCaptionProperty != null && !itemCaptionProperty.equals("")) {
-				combo.setItemCaptionPropertyId(itemCaptionProperty);
-				combo.setItemCaptionMode(ItemCaptionMode.PROPERTY);
-			} else {
-				combo.setItemCaptionMode(ItemCaptionMode.ID);
-			}
-
-			String itemImageProperty = modelAccess.yCombo
-					.getItemImageProperty();
-			if (itemImageProperty != null && !itemImageProperty.equals("")) {
-				combo.setItemIconPropertyId(itemImageProperty);
-			}
-
-			// creates the binding for the field
-			createBindings(modelAccess.yCombo, combo);
-
-			if (modelAccess.isCssClassValid()) {
-				combo.addStyleName(modelAccess.getCssClass());
-			}
-
-			applyCaptions();
-
-			initializeField(combo);
 		}
 		return combo;
 	}

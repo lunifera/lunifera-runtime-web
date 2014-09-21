@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YButton;
 import org.lunifera.ecview.core.extension.model.extension.listener.YButtonClickListener;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IButtonEditpart;
@@ -52,7 +53,7 @@ public class ButtonPresentation extends
 			button.addStyleName(CSS_CLASS_CONTROL);
 			button.setImmediate(true);
 			setupComponent(button, getCastedModel());
-			
+
 			associateWidget(button, modelAccess.yButton);
 
 			if (modelAccess.isCssIdValid()) {
@@ -106,6 +107,9 @@ public class ButtonPresentation extends
 	 */
 	@SuppressWarnings("serial")
 	protected void createBindings(final YButton yButton, Button button) {
+		registerBinding(createBindingsButtonClick(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YBUTTON__LAST_CLICK_TIME, button));
+
 		super.createBindings(yButton, button, null);
 
 		button.addClickListener(new Button.ClickListener() {
