@@ -31,9 +31,12 @@ import org.lunifera.ecview.core.common.model.core.YAlignment;
 import org.lunifera.ecview.core.common.model.core.YView;
 import org.lunifera.ecview.core.common.presentation.IViewPresentation;
 import org.lunifera.ecview.core.common.services.IUiKitBasedService;
+import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
 import org.lunifera.ecview.core.common.tooling.IWidgetMouseClickService;
+import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetAssocationsService;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetMouseClickService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,27 +118,27 @@ public class ViewPresentation extends AbstractDisposable implements
 		} else {
 			LOGGER.warn("Content is null");
 		}
-		
+
 		componentBase.setSizeFull();
 		component.setSizeFull();
 
-//		if (!isFillVertical(modelAccess.yView.getContentAlignment())) {
-//			int packingHelperRowIndex = component.getRows();
-//			component.setRows(packingHelperRowIndex + 1);
-//			component.setRowExpandRatio(packingHelperRowIndex, 1.0f);
-//		} else {
-//			componentBase.setHeight("100%");
-//			component.setHeight("100%");
-//		}
-//
-//		if (!isFillHorizontal(modelAccess.yView.getContentAlignment())) {
-//			int packingHelperColumnIndex = component.getColumns();
-//			component.setColumns(packingHelperColumnIndex + 1);
-//			component.setColumnExpandRatio(packingHelperColumnIndex, 1.0f);
-//		} else {
-//			componentBase.setWidth("100%");
-//			component.setWidth("100%");
-//		}
+		// if (!isFillVertical(modelAccess.yView.getContentAlignment())) {
+		// int packingHelperRowIndex = component.getRows();
+		// component.setRows(packingHelperRowIndex + 1);
+		// component.setRowExpandRatio(packingHelperRowIndex, 1.0f);
+		// } else {
+		// componentBase.setHeight("100%");
+		// component.setHeight("100%");
+		// }
+		//
+		// if (!isFillHorizontal(modelAccess.yView.getContentAlignment())) {
+		// int packingHelperColumnIndex = component.getColumns();
+		// component.setColumns(packingHelperColumnIndex + 1);
+		// component.setColumnExpandRatio(packingHelperColumnIndex, 1.0f);
+		// } else {
+		// componentBase.setWidth("100%");
+		// component.setWidth("100%");
+		// }
 	}
 
 	private boolean isFillVertical(YAlignment alignment) {
@@ -293,7 +296,7 @@ public class ViewPresentation extends AbstractDisposable implements
 	}
 
 	@Override
-	public void apply(IVisibilityPropertiesEditpart properties) {
+	public void apply(IVisibilityHandler handler) {
 
 	}
 
@@ -320,6 +323,9 @@ public class ViewPresentation extends AbstractDisposable implements
 			final WidgetMouseClickService service = new WidgetMouseClickService(
 					getViewContext());
 			service.activate();
+			return (A) service;
+		} else if (serviceClass == IWidgetAssocationsService.class) {
+			WidgetAssocationsService service = new WidgetAssocationsService();
 			return (A) service;
 		}
 

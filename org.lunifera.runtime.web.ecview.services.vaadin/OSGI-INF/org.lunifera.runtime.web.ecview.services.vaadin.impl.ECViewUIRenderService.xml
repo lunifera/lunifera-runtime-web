@@ -4,8 +4,8 @@
    <service>
       <provide interface="org.lunifera.runtime.web.ecview.services.vaadin.IECViewUIRenderService"/>
    </service>
-   <reference bind="bindDtoMetadataService" cardinality="1..1" interface="IDtoMetadataService" name="DtoMetadataService" policy="dynamic" unbind="unbindDtoMetadataService"/>
+   <reference bind="bindDtoMetadataService" cardinality="1..1" interface="org.lunifera.dsl.xtext.builder.participant.IDtoMetadataService" name="DtoMetadataService" policy="dynamic" unbind="unbindDtoMetadataService"/>
    <reference bind="bindDtoRenderingStrategy" cardinality="1..1" interface="org.lunifera.runtime.web.ecview.services.vaadin.ILDtoRenderStrategy" name="DtoRenderingStrategy" policy="dynamic" unbind="unbindDtoRenderingStrategy"/>
-   <reference bind="bindEntityMetadataService" cardinality="1..1" interface="IEntityMetadataService" name="EntityMetadataService" policy="dynamic" unbind="unbindEntityMetadataService"/>
+   <reference bind="bindEntityMetadataService" cardinality="1..1" interface="org.lunifera.dsl.xtext.builder.participant.IEntityMetadataService" name="EntityMetadataService" policy="dynamic" unbind="unbindEntityMetadataService"/>
    <reference bind="bindEntityRenderingStrategy" cardinality="1..1" interface="org.lunifera.runtime.web.ecview.services.vaadin.ILEntityRenderStrategy" name="EntityRenderingStrategy" policy="dynamic" unbind="unbindEntityRenderingStrategy"/>
 </scr:component>

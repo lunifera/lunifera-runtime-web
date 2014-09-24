@@ -35,7 +35,6 @@ import org.lunifera.ecview.core.common.context.IViewContext;
 import org.lunifera.ecview.core.common.disposal.AbstractDisposable;
 import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
-import org.lunifera.ecview.core.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.lunifera.ecview.core.common.model.core.YEditable;
 import org.lunifera.ecview.core.common.model.core.YElement;
 import org.lunifera.ecview.core.common.model.core.YEmbeddable;
@@ -52,16 +51,18 @@ import org.lunifera.ecview.core.common.notification.LifecycleEvent;
 import org.lunifera.ecview.core.common.presentation.IInitializerService;
 import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
 import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
+import org.lunifera.ecview.core.common.visibility.Color;
+import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.databinding.emf.common.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeNotifier;
-import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
@@ -163,13 +164,12 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	protected abstract void doUpdateLocale(Locale locale);
 
 	@Override
-	public void apply(IVisibilityPropertiesEditpart properties) {
+	public void apply(IVisibilityHandler handler) {
 		if (visibilityOptionsApplier == null) {
 			visibilityOptionsApplier = createVisibilityOptionsApplier();
 		}
 
-		visibilityOptionsApplier.apply((YVisibilityProperties) properties
-				.getModel());
+		visibilityOptionsApplier.apply(Util.mapYProperties(handler));
 	}
 
 	@Override
@@ -728,7 +728,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * @param yElement
 	 */
 	protected void associateWidget(Component component, EObject yElement) {
-		IWidgetAssocationsService service = getViewContext().getService(
+		IWidgetAssocationsService<Component, EObject> service = getViewContext().getService(
 				IWidgetAssocationsService.ID);
 		service.associate(component, yElement);
 	}
@@ -739,7 +739,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * @param component
 	 */
 	protected void unassociateWidget(Component component) {
-		IWidgetAssocationsService service = getViewContext().getService(
+		IWidgetAssocationsService<Component, EObject> service = getViewContext().getService(
 				IWidgetAssocationsService.ID);
 		service.remove(component);
 	}
@@ -856,10 +856,28 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		public void resetStylenames() {
 			component.removeStyleName("l-strikethrough");
 			component.removeStyleName("l-border");
+			component.removeStyleName("l-bold");
 			component.removeStyleName("l-italic");
 			component.removeStyleName("l-underline");
-			component.removeStyleName("l-foreground");
-			component.removeStyleName("l-background");
+			component.removeStyleName("l-foreground-red");
+			component.removeStyleName("l-foreground-white");
+			component.removeStyleName("l-foreground-blue");
+			component.removeStyleName("l-foreground-green");
+			component.removeStyleName("l-foreground-black");
+			component.removeStyleName("l-foreground-yellow");
+			component.removeStyleName("l-foreground-gray");
+			component.removeStyleName("l-foreground-light-gray");
+			component.removeStyleName("l-foreground-dark-gray");
+			component.removeStyleName("l-background-red");
+			component.removeStyleName("l-background-white");
+			component.removeStyleName("l-background-blue");
+			component.removeStyleName("l-background-green");
+			component.removeStyleName("l-background-black");
+			component.removeStyleName("l-background-yellow");
+			component.removeStyleName("l-background-gray");
+			component.removeStyleName("l-background-light-gray");
+			component.removeStyleName("l-background-dark-gray");
+			
 		}
 
 		/**
@@ -949,21 +967,15 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		public void applyForegroundColor(YVisibilityProperties yProps) {
 			YColor yColor = yProps.getForegroundColor();
 			if (yColor != null) {
-				Color c = new Color(yColor.getRed(), yColor.getGreen(),
-						yColor.getBlue());
-				component.addStyleName("l-foreground:" + c.getCSS());
+				component.addStyleName("l-foreground-" + yColor.getName().toLowerCase());
 			}
 		}
 
 		public void applyBackgroundColor(YVisibilityProperties yProps) {
 			YColor yColor = yProps.getBackgroundColor();
 			if (yColor != null) {
-				Color c = new Color(yColor.getRed(), yColor.getGreen(),
-						yColor.getBlue());
-				component.addStyleName("l-background:" + c.getCSS());
+				component.addStyleName("l-background-" + yColor.getName().toLowerCase());
 			}
 		}
-
 	}
-
 }

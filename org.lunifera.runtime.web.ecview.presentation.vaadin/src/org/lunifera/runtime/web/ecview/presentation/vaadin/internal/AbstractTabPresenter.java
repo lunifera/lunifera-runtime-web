@@ -22,7 +22,6 @@ import org.lunifera.ecview.core.common.context.ILocaleChangedService;
 import org.lunifera.ecview.core.common.context.IViewContext;
 import org.lunifera.ecview.core.common.disposal.AbstractDisposable;
 import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
-import org.lunifera.ecview.core.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddable;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.util.CoreModelUtil;
@@ -30,6 +29,7 @@ import org.lunifera.ecview.core.common.notification.ILifecycleEvent;
 import org.lunifera.ecview.core.common.notification.ILifecycleService;
 import org.lunifera.ecview.core.common.notification.LifecycleEvent;
 import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITabEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 
@@ -119,7 +119,7 @@ public abstract class AbstractTabPresenter<A extends Component> extends
 	protected abstract void doUpdateLocale(Locale locale);
 
 	@Override
-	public void apply(IVisibilityPropertiesEditpart properties) {
+	public void apply(IVisibilityHandler handler) {
 
 	}
 

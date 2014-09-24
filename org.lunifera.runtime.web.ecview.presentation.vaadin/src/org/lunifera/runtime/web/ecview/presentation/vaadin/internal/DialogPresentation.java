@@ -35,6 +35,7 @@ import org.lunifera.ecview.core.common.editpart.visibility.IVisibilityProperties
 import org.lunifera.ecview.core.common.model.core.CoreModelPackage;
 import org.lunifera.ecview.core.common.model.core.YDialog;
 import org.lunifera.ecview.core.common.presentation.IDialogPresentation;
+import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -302,8 +303,8 @@ public class DialogPresentation extends AbstractDisposable implements
 	}
 
 	@Override
-	public void apply(IVisibilityPropertiesEditpart properties) {
-
+	public void apply(IVisibilityHandler handler) {
+		
 	}
 
 	@Override
