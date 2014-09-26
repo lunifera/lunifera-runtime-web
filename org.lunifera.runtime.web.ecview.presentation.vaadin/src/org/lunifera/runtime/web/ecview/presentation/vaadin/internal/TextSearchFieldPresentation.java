@@ -18,13 +18,18 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.lunifera.ecview.core.common.binding.IECViewBindingManager;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.filter.IFilterProvidingPresentation;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YTextSearchField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITextSearchFieldEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
 import org.lunifera.runtime.web.vaadin.components.fields.search.TextSearchField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
@@ -35,7 +40,11 @@ import com.vaadin.ui.Field;
  * This presenter is responsible to render a text field on the given layout.
  */
 public class TextSearchFieldPresentation extends
-		AbstractFieldWidgetPresenter<Component> {
+		AbstractFieldWidgetPresenter<Component> implements
+		IFilterProvidingPresentation {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(TextSearchFieldPresentation.class);
 
 	private final ModelAccess modelAccess;
 	private TextSearchField field;
@@ -59,12 +68,21 @@ public class TextSearchFieldPresentation extends
 	@Override
 	public Component doCreateWidget(Object parent) {
 		if (field == null) {
-
 			IBindingManager bm = getViewContext().getService(
 					IECViewBindingManager.class.getName());
 			field = new TextSearchField(getEditpart().getId(),
-					bm.getDatabindingContext());
+					modelAccess.yText.getName(), bm.getDatabindingContext());
 			field.addStyleName(CSS_CLASS_CONTROL);
+			field.addStyleName(IConstants.CSS_CLASS_SEARCHFIELD);
+
+			IFilterProvider filterProvider = getViewContext().getService(
+					IFilterProvider.class.getName());
+			if (filterProvider != null) {
+				field.setFilterProvider(filterProvider);
+			} else {
+				LOGGER.error("No IFilterProvider available. Filters can not be provided!");
+			}
+
 			field.setNullRepresentation("");
 			field.setImmediate(true);
 			setupComponent(field, getCastedModel());
@@ -94,6 +112,11 @@ public class TextSearchFieldPresentation extends
 	}
 
 	@Override
+	public Object getFilter() {
+		return field != null ? field.getFilter() : null;
+	}
+
+	@Override
 	protected void doUpdateLocale(Locale locale) {
 		// no need to set the locale to the ui elements. Is handled by vaadin
 		// internally.
@@ -115,6 +138,9 @@ public class TextSearchFieldPresentation extends
 				field.setCaption(modelAccess.getLabel());
 			}
 		}
+
+		field.setDescription(service.getValue(
+				IConstants.I18N_TOOLTIP_TEXTSEARCHFIELD, getLocale()));
 	}
 
 	@Override

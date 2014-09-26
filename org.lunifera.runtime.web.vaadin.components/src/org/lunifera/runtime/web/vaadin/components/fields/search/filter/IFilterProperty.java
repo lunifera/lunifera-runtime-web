@@ -10,10 +10,23 @@
  */
 package org.lunifera.runtime.web.vaadin.components.fields.search.filter;
 
-public interface IFilter {
+import com.vaadin.data.Container.Filter;
+
+public interface IFilterProperty {
 
 	String PROP_OPTIONS = "options";
 	String PROP_SELECTION = "selection";
 	String PROP_FILTER_VALUE = "value";
 	
+	/**
+	 * Returns the vaadin filter for the property.
+	 * @return
+	 */
+	Filter getFilter();
+	
+	/**
+	 * Returns the property id for the search field.
+	 * @return
+	 */
+	Object getPropertyId();
 }

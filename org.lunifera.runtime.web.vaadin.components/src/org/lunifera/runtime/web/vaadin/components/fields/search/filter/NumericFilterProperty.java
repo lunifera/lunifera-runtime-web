@@ -12,13 +12,19 @@ package org.lunifera.runtime.web.vaadin.components.fields.search.filter;
 
 import java.util.Locale;
 
-public class TextFilter extends Filter {
+import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+
+import com.vaadin.data.Container.Filter;
+import com.vaadin.ui.Component;
+
+public class NumericFilterProperty extends FilterProperty {
 
 	private String value;
 	private Wildcard wildcard;
 
-	public TextFilter(Locale locale) {
-		super(null, locale);
+	public NumericFilterProperty(Component filterField, Object propertyId,
+			Locale locale) {
+		super(filterField, propertyId, locale);
 	}
 
 	/**
@@ -38,12 +44,40 @@ public class TextFilter extends Filter {
 		calculateWildcard(value);
 	}
 
+	@Override
+	public Filter getFilter() {
+		IFilterProvider filterProvider = getFilterProvider();
+		if (filterProvider == null || getValue() == null) {
+			return null;
+		}
+		if (wildcard == null || wildcard.equals("")) {
+			return filterProvider.eq(getPropertyId(), getValue());
+		} else {
+			switch (wildcard) {
+			case GE:
+				return filterProvider.gteq(getPropertyId(), getValue());
+			case GT:
+				return filterProvider.gt(getPropertyId(), getValue());
+			case LE:
+				return filterProvider.lteq(getPropertyId(), getValue());
+			case LT:
+				return filterProvider.lt(getPropertyId(), getValue());
+			case NE:
+				return filterProvider.not(filterProvider.eq(getPropertyId(),
+						getValue()));
+			}
+		}
+
+		throw new IllegalStateException("Not a valid state!");
+	}
+
 	/**
 	 * Calculates the wildcard.
 	 * 
 	 * @param value
 	 */
 	private void calculateWildcard(String value) {
+		wildcard = null;
 		if (value.startsWith(Wildcard.GE.sequence)) {
 			wildcard = Wildcard.GE;
 		} else if (value.startsWith(Wildcard.LE.sequence)) {
@@ -54,8 +88,10 @@ public class TextFilter extends Filter {
 			wildcard = Wildcard.LT;
 		} else if (value.startsWith(Wildcard.NE.sequence)) {
 			wildcard = Wildcard.NE;
-		} else if (value.contains(Wildcard.ANY.sequence)) {
-			wildcard = Wildcard.ANY;
+		}
+
+		if (wildcard != null) {
+			this.value = value.replaceAll(wildcard.sequence, "");
 		}
 	}
 
@@ -67,7 +103,7 @@ public class TextFilter extends Filter {
 	}
 
 	public static enum Wildcard {
-		GT(">"), LT("<"), GE(">="), LE("<="), NE("!="), ANY("*");
+		GT(">"), LT("<"), GE(">="), LE("<="), NE("!=");
 
 		private String sequence;
 

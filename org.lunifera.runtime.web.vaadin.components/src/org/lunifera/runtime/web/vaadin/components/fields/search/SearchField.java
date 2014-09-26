@@ -12,17 +12,41 @@ package org.lunifera.runtime.web.vaadin.components.fields.search;
 
 import org.eclipse.core.databinding.DataBindingContext;
 
+import com.vaadin.data.Container.Filter;
 import com.vaadin.ui.CustomField;
 
 @SuppressWarnings("serial")
 public abstract class SearchField<C> extends CustomField<C> {
 
-	private String id;
+	private final String id;
+	private final Object propertyId;
 	private DataBindingContext dbContext;
 
-	public SearchField(String id, DataBindingContext dbContext) {
+	public SearchField(String id, Object propertyId,
+			DataBindingContext dbContext) {
 		this.id = id;
+		this.propertyId = propertyId;
 		this.dbContext = dbContext;
+	}
+	
+	/**
+	 * Returns the vaadin filter for the property.
+	 * @return
+	 */
+	public abstract Filter getFilter();
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @return the propertyId
+	 */
+	public Object getPropertyId() {
+		return propertyId;
 	}
 
 	/**

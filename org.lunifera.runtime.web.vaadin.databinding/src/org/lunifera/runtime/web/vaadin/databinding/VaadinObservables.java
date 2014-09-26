@@ -34,6 +34,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Validatable;
 import com.vaadin.server.Scrollable;
 import com.vaadin.server.Sizeable;
+import com.vaadin.server.VaadinService;
 import com.vaadin.ui.AbstractEmbedded;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractMedia;
@@ -1361,6 +1362,18 @@ public class VaadinObservables {
 		@Override
 		public boolean isCurrent() {
 			return UI.getCurrent() == ui;
+		}
+
+		public void exec(Runnable runnable) {
+			if (isCurrent()) {
+				ui.accessSynchronously(runnable);
+			} else {
+				asyncExec(runnable);
+			}
+		}
+		
+		private boolean isHttpThread() {
+			return VaadinService.getCurrentRequest() != null;
 		}
 
 		/**

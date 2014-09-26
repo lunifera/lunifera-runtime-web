@@ -35,6 +35,7 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.INumericSearchFieldE
 import org.lunifera.ecview.core.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IPanelEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IProgressBarEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ISearchPanelEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ISplitPanelEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITabEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITabSheetEditpart;
@@ -127,6 +128,8 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new SplitPanelPresentation(editpart);
 		} else if (editpart instanceof IPanelEditpart) {
 			return (A) new PanelPresentation(editpart);
+		} else if (editpart instanceof ISearchPanelEditpart) {
+			return (A) new SearchPanelPresentation(editpart);
 		}
 
 		throw new IllegalArgumentException(String.format(

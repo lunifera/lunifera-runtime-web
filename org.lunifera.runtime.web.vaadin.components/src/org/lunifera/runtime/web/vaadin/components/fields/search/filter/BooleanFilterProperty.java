@@ -15,22 +15,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+
+import com.vaadin.data.Container.Filter;
 import com.vaadin.ui.Component;
 
-public class BooleanFilter extends Filter {
+public class BooleanFilterProperty extends FilterProperty {
 
-	private Option selection;
+	private OptionBean selection;
 	private List<OptionBean> options;
 	private OptionBean defaultOption;
 
-	public BooleanFilter(Locale locale) {
-		super(null, locale);
+	public BooleanFilterProperty(Component filterField, Object propertyId,
+			Locale locale) {
+		super(filterField, propertyId, locale);
 	}
 
 	/**
 	 * @return the selection
 	 */
-	public Option getSelection() {
+	public OptionBean getSelection() {
 		return selection;
 	}
 
@@ -38,7 +42,7 @@ public class BooleanFilter extends Filter {
 	 * @param selection
 	 *            the selection to set
 	 */
-	public void setSelection(Option selection) {
+	public void setSelection(OptionBean selection) {
 		this.selection = selection;
 	}
 
@@ -50,8 +54,7 @@ public class BooleanFilter extends Filter {
 	 */
 	public List<OptionBean> getOptions() {
 		if (options == null) {
-			options = Collections
-					.unmodifiableList(new ArrayList<BooleanFilter.OptionBean>());
+			options = new ArrayList<BooleanFilterProperty.OptionBean>();
 			options.add(new OptionBean(Option.TRUE, getOptionsName(Option.TRUE,
 					getLocale())));
 			options.add(new OptionBean(Option.FALSE, getOptionsName(
@@ -60,7 +63,7 @@ public class BooleanFilter extends Filter {
 					Option.IGNORE, getLocale()));
 			options.add(defaultOption);
 		}
-		return options;
+		return Collections.unmodifiableList(options);
 	}
 
 	private static String getOptionsName(Option option, Locale locale) {
@@ -74,6 +77,24 @@ public class BooleanFilter extends Filter {
 	 */
 	public OptionBean getDefaultOption() {
 		return defaultOption;
+	}
+
+	@Override
+	public Filter getFilter() {
+		IFilterProvider filterProvider = getFilterProvider();
+		if (filterProvider == null || selection == null) {
+			return null;
+		}
+		switch (selection.getOption()) {
+		case FALSE:
+			return filterProvider.eq(getPropertyId(), Boolean.TRUE);
+		case TRUE:
+			return filterProvider.eq(getPropertyId(), Boolean.FALSE);
+		case IGNORE:
+			return null;
+		}
+
+		throw new IllegalStateException("Not a valid state!");
 	}
 
 	public static enum Option {

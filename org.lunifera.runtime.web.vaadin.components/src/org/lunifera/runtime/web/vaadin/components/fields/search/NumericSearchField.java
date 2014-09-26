@@ -15,10 +15,12 @@ import java.text.DecimalFormatSymbols;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
-import org.lunifera.runtime.web.vaadin.components.fields.search.filter.IFilter;
-import org.lunifera.runtime.web.vaadin.components.fields.search.filter.TextFilter;
+import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.vaadin.components.fields.search.filter.IFilterProperty;
+import org.lunifera.runtime.web.vaadin.components.fields.search.filter.TextFilterProperty;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
+import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.Component;
@@ -28,16 +30,16 @@ import com.vaadin.ui.TextField;
 public class NumericSearchField extends SearchField<String> {
 
 	private Binding valueBinding;
-	private TextFilter filter;
+	private TextFilterProperty filterProperty;
 
-	public NumericSearchField(String id, DataBindingContext dbContext) {
-		super(id, dbContext);
+	public NumericSearchField(String id, Object propertyId, DataBindingContext dbContext) {
+		super(id, propertyId, dbContext);
+		
+		filterProperty = new TextFilterProperty(this, getPropertyId(), getLocale());
 	}
 
 	@Override
 	protected Component initContent() {
-
-		filter = new TextFilter(getLocale());
 
 		TextField textField = new TextField();
 		textField.setImmediate(true);
@@ -52,10 +54,18 @@ public class NumericSearchField extends SearchField<String> {
 		DataBindingContext dbContext = getDbContext();
 		valueBinding = dbContext
 				.bindValue(VaadinObservables.observeValue(textField),
-						PojoObservables.observeValue(filter,
-								IFilter.PROP_FILTER_VALUE));
+						PojoObservables.observeValue(filterProperty,
+								IFilterProperty.PROP_FILTER_VALUE));
 
 		return textField;
+	}
+	
+	/**
+	 * @param filterProvider
+	 *            the filterProvider to set
+	 */
+	public void setFilterProvider(IFilterProvider filterProvider) {
+		filterProperty.setFilterProvider(filterProvider);
 	}
 
 	/**
@@ -73,13 +83,18 @@ public class NumericSearchField extends SearchField<String> {
 	public Class<? extends String> getType() {
 		return String.class;
 	}
+	
+	@Override
+	public Filter getFilter() {
+		return filterProperty.getFilter();
+	}
 
 	/**
 	 * Dispose the field.
 	 */
 	public void dispose() {
 
-		filter = null;
+		filterProperty = null;
 
 		if (valueBinding != null) {
 			valueBinding.dispose();

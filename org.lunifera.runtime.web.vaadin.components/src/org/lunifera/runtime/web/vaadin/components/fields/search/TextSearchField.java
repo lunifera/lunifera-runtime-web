@@ -13,32 +13,37 @@ package org.lunifera.runtime.web.vaadin.components.fields.search;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
-import org.lunifera.runtime.web.vaadin.components.fields.search.filter.BooleanFilter;
-import org.lunifera.runtime.web.vaadin.components.fields.search.filter.IFilter;
-import org.lunifera.runtime.web.vaadin.components.fields.search.filter.TextFilter;
+import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.vaadin.components.fields.search.filter.BooleanFilterProperty;
+import org.lunifera.runtime.web.vaadin.components.fields.search.filter.IFilterProperty;
+import org.lunifera.runtime.web.vaadin.components.fields.search.filter.TextFilterProperty;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
+import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 
 @SuppressWarnings("serial")
-public class TextSearchField extends SearchField<BooleanFilter.OptionBean> {
+public class TextSearchField extends
+		SearchField<BooleanFilterProperty.OptionBean> {
 
 	private Binding valueBinding;
-	private TextFilter filter;
+	private TextFilterProperty filterProperty;
 
-	public TextSearchField(String id, DataBindingContext dbContext) {
-		super(id, dbContext);
-	} 
-
+	public TextSearchField(String id, Object propertyId,
+			DataBindingContext dbContext) {
+		super(id, propertyId, dbContext);
+		
+		filterProperty = new TextFilterProperty(this, getPropertyId(), getLocale());
+	}
+ 
 	@Override
-	protected Component initContent() {
-
-		filter = new TextFilter(getLocale());
+	protected Component initContent() { 
 
 		TextField textField = new TextField();
 		textField.setImmediate(true);
+		textField.setNullRepresentation("");
 
 		// Create the property
 		ObjectProperty<String> property = new ObjectProperty<String>("",
@@ -47,17 +52,16 @@ public class TextSearchField extends SearchField<BooleanFilter.OptionBean> {
 
 		// Create the bindings
 		DataBindingContext dbContext = getDbContext();
-		valueBinding = dbContext
-				.bindValue(VaadinObservables.observeValue(textField),
-						PojoObservables.observeValue(filter,
-								IFilter.PROP_FILTER_VALUE));
+		valueBinding = dbContext.bindValue(VaadinObservables
+				.observeValue(textField), PojoObservables.observeValue(filterProperty,
+				IFilterProperty.PROP_FILTER_VALUE));
 
 		return textField;
 	}
 
 	@Override
-	public Class<? extends BooleanFilter.OptionBean> getType() {
-		return BooleanFilter.OptionBean.class;
+	public Class<? extends BooleanFilterProperty.OptionBean> getType() {
+		return BooleanFilterProperty.OptionBean.class;
 	}
 
 	/**
@@ -68,13 +72,26 @@ public class TextSearchField extends SearchField<BooleanFilter.OptionBean> {
 	public void setNullRepresentation(String value) {
 		((TextField) getContent()).setNullRepresentation(value);
 	}
+	
+	@Override
+	public Filter getFilter() {
+		return filterProperty.getFilter();
+	}
+	
+	/**
+	 * @param filterProvider
+	 *            the filterProvider to set
+	 */
+	public void setFilterProvider(IFilterProvider filterProvider) {
+		filterProperty.setFilterProvider(filterProvider);
+	}
 
 	/**
 	 * Dispose the field.
 	 */
 	public void dispose() {
 
-		filter = null;
+		filterProperty = null;
 
 		if (valueBinding != null) {
 			valueBinding.dispose();

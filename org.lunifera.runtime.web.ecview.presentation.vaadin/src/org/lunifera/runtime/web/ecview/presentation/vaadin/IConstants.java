@@ -28,6 +28,12 @@ public interface IConstants {
 	 * model element does not specify its own CSS class.
 	 */
 	public static final String CSS_CLASS_CONTROL = "l-control";
+	
+	/**
+	 * This CSS class is applied to searchfields of a presentation as far as the
+	 * model element does not specify its own CSS class.
+	 */
+	public static final String CSS_CLASS_SEARCHFIELD = "l-searchfield";
 
 	/**
 	 * This CSS class marks the widget to show a margin.
@@ -61,4 +67,10 @@ public interface IConstants {
 	String CSS_CLASS_GRIDLAYOUT = "l-gridlayout";
 	String CSS_CLASS_VERTICALLAYOUT = "l-verticallayout";
 	String CSS_CLASS_HORIZONTALLAYOUT = "l-horizontallayout";
+	
+	
+	String I18N_TOOLTIP_TEXTSEARCHFIELD = "org.lunifera.ecview.core.common.i18n.TextSearchFieldTooltip";
+	String I18N_TOOLTIP_BOOLEANSEARCHFIELD = "org.lunifera.ecview.core.common.i18n.BooleanSearchFieldTooltip";
+	String I18N_TOOLTIP_NUMBERSEARCHFIELD = "org.lunifera.ecview.core.common.i18n.NumberSearchFieldTooltip";
+	
 }
