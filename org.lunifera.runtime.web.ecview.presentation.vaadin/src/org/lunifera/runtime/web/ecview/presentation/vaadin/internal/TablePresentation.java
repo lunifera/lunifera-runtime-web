@@ -23,6 +23,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.filter.IFilterablePresentation;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableMultiSelectionEndpoint;
@@ -35,10 +36,12 @@ import org.lunifera.ecview.core.extension.model.extension.YColumn;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.extension.model.extension.YTable;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITableEditpart;
-import org.lunifera.ecview.core.ui.core.editparts.extension.presentation.ITabPresentation;
+import org.lunifera.runtime.web.vaadin.components.container.DeepResolvingBeanItemContainer;
 
+import com.vaadin.data.Container;
+import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.Resource;
@@ -55,7 +58,7 @@ import com.vaadin.ui.Table.RowHeaderMode;
  * This presenter is responsible to render a table on the given layout.
  */
 public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
-		implements ITabPresentation<Component> {
+		implements IFilterablePresentation {
 
 	private final ModelAccess modelAccess;
 	private Table table;
@@ -115,8 +118,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 				table.setItemCaptionMode(ItemCaptionMode.ID);
 			} else {
 				if (modelAccess.yTable.getType() != null) {
-					BeanItemContainer datasource = null;
-					datasource = new BeanItemContainer(
+					DeepResolvingBeanItemContainer datasource = null;
+					datasource = new DeepResolvingBeanItemContainer(
 							modelAccess.yTable.getType());
 					table.setContainerDataSource(datasource);
 
@@ -162,8 +165,19 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 				.getContainerPropertyIds();
 
 		for (YColumn yColumn : modelAccess.yTable.getColumns()) {
-			if (yColumn.isVisible() && propertyIds.contains(yColumn.getName())) {
-				columns.add(yColumn.getName());
+			if (yColumn.isVisible()
+					&& propertyIds.contains(yColumn.getPropertyPath())
+					|| isNestedColumn(yColumn)) {
+				columns.add(yColumn.getPropertyPath());
+			}
+		}
+
+		// add nested properties
+		DeepResolvingBeanItemContainer<?> container = (DeepResolvingBeanItemContainer<?>) table
+				.getContainerDataSource();
+		for (String property : columns) {
+			if (property.contains(".")) {
+				container.addNestedContainerProperty(property);
 			}
 		}
 
@@ -172,25 +186,28 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 
 		// traverse the columns again and set other properties
 		for (YColumn yColumn : modelAccess.yTable.getColumns()) {
-			if (yColumn.isVisible() && propertyIds.contains(yColumn.getName())) {
-				table.setColumnHeader(yColumn.getName(),
-						getColumnHeader(yColumn));
-				table.setColumnAlignment(yColumn.getName(),
+			if (yColumn.isVisible()
+					&& (propertyIds.contains(yColumn.getPropertyPath()) || isNestedColumn(yColumn))) {
+				String columnId = yColumn.getPropertyPath();
+				table.setColumnHeader(columnId, getColumnHeader(yColumn));
+				table.setColumnAlignment(columnId,
 						toAlign(yColumn.getAlignment()));
-				table.setColumnCollapsed(yColumn.getName(),
-						yColumn.isCollapsed());
-				table.setColumnCollapsible(yColumn.getName(),
-						yColumn.isCollapsible());
+				table.setColumnCollapsed(columnId, yColumn.isCollapsed());
+				table.setColumnCollapsible(columnId, yColumn.isCollapsible());
 				if (yColumn.getExpandRatio() >= 0) {
-					table.setColumnExpandRatio(yColumn.getName(),
+					table.setColumnExpandRatio(columnId,
 							yColumn.getExpandRatio());
 				}
 				if (yColumn.getIcon() != null && !yColumn.getIcon().equals("")) {
-					table.setColumnIcon(yColumn.getName(), new ThemeResource(
-							yColumn.getIcon()));
+					table.setColumnIcon(columnId,
+							new ThemeResource(yColumn.getIcon()));
 				}
 			}
 		}
+	}
+
+	protected boolean isNestedColumn(YColumn yColumn) {
+		return yColumn.getPropertyPath().contains(".");
 	}
 
 	/**
@@ -202,15 +219,24 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	private String getColumnHeader(YColumn yColumn) {
 		YDatadescription yDt = yColumn.getDatadescription();
 		if (yDt == null) {
-			return yColumn.getName();
+			return yColumn.getPropertyPath();
 		}
 
+		String result = null;
 		II18nService service = getI18nService();
 		if (service != null && yDt.getLabelI18nKey() != null) {
-			return service.getValue(yDt.getLabelI18nKey(), getLocale());
-		} else {
-			return yDt.getLabel();
+			result = service.getValue(yDt.getLabelI18nKey(), getLocale());
 		}
+
+		if (result == null || result.equals("")) {
+			result = yDt.getLabel();
+		}
+
+		if (result == null || result.equals("")) {
+			result = yColumn.getPropertyPath();
+		}
+
+		return result;
 	}
 
 	private Align toAlign(YFlatAlignment alignment) {
@@ -251,6 +277,18 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		} else {
 			if (modelAccess.isLabelValid()) {
 				table.setCaption(modelAccess.getLabel());
+			}
+		}
+	}
+
+	@Override
+	public void applyFilter(Object filter) {
+		Container container = table.getContainerDataSource();
+		if (container instanceof Container.Filterable) {
+			Container.Filterable filterable = (Filterable) container;
+			filterable.removeAllContainerFilters();
+			if (filter != null) {
+				filterable.addContainerFilter((Filter) filter);
 			}
 		}
 	}

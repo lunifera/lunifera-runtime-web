@@ -19,6 +19,7 @@ import org.eclipse.core.databinding.observable.list.ListDiff;
 import org.eclipse.core.databinding.observable.list.ListDiffVisitor;
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
+import org.lunifera.runtime.web.vaadin.databinding.container.IEnhancedFilterableContainer;
 import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinListProperty;
 import org.lunifera.runtime.web.vaadin.databinding.properties.Util;
 
@@ -51,7 +52,13 @@ public class ContainerItemSetContentProperty extends AbstractVaadinListProperty 
 	protected List<?> doGetList(Object source) {
 
 		Container ds = Util.getContainer(source);
-		Collection<?> result = ds.getItemIds();
+		Collection<?> result = null;
+		if (ds instanceof IEnhancedFilterableContainer<?>) {
+			result = ((IEnhancedFilterableContainer<?>) ds)
+					.getUnfilteredItemIds();
+		} else {
+			result = ds.getItemIds();
+		}
 		return (List<?>) ((result instanceof List) ? result : new ArrayList(
 				result));
 	}

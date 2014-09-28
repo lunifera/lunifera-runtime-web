@@ -10,61 +10,89 @@
  */
 package org.lunifera.runtime.web.vaadin.components.fields.search.filter;
 
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.vaadin.components.converter.DecimalConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Container.Filter;
-import com.vaadin.ui.Component;
+import com.vaadin.data.util.converter.Converter.ConversionException;
 
 public class NumericFilterProperty extends FilterProperty {
 
-	private String value;
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(NumericFilterProperty.class);
+
+	private final DecimalConverter numberConverter = new DecimalConverter();
+	private String stringValue;
+
+	private Number number;
 	private Wildcard wildcard;
 
-	public NumericFilterProperty(Component filterField, Object propertyId,
-			Locale locale) {
-		super(filterField, propertyId, locale);
+	private Class<? extends Number> type;
+
+	public NumericFilterProperty(Class<? extends Number> type,
+			Object propertyId, Locale locale) {
+		super(propertyId, locale);
+		this.type = type;
+
+		numberConverter.setUseGrouping(true);
+		numberConverter.setPrecision(4);
 	}
 
 	/**
 	 * @return the value
 	 */
-	public String getValue() {
-		return value;
+	public String getStringValue() {
+		return stringValue;
 	}
 
 	/**
 	 * @param value
 	 *            the value to set
 	 */
-	public void setValue(String value) {
-		this.value = value;
+	public void setStringValue(String value) {
+		this.stringValue = value;
 
-		calculateWildcard(value);
+		parseNumber(value);
+	}
+
+	/**
+	 * @return the number
+	 */
+	public Number getNumber() {
+		return number;
+	}
+
+	public void setLocale(Locale locale) {
+		numberConverter.setDecimalFormatSymbols(DecimalFormatSymbols
+				.getInstance(locale));
 	}
 
 	@Override
 	public Filter getFilter() {
 		IFilterProvider filterProvider = getFilterProvider();
-		if (filterProvider == null || getValue() == null) {
+		if (filterProvider == null || getNumber() == null) {
 			return null;
 		}
 		if (wildcard == null || wildcard.equals("")) {
-			return filterProvider.eq(getPropertyId(), getValue());
+			return filterProvider.eq(getPropertyId(), getNumber());
 		} else {
 			switch (wildcard) {
 			case GE:
-				return filterProvider.gteq(getPropertyId(), getValue());
+				return filterProvider.gteq(getPropertyId(), getNumber());
 			case GT:
-				return filterProvider.gt(getPropertyId(), getValue());
+				return filterProvider.gt(getPropertyId(), getNumber());
 			case LE:
-				return filterProvider.lteq(getPropertyId(), getValue());
+				return filterProvider.lteq(getPropertyId(), getNumber());
 			case LT:
-				return filterProvider.lt(getPropertyId(), getValue());
+				return filterProvider.lt(getPropertyId(), getNumber());
 			case NE:
 				return filterProvider.not(filterProvider.eq(getPropertyId(),
-						getValue()));
+						getNumber()));
 			}
 		}
 
@@ -76,8 +104,12 @@ public class NumericFilterProperty extends FilterProperty {
 	 * 
 	 * @param value
 	 */
-	private void calculateWildcard(String value) {
+	private void parseNumber(String value) {
 		wildcard = null;
+		number = 0;
+		if (value == null) {
+			return;
+		}
 		if (value.startsWith(Wildcard.GE.sequence)) {
 			wildcard = Wildcard.GE;
 		} else if (value.startsWith(Wildcard.LE.sequence)) {
@@ -90,9 +122,41 @@ public class NumericFilterProperty extends FilterProperty {
 			wildcard = Wildcard.NE;
 		}
 
+		this.stringValue = value.trim();
+
+		String temp = stringValue;
 		if (wildcard != null) {
-			this.value = value.replaceAll(wildcard.sequence, "");
+			temp = temp.replaceAll(wildcard.sequence, "").trim();
 		}
+		try {
+			Double convertedDouble = numberConverter.convertToModel(temp,
+					Double.class, getLocale());
+			number = convertToNumber(convertedDouble);
+		} catch (ConversionException e) {
+			LOGGER.warn("{}", e);
+		}
+	}
+
+	private Number convertToNumber(Double value) {
+		if(value == null){
+			return null;
+		}
+		Number result = null;
+		if (type == Double.class || type == Double.TYPE) {
+			result = value;
+		} else if (type == Float.class || type == Float.TYPE) {
+			result = value.floatValue();
+		} else if (type == Short.class || type == Short.TYPE) {
+			result = value.shortValue();
+		} else if (type == Integer.class || type == Integer.TYPE) {
+			result = value.intValue();
+		} else if (type == Byte.class || type == Byte.TYPE) {
+			result = value.byteValue();
+		} else if (type == Long.class || type == Long.TYPE) {
+			result = value.longValue();
+		}
+
+		return result;
 	}
 
 	/**
@@ -100,6 +164,23 @@ public class NumericFilterProperty extends FilterProperty {
 	 */
 	public Wildcard getWildcard() {
 		return wildcard;
+	}
+
+	public void setUseGrouping(boolean useGrouping) {
+		numberConverter.setUseGrouping(useGrouping);
+	}
+
+	public boolean isUseGrouping() {
+		return numberConverter.isUseGrouping();
+	}
+
+	public DecimalFormatSymbols getDecimalFormatSymbols() {
+		return numberConverter.getDecimalFormatSymbols();
+	}
+
+	public void setDecimalFormatSymbols(
+			DecimalFormatSymbols decimalFormatSymbols) {
+		numberConverter.setDecimalFormatSymbols(decimalFormatSymbols);
 	}
 
 	public static enum Wildcard {

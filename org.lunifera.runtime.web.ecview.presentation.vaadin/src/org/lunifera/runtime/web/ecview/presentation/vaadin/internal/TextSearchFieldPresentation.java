@@ -71,7 +71,7 @@ public class TextSearchFieldPresentation extends
 			IBindingManager bm = getViewContext().getService(
 					IECViewBindingManager.class.getName());
 			field = new TextSearchField(getEditpart().getId(),
-					modelAccess.yText.getName(), bm.getDatabindingContext());
+					modelAccess.yText.getPropertyPath(), bm.getDatabindingContext());
 			field.addStyleName(CSS_CLASS_CONTROL);
 			field.addStyleName(IConstants.CSS_CLASS_SEARCHFIELD);
 

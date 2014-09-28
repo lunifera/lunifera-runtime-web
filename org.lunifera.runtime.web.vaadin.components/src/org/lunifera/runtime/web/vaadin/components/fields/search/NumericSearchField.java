@@ -7,102 +7,213 @@
  * 
  * Contributors: 
  * 		Florian Pirchner - Initial implementation
+ * 		Hans Georg Glöckler - Initial implementation
  */
 package org.lunifera.runtime.web.vaadin.components.fields.search;
 
 import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
-import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
-import org.lunifera.runtime.web.vaadin.components.fields.search.filter.IFilterProperty;
-import org.lunifera.runtime.web.vaadin.components.fields.search.filter.TextFilterProperty;
-import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
+import org.lunifera.runtime.web.vaadin.components.fields.search.filter.NumericFilterProperty;
 
-import com.vaadin.data.Container.Filter;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.RegexpValidator;
-import com.vaadin.ui.Component;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.TextField;
 
+/**
+ * A numericfield specific for redvoodo.
+ */
 @SuppressWarnings("serial")
-public class NumericSearchField extends SearchField<String> {
+public class NumericSearchField extends TextField {
 
-	private Binding valueBinding;
-	private TextFilterProperty filterProperty;
+	private static final String NEGATIVE_VALUE = "lun-negative-value";
 
-	public NumericSearchField(String id, Object propertyId, DataBindingContext dbContext) {
-		super(id, propertyId, dbContext);
-		
-		filterProperty = new TextFilterProperty(this, getPropertyId(), getLocale());
-	}
+	private final StringToPropertyConverter converter;
+	private boolean markNegative;
+	@SuppressWarnings("unused")
+	private String id;
+	private Object propertyId;
+	private Class<? extends Number> type;
 
-	@Override
-	protected Component initContent() {
+	private NumericFilterProperty property;
 
-		TextField textField = new TextField();
-		textField.setImmediate(true);
-		textField.addValidator(new RegexpValidator(getRegexp(), "Not a valid format!"));
+	public NumericSearchField(String id, Object propertyId,
+			Class<? extends Number> type) {
+		this.id = id;
+		this.propertyId = propertyId;
+		this.type = type;
 
-		// Create the property
-		ObjectProperty<String> property = new ObjectProperty<String>("",
-				String.class, false);
-		textField.setPropertyDataSource(property);
+		setNullRepresentation("");
+		setNullSettingAllowed(false);
+		setImmediate(true);
 
-		// Create the bindings
-		DataBindingContext dbContext = getDbContext();
-		valueBinding = dbContext
-				.bindValue(VaadinObservables.observeValue(textField),
-						PojoObservables.observeValue(filterProperty,
-								IFilterProperty.PROP_FILTER_VALUE));
-
-		return textField;
-	}
-	
-	/**
-	 * @param filterProvider
-	 *            the filterProvider to set
-	 */
-	public void setFilterProvider(IFilterProvider filterProvider) {
-		filterProperty.setFilterProvider(filterProvider);
+		markNegative = true;
+		// Important: Is responsible that the Converter is used in the Field
+		this.converter = createConverter();
+		setConverter(this.converter);
 	}
 
 	/**
-	 * Creates the reg expression for the values allowed.
+	 * Creates a default converter.
 	 * 
 	 * @return
 	 */
-	private String getRegexp() {
-		DecimalFormatSymbols symbols = getLocale() != null ? DecimalFormatSymbols.getInstance(getLocale()) : DecimalFormatSymbols.getInstance();
-		return String.format("(>|<|>=|<=|\\!=)?( )*\\d+(\\%s\\d{1,4})?",
-				symbols.getDecimalSeparator());
-	}
-
-	@Override
-	public Class<? extends String> getType() {
-		return String.class;
-	}
-	
-	@Override
-	public Filter getFilter() {
-		return filterProperty.getFilter();
+	protected StringToPropertyConverter createConverter() {
+		this.property = new NumericFilterProperty(type, propertyId, getLocale());
+		return new StringToPropertyConverter(propertyId, getLocale(), property);
 	}
 
 	/**
-	 * Dispose the field.
+	 * Sets the Symbols which are used to Format.
+	 * 
+	 * @param decimalFormatSymbols
 	 */
-	public void dispose() {
+	public void setDecimalFormatSymbols(
+			DecimalFormatSymbols decimalFormatSymbols) {
+		converter.setDecimalFormatSymbols(decimalFormatSymbols);
 
-		filterProperty = null;
+		markAsDirty();
+	}
 
-		if (valueBinding != null) {
-			valueBinding.dispose();
-			valueBinding = null;
+	/**
+	 * Returns the currently used decimal format symbols.
+	 * 
+	 * @return
+	 */
+	public DecimalFormatSymbols getDecimalFormatSymbols() {
+		return converter.getDecimalFormatSymbols();
+	}
+
+	/**
+	 * Returns true, if grouping is used. False otherwise.
+	 * 
+	 * @return
+	 */
+	public boolean isUseGrouping() {
+		return converter.isUseGrouping();
+	}
+
+	/**
+	 * Set true, if grouping should be used. False otherwise.
+	 * 
+	 * @param useGrouping
+	 */
+	public void setUseGrouping(boolean useGrouping) {
+		converter.setUseGrouping(useGrouping);
+
+		markAsDirty();
+	}
+
+	/**
+	 * True, if negative values should become marked.
+	 * 
+	 * @param markNegative
+	 */
+	public void setMarkNegative(boolean markNegative) {
+		this.markNegative = markNegative;
+
+		handleNegative();
+	}
+
+	/**
+	 * Returns true, if negative values should become marked.
+	 * 
+	 * @return
+	 */
+	public boolean isMarkNegative() {
+		return markNegative;
+	}
+
+	protected void setInternalValue(String newValue) {
+		super.setInternalValue(newValue);
+
+		handleNegative();
+	}
+
+	/**
+	 * Is called to handle the negative marker.
+	 */
+	protected void handleNegative() {
+		removeStyleName(NEGATIVE_VALUE);
+
+		if (!isMarkNegative()) {
+			return;
+		}
+
+		if (property.getNumber() != null && property.getNumber().intValue() < 0) {
+			addStyleName(NEGATIVE_VALUE);
 		}
 	}
 
-	public void setNullRepresentation(String value) {
-		((TextField) getContent()).setNullRepresentation(value);
+	public void setFilterProvider(IFilterProvider filterProvider) {
+		property.setFilterProvider(filterProvider);
+	}
+	
+	public void setLocale(Locale locale){
+		super.setLocale(locale);
+		
+		property.setLocale(locale);
+	}
+
+	public Object getFilter() {
+		return property.getFilter();
+	}
+
+	public static class StringToPropertyConverter implements
+			Converter<String, NumericFilterProperty> {
+
+		private final NumericFilterProperty property;
+
+		public StringToPropertyConverter(Object propertyId, Locale locale,
+				NumericFilterProperty property) {
+			this.property = property;
+		}
+
+		public void setUseGrouping(boolean useGrouping) {
+			property.setUseGrouping(useGrouping);
+		}
+
+		public boolean isUseGrouping() {
+			return property.isUseGrouping();
+		}
+
+		public DecimalFormatSymbols getDecimalFormatSymbols() {
+			return property.getDecimalFormatSymbols();
+		}
+
+		public void setDecimalFormatSymbols(
+				DecimalFormatSymbols decimalFormatSymbols) {
+			property.setDecimalFormatSymbols(decimalFormatSymbols);
+		}
+
+		@Override
+		public NumericFilterProperty convertToModel(String value,
+				Class<? extends NumericFilterProperty> targetType, Locale locale)
+				throws ConversionException {
+			property.setStringValue(value);
+			return property;
+		}
+
+		@Override
+		public Class<NumericFilterProperty> getModelType() {
+			return NumericFilterProperty.class;
+		}
+
+		@Override
+		public String convertToPresentation(NumericFilterProperty value,
+				Class<? extends String> targetType, Locale locale)
+				throws ConversionException {
+			if (value == null) {
+				return null;
+			}
+
+			return value.getStringValue();
+		}
+
+		@Override
+		public Class<String> getPresentationType() {
+			return String.class;
+		}
+
 	}
 }

@@ -14,7 +14,6 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
-import org.lunifera.runtime.web.vaadin.components.fields.search.filter.BooleanFilterProperty;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.IFilterProperty;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.TextFilterProperty;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -25,8 +24,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 
 @SuppressWarnings("serial")
-public class TextSearchField extends
-		SearchField<BooleanFilterProperty.OptionBean> {
+public class TextSearchField extends SearchField<String> {
 
 	private Binding valueBinding;
 	private TextFilterProperty filterProperty;
@@ -34,16 +32,17 @@ public class TextSearchField extends
 	public TextSearchField(String id, Object propertyId,
 			DataBindingContext dbContext) {
 		super(id, propertyId, dbContext);
-		
-		filterProperty = new TextFilterProperty(this, getPropertyId(), getLocale());
+
+		filterProperty = new TextFilterProperty(getPropertyId(), getLocale());
 	}
- 
+
 	@Override
-	protected Component initContent() { 
+	protected Component initContent() {
 
 		TextField textField = new TextField();
 		textField.setImmediate(true);
 		textField.setNullRepresentation("");
+		textField.setInvalidAllowed(false);
 
 		// Create the property
 		ObjectProperty<String> property = new ObjectProperty<String>("",
@@ -53,15 +52,15 @@ public class TextSearchField extends
 		// Create the bindings
 		DataBindingContext dbContext = getDbContext();
 		valueBinding = dbContext.bindValue(VaadinObservables
-				.observeValue(textField), PojoObservables.observeValue(filterProperty,
-				IFilterProperty.PROP_FILTER_VALUE));
+				.observeValue(textField), PojoObservables.observeValue(
+				filterProperty, IFilterProperty.PROP_FILTER_VALUE));
 
 		return textField;
 	}
 
 	@Override
-	public Class<? extends BooleanFilterProperty.OptionBean> getType() {
-		return BooleanFilterProperty.OptionBean.class;
+	public Class<? extends String> getType() {
+		return String.class;
 	}
 
 	/**
@@ -72,12 +71,12 @@ public class TextSearchField extends
 	public void setNullRepresentation(String value) {
 		((TextField) getContent()).setNullRepresentation(value);
 	}
-	
+
 	@Override
 	public Filter getFilter() {
 		return filterProperty.getFilter();
 	}
-	
+
 	/**
 	 * @param filterProvider
 	 *            the filterProvider to set

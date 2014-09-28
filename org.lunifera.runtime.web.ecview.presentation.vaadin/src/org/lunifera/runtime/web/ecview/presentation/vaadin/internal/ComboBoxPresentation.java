@@ -25,11 +25,11 @@ import org.lunifera.ecview.core.databinding.emf.model.ECViewModelBindable;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YComboBox;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IComboBoxEditpart;
+import org.lunifera.runtime.web.vaadin.components.container.DeepResolvingBeanItemContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
@@ -91,8 +91,8 @@ public class ComboBoxPresentation extends
 				combo.setPropertyDataSource(property);
 
 				if (modelAccess.yCombo.getType() != null) {
-					BeanItemContainer datasource = null;
-					datasource = new BeanItemContainer(
+					DeepResolvingBeanItemContainer datasource = null;
+					datasource = new DeepResolvingBeanItemContainer(
 							modelAccess.yCombo.getType());
 					combo.setContainerDataSource(datasource);
 				}

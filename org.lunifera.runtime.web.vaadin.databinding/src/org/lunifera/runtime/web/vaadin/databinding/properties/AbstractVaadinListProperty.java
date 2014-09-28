@@ -23,6 +23,7 @@ import org.eclipse.core.databinding.property.list.SimpleListProperty;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.lunifera.runtime.web.vaadin.databinding.component.internal.ComponentListener;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
+import org.lunifera.runtime.web.vaadin.databinding.values.SimpleVaadinPropertyObservableList;
 import org.lunifera.runtime.web.vaadin.databinding.values.VaadinObservableListDecorator;
 
 import com.vaadin.ui.Component;
@@ -80,8 +81,10 @@ public abstract class AbstractVaadinListProperty extends SimpleListProperty {
 	public AbstractVaadinListProperty(
 			Class<? extends Component.Event>[] changeEvents,
 			Class<? extends Component.Event>[] staleEvents) {
-		this.changeEvents = changeEvents != null ? Arrays.copyOf(changeEvents, changeEvents.length) : changeEvents;
-		this.staleEvents = staleEvents != null ? Arrays.copyOf(staleEvents, staleEvents.length) : staleEvents;
+		this.changeEvents = changeEvents != null ? Arrays.copyOf(changeEvents,
+				changeEvents.length) : changeEvents;
+		this.staleEvents = staleEvents != null ? Arrays.copyOf(staleEvents,
+				staleEvents.length) : staleEvents;
 	}
 
 	public INativePropertyListener adaptListener(
@@ -100,7 +103,8 @@ public abstract class AbstractVaadinListProperty extends SimpleListProperty {
 	}
 
 	public IObservableList observe(Realm realm, Object source) {
-		return wrapObservable(super.observe(realm, source), source);
+		return wrapObservable(new SimpleVaadinPropertyObservableList(realm,
+				source, this), source);
 	}
 
 	protected IVaadinObservableList wrapObservable(IObservableList observable,

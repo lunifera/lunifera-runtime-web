@@ -19,21 +19,21 @@ import org.lunifera.runtime.web.vaadin.components.converter.NumberConverter;
  * A numericfield specific for redvoodo.
  */
 @SuppressWarnings("serial")
-public class NumberField extends TextField {
+public class NumericField extends TextField {
 
 	private static final String NEGATIVE_VALUE = "lun-negative-value";
 	private final NumberConverter converter;
 	private boolean markNegative;
 
-	public NumberField() {
+	public NumericField() {
 		this(null);
 	}
 
-	public NumberField(String caption) {
+	public NumericField(String caption) {
 		this(caption, null);
 	}
 
-	public NumberField(String caption, NumberConverter converter) {
+	public NumericField(String caption, NumberConverter converter) {
 		super(caption);
 
 		setNullRepresentation("");

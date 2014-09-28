@@ -26,26 +26,28 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 
 @SuppressWarnings("serial")
-public class BooleanSearchField extends SearchField<BooleanFilterProperty.OptionBean> {
+public class BooleanSearchField extends
+		SearchField<BooleanFilterProperty.OptionBean> {
 
 	private Binding selectionBinding;
 	private Binding collectionBinding;
 	private BooleanFilterProperty filterProperty;
 
-	public BooleanSearchField(String id, Object propertyId, DataBindingContext dbContext) {
+	public BooleanSearchField(String id, Object propertyId,
+			DataBindingContext dbContext) {
 		super(id, propertyId, dbContext);
-		
-		filterProperty = new BooleanFilterProperty(this, getPropertyId(), getLocale());
+
+		filterProperty = new BooleanFilterProperty(getPropertyId(), getLocale());
 	}
- 
+
 	@Override
 	protected Component initContent() {
- 
+
 		ComboBox combo = new ComboBox();
 		combo.setImmediate(true);
 		combo.setNullSelectionAllowed(false);
 		combo.setItemCaptionPropertyId("description");
-		
+
 		// Create the container
 		BeanItemContainer<BooleanFilterProperty.OptionBean> container = new BeanItemContainer<BooleanFilterProperty.OptionBean>(
 				BooleanFilterProperty.OptionBean.class);
@@ -54,22 +56,23 @@ public class BooleanSearchField extends SearchField<BooleanFilterProperty.Option
 
 		// Create the property
 		ObjectProperty<BooleanFilterProperty.OptionBean> property = new ObjectProperty<BooleanFilterProperty.OptionBean>(
-				filterProperty.getDefaultOption(), BooleanFilterProperty.OptionBean.class,
-				false);
+				filterProperty.getDefaultOption(),
+				BooleanFilterProperty.OptionBean.class, false);
 		combo.setPropertyDataSource(property);
 
 		// Create the bindings
 		DataBindingContext dbContext = getDbContext();
-		selectionBinding = dbContext.bindValue(
-				VaadinObservables.observeValue(combo),
-				PojoObservables.observeValue(filterProperty, IFilterProperty.PROP_SELECTION));
+		selectionBinding = dbContext.bindValue(VaadinObservables
+				.observeValue(combo), PojoObservables.observeValue(
+				filterProperty, IFilterProperty.PROP_SELECTION));
 		collectionBinding = dbContext.bindList(VaadinObservables
 				.observeContainerItemSetContents(combo, OptionBean.class),
-				PojoObservables.observeList(filterProperty, IFilterProperty.PROP_OPTIONS));
+				PojoObservables.observeList(filterProperty,
+						IFilterProperty.PROP_OPTIONS));
 
 		return combo;
 	}
-	
+
 	/**
 	 * @param filterProvider
 	 *            the filterProvider to set
@@ -82,7 +85,7 @@ public class BooleanSearchField extends SearchField<BooleanFilterProperty.Option
 	public Class<? extends BooleanFilterProperty.OptionBean> getType() {
 		return BooleanFilterProperty.OptionBean.class;
 	}
-	
+
 	@Override
 	public Filter getFilter() {
 		return filterProperty.getFilter();

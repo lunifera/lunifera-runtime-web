@@ -15,16 +15,14 @@ import java.util.Locale;
 import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
 
 import com.vaadin.data.Container.Filter;
-import com.vaadin.ui.Component;
 
 public class TextFilterProperty extends FilterProperty {
 
 	private String value;
 	private Wildcard wildcard;
 
-	public TextFilterProperty(Component filterField, Object propertyId,
-			Locale locale) {
-		super(filterField, propertyId, locale);
+	public TextFilterProperty(Object propertyId, Locale locale) {
+		super(propertyId, locale);
 	}
 
 	/**
@@ -47,7 +45,8 @@ public class TextFilterProperty extends FilterProperty {
 	@Override
 	public Filter getFilter() {
 		IFilterProvider filterProvider = getFilterProvider();
-		if (filterProvider == null || getValue() == null) {
+		if (filterProvider == null || getValue() == null
+				|| getValue().equals("")) {
 			return null;
 		}
 		if (wildcard == null || wildcard.equals("")) {
@@ -66,8 +65,7 @@ public class TextFilterProperty extends FilterProperty {
 				return filterProvider.not(filterProvider.eq(getPropertyId(),
 						getValue()));
 			case ANY:
-				return filterProvider.like(getPropertyId(), getValue()
-						.replaceAll("*", "%"), true);
+				return filterProvider.like(getPropertyId(), getValue(), true);
 			}
 		}
 
@@ -98,9 +96,9 @@ public class TextFilterProperty extends FilterProperty {
 		if (wildcard != null) {
 			// remove the wildcard from the value and change * to %
 			if (wildcard == Wildcard.ANY) {
-				this.value = value.replaceAll("*", "%");
+				this.value = value.replaceAll("\\*", "%").trim();
 			} else {
-				this.value = value.replaceAll(wildcard.sequence, "");
+				this.value = value.replaceAll(wildcard.sequence, "").trim();
 			}
 		}
 	}

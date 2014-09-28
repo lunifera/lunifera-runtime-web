@@ -44,7 +44,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
  * @author Petter Holmström (Vaadin Ltd)
  * @since 1.0
  */
-@Component(service = { IFilterProvider.class })
+@Component(service = { IFilterProvider.class }, immediate=true)
 public final class Filters implements IFilterProvider {
 
 	public Filters() {
@@ -342,13 +342,6 @@ public final class Filters implements IFilterProvider {
 		return new Or(CollectionUtil.toArray(Filter.class, filters));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.lunifera.runtime.web.vaadin.filter.jpa.IFilterProvider#joinFilter
-	 * (java.lang.String, com.vaadin.data.Container.Filter)
-	 */
 	public JoinFilter joinFilter(String joinProperty, Filter... filters) {
 		return new JoinFilter(joinProperty, filters);
 	}

@@ -72,5 +72,6 @@ public interface IConstants {
 	String I18N_TOOLTIP_TEXTSEARCHFIELD = "org.lunifera.ecview.core.common.i18n.TextSearchFieldTooltip";
 	String I18N_TOOLTIP_BOOLEANSEARCHFIELD = "org.lunifera.ecview.core.common.i18n.BooleanSearchFieldTooltip";
 	String I18N_TOOLTIP_NUMBERSEARCHFIELD = "org.lunifera.ecview.core.common.i18n.NumberSearchFieldTooltip";
+	String I18N_TOOLTIP_REFERENCESEARCHFIELD = "org.lunifera.ecview.core.common.i18n.ReferenceSearchFieldTooltip";
 	
 }

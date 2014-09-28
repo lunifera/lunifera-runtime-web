@@ -31,7 +31,7 @@ import org.lunifera.ecview.core.extension.model.extension.YNumericField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.INumericFieldEditpart;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
-import org.lunifera.runtime.web.vaadin.components.fields.NumberField;
+import org.lunifera.runtime.web.vaadin.components.fields.NumericField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.data.Property;
@@ -49,7 +49,7 @@ public class NumericFieldPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
-	private NumberField numberField;
+	private NumericField numberField;
 	private Binding binding_valueToUI;
 	private ObjectProperty<Double> property;
 
@@ -72,7 +72,7 @@ public class NumericFieldPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (numberField == null) {
 
-			numberField = new NumberField();
+			numberField = new NumericField();
 			numberField.addStyleName(CSS_CLASS_CONTROL);
 			numberField.setImmediate(true);
 			setupComponent(numberField, getCastedModel());
@@ -203,7 +203,7 @@ public class NumericFieldPresentation extends
 	 * @param yField
 	 * @param field
 	 */
-	protected void createBindings(YNumericField yField, NumberField field) {
+	protected void createBindings(YNumericField yField, NumericField field) {
 		// create the model binding from ridget to ECView-model
 
 		binding_valueToUI = createModelBinding(castEObject(getModel()),

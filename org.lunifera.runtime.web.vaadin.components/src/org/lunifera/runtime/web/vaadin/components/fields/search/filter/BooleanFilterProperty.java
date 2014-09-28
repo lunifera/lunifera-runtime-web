@@ -18,7 +18,6 @@ import java.util.Locale;
 import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
 
 import com.vaadin.data.Container.Filter;
-import com.vaadin.ui.Component;
 
 public class BooleanFilterProperty extends FilterProperty {
 
@@ -26,9 +25,8 @@ public class BooleanFilterProperty extends FilterProperty {
 	private List<OptionBean> options;
 	private OptionBean defaultOption;
 
-	public BooleanFilterProperty(Component filterField, Object propertyId,
-			Locale locale) {
-		super(filterField, propertyId, locale);
+	public BooleanFilterProperty(Object propertyId, Locale locale) {
+		super(propertyId, locale);
 	}
 
 	/**
@@ -87,9 +85,9 @@ public class BooleanFilterProperty extends FilterProperty {
 		}
 		switch (selection.getOption()) {
 		case FALSE:
-			return filterProvider.eq(getPropertyId(), Boolean.TRUE);
-		case TRUE:
 			return filterProvider.eq(getPropertyId(), Boolean.FALSE);
+		case TRUE:
+			return filterProvider.eq(getPropertyId(), Boolean.TRUE);
 		case IGNORE:
 			return null;
 		}

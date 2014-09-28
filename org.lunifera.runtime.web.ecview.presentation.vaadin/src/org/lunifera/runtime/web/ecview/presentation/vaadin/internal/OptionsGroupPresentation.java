@@ -29,9 +29,9 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YOptionsGroup;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IOptionsGroupEditpart;
+import org.lunifera.runtime.web.vaadin.components.container.DeepResolvingBeanItemContainer;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.Resource;
@@ -103,8 +103,8 @@ public class OptionsGroupPresentation extends
 				optionsGroup.setItemCaptionMode(ItemCaptionMode.ID);
 			} else {
 				if (modelAccess.yOptionsGroup.getType() != null) {
-					BeanItemContainer datasource = null;
-					datasource = new BeanItemContainer(
+					DeepResolvingBeanItemContainer datasource = null;
+					datasource = new DeepResolvingBeanItemContainer(
 							modelAccess.yOptionsGroup.getType());
 					optionsGroup.setContainerDataSource(datasource);
 

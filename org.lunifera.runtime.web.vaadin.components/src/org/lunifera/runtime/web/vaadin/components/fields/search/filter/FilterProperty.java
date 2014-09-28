@@ -18,14 +18,12 @@ import com.vaadin.ui.Component;
 
 public abstract class FilterProperty implements IFilterProperty {
 
-	private Component filterField;
 	private Object propertyId;
 	private Locale locale;
 	private IFilterProvider filterProvider;
 
-	public FilterProperty(Component filterField, Object propertyId,
+	public FilterProperty(Object propertyId,
 			Locale locale) {
-		this.filterField = filterField;
 		this.propertyId = propertyId;
 		this.locale = locale;
 	}
