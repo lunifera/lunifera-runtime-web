@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin Components
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components;singleton:=true
-Bundle-Version: 0.7.4
+Bundle-Version: 0.7.5.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.runtime.web.vaadin.components.container,
  org.lunifera.runtime.web.vaadin.components.converter,
