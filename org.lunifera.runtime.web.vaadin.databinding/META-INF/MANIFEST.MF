@@ -16,10 +16,10 @@ Require-Bundle: javax.servlet;bundle-version="3.0.0";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.9.0";visibility:=reexport,
  com.ibm.icu;bundle-version="50.1.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.vaadin.databinding,
- org.lunifera.runtime.web.vaadin.databinding.component.internal;x-internal:=true,
+Export-Package: org.lunifera.runtime.web.vaadin.databinding;version="0.7.3",
  org.lunifera.runtime.web.vaadin.databinding.container,
- org.lunifera.runtime.web.vaadin.databinding.model.internal;x-internal:=true,
- org.lunifera.runtime.web.vaadin.databinding.properties,
- org.lunifera.runtime.web.vaadin.databinding.values
+ org.lunifera.runtime.web.vaadin.databinding.component.internal;version="0.7.3";x-internal:=true,
+ org.lunifera.runtime.web.vaadin.databinding.model.internal;version="0.7.3";x-internal:=true,
+ org.lunifera.runtime.web.vaadin.databinding.properties;version="0.7.3",
+ org.lunifera.runtime.web.vaadin.databinding.values;version="0.7.3"
 Bundle-Vendor: lunifera.org
