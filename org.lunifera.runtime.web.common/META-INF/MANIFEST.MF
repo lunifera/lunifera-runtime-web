@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin wrapper common classes
 Bundle-SymbolicName: org.lunifera.runtime.web.common
-Bundle-Version: 0.7.3.qualifier
+Bundle-Version: 0.7.4
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Lunifera.org
