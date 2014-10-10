@@ -6,7 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *      Benno Luthiger *
+ *      Benno Luthiger
+ * I hereby confirm that the code of the patch/enhancement was written entirely on my own and
+ * I agree to contribute the code to Lunifera under the terms of the EPL.
  */
 package org.lunifera.runtime.web.vaadin.osgi.webapp;
 
