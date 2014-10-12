@@ -13,13 +13,13 @@ package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 import java.util.Map;
 
-import org.lunifera.ecview.core.common.context.ContextException;
-import org.lunifera.ecview.core.common.context.IViewContext;
-import org.lunifera.ecview.core.common.model.core.YView;
 import org.lunifera.dsl.semantic.dto.LDto;
 import org.lunifera.dsl.semantic.entity.LEntity;
 import org.lunifera.dsl.xtext.builder.participant.IDtoMetadataService;
 import org.lunifera.dsl.xtext.builder.participant.IEntityMetadataService;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.model.core.YView;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.services.vaadin.IECViewUIRenderService;
 import org.lunifera.runtime.web.ecview.services.vaadin.ILDtoRenderStrategy;
@@ -29,15 +29,29 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.vaadin.ui.ComponentContainer;
 
-@Component
+@Component(immediate = true, enabled = true)
 public class ECViewUIRenderService implements IECViewUIRenderService {
 
 	private ILDtoRenderStrategy dtoStrategy;
 	private ILEntityRenderStrategy entityStrategy;
 	private IEntityMetadataService entityMetadataService;
 	private IDtoMetadataService dtoMetadataService;
+	private Injector injector;
+
+	protected void activate() {
+		injector = Guice.createInjector(new XtextModule());
+
+		if (entityStrategy != null) {
+			injector.injectMembers(entityStrategy);
+		}
+	}
+
+	protected void deactivate() {
+	}
 
 	@Override
 	public IViewContext renderUIForDTO(Class<?> clazz,

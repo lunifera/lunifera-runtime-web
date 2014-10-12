@@ -24,7 +24,12 @@ Require-Bundle:
  org.lunifera.dsl.semantic.dto;bundle-version="0.7.3",
  org.lunifera.dsl.semantic.entity;bundle-version="0.7.3",
  org.lunifera.dsl.xtext.builder.participant;bundle-version="0.7.3",
- org.lunifera.dsl.semantic.entity;bundle-version="0.7.3"
+ org.lunifera.dsl.semantic.entity;bundle-version="0.7.3",
+ com.google.inject;bundle-version="3.0.0",
+ org.junit;bundle-version="4.11.0",
+ org.eclipse.xtext,
+ org.lunifera.xtext.builder.types.bundles,
+ org.lunifera.runtime.common;bundle-version="0.7.5"
 Import-Package: org.osgi.service.component;version="1.2.0",
  org.osgi.service.component.annotations;version="1.2.0"
 Service-Component: OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.LDtoRenderStrategy.xml,
