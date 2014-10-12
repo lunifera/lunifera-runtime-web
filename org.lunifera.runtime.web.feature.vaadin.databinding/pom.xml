@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.lunifera.runtime.web</groupId>
 		<artifactId>org.lunifera.runtime.web.parent</artifactId>
-		<version>0.7.3-SNAPSHOT</version>
+		<version>0.7.5-SNAPSHOT</version>
 		<relativePath>../org.lunifera.runtime.web.parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>org.lunifera.runtime.web.feature.vaadin.databinding</artifactId>
