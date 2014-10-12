@@ -13,7 +13,6 @@ package org.lunifera.runtime.web.vaadin.components.fields.search;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.BooleanFilterProperty;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.BooleanFilterProperty.OptionBean;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.IFilterProperty;
@@ -71,14 +70,6 @@ public class BooleanSearchField extends
 						IFilterProperty.PROP_OPTIONS));
 
 		return combo;
-	}
-
-	/**
-	 * @param filterProvider
-	 *            the filterProvider to set
-	 */
-	public void setFilterProvider(IFilterProvider filterProvider) {
-		filterProperty.setFilterProvider(filterProvider);
 	}
 
 	@Override

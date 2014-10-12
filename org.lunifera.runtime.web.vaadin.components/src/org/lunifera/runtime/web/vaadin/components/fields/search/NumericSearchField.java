@@ -14,7 +14,6 @@ package org.lunifera.runtime.web.vaadin.components.fields.search;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.NumericFilterProperty;
 
 import com.vaadin.data.util.converter.Converter;
@@ -145,13 +144,9 @@ public class NumericSearchField extends TextField {
 		}
 	}
 
-	public void setFilterProvider(IFilterProvider filterProvider) {
-		property.setFilterProvider(filterProvider);
-	}
-	
-	public void setLocale(Locale locale){
+	public void setLocale(Locale locale) {
 		super.setLocale(locale);
-		
+
 		property.setLocale(locale);
 	}
 

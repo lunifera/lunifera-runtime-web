@@ -32,7 +32,6 @@ import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 
 /**
@@ -46,7 +45,6 @@ public class HorizontalLayoutPresentation extends
 
 	private HorizontalLayout horizontalLayout;
 	private ModelAccess modelAccess;
-	private CssLayout fillerLayout;
 
 	/**
 	 * The constructor.

@@ -36,7 +36,8 @@ import org.lunifera.ecview.core.extension.model.extension.YColumn;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.extension.model.extension.YTable;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITableEditpart;
-import org.lunifera.runtime.web.vaadin.components.container.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
@@ -57,6 +58,7 @@ import com.vaadin.ui.Table.RowHeaderMode;
 /**
  * This presenter is responsible to render a table on the given layout.
  */
+@SuppressWarnings("restriction")
 public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		implements IFilterablePresentation {
 
@@ -87,12 +89,12 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 
 			table = new CustomTable();
 			table.addStyleName(CSS_CLASS_CONTROL);
-			table.setMultiSelect(modelAccess.yTable.getSelectionType() == YSelectionType.MULTI);
+			table.setMultiSelect(modelAccess.yField.getSelectionType() == YSelectionType.MULTI);
 			table.setSelectable(true);
 			table.setImmediate(true);
 			setupComponent(table, getCastedModel());
 
-			associateWidget(table, modelAccess.yTable);
+			associateWidget(table, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				table.setId(modelAccess.getCssID());
 			} else {
@@ -102,9 +104,9 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			if (table.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
 			} else {
-				if (modelAccess.yTable.getType() != null) {
+				if (modelAccess.yField.getType() != null) {
 					property = new ObjectProperty(null,
-							modelAccess.yTable.getType());
+							modelAccess.yField.getType());
 				} else {
 					property = new ObjectProperty(null, Object.class);
 				}
@@ -112,15 +114,15 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			table.setPropertyDataSource(property);
 
 			applyColumns = false;
-			if (modelAccess.yTable.getType() == String.class) {
+			if (modelAccess.yField.getType() == String.class) {
 				IndexedContainer datasource = new IndexedContainer();
 				table.setContainerDataSource(datasource);
 				table.setItemCaptionMode(ItemCaptionMode.ID);
 			} else {
-				if (modelAccess.yTable.getType() != null) {
+				if (modelAccess.yField.getType() != null) {
 					DeepResolvingBeanItemContainer datasource = null;
 					datasource = new DeepResolvingBeanItemContainer(
-							modelAccess.yTable.getType());
+							modelAccess.yField.getType());
 					table.setContainerDataSource(datasource);
 
 					applyColumns = true;
@@ -134,7 +136,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 				}
 			}
 
-			String itemImageProperty = modelAccess.yTable
+			String itemImageProperty = modelAccess.yField
 					.getItemImageProperty();
 			if (itemImageProperty != null && !itemImageProperty.equals("")) {
 				table.setItemIconPropertyId(itemImageProperty);
@@ -142,7 +144,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			}
 
 			// creates the binding for the field
-			createBindings(modelAccess.yTable, table);
+			createBindings(modelAccess.yField, table);
 
 			if (modelAccess.isCssClassValid()) {
 				table.addStyleName(modelAccess.getCssClass());
@@ -164,7 +166,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		Collection<?> propertyIds = table.getContainerDataSource()
 				.getContainerPropertyIds();
 
-		for (YColumn yColumn : modelAccess.yTable.getColumns()) {
+		for (YColumn yColumn : modelAccess.yField.getColumns()) {
 			if (yColumn.isVisible()
 					&& propertyIds.contains(yColumn.getPropertyPath())
 					|| isNestedColumn(yColumn)) {
@@ -185,7 +187,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		table.setColumnCollapsingAllowed(true);
 
 		// traverse the columns again and set other properties
-		for (YColumn yColumn : modelAccess.yTable.getColumns()) {
+		for (YColumn yColumn : modelAccess.yField.getColumns()) {
 			if (yColumn.isVisible()
 					&& (propertyIds.contains(yColumn.getPropertyPath()) || isNestedColumn(yColumn))) {
 				String columnId = yColumn.getPropertyPath();
@@ -270,15 +272,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			applyColumns();
 		}
 
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			table.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				table.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), table);
 	}
 
 	@Override
@@ -334,7 +329,6 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("restriction")
 	protected IObservableValue internalGetSelectionEndpoint(
 			YEmbeddableSelectionEndpoint yEndpoint) {
 
@@ -344,8 +338,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yTable.getType(),
-				modelAccess.yTable.getEmfNsURI());
+				attributePath, modelAccess.yField.getType(),
+				modelAccess.yField.getEmfNsURI());
 	}
 
 	/**
@@ -374,7 +368,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 				yField.getType()));
 
 		// create the model binding from ridget to ECView-model
-		if (modelAccess.yTable.getSelectionType() == YSelectionType.MULTI) {
+		if (modelAccess.yField.getSelectionType() == YSelectionType.MULTI) {
 			// create the model binding from ridget to ECView-model
 			registerBinding(createBindingsMultiSelection(
 					castEObject(getModel()),
@@ -439,11 +433,11 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YTable yTable;
+		private final YTable yField;
 
-		public ModelAccess(YTable yTable) {
+		public ModelAccess(YTable yField) {
 			super();
-			this.yTable = yTable;
+			this.yField = yField;
 		}
 
 		/**
@@ -451,7 +445,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yTable.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -468,7 +462,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yTable.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -481,32 +475,12 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yTable.getDatadescription() != null
-					&& yTable.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yTable.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yTable.getDatadescription() != null
-					&& yTable.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -515,7 +489,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yTable.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 

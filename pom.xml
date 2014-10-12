@@ -48,7 +48,7 @@
 				<module>org.lunifera.runtime.web.vaadin.common</module>
 				<!-- <module>org.lunifera.runtime.web.vaadin.common.tests</module> -->
 				<module>org.lunifera.runtime.web.vaadin.components</module>
-				<module>org.lunifera.runtime.web.vaadin.filter.jpa</module>
+
 				<module>org.lunifera.runtime.web.vaadin.databinding</module>
 				<module>org.lunifera.runtime.web.vaadin.databinding.tests</module>
 				<module>org.lunifera.runtime.web.vaadin.osgi</module>

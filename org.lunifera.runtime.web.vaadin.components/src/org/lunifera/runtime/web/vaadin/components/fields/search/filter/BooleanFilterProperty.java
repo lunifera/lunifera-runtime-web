@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.vaadin.common.data.filter.Filters;
 
 import com.vaadin.data.Container.Filter;
 
@@ -24,6 +24,7 @@ public class BooleanFilterProperty extends FilterProperty {
 	private OptionBean selection;
 	private List<OptionBean> options;
 	private OptionBean defaultOption;
+	private Filters filterProvider = new Filters();
 
 	public BooleanFilterProperty(Object propertyId, Locale locale) {
 		super(propertyId, locale);
@@ -79,7 +80,6 @@ public class BooleanFilterProperty extends FilterProperty {
 
 	@Override
 	public Filter getFilter() {
-		IFilterProvider filterProvider = getFilterProvider();
 		if (filterProvider == null || selection == null) {
 			return null;
 		}

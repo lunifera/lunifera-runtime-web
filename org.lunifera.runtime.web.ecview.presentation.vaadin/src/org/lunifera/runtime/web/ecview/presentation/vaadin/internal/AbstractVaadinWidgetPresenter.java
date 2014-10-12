@@ -51,7 +51,6 @@ import org.lunifera.ecview.core.common.notification.LifecycleEvent;
 import org.lunifera.ecview.core.common.presentation.IInitializerService;
 import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
 import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
-import org.lunifera.ecview.core.common.visibility.Color;
 import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.databinding.emf.common.ECViewUpdateValueStrategy;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
@@ -59,10 +58,14 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeNotifier;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
@@ -76,6 +79,9 @@ import com.vaadin.ui.Field;
 public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 		extends AbstractDisposable implements IWidgetPresentation<A>,
 		ILocaleChangedService.LocaleListener {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(AbstractVaadinWidgetPresenter.class);
 
 	/**
 	 * See {@link IConstants#CSS_CLASS_CONTROL_BASE}.
@@ -532,10 +538,23 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			ECViewUpdateValueStrategy modelToTarget = new ECViewUpdateValueStrategy(
 					ECViewUpdateValueStrategy.POLICY_UPDATE);
 			modelToTarget.setBeforeSetValidator(new IValidator() {
+				@SuppressWarnings({ "unchecked", "rawtypes" })
 				@Override
 				public IStatus validate(Object value) {
-					if (value != null && !value.equals("")
-							&& !field.containsId(value)) {
+					Object convertedValue = value;
+					if (value != null && !value.equals("")) {
+						Converter converter = field.getConverter();
+						if (converter != null) {
+							try {
+								convertedValue = converter.convertToPresentation(
+										value, converter.getPresentationType(),
+										getLocale());
+							} catch (ConversionException e) {
+								LOGGER.error("{}", e);
+							}
+						}
+					}
+					if (!field.containsId(convertedValue)) {
 						return Status.CANCEL_STATUS;
 					}
 
@@ -728,8 +747,8 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * @param yElement
 	 */
 	protected void associateWidget(Component component, EObject yElement) {
-		IWidgetAssocationsService<Component, EObject> service = getViewContext().getService(
-				IWidgetAssocationsService.ID);
+		IWidgetAssocationsService<Component, EObject> service = getViewContext()
+				.getService(IWidgetAssocationsService.ID);
 		service.associate(component, yElement);
 	}
 
@@ -739,8 +758,8 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 * @param component
 	 */
 	protected void unassociateWidget(Component component) {
-		IWidgetAssocationsService<Component, EObject> service = getViewContext().getService(
-				IWidgetAssocationsService.ID);
+		IWidgetAssocationsService<Component, EObject> service = getViewContext()
+				.getService(IWidgetAssocationsService.ID);
 		service.remove(component);
 	}
 
@@ -845,7 +864,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	/**
 	 * Applies the visibility options to the component.
 	 */
-	protected static class VisibilityOptionsApplier {
+	protected class VisibilityOptionsApplier {
 
 		protected final Component component;
 
@@ -877,7 +896,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			component.removeStyleName("l-background-gray");
 			component.removeStyleName("l-background-light-gray");
 			component.removeStyleName("l-background-dark-gray");
-			
+
 		}
 
 		/**
@@ -947,34 +966,50 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			if (yProps == null) {
 				return;
 			}
-			component.setReadOnly(!yProps.isEditable());
+
+			YElement model = getCastedModel();
+			if (model instanceof YEditable) {
+				YEditable yEditable = (YEditable) model;
+				yEditable.setEditable(yProps.isEditable());
+			}
 		}
 
 		public void applyEnabled(YVisibilityProperties yProps) {
 			if (yProps == null) {
 				return;
 			}
-			component.setEnabled(yProps.isEnabled());
+
+			YElement model = getCastedModel();
+			if (model instanceof YEnable) {
+				YEnable yEnable = (YEnable) model;
+				yEnable.setEnabled(yProps.isEnabled());
+			}
 		}
 
 		public void applyVisible(YVisibilityProperties yProps) {
 			if (yProps == null) {
 				return;
 			}
-			component.setVisible(yProps.isVisible());
+			YElement model = getCastedModel();
+			if (model instanceof YVisibleable) {
+				YVisibleable yVisibleable = (YVisibleable) model;
+				yVisibleable.setVisible(yProps.isVisible());
+			}
 		}
 
 		public void applyForegroundColor(YVisibilityProperties yProps) {
 			YColor yColor = yProps.getForegroundColor();
 			if (yColor != null) {
-				component.addStyleName("l-foreground-" + yColor.getName().toLowerCase());
+				component.addStyleName("l-foreground-"
+						+ yColor.getName().toLowerCase());
 			}
 		}
 
 		public void applyBackgroundColor(YVisibilityProperties yProps) {
 			YColor yColor = yProps.getBackgroundColor();
 			if (yColor != null) {
-				component.addStyleName("l-background-" + yColor.getName().toLowerCase());
+				component.addStyleName("l-background-"
+						+ yColor.getName().toLowerCase());
 			}
 		}
 	}

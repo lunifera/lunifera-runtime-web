@@ -30,6 +30,7 @@ import com.vaadin.ui.TabSheet.Tab;
 /**
  * This presenter is responsible to render a tab sheet on the given layout.
  */
+@SuppressWarnings("restriction")
 public class TabPresentation extends AbstractTabPresenter<Component> implements
 		ITabPresentation<Component> {
 
@@ -54,7 +55,6 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 			TabSheet tabSheet = (TabSheet) parent;
 
 			YTab yTab = (YTab) getModel();
-			@SuppressWarnings("restriction")
 			IEmbeddableEditpart childEditpart = ElementEditpart
 					.getEditpart(yTab.getEmbeddable());
 
@@ -71,6 +71,13 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 			childLayout.addComponent(childContent);
 
 			tab = tabSheet.addTab(childLayout);
+
+			if (modelAccess.isCssIdValid()) {
+				tab.setId(modelAccess.getCssID());
+			} else {
+				tab.setId(getEditpart().getId());
+			}
+
 			applyCaptions();
 		}
 		return tab.getComponent();
@@ -124,7 +131,6 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 			unbind();
 
 			YTab yTab = (YTab) getModel();
-			@SuppressWarnings("restriction")
 			IEmbeddableEditpart editpart = ElementEditpart.getEditpart(yTab
 					.getEmbeddable());
 
@@ -143,23 +149,6 @@ public class TabPresentation extends AbstractTabPresenter<Component> implements
 		public ModelAccess(YTab yTab) {
 			super();
 			this.yTab = yTab;
-		}
-
-		/**
-		 * @return
-		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
-		 */
-		public String getCssClass() {
-			return yTab.getCssClass();
-		}
-
-		/**
-		 * Returns true, if the css class is not null and not empty.
-		 * 
-		 * @return
-		 */
-		public boolean isCssClassValid() {
-			return getCssClass() != null && !getCssClass().equals("");
 		}
 
 		/**

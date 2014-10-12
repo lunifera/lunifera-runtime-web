@@ -13,7 +13,6 @@ package org.lunifera.runtime.web.vaadin.components.fields.search;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.IFilterProperty;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.TextFilterProperty;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
@@ -43,7 +42,6 @@ public class TextSearchField extends SearchField<String> {
 		textField.setImmediate(true);
 		textField.setNullRepresentation("");
 		textField.setInvalidAllowed(false);
-
 		// Create the property
 		ObjectProperty<String> property = new ObjectProperty<String>("",
 				String.class, false);
@@ -75,14 +73,6 @@ public class TextSearchField extends SearchField<String> {
 	@Override
 	public Filter getFilter() {
 		return filterProperty.getFilter();
-	}
-
-	/**
-	 * @param filterProvider
-	 *            the filterProvider to set
-	 */
-	public void setFilterProvider(IFilterProvider filterProvider) {
-		filterProperty.setFilterProvider(filterProvider);
 	}
 
 	/**

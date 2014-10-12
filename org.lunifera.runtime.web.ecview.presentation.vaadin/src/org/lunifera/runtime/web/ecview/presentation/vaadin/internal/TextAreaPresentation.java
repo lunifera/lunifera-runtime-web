@@ -15,13 +15,13 @@ import java.util.Locale;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YTextArea;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITextAreaEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
@@ -64,7 +64,7 @@ public class TextAreaPresentation extends
 			textArea.setNullRepresentation("");
 			setupComponent(textArea, getCastedModel());
 
-			associateWidget(textArea, modelAccess.yTextArea);
+			associateWidget(textArea, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				textArea.setId(modelAccess.getCssID());
 			} else {
@@ -75,7 +75,7 @@ public class TextAreaPresentation extends
 			textArea.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yTextArea, textArea);
+			createBindings(modelAccess.yField, textArea);
 
 			if (modelAccess.isCssClassValid()) {
 				textArea.addStyleName(modelAccess.getCssClass());
@@ -101,15 +101,8 @@ public class TextAreaPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			textArea.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				textArea.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), textArea);
 	}
 
 	@Override
@@ -205,11 +198,11 @@ public class TextAreaPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YTextArea yTextArea;
+		private final YTextArea yField;
 
-		public ModelAccess(YTextArea yTextArea) {
+		public ModelAccess(YTextArea yField) {
 			super();
-			this.yTextArea = yTextArea;
+			this.yField = yField;
 		}
 
 		/**
@@ -217,7 +210,7 @@ public class TextAreaPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yTextArea.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -234,7 +227,7 @@ public class TextAreaPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yTextArea.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -247,32 +240,12 @@ public class TextAreaPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yTextArea.getDatadescription() != null
-					&& yTextArea.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yTextArea.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yTextArea.getDatadescription() != null
-					&& yTextArea.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -281,7 +254,7 @@ public class TextAreaPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yTextArea.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

@@ -24,7 +24,7 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YNumericSearchField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.INumericSearchFieldEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.components.fields.search.NumericSearchField;
 import org.lunifera.runtime.web.vaadin.components.fields.search.filter.NumericFilterProperty;
 import org.slf4j.Logger;
@@ -69,24 +69,16 @@ public class NumericSearchFieldPresentation extends
 	public Component doCreateWidget(Object parent) {
 		if (field == null) {
 			field = new NumericSearchField(getEditpart().getId(),
-					modelAccess.yText.getPropertyPath(),
-					modelAccess.yText.getType());
+					modelAccess.yField.getPropertyPath(),
+					modelAccess.yField.getType());
 			field.addStyleName(CSS_CLASS_CONTROL);
 			field.addStyleName(IConstants.CSS_CLASS_SEARCHFIELD);
-
-			IFilterProvider filterProvider = getViewContext().getService(
-					IFilterProvider.class.getName());
-			if (filterProvider != null) {
-				field.setFilterProvider(filterProvider);
-			} else {
-				LOGGER.error("No IFilterProvider available. Filters can not be provided!");
-			}
 
 			field.setNullRepresentation("");
 			field.setImmediate(true);
 			setupComponent(field, getCastedModel());
 
-			associateWidget(field, modelAccess.yText);
+			associateWidget(field, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				field.setId(modelAccess.getCssID());
 			} else {
@@ -97,7 +89,7 @@ public class NumericSearchFieldPresentation extends
 			field.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yText, field);
+			createBindings(modelAccess.yField, field);
 
 			if (modelAccess.isCssClassValid()) {
 				field.addStyleName(modelAccess.getCssClass());
@@ -129,14 +121,8 @@ public class NumericSearchFieldPresentation extends
 	 */
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			field.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				field.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(service, modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), field);
 
 		field.setDescription(service.getValue(
 				IConstants.I18N_TOOLTIP_NUMBERSEARCHFIELD, getLocale()));
@@ -237,11 +223,11 @@ public class NumericSearchFieldPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YNumericSearchField yText;
+		private final YNumericSearchField yField;
 
-		public ModelAccess(YNumericSearchField yText) {
+		public ModelAccess(YNumericSearchField yField) {
 			super();
-			this.yText = yText;
+			this.yField = yField;
 		}
 
 		/**
@@ -249,7 +235,7 @@ public class NumericSearchFieldPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yText.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -266,7 +252,7 @@ public class NumericSearchFieldPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yText.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -279,32 +265,12 @@ public class NumericSearchFieldPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yText.getDatadescription() != null
-					&& yText.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yText.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yText.getDatadescription() != null
-					&& yText.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -313,7 +279,7 @@ public class NumericSearchFieldPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yText.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

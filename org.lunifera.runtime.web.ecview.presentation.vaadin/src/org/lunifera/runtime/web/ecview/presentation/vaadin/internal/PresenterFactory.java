@@ -16,6 +16,7 @@ import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.editpart.IViewEditpart;
 import org.lunifera.ecview.core.common.presentation.IPresentationFactory;
 import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IBeanReferenceFieldEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBooleanSearchFieldEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBrowserEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IButtonEditpart;
@@ -23,6 +24,9 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.ICheckboxEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IComboBoxEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IDateTimeEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IEnumComboBoxEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IEnumListEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IEnumOptionsGroupEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IFormLayoutEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IGridLayoutEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IHorizontalLayoutEditpart;
@@ -130,6 +134,14 @@ public class PresenterFactory implements IPresentationFactory {
 			return (A) new PanelPresentation(editpart);
 		} else if (editpart instanceof ISearchPanelEditpart) {
 			return (A) new SearchPanelPresentation(editpart);
+		} else if (editpart instanceof IBeanReferenceFieldEditpart) {
+			return (A) new BeanReferenceFieldPresentation(editpart);
+		} else if (editpart instanceof IEnumComboBoxEditpart) {
+			return (A) new EnumComboBoxPresentation(editpart);
+		} else if (editpart instanceof IEnumListEditpart) {
+			return (A) new EnumListPresentation(editpart);
+		} else if (editpart instanceof IEnumOptionsGroupEditpart) {
+			return (A) new EnumOptionsGroupPresentation(editpart);
 		}
 
 		throw new IllegalArgumentException(String.format(

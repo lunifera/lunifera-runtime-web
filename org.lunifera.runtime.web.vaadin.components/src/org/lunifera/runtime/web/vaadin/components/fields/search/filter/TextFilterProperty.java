@@ -12,7 +12,7 @@ package org.lunifera.runtime.web.vaadin.components.fields.search.filter;
 
 import java.util.Locale;
 
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.vaadin.common.data.filter.Filters;
 
 import com.vaadin.data.Container.Filter;
 
@@ -20,6 +20,7 @@ public class TextFilterProperty extends FilterProperty {
 
 	private String value;
 	private Wildcard wildcard;
+	private Filters filterProvider = new Filters();
 
 	public TextFilterProperty(Object propertyId, Locale locale) {
 		super(propertyId, locale);
@@ -44,7 +45,6 @@ public class TextFilterProperty extends FilterProperty {
 
 	@Override
 	public Filter getFilter() {
-		IFilterProvider filterProvider = getFilterProvider();
 		if (filterProvider == null || getValue() == null
 				|| getValue().equals("")) {
 			return null;

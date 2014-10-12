@@ -18,7 +18,6 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFProperties;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
@@ -29,7 +28,8 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YOptionsGroup;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IOptionsGroupEditpart;
-import org.lunifera.runtime.web.vaadin.components.container.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
@@ -45,12 +45,13 @@ import com.vaadin.ui.OptionGroup;
 /**
  * This presenter is responsible to render a list on the given layout.
  */
+@SuppressWarnings("restriction")
 public class OptionsGroupPresentation extends
 		AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private OptionGroup optionsGroup;
-	private ObjectProperty property;
+	private ObjectProperty<?> property;
 
 	/**
 	 * Constructor.
@@ -73,12 +74,12 @@ public class OptionsGroupPresentation extends
 
 			optionsGroup = new CustomOptionGroup();
 			optionsGroup.addStyleName(CSS_CLASS_CONTROL);
-			optionsGroup.setMultiSelect(modelAccess.yOptionsGroup
-					.getSelectionType() == YSelectionType.MULTI);
+			optionsGroup
+					.setMultiSelect(modelAccess.yField.getSelectionType() == YSelectionType.MULTI);
 			optionsGroup.setImmediate(true);
 			setupComponent(optionsGroup, getCastedModel());
-			associateWidget(optionsGroup, modelAccess.yOptionsGroup);
-			
+			associateWidget(optionsGroup, modelAccess.yField);
+
 			if (modelAccess.isCssIdValid()) {
 				optionsGroup.setId(modelAccess.getCssID());
 			} else {
@@ -88,24 +89,24 @@ public class OptionsGroupPresentation extends
 			if (optionsGroup.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
 			} else {
-				if (modelAccess.yOptionsGroup.getType() != null) {
+				if (modelAccess.yField.getType() != null) {
 					property = new ObjectProperty(null,
-							modelAccess.yOptionsGroup.getType());
+							modelAccess.yField.getType());
 				} else {
 					property = new ObjectProperty(null, Object.class);
 				}
 			}
 			optionsGroup.setPropertyDataSource(property);
 
-			if (modelAccess.yOptionsGroup.getType() == String.class) {
+			if (modelAccess.yField.getType() == String.class) {
 				IndexedContainer datasource = new IndexedContainer();
 				optionsGroup.setContainerDataSource(datasource);
 				optionsGroup.setItemCaptionMode(ItemCaptionMode.ID);
 			} else {
-				if (modelAccess.yOptionsGroup.getType() != null) {
+				if (modelAccess.yField.getType() != null) {
 					DeepResolvingBeanItemContainer datasource = null;
 					datasource = new DeepResolvingBeanItemContainer(
-							modelAccess.yOptionsGroup.getType());
+							modelAccess.yField.getType());
 					optionsGroup.setContainerDataSource(datasource);
 
 					// // applies the column properties
@@ -121,20 +122,19 @@ public class OptionsGroupPresentation extends
 				}
 			}
 
-			String itemCaptionProperty = modelAccess.yOptionsGroup
-					.getItemCaptionProperty();
+			String itemCaptionProperty = modelAccess.yField
+					.getCaptionProperty();
 			if (itemCaptionProperty != null && !itemCaptionProperty.equals("")) {
 				optionsGroup.setItemCaptionPropertyId(itemCaptionProperty);
 			}
 
-			String itemImageProperty = modelAccess.yOptionsGroup
-					.getItemImageProperty();
+			String itemImageProperty = modelAccess.yField.getImageProperty();
 			if (itemImageProperty != null && !itemImageProperty.equals("")) {
 				optionsGroup.setItemIconPropertyId(itemImageProperty);
 			}
 
 			// creates the binding for the field
-			createBindings(modelAccess.yOptionsGroup, optionsGroup);
+			createBindings(modelAccess.yField, optionsGroup);
 
 			if (modelAccess.isCssClassValid()) {
 				optionsGroup.addStyleName(modelAccess.getCssClass());
@@ -160,15 +160,8 @@ public class OptionsGroupPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			optionsGroup.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				optionsGroup.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), optionsGroup);
 	}
 
 	@Override
@@ -212,7 +205,6 @@ public class OptionsGroupPresentation extends
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("restriction")
 	protected IObservableValue internalGetSelectionEndpoint(
 			YEmbeddableSelectionEndpoint yEndpoint) {
 
@@ -222,8 +214,8 @@ public class OptionsGroupPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yOptionsGroup.getType(),
-				modelAccess.yOptionsGroup.getEmfNsURI());
+				attributePath, modelAccess.yField.getType(),
+				modelAccess.yField.getEmfNsURI());
 	}
 
 	/**
@@ -251,7 +243,7 @@ public class OptionsGroupPresentation extends
 				ExtensionModelPackage.Literals.YOPTIONS_GROUP__COLLECTION,
 				field, yField.getType()));
 
-		if (modelAccess.yOptionsGroup.getSelectionType() == YSelectionType.MULTI) {
+		if (modelAccess.yField.getSelectionType() == YSelectionType.MULTI) {
 			// create the model binding from ridget to ECView-model
 			registerBinding(createBindingsMultiSelection(
 					castEObject(getModel()),
@@ -317,11 +309,11 @@ public class OptionsGroupPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YOptionsGroup yOptionsGroup;
+		private final YOptionsGroup yField;
 
-		public ModelAccess(YOptionsGroup yOptionsGroup) {
+		public ModelAccess(YOptionsGroup yField) {
 			super();
-			this.yOptionsGroup = yOptionsGroup;
+			this.yField = yField;
 		}
 
 		/**
@@ -329,7 +321,7 @@ public class OptionsGroupPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yOptionsGroup.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -346,7 +338,7 @@ public class OptionsGroupPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yOptionsGroup.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -359,32 +351,13 @@ public class OptionsGroupPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yOptionsGroup.getDatadescription() != null
-					&& yOptionsGroup.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yOptionsGroup.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yOptionsGroup.getDatadescription() != null
-					&& yOptionsGroup.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -393,7 +366,8 @@ public class OptionsGroupPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yOptionsGroup.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 
@@ -401,6 +375,7 @@ public class OptionsGroupPresentation extends
 	 * Converts the string value of the item icon property to
 	 * {@link ThemeResource}.
 	 */
+	@SuppressWarnings("serial")
 	private static class CustomOptionGroup extends OptionGroup {
 		private Object itemIconPropertyId;
 
@@ -433,8 +408,11 @@ public class OptionsGroupPresentation extends
 					return null;
 				}
 				final Object icon = ip.getValue();
-				if (icon instanceof String) {
-					return new ThemeResource((String) icon);
+				try {
+					if (icon instanceof String) {
+						return new ThemeResource((String) icon);
+					}
+				} catch (Exception e) {
 				}
 			}
 			return null;

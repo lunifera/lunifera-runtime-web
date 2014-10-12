@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" enabled="true" immediate="true" name="org.lunifera.runtime.web.vaadin.components.fields.BeanSearchServiceFactory">
+   <implementation class="org.lunifera.runtime.web.vaadin.components.fields.BeanSearchServiceFactory"/>
+   <service>
+      <provide interface="org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory"/>
+   </service>
+   <reference bind="addDelegate" cardinality="0..n" interface="org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactoryDelegate" name="Delegate" policy="dynamic" unbind="removeDelegate"/>
+</scr:component>

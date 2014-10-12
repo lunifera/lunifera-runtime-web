@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.model.core.YEmbeddable;
 import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
 import org.lunifera.ecview.core.common.tooling.IWidgetMouseClickService;
 
@@ -22,6 +23,7 @@ import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
+import com.vaadin.ui.Component;
 
 @SuppressWarnings("serial")
 public class WidgetMouseClickService implements IWidgetMouseClickService,
@@ -29,7 +31,7 @@ public class WidgetMouseClickService implements IWidgetMouseClickService,
 
 	private Set<Listener> listeners = Collections
 			.synchronizedSet(new HashSet<IWidgetMouseClickService.Listener>());
-	private IWidgetAssocationsService associations;
+	private IWidgetAssocationsService<Component, YEmbeddable> associations;
 	private IViewContext context;
 	private LayoutClickNotifier widget;
 

@@ -10,11 +10,16 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util;
 
+import java.util.Locale;
+
+import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.model.visibility.VisibilityFactory;
 import org.lunifera.ecview.core.common.model.visibility.YColor;
 import org.lunifera.ecview.core.common.model.visibility.YVisibilityProperties;
 import org.lunifera.ecview.core.common.visibility.Color;
 import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
+
+import com.vaadin.ui.Component;
 
 public class Util {
 
@@ -51,7 +56,7 @@ public class Util {
 	 * @return
 	 */
 	public static YColor mapYColor(Color color) {
-		if(color == null){
+		if (color == null) {
 			return YColor.UNDEFINED;
 		}
 		switch (color) {
@@ -78,6 +83,21 @@ public class Util {
 		}
 
 		return null;
+	}
+
+	public static void applyCaptions(II18nService service, String label,
+			String i18nLabelKey, Locale locale, Component component) {
+		if (service != null && isValid(i18nLabelKey)) {
+			component.setCaption(service.getValue(i18nLabelKey, locale));
+		} else {
+			if (isValid(label)) {
+				component.setCaption(label);
+			}
+		}
+	}
+
+	private static boolean isValid(String value) {
+		return value != null && !value.equals("");
 	}
 
 }

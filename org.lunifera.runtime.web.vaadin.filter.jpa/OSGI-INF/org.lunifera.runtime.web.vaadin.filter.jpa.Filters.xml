@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.lunifera.runtime.web.vaadin.filter.jpa.Filters">
-   <implementation class="org.lunifera.runtime.web.vaadin.filter.jpa.Filters"/>
-   <service>
-      <provide interface="org.lunifera.runtime.web.vaadin.common.IFilterProvider"/>
-   </service>
-</scr:component>

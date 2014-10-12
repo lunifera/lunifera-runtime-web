@@ -32,6 +32,7 @@ import com.vaadin.ui.FormLayout;
 public class FormLayoutPresentation extends
 		AbstractLayoutPresenter<ComponentContainer> {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(FormLayoutPresentation.class);
 

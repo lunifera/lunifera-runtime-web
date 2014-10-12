@@ -11,12 +11,12 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YButton;
 import org.lunifera.ecview.core.extension.model.extension.listener.YButtonClickListener;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IButtonEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -54,7 +54,7 @@ public class ButtonPresentation extends
 			button.setImmediate(true);
 			setupComponent(button, getCastedModel());
 
-			associateWidget(button, modelAccess.yButton);
+			associateWidget(button, modelAccess.yField);
 
 			if (modelAccess.isCssIdValid()) {
 				button.setId(modelAccess.getCssID());
@@ -63,7 +63,7 @@ public class ButtonPresentation extends
 			}
 
 			// creates the binding for the field
-			createBindings(modelAccess.yButton, button);
+			createBindings(modelAccess.yField, button);
 
 			if (modelAccess.isCssClassValid()) {
 				button.addStyleName(modelAccess.getCssClass());
@@ -88,36 +88,29 @@ public class ButtonPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			button.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				button.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), button);
 	}
 
 	/**
 	 * Creates the bindings for the given values.
 	 * 
-	 * @param yButton
+	 * @param yField
 	 * @param button
 	 */
 	@SuppressWarnings("serial")
-	protected void createBindings(final YButton yButton, Button button) {
+	protected void createBindings(final YButton yField, Button button) {
 		registerBinding(createBindingsButtonClick(castEObject(getModel()),
 				ExtensionModelPackage.Literals.YBUTTON__LAST_CLICK_TIME, button));
 
-		super.createBindings(yButton, button, null);
+		super.createBindings(yField, button, null);
 
 		button.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(Button.ClickEvent event) {
 				for (YButtonClickListener listener : new ArrayList<YButtonClickListener>(
-						yButton.getClickListeners())) {
-					listener.clicked(yButton);
+						yField.getClickListeners())) {
+					listener.clicked(yField);
 				}
 			}
 		});
@@ -173,11 +166,11 @@ public class ButtonPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YButton yButton;
+		private final YButton yField;
 
-		public ModelAccess(YButton yButton) {
+		public ModelAccess(YButton yField) {
 			super();
-			this.yButton = yButton;
+			this.yField = yField;
 		}
 
 		/**
@@ -185,7 +178,7 @@ public class ButtonPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yButton.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -202,7 +195,7 @@ public class ButtonPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yButton.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -215,32 +208,12 @@ public class ButtonPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yButton.getDatadescription() != null
-					&& yButton.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yButton.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yButton.getDatadescription() != null
-					&& yButton.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -249,7 +222,7 @@ public class ButtonPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yButton.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

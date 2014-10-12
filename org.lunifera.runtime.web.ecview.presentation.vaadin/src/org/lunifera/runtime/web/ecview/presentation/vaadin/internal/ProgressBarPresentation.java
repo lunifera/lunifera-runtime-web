@@ -15,13 +15,13 @@ import java.util.Locale;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YProgressBar;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IProgressBarEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
@@ -62,7 +62,7 @@ public class ProgressBarPresentation extends
 			progressBar.setImmediate(true);
 			setupComponent(progressBar, getCastedModel());
 
-			associateWidget(progressBar, modelAccess.yProgressBar);
+			associateWidget(progressBar, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				progressBar.setId(modelAccess.getCssID());
 			} else {
@@ -73,7 +73,7 @@ public class ProgressBarPresentation extends
 			progressBar.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yProgressBar, progressBar);
+			createBindings(modelAccess.yField, progressBar);
 
 			if (modelAccess.isCssClassValid()) {
 				progressBar.addStyleName(modelAccess.getCssClass());
@@ -99,15 +99,8 @@ public class ProgressBarPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			progressBar.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				progressBar.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), progressBar);
 	}
 
 	@Override
@@ -205,11 +198,11 @@ public class ProgressBarPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YProgressBar yProgressBar;
+		private final YProgressBar yField;
 
-		public ModelAccess(YProgressBar yProgressBar) {
+		public ModelAccess(YProgressBar yField) {
 			super();
-			this.yProgressBar = yProgressBar;
+			this.yField = yField;
 		}
 
 		/**
@@ -217,7 +210,7 @@ public class ProgressBarPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yProgressBar.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -234,7 +227,7 @@ public class ProgressBarPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yProgressBar.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -247,32 +240,12 @@ public class ProgressBarPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yProgressBar.getDatadescription() != null
-					&& yProgressBar.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yProgressBar.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yProgressBar.getDatadescription() != null
-					&& yProgressBar.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -281,7 +254,7 @@ public class ProgressBarPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yProgressBar.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

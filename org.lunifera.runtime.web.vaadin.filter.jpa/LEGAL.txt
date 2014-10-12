@@ -1,4 +1,0 @@
-This bundle contains classes from Vaadin Ltd JPAContainer. The filter implementation for JPA was extracted and
-added to this bundle. So there is no need to have a dependency to JPAContainer and the filters can be used.
-
-Since JPAContainer is licensed under the Apache License 2, this bundle is also licensed under the APL2.

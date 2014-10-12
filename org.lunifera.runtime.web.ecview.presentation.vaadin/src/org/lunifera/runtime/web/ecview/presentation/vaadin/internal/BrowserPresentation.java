@@ -12,10 +12,10 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Locale;
 
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.extension.model.extension.YBrowser;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBrowserEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
@@ -53,7 +53,7 @@ public class BrowserPresentation extends
 			browser.setImmediate(true);
 			setupComponent(browser, getCastedModel());
 			
-			associateWidget(browser, modelAccess.yBrowser);
+			associateWidget(browser, modelAccess.yField);
 
 			if (modelAccess.isCssIdValid()) {
 				browser.setId(modelAccess.getCssID());
@@ -62,7 +62,7 @@ public class BrowserPresentation extends
 			}
 
 			// creates the binding for the field
-			createBindings(modelAccess.yBrowser, browser, null);
+			createBindings(modelAccess.yField, browser, null);
 
 			if (modelAccess.isCssClassValid()) {
 				browser.addStyleName(modelAccess.getCssClass());
@@ -87,15 +87,8 @@ public class BrowserPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			browser.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				browser.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), browser);
 	}
 
 	@Override
@@ -146,11 +139,11 @@ public class BrowserPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YBrowser yBrowser;
+		private final YBrowser yField;
 
-		public ModelAccess(YBrowser yBrowser) {
+		public ModelAccess(YBrowser yField) {
 			super();
-			this.yBrowser = yBrowser;
+			this.yField = yField;
 		}
 
 		/**
@@ -158,7 +151,7 @@ public class BrowserPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yBrowser.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -175,7 +168,7 @@ public class BrowserPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yBrowser.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -188,32 +181,12 @@ public class BrowserPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yBrowser.getDatadescription() != null
-					&& yBrowser.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yBrowser.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yBrowser.getDatadescription() != null
-					&& yBrowser.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -222,7 +195,7 @@ public class BrowserPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yBrowser.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

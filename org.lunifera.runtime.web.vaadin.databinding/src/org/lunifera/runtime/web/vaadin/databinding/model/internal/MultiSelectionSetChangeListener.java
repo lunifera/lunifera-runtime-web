@@ -17,13 +17,13 @@ import org.eclipse.core.databinding.observable.set.SetDiff;
 import org.eclipse.core.databinding.property.IProperty;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
 import org.eclipse.core.databinding.property.NativePropertyListener;
+import org.lunifera.runtime.web.vaadin.databinding.properties.Util;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Viewer;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeNotifier;
-import com.vaadin.ui.AbstractSelect;
 
 /**
  */
@@ -48,16 +48,22 @@ public class MultiSelectionSetChangeListener extends NativePropertyListener
 
 	@SuppressWarnings("unchecked")
 	protected void cacheOldValues(Object source) {
-		oldItems = (Set<Object>) getWidget(source).getValue();
+		Property<Object> property = Util.getProperty(source);
+		oldItems = (Set<Object>) property.getValue();
 	}
 
 	protected Property.ValueChangeNotifier getNotifier(Object source) {
-		return (ValueChangeNotifier) source;
+		Property<Object> property = Util.getProperty(source);
+		if (property instanceof ValueChangeNotifier) {
+			return (ValueChangeNotifier) property;
+		} else {
+			return (ValueChangeNotifier) source;
+		}
 	}
 
-	protected AbstractSelect getWidget(Object source) {
-		return (AbstractSelect) source;
-	}
+	// protected AbstractSelect getWidget(Object source) {
+	// return (AbstractSelect) source;
+	// }
 
 	protected Container getContainer(Object source) {
 		Container.Viewer viewer = (Viewer) source;
