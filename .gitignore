@@ -1,7 +1,5 @@
 bin/
 .*.jar
-**/xtend-gen
-**/src-gen
 **/resources/VAADIN/widgetsets
 **/resources/VAADIN/gwt-unitCache
 **/WebContent/VAADIN/widgetsets
@@ -10,12 +8,6 @@ bin/
 **/WebContent/WEB-INF/lib
 .DS_Store
 target
-.classpath
-.settings
-src-gen/
-xtend-gen/
-plugin.xml_gen
-.project
 /build.runtime-web.kepler.latest.log.properties
 **/log
 **/org.lunifera.runtime.web.doc/contents/
