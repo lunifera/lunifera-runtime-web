@@ -12,7 +12,6 @@ package org.lunifera.runtime.web.vaadin.common.data;
 
 import java.util.List;
 
-import org.lunifera.dsl.dto.lib.impl.DtoServiceAccess;
 import org.lunifera.dsl.dto.lib.services.IDTOService;
 import org.lunifera.dsl.dto.lib.services.IQuery;
 import org.lunifera.dsl.dto.lib.services.Query;
@@ -36,8 +35,9 @@ public class StatefulDelegatingDtoSearchService<BEAN> implements
 	private final IDTOService<BEAN> delegate;
 	private final Class<BEAN> type;
 
-	public StatefulDelegatingDtoSearchService(Class<BEAN> type) {
-		delegate = DtoServiceAccess.getService(type);
+	public StatefulDelegatingDtoSearchService(IDTOService<BEAN> delegate,
+			Class<BEAN> type) {
+		this.delegate = delegate;
 		this.type = type;
 
 		if (delegate == null) {
@@ -97,8 +97,7 @@ public class StatefulDelegatingDtoSearchService<BEAN> implements
 	}
 
 	@Override
-	public BEAN getNextBean(BEAN bean, List<Filter> filters,
-			SortOrder sortOrder) {
+	public BEAN getNextBean(BEAN bean, List<Filter> filters, SortOrder sortOrder) {
 		if (!checkDelegate()) {
 			return null;
 		}

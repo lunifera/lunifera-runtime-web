@@ -25,6 +25,7 @@ import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItem;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 import org.lunifera.runtime.web.vaadin.common.data.StatefulInMemoryBeanSearchService;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.SimpleFilterable;
@@ -41,7 +42,8 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
 @SuppressWarnings("serial")
 public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 		AbstractContainer implements Filterable, Indexed, SimpleFilterable,
-		Sortable, ValueChangeListener {
+		Sortable, ValueChangeListener, Container.ItemSetChangeNotifier,
+		Container.PropertySetChangeNotifier {
 
 	private IBeanSearchService<BEANTYPE> service;
 	private SortOrder sortOrder = new SortOrder();
@@ -60,6 +62,30 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 		this.type = type;
 		model = DeepResolvingBeanItem
 				.getPropertyDescriptors((Class<BEANTYPE>) type);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void addListener(PropertySetChangeListener listener) {
+		super.addListener(listener);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void removeListener(PropertySetChangeListener listener) {
+		super.removeListener(listener);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void addListener(ItemSetChangeListener listener) {
+		super.addListener(listener);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void removeListener(ItemSetChangeListener listener) {
+		super.removeListener(listener);
 	}
 
 	@Override
@@ -235,15 +261,14 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 	public void sort(Object[] propertyIds, boolean[] ascending) {
 		sortOrder.clear();
 		for (int i = 0; i < propertyIds.length; i++) {
-			sortOrder.add(new SortBy((String) propertyIds[i],
-					ascending[i]));
+			sortOrder.add(new SortBy((String) propertyIds[i], ascending[i]));
 		}
 		clearCache();
 	}
 
 	@Override
 	public Collection<?> getSortableContainerPropertyIds() {
-		return null;
+		return getContainerPropertyIds();
 	}
 
 	@Override
@@ -284,6 +309,8 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 			filters.add(filter);
 			clearCache();
 		}
+
+		fireItemSetChange();
 	}
 
 	protected void clearCache() {

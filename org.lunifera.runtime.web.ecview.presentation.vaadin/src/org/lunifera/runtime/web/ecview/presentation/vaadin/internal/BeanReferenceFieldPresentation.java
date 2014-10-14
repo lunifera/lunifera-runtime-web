@@ -67,15 +67,12 @@ public class BeanReferenceFieldPresentation extends
 	@Override
 	public Component doCreateWidget(Object parent) {
 		if (field == null) {
-			IBindingManager bm = getViewContext().getService(
-					IECViewBindingManager.class.getName());
 			IBeanSearchServiceFactory searchServiceFactory = getViewContext()
 					.getService(IBeanSearchServiceFactory.class.getName());
 
 			IBeanSearchService<?> service = getSearchService(searchServiceFactory);
 			field = new BeanReferenceField(getEditpart().getId(), "",
-					bm.getDatabindingContext(), modelAccess.yField.getType(),
-					service);
+					modelAccess.yField.getType(), service);
 			field.addStyleName(CSS_CLASS_CONTROL);
 			field.setNullRepresentation("");
 			field.setImmediate(true);
@@ -197,7 +194,8 @@ public class BeanReferenceFieldPresentation extends
 			BeanReferenceField<?> field) {
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBindings_Value(castEObject(getModel()),
-				ExtensionModelPackage.Literals.YBEAN_REFERENCE_FIELD__VALUE, field));
+				ExtensionModelPackage.Literals.YBEAN_REFERENCE_FIELD__VALUE,
+				field));
 
 		super.createBindings(yField, field, null);
 	}

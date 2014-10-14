@@ -76,7 +76,8 @@ public class NumericFilterProperty extends FilterProperty {
 
 	@Override
 	public Filter getFilter() {
-		if (filterProvider == null || getNumber() == null) {
+		if (filterProvider == null || getNumber() == null
+				|| getStringValue() == null || getStringValue().equals("")) {
 			return null;
 		}
 		if (wildcard == null || wildcard.equals("")) {

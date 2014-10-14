@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Vaadin JPA Filters
+Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.filter.jpa
+Bundle-Version: 0.7.5.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Lunifera.org
+Import-Package: javax.persistence;version="2.1.0",
+ javax.persistence.criteria;version="2.1.0",
+ javax.persistence.metamodel;version="2.1.0",
+ javax.persistence.spi;version="2.1.0",
+ org.json;version="0.0.20080701",
+ org.osgi.framework;version="1.8.0",
+ org.osgi.service.component;version="1.2.2",
+ org.osgi.service.component.annotations;version="1.2.0"
+Require-Bundle: com.vaadin.client;bundle-version="7.1.9",
+ com.vaadin.server,
+ com.vaadin.shared;bundle-version="7.1.9",
+ com.vaadin.shared.deps;bundle-version="1.0.2",
+ com.google.guava;bundle-version="15.0.0",
+ org.lunifera.runtime.web.vaadin.common;bundle-version="0.7.3"
+Service-Component: OSGI-INF/org.lunifera.runtime.web.vaadin.filter.jpa.Filters.xml

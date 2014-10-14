@@ -9,7 +9,7 @@ public interface IBeanSearchServiceFactoryDelegate {
 
 	/**
 	 * Returns the {@link IBeanSearchService} for the given type. If no proper
-	 * implementation could be found, an in memory service will be returned.
+	 * implementation could be found, <code>null</code> must be returned.
 	 * 
 	 * @param bean
 	 * @return

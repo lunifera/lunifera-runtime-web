@@ -30,6 +30,8 @@ import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IListEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
+import org.lunifera.runtime.web.vaadin.components.fields.BeanServiceLazyLoadingContainer;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
@@ -102,14 +104,23 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 				list.setItemCaptionMode(ItemCaptionMode.ID);
 			} else {
 				if (modelAccess.yField.getType() != null) {
-					DeepResolvingBeanItemContainer datasource = null;
-					datasource = new DeepResolvingBeanItemContainer(
-							modelAccess.yField.getType());
-					list.setContainerDataSource(datasource);
-
-					// // applies the column properties
-					// applyColumns();
-
+					if (!modelAccess.yField.isUseBeanService()) {
+						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(
+								modelAccess.yField.getType());
+						list.setContainerDataSource(datasource);
+					} else {
+						IBeanSearchServiceFactory factory = getViewContext()
+								.getService(
+										IBeanSearchServiceFactory.class
+												.getName());
+						if (factory != null) {
+							BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
+									factory.createService(modelAccess.yField
+											.getType()),
+									modelAccess.yField.getType());
+							list.setContainerDataSource(datasource);
+						}
+					}
 				} else {
 					IndexedContainer container = new IndexedContainer();
 					container.addContainerProperty("for", String.class, null);
@@ -126,8 +137,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 				list.setItemCaptionPropertyId(itemCaptionProperty);
 			}
 
-			String itemImageProperty = modelAccess.yField
-					.getImageProperty();
+			String itemImageProperty = modelAccess.yField.getImageProperty();
 			if (itemImageProperty != null && !itemImageProperty.equals("")) {
 				list.setItemIconPropertyId(itemImageProperty);
 			}
@@ -195,8 +205,8 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	protected IObservableList internalGetCollectionEndpoint() {
 		// return the observable value for text
 		return EMFProperties.list(
-				ExtensionModelPackage.Literals.YLIST__COLLECTION)
-				.observe(getModel());
+				ExtensionModelPackage.Literals.YLIST__COLLECTION).observe(
+				getModel());
 	}
 
 	/**
@@ -225,8 +235,8 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	protected IObservableList internalGetMultiSelectionEndpoint() {
 		// return the observable value for text
 		return EMFProperties.list(
-				ExtensionModelPackage.Literals.YLIST__MULTI_SELECTION)
-				.observe(getModel());
+				ExtensionModelPackage.Literals.YLIST__MULTI_SELECTION).observe(
+				getModel());
 	}
 
 	/**
@@ -239,9 +249,9 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 		// create the model binding from ridget to ECView-model
 		registerBinding(createBindings_ContainerContents(
 				castEObject(getModel()),
-				ExtensionModelPackage.Literals.YLIST__COLLECTION,
-				field, yField.getType()));
-		
+				ExtensionModelPackage.Literals.YLIST__COLLECTION, field,
+				yField.getType()));
+
 		if (modelAccess.yField.getSelectionType() == YSelectionType.MULTI) {
 			// create the model binding from ridget to ECView-model
 			registerBinding(createBindingsMultiSelection(
@@ -251,8 +261,8 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 		} else {
 			// create the model binding from ridget to ECView-model
 			registerBinding(createBindingsSelection(castEObject(getModel()),
-					ExtensionModelPackage.Literals.YLIST__SELECTION,
-					field, yField.getType()));
+					ExtensionModelPackage.Literals.YLIST__SELECTION, field,
+					yField.getType()));
 
 		}
 

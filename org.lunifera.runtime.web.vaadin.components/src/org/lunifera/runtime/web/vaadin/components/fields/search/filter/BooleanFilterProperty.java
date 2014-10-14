@@ -66,7 +66,15 @@ public class BooleanFilterProperty extends FilterProperty {
 	}
 
 	private static String getOptionsName(Option option, Locale locale) {
-		return option.name();
+		switch (option) {
+		case TRUE:
+			return "true";
+		case FALSE:
+			return "false";
+		case IGNORE:
+		default:
+			return "ignore";
+		}
 	}
 
 	/**

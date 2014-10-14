@@ -30,6 +30,8 @@ import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
+import org.lunifera.runtime.web.vaadin.components.fields.BeanServiceLazyLoadingContainer;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
@@ -104,14 +106,23 @@ public class OptionsGroupPresentation extends
 				optionsGroup.setItemCaptionMode(ItemCaptionMode.ID);
 			} else {
 				if (modelAccess.yField.getType() != null) {
-					DeepResolvingBeanItemContainer datasource = null;
-					datasource = new DeepResolvingBeanItemContainer(
-							modelAccess.yField.getType());
-					optionsGroup.setContainerDataSource(datasource);
-
-					// // applies the column properties
-					// applyColumns();
-
+					if (!modelAccess.yField.isUseBeanService()) {
+						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(
+								modelAccess.yField.getType());
+						optionsGroup.setContainerDataSource(datasource);
+					} else {
+						IBeanSearchServiceFactory factory = getViewContext()
+								.getService(
+										IBeanSearchServiceFactory.class
+												.getName());
+						if (factory != null) {
+							BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
+									factory.createService(modelAccess.yField
+											.getType()),
+									modelAccess.yField.getType());
+							optionsGroup.setContainerDataSource(datasource);
+						}
+					}
 				} else {
 					IndexedContainer container = new IndexedContainer();
 					container.addContainerProperty("for", String.class, null);

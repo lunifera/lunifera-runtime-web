@@ -38,6 +38,9 @@ import org.lunifera.ecview.core.extension.model.extension.YTable;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITableEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
+import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
+import org.lunifera.runtime.web.vaadin.components.fields.BeanServiceLazyLoadingContainer;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
@@ -120,11 +123,24 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 				table.setItemCaptionMode(ItemCaptionMode.ID);
 			} else {
 				if (modelAccess.yField.getType() != null) {
-					DeepResolvingBeanItemContainer datasource = null;
-					datasource = new DeepResolvingBeanItemContainer(
-							modelAccess.yField.getType());
-					table.setContainerDataSource(datasource);
-
+					IBeanSearchService<?> service = null;
+					IBeanSearchServiceFactory factory = getViewContext()
+							.getService(
+									IBeanSearchServiceFactory.class.getName());
+					if (factory != null) {
+						service = factory.createService(modelAccess.yField
+								.getType());
+					}
+					if (modelAccess.yField.isUseBeanService()
+							&& service != null) {
+						BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
+								service, modelAccess.yField.getType());
+						table.setContainerDataSource(datasource);
+					} else {
+						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(
+								modelAccess.yField.getType());
+						table.setContainerDataSource(datasource);
+					}
 					applyColumns = true;
 				} else {
 					IndexedContainer container = new IndexedContainer();
@@ -175,11 +191,13 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		}
 
 		// add nested properties
-		DeepResolvingBeanItemContainer<?> container = (DeepResolvingBeanItemContainer<?>) table
-				.getContainerDataSource();
-		for (String property : columns) {
-			if (property.contains(".")) {
-				container.addNestedContainerProperty(property);
+		if (table.getContainerDataSource() instanceof DeepResolvingBeanItemContainer) {
+			DeepResolvingBeanItemContainer<?> container = (DeepResolvingBeanItemContainer<?>) table
+					.getContainerDataSource();
+			for (String property : columns) {
+				if (property.contains(".")) {
+					container.addNestedContainerProperty(property);
+				}
 			}
 		}
 
@@ -480,7 +498,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		 * @return
 		 */
 		public String getLabel() {
-			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -489,7 +508,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 

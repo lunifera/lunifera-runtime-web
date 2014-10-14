@@ -26,6 +26,8 @@ import org.lunifera.ecview.core.extension.model.extension.YComboBox;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IComboBoxEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
+import org.lunifera.runtime.web.vaadin.components.fields.BeanServiceLazyLoadingContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,10 +93,23 @@ public class ComboBoxPresentation extends
 				combo.setPropertyDataSource(property);
 
 				if (modelAccess.yField.getType() != null) {
-					DeepResolvingBeanItemContainer datasource = null;
-					datasource = new DeepResolvingBeanItemContainer(
-							modelAccess.yField.getType());
-					combo.setContainerDataSource(datasource);
+					if (!modelAccess.yField.isUseBeanService()) {
+						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(
+								modelAccess.yField.getType());
+						combo.setContainerDataSource(datasource);
+					} else {
+						IBeanSearchServiceFactory factory = getViewContext()
+								.getService(
+										IBeanSearchServiceFactory.class
+												.getName());
+						if (factory != null) {
+							BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
+									factory.createService(modelAccess.yField
+											.getType()),
+									modelAccess.yField.getType());
+							combo.setContainerDataSource(datasource);
+						}
+					}
 				}
 
 				String itemCaptionProperty = modelAccess.yField
@@ -315,7 +330,8 @@ public class ComboBoxPresentation extends
 		 * @return
 		 */
 		public String getLabel() {
-			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -324,7 +340,8 @@ public class ComboBoxPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 

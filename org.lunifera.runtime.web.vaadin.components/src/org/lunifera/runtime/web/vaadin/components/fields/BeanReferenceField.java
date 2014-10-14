@@ -11,10 +11,7 @@
 package org.lunifera.runtime.web.vaadin.components.fields;
 
 import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
-import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
@@ -37,15 +34,12 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 	private IBeanSearchService<BEAN> searchService;
 	private final Class<BEAN> type;
 	private CustomComboBox comboBox;
-	private DataBindingContext dbc;
 	private Binding valueBinding;
 	private Object itemCaptionPropertyId;
 	private Object itemIconPropertyId;
 
-	public BeanReferenceField(String id, Object propertyId,
-			DataBindingContext dbc, Class<BEAN> type,
+	public BeanReferenceField(String id, Object propertyId, Class<BEAN> type,
 			IBeanSearchService<BEAN> searchService) {
-		this.dbc = dbc;
 		this.type = type;
 		this.searchService = searchService;
 
@@ -61,7 +55,7 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 		root.addStyleName("l-beansearchfield");
 		comboBox = new CustomComboBox();
 		comboBox.setImmediate(true);
-		comboBox.setNullSelectionAllowed(true);
+		comboBox.setNullSelectionAllowed(false);
 		comboBox.setInvalidAllowed(false);
 		comboBox.setContainerDataSource(new BeanServiceLazyLoadingContainer(
 				searchService, type));
@@ -92,8 +86,9 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 		comboBox.setPropertyDataSource(property);
 
 		// Create the bindings
-//		valueBinding = dbc.bindValue(VaadinObservables.observeValue(comboBox),
-//				PojoObservables.observeValue(property, "value"));
+		// valueBinding =
+		// dbc.bindValue(VaadinObservables.observeValue(comboBox),
+		// PojoObservables.observeValue(property, "value"));
 
 		return root;
 	}
@@ -167,6 +162,7 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 		@Override
 		public void setItemIconPropertyId(Object propertyId)
 				throws IllegalArgumentException {
+
 			if (propertyId == null) {
 				super.setItemIconPropertyId(propertyId);
 			} else if (!getContainerPropertyIds().contains(propertyId)) {
