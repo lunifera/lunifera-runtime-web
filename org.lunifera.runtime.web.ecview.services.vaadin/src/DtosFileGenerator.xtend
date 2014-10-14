@@ -37,7 +37,7 @@ import org.lunifera.dsl.semantic.entity.LEntityReference
 class DtosFileGenerator {
 
 	@Inject extension JvmTypesBuilder
-
+ 
 	def getContent(LTypedPackage pkg) '''
 		«pkg.toDocu»
 		package «pkg.toDtoName» {
