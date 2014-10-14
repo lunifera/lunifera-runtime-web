@@ -35,7 +35,7 @@ class EntityToUimodelFileGenerator {
 	
 	Bindings bindings = new Bindings("")
 	Counter counter = new Counter(0)
-	
+	 
 	def getContent(LEntity entity) '''
 «««		«entity.toDocu»
 		package «entity.toUimodelName»

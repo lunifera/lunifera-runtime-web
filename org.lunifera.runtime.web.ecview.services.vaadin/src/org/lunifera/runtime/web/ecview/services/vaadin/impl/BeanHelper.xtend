@@ -32,7 +32,7 @@ class BeanHelper {
 		if (beanClass == null) {
 			return null
 		}
-
+ 
 		// try to find annotation in class
 		for (field : beanClass.declaredFields) {
 			if (field.isAnnotationPresent(typeof(DomainKey))) {
