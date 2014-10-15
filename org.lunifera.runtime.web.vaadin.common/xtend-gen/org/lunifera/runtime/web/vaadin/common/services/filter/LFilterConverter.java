@@ -50,7 +50,7 @@ public class LFilterConverter {
     final LAnd result = new LAnd(((ILFilter[])Conversions.unwrapArray(children, ILFilter.class)));
     return result;
   }
-   
+  
   protected ILFilter _convert(final Or vFilter) {
     final ArrayList<ILFilter> children = CollectionLiterals.<ILFilter>newArrayList();
     Collection<Container.Filter> _filters = vFilter.getFilters();
