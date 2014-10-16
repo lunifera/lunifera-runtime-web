@@ -9,22 +9,7 @@ import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.filter.Not;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import org.lunifera.dsl.dto.lib.services.filters.ILFilter;
-import org.lunifera.dsl.dto.lib.services.filters.LAnd;
-import org.lunifera.dsl.dto.lib.services.filters.LBetween;
-import org.lunifera.dsl.dto.lib.services.filters.LCompare;
-import org.lunifera.dsl.dto.lib.services.filters.LIsNull;
-import org.lunifera.dsl.dto.lib.services.filters.LLike;
-import org.lunifera.dsl.dto.lib.services.filters.LNot;
-import org.lunifera.dsl.dto.lib.services.filters.LOr;
-import org.lunifera.dsl.dto.lib.services.filters.LSimpleStringFilter;
 
 /**
  * This converter will convert from Vaadin-Filters to Lunifera-Filters.
@@ -33,98 +18,68 @@ import org.lunifera.dsl.dto.lib.services.filters.LSimpleStringFilter;
  */
 @SuppressWarnings("all")
 public class LFilterConverter {
-  protected ILFilter _convert(final Container.Filter vFilter) {
+  protected /* ILFilter */Object _convert(final Container.Filter vFilter) {
     throw new UnsupportedOperationException(("Not a valid type: " + vFilter));
   }
   
-  protected ILFilter _convert(final And vFilter) {
-    final ArrayList<ILFilter> children = CollectionLiterals.<ILFilter>newArrayList();
-    Collection<Container.Filter> _filters = vFilter.getFilters();
-    final Procedure1<Container.Filter> _function = new Procedure1<Container.Filter>() {
-      public void apply(final Container.Filter it) {
-        ILFilter _convert = LFilterConverter.this.convert(it);
-        children.add(_convert);
-      }
-    };
-    IterableExtensions.<Container.Filter>forEach(_filters, _function);
-    final LAnd result = new LAnd(((ILFilter[])Conversions.unwrapArray(children, ILFilter.class)));
-    return result;
-  }
-   
-  protected ILFilter _convert(final Or vFilter) {
-    final ArrayList<ILFilter> children = CollectionLiterals.<ILFilter>newArrayList();
-    Collection<Container.Filter> _filters = vFilter.getFilters();
-    final Procedure1<Container.Filter> _function = new Procedure1<Container.Filter>() {
-      public void apply(final Container.Filter it) {
-        ILFilter _convert = LFilterConverter.this.convert(it);
-        children.add(_convert);
-      }
-    };
-    IterableExtensions.<Container.Filter>forEach(_filters, _function);
-    final LOr result = new LOr(((ILFilter[])Conversions.unwrapArray(children, ILFilter.class)));
-    return result;
+  protected /* ILFilter */Object _convert(final And vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLAnd cannot be resolved.");
   }
   
-  protected ILFilter _convert(final Between vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    Comparable<?> _startValue = vFilter.getStartValue();
-    Comparable<?> _endValue = vFilter.getEndValue();
-    return new LBetween(_propertyId, _startValue, _endValue);
+  protected /* ILFilter */Object _convert(final Or vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLOr cannot be resolved.");
   }
   
-  protected ILFilter _convert(final Compare.Equal vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    Object _value = vFilter.getValue();
-    return new LCompare.Equal(_propertyId, _value);
+  protected /* ILFilter */Object _convert(final Between vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLBetween cannot be resolved.");
   }
   
-  protected ILFilter _convert(final Compare.Greater vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    Object _value = vFilter.getValue();
-    return new LCompare.Greater(_propertyId, _value);
+  protected /* ILFilter */Object _convert(final Compare.Equal vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLCompare.Equal cannot be resolved.");
   }
   
-  protected ILFilter _convert(final Compare.GreaterOrEqual vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    Object _value = vFilter.getValue();
-    return new LCompare.GreaterOrEqual(_propertyId, _value);
+  protected /* ILFilter */Object _convert(final Compare.Greater vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLCompare.Greater cannot be resolved.");
   }
   
-  protected ILFilter _convert(final Compare.Less vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    Object _value = vFilter.getValue();
-    return new LCompare.Less(_propertyId, _value);
+  protected /* ILFilter */Object _convert(final Compare.GreaterOrEqual vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLCompare.GreaterOrEqual cannot be resolved.");
   }
   
-  protected ILFilter _convert(final Compare.LessOrEqual vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    Object _value = vFilter.getValue();
-    return new LCompare.LessOrEqual(_propertyId, _value);
+  protected /* ILFilter */Object _convert(final Compare.Less vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLCompare.Less cannot be resolved.");
   }
   
-  protected ILFilter _convert(final IsNull vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    return new LIsNull(_propertyId);
+  protected /* ILFilter */Object _convert(final Compare.LessOrEqual vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLCompare.LessOrEqual cannot be resolved.");
   }
   
-  protected ILFilter _convert(final Like vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    String _value = vFilter.getValue();
-    return new LLike(_propertyId, _value);
+  protected /* ILFilter */Object _convert(final IsNull vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLIsNull cannot be resolved.");
   }
   
-  protected ILFilter _convert(final Not vFilter) {
-    Container.Filter _filter = vFilter.getFilter();
-    ILFilter _convert = this.convert(_filter);
-    return new LNot(_convert);
+  protected /* ILFilter */Object _convert(final Like vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLLike cannot be resolved.");
   }
   
-  protected ILFilter _convert(final SimpleStringFilter vFilter) {
-    Object _propertyId = vFilter.getPropertyId();
-    String _filterString = vFilter.getFilterString();
-    boolean _isIgnoreCase = vFilter.isIgnoreCase();
-    boolean _isOnlyMatchPrefix = vFilter.isOnlyMatchPrefix();
-    return new LSimpleStringFilter(_propertyId, _filterString, _isIgnoreCase, _isOnlyMatchPrefix);
+  protected /* ILFilter */Object _convert(final Not vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLNot cannot be resolved.");
+  }
+  
+  protected /* ILFilter */Object _convert(final SimpleStringFilter vFilter) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nLSimpleStringFilter cannot be resolved.");
   }
   
   public ILFilter convert(final Container.Filter vFilter) {

@@ -12,24 +12,16 @@ package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 @SuppressWarnings("all")
 public class Bindings {
-  private String _bindingList;
-  
-  public String getBindingList() {
-    return this._bindingList;
-  }
-  
-  public void setBindingList(final String bindingList) {
-    this._bindingList = bindingList;
-  }
+  /* @Property
+   */private String bindingList;
   
   public Bindings(final String bindingList) {
-    this.setBindingList(bindingList);
+    this.bindingList = bindingList;
   }
   
-  public void add(final String string) {
-    String _bindingList = this.getBindingList();
-    String _concat = _bindingList.concat("\n");
+  public String add(final String string) {
+    String _concat = this.bindingList.concat("\n");
     String _concat_1 = _concat.concat(string);
-    this.setBindingList(_concat_1);
+    return this.bindingList = _concat_1;
   }
 }
