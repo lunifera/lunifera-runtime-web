@@ -12,8 +12,7 @@ package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 @SuppressWarnings("all")
 public class Counter {
-  /* @Property
-   */private int value;
+  public int value;
   
   public Counter(final int value) {
     this.value = value;

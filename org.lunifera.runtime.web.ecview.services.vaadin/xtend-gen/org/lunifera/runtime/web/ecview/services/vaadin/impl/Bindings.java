@@ -12,8 +12,7 @@ package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 @SuppressWarnings("all")
 public class Bindings {
-  /* @Property
-   */private String bindingList;
+  public String bindingList;
   
   public Bindings(final String bindingList) {
     this.bindingList = bindingList;

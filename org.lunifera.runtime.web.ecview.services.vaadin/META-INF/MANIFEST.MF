@@ -7,8 +7,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.runtime.web.ecview.services.vaadin
 Bundle-Vendor: Lunifera.org
-Require-Bundle: 
- com.vaadin.server;bundle-version="7.2.0",
+Require-Bundle: com.vaadin.server;bundle-version="7.2.0",
  com.vaadin.shared;bundle-version="7.2.0",
  org.lunifera.ecview.core.common;bundle-version="0.7.3",
  org.lunifera.ecview.core.common.editparts.emf;bundle-version="0.7.3",
@@ -24,14 +23,14 @@ Require-Bundle:
  org.lunifera.dsl.semantic.dto;bundle-version="0.7.3",
  org.lunifera.dsl.semantic.entity;bundle-version="0.7.3",
  org.lunifera.dsl.xtext.builder.participant;bundle-version="0.7.3",
- org.lunifera.dsl.semantic.entity;bundle-version="0.7.3",
  com.google.inject;bundle-version="3.0.0",
  org.junit;bundle-version="4.11.0",
  org.eclipse.xtext,
  org.lunifera.xtext.builder.types.bundles,
- org.lunifera.runtime.common;bundle-version="0.7.5"
+ org.lunifera.runtime.common;bundle-version="0.7.5",
+ org.eclipse.xtend.lib,
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib
 Import-Package: org.osgi.service.component;version="1.2.0",
  org.osgi.service.component.annotations;version="1.2.0"
-Service-Component: OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.LDtoRenderStrategy.xml,
- OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.ECViewUIRenderService.xml,
- OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.LEntityRenderStrategy.xml
+Service-Component: OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.LDtoRenderStrategy.xml,OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.ECViewUIRenderService.xml,OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.LEntityRenderStrategy.xml
