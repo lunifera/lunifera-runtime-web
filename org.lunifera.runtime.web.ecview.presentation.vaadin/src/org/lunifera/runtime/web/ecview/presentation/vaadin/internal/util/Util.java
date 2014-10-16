@@ -19,6 +19,7 @@ import org.lunifera.ecview.core.common.model.visibility.YVisibilityProperties;
 import org.lunifera.ecview.core.common.visibility.Color;
 import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 public class Util {
@@ -88,7 +89,19 @@ public class Util {
 	public static void applyCaptions(II18nService service, String label,
 			String i18nLabelKey, Locale locale, Component component) {
 		if (service != null && isValid(i18nLabelKey)) {
-			component.setCaption(service.getValue(i18nLabelKey, locale));
+			String translation = service.getValue(i18nLabelKey, locale);
+			if (translation == null || translation.equals("")) {
+				if (isValid(label)) {
+					component.setCaption(label);
+				}
+				if (component instanceof AbstractComponent) {
+					((AbstractComponent) component)
+							.setDescription(i18nLabelKey);
+				}
+			} else {
+				component.setCaption(translation);
+			}
+
 		} else {
 			if (isValid(label)) {
 				component.setCaption(label);

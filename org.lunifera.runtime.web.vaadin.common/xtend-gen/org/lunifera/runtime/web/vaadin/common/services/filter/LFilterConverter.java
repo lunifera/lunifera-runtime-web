@@ -27,9 +27,24 @@ public class LFilterConverter {
       + "\nLAnd cannot be resolved.");
   }
   
+<<<<<<< HEAD
   protected /* ILFilter */Object _convert(final Or vFilter) {
     throw new Error("Unresolved compilation problems:"
       + "\nLOr cannot be resolved.");
+=======
+  protected ILFilter _convert(final Or vFilter) {
+    final ArrayList<ILFilter> children = CollectionLiterals.<ILFilter>newArrayList();
+    Collection<Container.Filter> _filters = vFilter.getFilters();
+    final Procedure1<Container.Filter> _function = new Procedure1<Container.Filter>() {
+      public void apply(final Container.Filter it) {
+        ILFilter _convert = LFilterConverter.this.convert(it);
+        children.add(_convert);
+      }
+    };
+    IterableExtensions.<Container.Filter>forEach(_filters, _function);
+    final LOr result = new LOr(((ILFilter[])Conversions.unwrapArray(children, ILFilter.class)));
+    return result;
+>>>>>>> ead575f6240ab16cac4a598d4dda3954c5e261bf
   }
   
   protected /* ILFilter */Object _convert(final Between vFilter) {
