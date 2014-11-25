@@ -293,8 +293,7 @@ class EntityToUimodelFileGenerator {
 
 class Counter {
 	
-	@Property
-	var int value
+	public var int value
 	
 	new(int value) {
 		this.value = value
@@ -304,8 +303,7 @@ class Counter {
 
 class Bindings {
 	
-	@Property
-	var String bindingList
+	public var String bindingList
 	
 	new(String bindingList) {
 		this.bindingList = bindingList

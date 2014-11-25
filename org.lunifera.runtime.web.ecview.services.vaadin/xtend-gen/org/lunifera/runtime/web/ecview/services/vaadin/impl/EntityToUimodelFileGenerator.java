@@ -92,10 +92,7 @@ public class EntityToUimodelFileGenerator {
       EList<LEntityFeature> _features = entity.getFeatures();
       for(final LEntityFeature feature : _features) {
         {
-          int _value = this.counter.getValue();
-          int _modulo = (_value % 2);
-          boolean _equals = (_modulo == 0);
-          if (_equals) {
+          if (((this.counter.value % 2) == 0)) {
             {
               if ((feature instanceof LEntityAttribute)) {
                 {
@@ -124,9 +121,7 @@ public class EntityToUimodelFileGenerator {
           }
         }
         _builder.append("\t\t\t");
-        int _value_1 = this.counter.getValue();
-        int _plus = (_value_1 + 1);
-        this.counter.setValue(_plus);
+        _builder.append(this.counter.value = (this.counter.value + 1), "\t\t\t");
         _builder.newLineIfNotEmpty();
       }
     }
@@ -136,7 +131,7 @@ public class EntityToUimodelFileGenerator {
     _builder.append("\t\t");
     _builder.newLine();
     _builder.append("\t\t");
-    this.counter.setValue(0);
+    _builder.append(this.counter.value = 0, "\t\t");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t");
     _builder.append("form rightForm {");
@@ -145,10 +140,7 @@ public class EntityToUimodelFileGenerator {
       EList<LEntityFeature> _features_1 = entity.getFeatures();
       for(final LEntityFeature feature_1 : _features_1) {
         {
-          int _value_2 = this.counter.getValue();
-          int _modulo_1 = (_value_2 % 2);
-          boolean _equals_1 = (_modulo_1 == 1);
-          if (_equals_1) {
+          if (((this.counter.value % 2) == 1)) {
             {
               if ((feature_1 instanceof LEntityAttribute)) {
                 {
@@ -177,9 +169,7 @@ public class EntityToUimodelFileGenerator {
           }
         }
         _builder.append("\t\t\t");
-        int _value_3 = this.counter.getValue();
-        int _plus_1 = (_value_3 + 1);
-        this.counter.setValue(_plus_1);
+        _builder.append(this.counter.value = (this.counter.value + 1), "\t\t\t");
         _builder.newLineIfNotEmpty();
       }
     }
@@ -187,8 +177,7 @@ public class EntityToUimodelFileGenerator {
     _builder.append("}");
     _builder.newLine();
     _builder.append("\t");
-    String _bindingList = this.bindings.getBindingList();
-    _builder.append(_bindingList, "\t");
+    _builder.append(this.bindings.bindingList, "\t");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     _builder.newLine();
@@ -225,10 +214,7 @@ public class EntityToUimodelFileGenerator {
       _builder.append(_name, "");
       _builder.append(" <--> [this.");
       {
-        int _value = this.counter.getValue();
-        int _modulo = (_value % 2);
-        boolean _equals = (_modulo == 0);
-        if (_equals) {
+        if (((this.counter.value % 2) == 0)) {
           _builder.append("leftform");
         } else {
           _builder.append("rightform");
@@ -256,10 +242,7 @@ public class EntityToUimodelFileGenerator {
         _builder_2.append(_name_3, "");
         _builder_2.append(" <--> [this.");
         {
-          int _value_1 = this.counter.getValue();
-          int _modulo_1 = (_value_1 % 2);
-          boolean _equals_1 = (_modulo_1 == 0);
-          if (_equals_1) {
+          if (((this.counter.value % 2) == 0)) {
             _builder_2.append("leftform");
           } else {
             _builder_2.append("rightform");
@@ -287,10 +270,7 @@ public class EntityToUimodelFileGenerator {
           _builder_4.append(_name_6, "");
           _builder_4.append(" <--> [this.");
           {
-            int _value_2 = this.counter.getValue();
-            int _modulo_2 = (_value_2 % 2);
-            boolean _equals_2 = (_modulo_2 == 0);
-            if (_equals_2) {
+            if (((this.counter.value % 2) == 0)) {
               _builder_4.append("leftform");
             } else {
               _builder_4.append("rightform");
@@ -322,10 +302,7 @@ public class EntityToUimodelFileGenerator {
               _builder_6.append(_name_9, "");
               _builder_6.append(" <--> [this.");
               {
-                int _value_3 = this.counter.getValue();
-                int _modulo_3 = (_value_3 % 2);
-                boolean _equals_3 = (_modulo_3 == 0);
-                if (_equals_3) {
+                if (((this.counter.value % 2) == 0)) {
                   _builder_6.append("leftform");
                 } else {
                   _builder_6.append("rightform");
@@ -349,10 +326,7 @@ public class EntityToUimodelFileGenerator {
               _builder_8.append(_name_12, "");
               _builder_8.append(" <--> [this.");
               {
-                int _value_4 = this.counter.getValue();
-                int _modulo_4 = (_value_4 % 2);
-                boolean _equals_4 = (_modulo_4 == 0);
-                if (_equals_4) {
+                if (((this.counter.value % 2) == 0)) {
                   _builder_8.append("leftform");
                 } else {
                   _builder_8.append("rightform");
@@ -389,10 +363,7 @@ public class EntityToUimodelFileGenerator {
       _builder.append(_name, "");
       _builder.append(" <--> [this.");
       {
-        int _value = this.counter.getValue();
-        int _modulo = (_value % 2);
-        boolean _equals_1 = (_modulo == 0);
-        if (_equals_1) {
+        if (((this.counter.value % 2) == 0)) {
           _builder.append("leftform");
         } else {
           _builder.append("rightform");
@@ -427,18 +398,15 @@ public class EntityToUimodelFileGenerator {
     }
     LMultiplicity _multiplicity_1 = ref.getMultiplicity();
     LUpperBound _upper_1 = _multiplicity_1.getUpper();
-    boolean _equals_2 = Objects.equal(_upper_1, LUpperBound.MANY);
-    if (_equals_2) {
+    boolean _equals_1 = Objects.equal(_upper_1, LUpperBound.MANY);
+    if (_equals_1) {
       StringConcatenation _builder_2 = new StringConcatenation();
       _builder_2.append("bind ds.");
       String _name_4 = feature.getName();
       _builder_2.append(_name_4, "");
       _builder_2.append(" <--> [this.");
       {
-        int _value_1 = this.counter.getValue();
-        int _modulo_1 = (_value_1 % 2);
-        boolean _equals_3 = (_modulo_1 == 0);
-        if (_equals_3) {
+        if (((this.counter.value % 2) == 0)) {
           _builder_2.append("leftform");
         } else {
           _builder_2.append("rightform");
@@ -556,10 +524,7 @@ public class EntityToUimodelFileGenerator {
       _builder.append(_name, "");
       _builder.append(" <--> [this.");
       {
-        int _value = this.counter.getValue();
-        int _modulo = (_value % 2);
-        boolean _equals_1 = (_modulo == 0);
-        if (_equals_1) {
+        if (((this.counter.value % 2) == 0)) {
           _builder.append("leftform");
         } else {
           _builder.append("rightform");
@@ -594,18 +559,15 @@ public class EntityToUimodelFileGenerator {
     }
     LMultiplicity _multiplicity_1 = ref.getMultiplicity();
     LUpperBound _upper_1 = _multiplicity_1.getUpper();
-    boolean _equals_2 = Objects.equal(_upper_1, LUpperBound.MANY);
-    if (_equals_2) {
+    boolean _equals_1 = Objects.equal(_upper_1, LUpperBound.MANY);
+    if (_equals_1) {
       StringConcatenation _builder_2 = new StringConcatenation();
       _builder_2.append("bind ds.");
       String _name_4 = attribute.getName();
       _builder_2.append(_name_4, "");
       _builder_2.append(" <--> [this.");
       {
-        int _value_1 = this.counter.getValue();
-        int _modulo_1 = (_value_1 % 2);
-        boolean _equals_3 = (_modulo_1 == 0);
-        if (_equals_3) {
+        if (((this.counter.value % 2) == 0)) {
           _builder_2.append("leftform");
         } else {
           _builder_2.append("rightform");
@@ -669,10 +631,7 @@ public class EntityToUimodelFileGenerator {
       _builder.append(_name_1, "");
       _builder.append(" <--> [this.");
       {
-        int _value = this.counter.getValue();
-        int _modulo = (_value % 2);
-        boolean _equals = (_modulo == 0);
-        if (_equals) {
+        if (((this.counter.value % 2) == 0)) {
           _builder.append("leftform");
         } else {
           _builder.append("rightform");
@@ -704,10 +663,7 @@ public class EntityToUimodelFileGenerator {
         _builder_2.append(_name_4, "");
         _builder_2.append(" <--> [this.");
         {
-          int _value_1 = this.counter.getValue();
-          int _modulo_1 = (_value_1 % 2);
-          boolean _equals_1 = (_modulo_1 == 0);
-          if (_equals_1) {
+          if (((this.counter.value % 2) == 0)) {
             _builder_2.append("leftform");
           } else {
             _builder_2.append("rightform");
@@ -739,10 +695,7 @@ public class EntityToUimodelFileGenerator {
           _builder_4.append(_name_7, "");
           _builder_4.append(" <--> [this.");
           {
-            int _value_2 = this.counter.getValue();
-            int _modulo_2 = (_value_2 % 2);
-            boolean _equals_2 = (_modulo_2 == 0);
-            if (_equals_2) {
+            if (((this.counter.value % 2) == 0)) {
               _builder_4.append("leftform");
             } else {
               _builder_4.append("rightform");
@@ -778,10 +731,7 @@ public class EntityToUimodelFileGenerator {
               _builder_6.append(_name_10, "");
               _builder_6.append(" <--> [this.");
               {
-                int _value_3 = this.counter.getValue();
-                int _modulo_3 = (_value_3 % 2);
-                boolean _equals_3 = (_modulo_3 == 0);
-                if (_equals_3) {
+                if (((this.counter.value % 2) == 0)) {
                   _builder_6.append("leftform");
                 } else {
                   _builder_6.append("rightform");
@@ -809,10 +759,7 @@ public class EntityToUimodelFileGenerator {
               _builder_8.append(_name_13, "");
               _builder_8.append(" <--> [this.");
               {
-                int _value_4 = this.counter.getValue();
-                int _modulo_4 = (_value_4 % 2);
-                boolean _equals_4 = (_modulo_4 == 0);
-                if (_equals_4) {
+                if (((this.counter.value % 2) == 0)) {
                   _builder_8.append("leftform");
                 } else {
                   _builder_8.append("rightform");

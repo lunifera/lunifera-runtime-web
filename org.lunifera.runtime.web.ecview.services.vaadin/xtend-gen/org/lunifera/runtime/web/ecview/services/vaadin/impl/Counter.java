@@ -10,24 +10,11 @@
  */
 package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
-import org.eclipse.xtend.lib.Property;
-import org.eclipse.xtext.xbase.lib.Pure;
-
 @SuppressWarnings("all")
 public class Counter {
-  @Property
-  private int _value;
+  public int value;
   
   public Counter(final int value) {
-    this.setValue(value);
-  }
-  
-  @Pure
-  public int getValue() {
-    return this._value;
-  }
-  
-  public void setValue(final int value) {
-    this._value = value;
+    this.value = value;
   }
 }

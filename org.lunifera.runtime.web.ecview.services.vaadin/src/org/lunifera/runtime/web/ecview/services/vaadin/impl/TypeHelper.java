@@ -17,7 +17,7 @@ public class TypeHelper {
 	 * Returns true, if the type is numeric
 	 * 
 	 * @param type
-	 * @return
+	 * @return 
 	 */
 	public boolean isNumber(JvmType type) {
 		if (typeReferences.is(type, Byte.class)

@@ -10,31 +10,17 @@
  */
 package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
-import org.eclipse.xtend.lib.Property;
-import org.eclipse.xtext.xbase.lib.Pure;
-
 @SuppressWarnings("all")
 public class Bindings {
-  @Property
-  private String _bindingList;
+  public String bindingList;
   
   public Bindings(final String bindingList) {
-    this.setBindingList(bindingList);
+    this.bindingList = bindingList;
   }
   
-  public void add(final String string) {
-    String _bindingList = this.getBindingList();
-    String _concat = _bindingList.concat("\n");
+  public String add(final String string) {
+    String _concat = this.bindingList.concat("\n");
     String _concat_1 = _concat.concat(string);
-    this.setBindingList(_concat_1);
-  }
-  
-  @Pure
-  public String getBindingList() {
-    return this._bindingList;
-  }
-  
-  public void setBindingList(final String bindingList) {
-    this._bindingList = bindingList;
+    return this.bindingList = _concat_1;
   }
 }
