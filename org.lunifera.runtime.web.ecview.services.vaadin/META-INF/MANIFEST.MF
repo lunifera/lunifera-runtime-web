@@ -25,12 +25,12 @@ Require-Bundle: com.vaadin.server;bundle-version="7.2.0",
  org.lunifera.dsl.xtext.builder.participant;bundle-version="0.7.3",
  com.google.inject;bundle-version="3.0.0",
  org.junit;bundle-version="4.11.0",
- org.eclipse.xtext,
+ org.eclipse.xtext;bundle-version="[2.7.3,2.8.0)",
  org.lunifera.xtext.builder.types.bundles,
  org.lunifera.runtime.common;bundle-version="0.7.5",
- org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib;bundle-version="[2.7.3,2.8.0)",
  com.google.guava,
- org.eclipse.xtext.xbase.lib
+ org.eclipse.xtext.xbase.lib;bundle-version="[2.7.3,2.8.0)"
 Import-Package: org.osgi.service.component;version="1.2.0",
  org.osgi.service.component.annotations;version="1.2.0"
 Service-Component: OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.LDtoRenderStrategy.xml,OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.ECViewUIRenderService.xml,OSGI-INF/org.lunifera.runtime.web.ecview.services.vaadin.impl.LEntityRenderStrategy.xml
