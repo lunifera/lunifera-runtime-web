@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin common stuff
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.common
-Bundle-Version: 0.7.5.qualifier
+Bundle-Version: 0.8.0
 Bundle-ActivationPolicy: lazy
 Import-Package: org.json,
  org.lunifera.runtime.common.dispose,
@@ -20,9 +20,9 @@ Export-Package: org.lunifera.runtime.web.vaadin.common,
  org.lunifera.runtime.web.vaadin.common.data,
  org.lunifera.runtime.web.vaadin.common.data.filter
 Bundle-Vendor: Lunifera.org
-Require-Bundle: com.vaadin.server;bundle-version="7.2.0",
- com.vaadin.shared;bundle-version="7.2.0",
- org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.7.3",
- org.lunifera.dsl.dto.lib;bundle-version="0.7.5",
+Require-Bundle: com.vaadin.server;bundle-version="7.3.1",
+ com.vaadin.shared;bundle-version="7.3.1",
+ org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.8.0",
+ org.lunifera.dsl.dto.lib;bundle-version="0.8.0",
  org.eclipse.xtext.xbase.lib;bundle-version="[2.7.3,2.8.0)"
 Service-Component: OSGI-INF/*

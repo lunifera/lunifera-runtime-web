@@ -21,11 +21,11 @@
 
 	<groupId>org.lunifera.runtime.web</groupId>
 	<artifactId>org.lunifera.runtime.web.parent</artifactId>
-	<version>0.7.5-SNAPSHOT</version>
+	<version>0.8.0</version>
 	<packaging>pom</packaging>
 
 	<properties>
-		<vaadin-version>7.2.5</vaadin-version>
+		<vaadin-version>7.3.1</vaadin-version>
 	</properties>
 
 	<pluginRepositories>
