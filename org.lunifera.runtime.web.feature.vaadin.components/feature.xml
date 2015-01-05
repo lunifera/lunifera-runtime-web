@@ -2,7 +2,7 @@
 <feature
       id="org.lunifera.runtime.web.feature.vaadin.components"
       label="%featureName"
-      version="0.8.0"
+      version="0.8.1.qualifier"
       provider-name="%providerName">
 
    <description>

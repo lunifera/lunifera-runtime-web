@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Databinding for Vaadin Tests
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.databinding.tests
-Bundle-Version: 0.8.0
+Bundle-Version: 0.8.1.qualifier
 Bundle-ActivationPolicy: lazy
 Require-Bundle: javax.servlet;bundle-version="3.0.0";visibility:=reexport,
  com.vaadin.shared;bundle-version="7.0.0";visibility:=reexport,
