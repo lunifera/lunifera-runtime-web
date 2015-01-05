@@ -25,7 +25,7 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YBooleanSearchField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBooleanSearchFieldEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.components.fields.search.BooleanSearchField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,18 +69,10 @@ public class BooleanSearchFieldPresentation extends
 			IECViewBindingManager bm = getViewContext().getService(
 					IECViewBindingManager.class.getName());
 			field = new BooleanSearchField(getEditpart().getId(),
-					modelAccess.yText.getPropertyPath(), bm.getDatabindingContext());
+					modelAccess.yField.getPropertyPath(), bm.getDatabindingContext());
 			field.addStyleName(CSS_CLASS_CONTROL);
 			field.addStyleName(IConstants.CSS_CLASS_SEARCHFIELD);
 
-			IFilterProvider filterProvider = getViewContext().getService(
-					IFilterProvider.class.getName());
-			if (filterProvider != null) {
-				field.setFilterProvider(filterProvider);
-			} else {
-				LOGGER.error("No IFilterProvider available. Filters can not be provided!");
-			}
-			
 			field.setImmediate(true);
 			setupComponent(field, getCastedModel());
 
@@ -90,13 +82,13 @@ public class BooleanSearchFieldPresentation extends
 				field.setId(getEditpart().getId());
 			}
 
-			associateWidget(field, modelAccess.yText);
+			associateWidget(field, modelAccess.yField);
 
 			property = new ObjectProperty<String>(null, String.class);
 			field.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yText, field);
+			createBindings(modelAccess.yField, field);
 
 			if (modelAccess.isCssClassValid()) {
 				field.addStyleName(modelAccess.getCssClass());
@@ -128,14 +120,8 @@ public class BooleanSearchFieldPresentation extends
 	 */
 	protected void applyCaptions() {
 		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			field.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				field.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(service, modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), field);
 		
 		field.setDescription(service.getValue(IConstants.I18N_TOOLTIP_BOOLEANSEARCHFIELD, getLocale()));
 	}
@@ -234,11 +220,11 @@ public class BooleanSearchFieldPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YBooleanSearchField yText;
+		private final YBooleanSearchField yField;
 
-		public ModelAccess(YBooleanSearchField yText) {
+		public ModelAccess(YBooleanSearchField yField) {
 			super();
-			this.yText = yText;
+			this.yField = yField;
 		}
 
 		/**
@@ -246,7 +232,7 @@ public class BooleanSearchFieldPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yText.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -263,7 +249,7 @@ public class BooleanSearchFieldPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yText.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -276,32 +262,12 @@ public class BooleanSearchFieldPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yText.getDatadescription() != null
-					&& yText.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yText.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yText.getDatadescription() != null
-					&& yText.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -310,7 +276,7 @@ public class BooleanSearchFieldPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yText.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

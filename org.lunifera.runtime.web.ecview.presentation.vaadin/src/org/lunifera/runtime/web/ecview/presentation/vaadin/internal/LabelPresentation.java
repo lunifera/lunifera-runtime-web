@@ -12,11 +12,11 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Locale;
 
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YLabel;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ILabelEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractComponent;
@@ -63,13 +63,13 @@ public class LabelPresentation extends
 				label.setId(getEditpart().getId());
 			}
 
-			associateWidget(label, modelAccess.yLabel);
+			associateWidget(label, modelAccess.yField);
 
 			property = new ObjectProperty<String>("", String.class);
 			label.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yLabel, label, null);
+			createBindings(modelAccess.yField, label, null);
 
 			if (modelAccess.isCssClassValid()) {
 				label.addStyleName(modelAccess.getCssClass());
@@ -108,15 +108,8 @@ public class LabelPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			label.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				label.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), label);
 	}
 
 	@Override
@@ -167,11 +160,11 @@ public class LabelPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YLabel yLabel;
+		private final YLabel yField;
 
-		public ModelAccess(YLabel yLabel) {
+		public ModelAccess(YLabel yField) {
 			super();
-			this.yLabel = yLabel;
+			this.yField = yField;
 		}
 
 		/**
@@ -179,7 +172,7 @@ public class LabelPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yLabel.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -196,7 +189,7 @@ public class LabelPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yLabel.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -209,32 +202,12 @@ public class LabelPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yLabel.getDatadescription() != null
-					&& yLabel.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yLabel.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yLabel.getDatadescription() != null
-					&& yLabel.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -243,7 +216,7 @@ public class LabelPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yLabel.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

@@ -16,7 +16,6 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFProperties;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
@@ -25,7 +24,10 @@ import org.lunifera.ecview.core.databinding.emf.model.ECViewModelBindable;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YComboBox;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IComboBoxEditpart;
-import org.lunifera.runtime.web.vaadin.components.container.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
+import org.lunifera.runtime.web.vaadin.components.fields.BeanServiceLazyLoadingContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +80,7 @@ public class ComboBoxPresentation extends
 			combo.setImmediate(true);
 			setupComponent(combo, getCastedModel());
 
-			associateWidget(combo, modelAccess.yCombo);
+			associateWidget(combo, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				combo.setId(modelAccess.getCssID());
 			} else {
@@ -87,18 +89,31 @@ public class ComboBoxPresentation extends
 
 			try {
 				property = new ObjectProperty(null,
-						modelAccess.yCombo.getType());
+						modelAccess.yField.getType());
 				combo.setPropertyDataSource(property);
 
-				if (modelAccess.yCombo.getType() != null) {
-					DeepResolvingBeanItemContainer datasource = null;
-					datasource = new DeepResolvingBeanItemContainer(
-							modelAccess.yCombo.getType());
-					combo.setContainerDataSource(datasource);
+				if (modelAccess.yField.getType() != null) {
+					if (!modelAccess.yField.isUseBeanService()) {
+						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(
+								modelAccess.yField.getType());
+						combo.setContainerDataSource(datasource);
+					} else {
+						IBeanSearchServiceFactory factory = getViewContext()
+								.getService(
+										IBeanSearchServiceFactory.class
+												.getName());
+						if (factory != null) {
+							BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
+									factory.createService(modelAccess.yField
+											.getType()),
+									modelAccess.yField.getType());
+							combo.setContainerDataSource(datasource);
+						}
+					}
 				}
 
-				String itemCaptionProperty = modelAccess.yCombo
-						.getItemCaptionProperty();
+				String itemCaptionProperty = modelAccess.yField
+						.getCaptionProperty();
 				if (itemCaptionProperty != null
 						&& !itemCaptionProperty.equals("")) {
 					combo.setItemCaptionPropertyId(itemCaptionProperty);
@@ -107,14 +122,14 @@ public class ComboBoxPresentation extends
 					combo.setItemCaptionMode(ItemCaptionMode.ID);
 				}
 
-				String itemImageProperty = modelAccess.yCombo
-						.getItemImageProperty();
+				String itemImageProperty = modelAccess.yField
+						.getImageProperty();
 				if (itemImageProperty != null && !itemImageProperty.equals("")) {
 					combo.setItemIconPropertyId(itemImageProperty);
 				}
 
 				// creates the binding for the field
-				createBindings(modelAccess.yCombo, combo);
+				createBindings(modelAccess.yField, combo);
 
 				if (modelAccess.isCssClassValid()) {
 					combo.addStyleName(modelAccess.getCssClass());
@@ -143,15 +158,8 @@ public class ComboBoxPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			combo.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				combo.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), combo);
 	}
 
 	@Override
@@ -202,8 +210,8 @@ public class ComboBoxPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yCombo.getType(),
-				modelAccess.yCombo.getEmfNsURI());
+				attributePath, modelAccess.yField.getType(),
+				modelAccess.yField.getEmfNsURI());
 	}
 
 	/**
@@ -275,11 +283,11 @@ public class ComboBoxPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YComboBox yCombo;
+		private final YComboBox yField;
 
-		public ModelAccess(YComboBox yCombo) {
+		public ModelAccess(YComboBox yField) {
 			super();
-			this.yCombo = yCombo;
+			this.yField = yField;
 		}
 
 		/**
@@ -287,7 +295,7 @@ public class ComboBoxPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yCombo.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -304,7 +312,7 @@ public class ComboBoxPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yCombo.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -317,32 +325,13 @@ public class ComboBoxPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yCombo.getDatadescription() != null
-					&& yCombo.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yCombo.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yCombo.getDatadescription() != null
-					&& yCombo.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -351,7 +340,8 @@ public class ComboBoxPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yCombo.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 
@@ -359,6 +349,7 @@ public class ComboBoxPresentation extends
 	 * Converts the string value of the item icon property to
 	 * {@link ThemeResource}.
 	 */
+	@SuppressWarnings("serial")
 	private static class CustomComboBox extends ComboBox {
 		private Object itemIconPropertyId;
 
@@ -391,8 +382,12 @@ public class ComboBoxPresentation extends
 					return null;
 				}
 				final Object icon = ip.getValue();
-				if (icon instanceof String) {
-					return new ThemeResource((String) icon);
+				try {
+					if (icon instanceof String) {
+						return new ThemeResource((String) icon);
+					}
+				} catch (Exception e) {
+					// nothing to do
 				}
 			}
 			return null;

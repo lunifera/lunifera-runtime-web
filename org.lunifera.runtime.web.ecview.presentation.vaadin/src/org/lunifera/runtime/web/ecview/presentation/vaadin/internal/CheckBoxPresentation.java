@@ -15,13 +15,13 @@ import java.util.Locale;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YCheckBox;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ICheckboxEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.CheckBox;
@@ -62,7 +62,7 @@ public class CheckBoxPresentation extends
 			checkBox.setImmediate(true);
 			setupComponent(checkBox, getCastedModel());
 			
-			associateWidget(checkBox, modelAccess.yCheckBox);
+			associateWidget(checkBox, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				checkBox.setId(modelAccess.getCssID());
 			} else {
@@ -73,7 +73,7 @@ public class CheckBoxPresentation extends
 			checkBox.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yCheckBox, checkBox);
+			createBindings(modelAccess.yField, checkBox);
 
 			if (modelAccess.isCssClassValid()) {
 				checkBox.addStyleName(modelAccess.getCssClass());
@@ -99,15 +99,8 @@ public class CheckBoxPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			checkBox.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				checkBox.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), checkBox);
 	}
 
 	@Override
@@ -204,11 +197,11 @@ public class CheckBoxPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YCheckBox yCheckBox;
+		private final YCheckBox yField;
 
-		public ModelAccess(YCheckBox yCheckBox) {
+		public ModelAccess(YCheckBox yField) {
 			super();
-			this.yCheckBox = yCheckBox;
+			this.yField = yField;
 		}
 
 		/**
@@ -216,7 +209,7 @@ public class CheckBoxPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yCheckBox.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -233,7 +226,7 @@ public class CheckBoxPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yCheckBox.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -246,32 +239,12 @@ public class CheckBoxPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yCheckBox.getDatadescription() != null
-					&& yCheckBox.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yCheckBox.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yCheckBox.getDatadescription() != null
-					&& yCheckBox.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -280,7 +253,7 @@ public class CheckBoxPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yCheckBox.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

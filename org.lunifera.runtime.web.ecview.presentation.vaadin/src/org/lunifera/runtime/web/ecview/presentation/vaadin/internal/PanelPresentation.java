@@ -13,16 +13,17 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.editpart.ILayoutEditpart;
 import org.lunifera.ecview.core.extension.model.extension.YPanel;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.themes.Reindeer;
 
 /**
  * This presenter is responsible to render a text field on the given layout.
@@ -61,15 +62,8 @@ public class PanelPresentation extends AbstractLayoutPresenter<Component> {
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			panel.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				panel.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), panel);
 	}
 
 	/**
@@ -275,32 +269,12 @@ public class PanelPresentation extends AbstractLayoutPresenter<Component> {
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yLayout.getDatadescription() != null
-					&& yLayout.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
 			return yLayout.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yLayout.getDatadescription() != null
-					&& yLayout.getDatadescription().getLabelI18nKey() != null;
 		}
 
 		/**

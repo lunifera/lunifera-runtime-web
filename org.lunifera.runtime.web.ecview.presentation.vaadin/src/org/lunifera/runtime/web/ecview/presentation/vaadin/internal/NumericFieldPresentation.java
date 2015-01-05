@@ -19,7 +19,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
@@ -31,6 +30,7 @@ import org.lunifera.ecview.core.extension.model.extension.YNumericField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.INumericFieldEditpart;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.components.fields.NumericField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
@@ -77,7 +77,7 @@ public class NumericFieldPresentation extends
 			numberField.setImmediate(true);
 			setupComponent(numberField, getCastedModel());
 
-			associateWidget(numberField, modelAccess.yNumericField);
+			associateWidget(numberField, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				numberField.setId(modelAccess.getCssID());
 			} else {
@@ -109,12 +109,12 @@ public class NumericFieldPresentation extends
 			}
 
 			applyCaptions();
-			doApplyDatatype(modelAccess.yNumericField.getDatatype());
+			doApplyDatatype(modelAccess.yField.getDatatype());
 
 			initializeField(numberField);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yNumericField, numberField);
+			createBindings(modelAccess.yField, numberField);
 
 			// send an event, that the content was rendered again
 			sendRenderedLifecycleEvent();
@@ -155,15 +155,8 @@ public class NumericFieldPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			numberField.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				numberField.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), numberField);
 	}
 
 	@Override
@@ -283,11 +276,11 @@ public class NumericFieldPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YNumericField yNumericField;
+		private final YNumericField yField;
 
-		public ModelAccess(YNumericField yNumericField) {
+		public ModelAccess(YNumericField yField) {
 			super();
-			this.yNumericField = yNumericField;
+			this.yField = yField;
 		}
 
 		/**
@@ -295,7 +288,7 @@ public class NumericFieldPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yNumericField.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -312,7 +305,7 @@ public class NumericFieldPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yNumericField.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -325,32 +318,12 @@ public class NumericFieldPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yNumericField.getDatadescription() != null
-					&& yNumericField.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yNumericField.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yNumericField.getDatadescription() != null
-					&& yNumericField.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -359,7 +332,7 @@ public class NumericFieldPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yNumericField.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

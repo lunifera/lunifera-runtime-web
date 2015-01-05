@@ -17,11 +17,11 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YImage;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IImageEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.server.Resource;
@@ -63,7 +63,7 @@ public class ImagePresentation extends
 			image.setImmediate(true);
 			setupComponent(image, getCastedModel());
 
-			associateWidget(image, modelAccess.yImage);
+			associateWidget(image, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				image.setId(modelAccess.getCssID());
 			} else {
@@ -71,7 +71,7 @@ public class ImagePresentation extends
 			}
 
 			// creates the binding for the field
-			createBindings(modelAccess.yImage, image, null);
+			createBindings(modelAccess.yField, image, null);
 
 			if (modelAccess.isCssClassValid()) {
 				image.addStyleName(modelAccess.getCssClass());
@@ -91,10 +91,10 @@ public class ImagePresentation extends
 	 * @param field
 	 * @return Binding - the created binding
 	 */
-	protected void createBindings(YImage yImage, AbstractComponent widget,
+	protected void createBindings(YImage yField, AbstractComponent widget,
 			AbstractComponent container) {
 
-		IObservableValue modelObservable = EMFObservables.observeValue(yImage,
+		IObservableValue modelObservable = EMFObservables.observeValue(yField,
 				ExtensionModelPackage.Literals.YIMAGE__VALUE);
 		IObservableValue uiObservable = VaadinObservables.observeSource(image);
 
@@ -111,7 +111,7 @@ public class ImagePresentation extends
 				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE)
 						.setConverter(stringToResourceConverter)));
 
-		super.createBindings(yImage, widget, container);
+		super.createBindings(yField, widget, container);
 	}
 
 	@Override
@@ -127,15 +127,8 @@ public class ImagePresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			image.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				image.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), image);
 	}
 
 	@Override
@@ -185,11 +178,11 @@ public class ImagePresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YImage yImage;
+		private final YImage yField;
 
-		public ModelAccess(YImage yImage) {
+		public ModelAccess(YImage yField) {
 			super();
-			this.yImage = yImage;
+			this.yField = yField;
 		}
 
 		/**
@@ -197,7 +190,7 @@ public class ImagePresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yImage.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -214,7 +207,7 @@ public class ImagePresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yImage.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -227,32 +220,12 @@ public class ImagePresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yImage.getDatadescription() != null
-					&& yImage.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yImage.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yImage.getDatadescription() != null
-					&& yImage.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -261,7 +234,7 @@ public class ImagePresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yImage.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

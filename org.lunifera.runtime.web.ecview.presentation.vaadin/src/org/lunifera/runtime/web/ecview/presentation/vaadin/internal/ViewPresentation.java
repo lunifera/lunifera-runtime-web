@@ -26,7 +26,6 @@ import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.editpart.IViewEditpart;
 import org.lunifera.ecview.core.common.editpart.binding.IBindableEndpointEditpart;
 import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
-import org.lunifera.ecview.core.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.lunifera.ecview.core.common.model.core.YAlignment;
 import org.lunifera.ecview.core.common.model.core.YView;
 import org.lunifera.ecview.core.common.presentation.IViewPresentation;
@@ -141,29 +140,29 @@ public class ViewPresentation extends AbstractDisposable implements
 		// }
 	}
 
-	private boolean isFillVertical(YAlignment alignment) {
-		switch (alignment) {
-		case FILL_CENTER:
-		case FILL_FILL:
-		case FILL_LEFT:
-		case FILL_RIGHT:
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	private boolean isFillHorizontal(YAlignment contentAlignment) {
-		switch (contentAlignment) {
-		case MIDDLE_FILL:
-		case FILL_FILL:
-		case BOTTOM_FILL:
-		case TOP_FILL:
-			return true;
-		default:
-			return false;
-		}
-	}
+//	private boolean isFillVertical(YAlignment alignment) {
+//		switch (alignment) {
+//		case FILL_CENTER:
+//		case FILL_FILL:
+//		case FILL_LEFT:
+//		case FILL_RIGHT:
+//			return true;
+//		default:
+//			return false;
+//		}
+//	}
+//
+//	private boolean isFillHorizontal(YAlignment contentAlignment) {
+//		switch (contentAlignment) {
+//		case MIDDLE_FILL:
+//		case FILL_FILL:
+//		case BOTTOM_FILL:
+//		case TOP_FILL:
+//			return true;
+//		default:
+//			return false;
+//		}
+//	}
 
 	/**
 	 * {@inheritDoc}

@@ -31,13 +31,13 @@ import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.editpart.binding.IBindableEndpointEditpart;
 import org.lunifera.ecview.core.common.editpart.binding.IBindableValueEndpointEditpart;
 import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
-import org.lunifera.ecview.core.common.editpart.visibility.IVisibilityPropertiesEditpart;
 import org.lunifera.ecview.core.common.model.core.CoreModelPackage;
 import org.lunifera.ecview.core.common.model.core.YDialog;
 import org.lunifera.ecview.core.common.presentation.IDialogPresentation;
 import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,15 +164,8 @@ public class DialogPresentation extends AbstractDisposable implements
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			window.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				window.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), window);
 	}
 
 	/**
@@ -369,32 +362,12 @@ public class DialogPresentation extends AbstractDisposable implements
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yDialog.getDatadescription() != null
-					&& yDialog.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
 			return yDialog.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yDialog.getDatadescription() != null
-					&& yDialog.getDatadescription().getLabelI18nKey() != null;
 		}
 
 		/**

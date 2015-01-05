@@ -13,36 +13,46 @@ package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 import java.util.Map;
 
-import org.lunifera.ecview.core.common.context.IViewContext;
-import org.lunifera.ecview.core.common.model.core.YView;
-import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
-import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.lunifera.dsl.semantic.entity.LEntity;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.lunifera.runtime.web.ecview.services.vaadin.ILEntityRenderStrategy;
 import org.osgi.service.component.annotations.Component;
+
+import com.google.inject.Inject;
 
 @Component(property = { "service.ranking=100" })
 public class LEntityRenderStrategy implements ILEntityRenderStrategy {
 
+	@Inject
+	private EntityToUimodelFileGenerator generator;
 	private SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 
 	@Override
 	public YView render(LEntity lEntity, Class<?> entityClass,
 			Object entityInstance, Map<String, Object> beanSlots) {
 
-		YView yView = factory.createView();
-		// create a bean slot for the bindings
-		yView.addBeanSlot(IViewContext.ROOTBEAN_SELECTOR, entityClass);
+		System.out.println("******************************");
+		System.out.println("******************************");
+		System.out.println("******************************\n\n");
+		System.out.println(generator.getContent(lEntity));
+		System.out.println("\n\n******************************");
+		System.out.println("******************************");
+		System.out.println("******************************");
 
-		// create a main layout
-		YGridLayout yLayout = factory.createGridLayout();
-		yLayout.setColumns(4);
-		yView.setContent(yLayout);
+		// YView yView = factory.createView();
+		// // create a bean slot for the bindings
+		// yView.addBeanSlot(IViewContext.ROOTBEAN_SELECTOR, entityClass);
+		//
+		// // create a main layout
+		// YGridLayout yLayout = factory.createGridLayout();
+		// yLayout.setColumns(4);
+		// yView.setContent(yLayout);
+		//
+		// // Use the entity renderer to build the UI model
+		// EntityModelRenderer renderer = new EntityModelRenderer();
+		// renderer.render(lEntity, yLayout, entityClass);
 
-		// Use the entity renderer to build the UI model
-		EntityModelRenderer renderer = new EntityModelRenderer();
-		renderer.render(lEntity, yLayout, entityClass);
-
-		return yView;
+		return null;
 	}
 }

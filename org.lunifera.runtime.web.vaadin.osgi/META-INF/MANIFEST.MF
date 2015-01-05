@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.equinox.common;bundle-version="3.6.100",
  com.vaadin.server;bundle-version="7.1.0",
  com.vaadin.shared;bundle-version="7.1.0"
 Build-Jdk: 1.7.0_15
-Bundle-Version: 0.7.4
+Bundle-Version: 0.8.0
 Bundle-Activator: org.lunifera.runtime.web.vaadin.osgi.Activator
 Bundle-ManifestVersion: 2
 Import-Package: javax.servlet;version="2.6.0",

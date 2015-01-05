@@ -19,7 +19,6 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.lunifera.ecview.core.common.binding.observables.ContextObservables;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YCollectionBindable;
 import org.lunifera.ecview.core.common.model.core.YEmbeddable;
@@ -34,6 +33,7 @@ import org.lunifera.ecview.core.extension.model.extension.YMasterDetail;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IMasterDetailEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.presentation.IMasterDetailPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -80,26 +80,26 @@ public class MasterDetailPresentation extends
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
-			associateWidget(componentBase, modelAccess.yMasterDetail);
+
+			associateWidget(componentBase, modelAccess.yField);
 
 			// create the container for master an detail
 			masterBase = new CssLayout();
 			masterBase.setStyleName(IConstants.CSS_CLASS_MASTER_BASE);
 			masterBase.setSizeFull();
 			componentBase.addComponent(masterBase);
-			
-			associateWidget(masterBase, modelAccess.yMasterDetail);
+
+			associateWidget(masterBase, modelAccess.yField);
 
 			detailBase = new CssLayout();
 			masterBase.setStyleName(IConstants.CSS_CLASS_DETAIL_BASE);
 			detailBase.setSizeFull();
 			componentBase.addComponent(detailBase);
-			
-			associateWidget(detailBase, modelAccess.yMasterDetail);
+
+			associateWidget(detailBase, modelAccess.yField);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yMasterDetail);
+			createBindings(modelAccess.yField);
 
 			// render master an detail
 			if (masterPresentation != null) {
@@ -132,7 +132,7 @@ public class MasterDetailPresentation extends
 		URI uri = URIHelper.view().bean(getCollectionBeanSlot())
 				.fragment("value").toURI();
 		IObservableList targetObservableList = ContextObservables.observeList(
-				getViewContext(), uri, modelAccess.yMasterDetail.getType());
+				getViewContext(), uri, modelAccess.yField.getType());
 		IObservableList modelObservable = EMFProperties.list(
 				ExtensionModelPackage.Literals.YMASTER_DETAIL__COLLECTION)
 				.observe(getModel());
@@ -169,14 +169,8 @@ public class MasterDetailPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-
-		} else {
-			if (modelAccess.isLabelValid()) {
-
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), masterBase);
 	}
 
 	@Override
@@ -204,7 +198,7 @@ public class MasterDetailPresentation extends
 		// delegate the binding to the proper bean slot
 		URI uri = URIHelper.view().bean(getCollectionBeanSlot()).toURI();
 		IObservableList modelObservableList = ContextObservables.observeList(
-				getViewContext(), uri, modelAccess.yMasterDetail.getType());
+				getViewContext(), uri, modelAccess.yField.getType());
 		return modelObservableList;
 	}
 
@@ -223,8 +217,8 @@ public class MasterDetailPresentation extends
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yMasterDetail.getType(),
-				modelAccess.yMasterDetail.getEmfNsURI());
+				attributePath, modelAccess.yField.getType(),
+				modelAccess.yField.getEmfNsURI());
 	}
 
 	@Override
@@ -361,7 +355,7 @@ public class MasterDetailPresentation extends
 		URI uri = URIHelper.view().bean(getCollectionBeanSlot())
 				.fragment("value").toURI();
 		IObservableList modelObservableList = ContextObservables.observeList(
-				getViewContext(), uri, modelAccess.yMasterDetail.getType());
+				getViewContext(), uri, modelAccess.yField.getType());
 
 		masterCollectionBinding = createBindings(targetObservableList,
 				modelObservableList);
@@ -391,11 +385,11 @@ public class MasterDetailPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YMasterDetail yMasterDetail;
+		private final YMasterDetail yField;
 
-		public ModelAccess(YMasterDetail yMasterDetail) {
+		public ModelAccess(YMasterDetail yField) {
 			super();
-			this.yMasterDetail = yMasterDetail;
+			this.yField = yField;
 		}
 
 		/**
@@ -403,7 +397,7 @@ public class MasterDetailPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yMasterDetail.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -420,7 +414,7 @@ public class MasterDetailPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yMasterDetail.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -433,32 +427,12 @@ public class MasterDetailPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yMasterDetail.getDatadescription() != null
-					&& yMasterDetail.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yMasterDetail.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yMasterDetail.getDatadescription() != null
-					&& yMasterDetail.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -467,7 +441,7 @@ public class MasterDetailPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yMasterDetail.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

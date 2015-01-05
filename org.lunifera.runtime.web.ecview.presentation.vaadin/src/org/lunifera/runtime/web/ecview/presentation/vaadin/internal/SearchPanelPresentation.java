@@ -21,14 +21,13 @@ import org.lunifera.ecview.core.common.filter.IFilterProvidingPresentation;
 import org.lunifera.ecview.core.extension.model.extension.YSearchPanel;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ISearchFieldEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.vaadin.common.data.filter.Filters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 
@@ -46,7 +45,6 @@ public class SearchPanelPresentation extends
 	private FormLayout leftForm;
 	private FormLayout rightForm;
 	private ModelAccess modelAccess;
-	private CssLayout fillerLayout;
 
 	private int currentChildIndex;
 
@@ -159,24 +157,19 @@ public class SearchPanelPresentation extends
 
 	@Override
 	public Object getFilter() {
-		IFilterProvider provider = getViewContext().getService(
-				IFilterProvider.class.getName());
-		if (provider == null) {
-			LOGGER.error("Filterprovider was null!");
-			return null;
-		}
 
 		Set<Filter> filters = new HashSet<Filter>();
 		for (IEmbeddableEditpart editpart : getChildren()) {
 			ISearchFieldEditpart temp = (ISearchFieldEditpart) editpart;
 			Filter filter = (Filter) temp.getFilter();
-			if(filter != null){
+			if (filter != null) {
 				filters.add(filter);
 			}
 		}
 
 		if (filters.size() > 0) {
-			return provider.and(filters.toArray(new Filter[filters.size()]));
+			return new Filters()
+					.and(filters.toArray(new Filter[filters.size()]));
 		} else {
 			return null;
 		}

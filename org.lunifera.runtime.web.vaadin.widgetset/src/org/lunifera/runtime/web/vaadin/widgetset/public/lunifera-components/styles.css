@@ -2,31 +2,176 @@
 	color: red !important;
 }
 
-.l-debug-show-layout-bounds .l-controlbase {
+.l-debug-show-layout-bounds {
 	border-width: 1px;
 	border-style: solid;
 	background-color: #8C698A;
 	border-color: #8C698A;
 }
 
-.l-debug-show-layout-bounds .l-controlbase .l-control {
+.l-debug-show-layout-bounds .l-control {
 	background-color: #A68095;
 	border-width: 1px;
 	border-style: solid;
 	border-color: #A68095;
 }
- 
-.l-debug-show-layout-bounds .l-controlbase .l-control .v-slot, 
-.l-debug-show-layout-bounds .l-controlbase .l-control .v-gridlayout-slot {
+
+.l-debug-show-layout-bounds .l-control .v-slot,
+	.l-debug-show-layout-bounds .l-control .v-gridlayout-slot {
 	background-color: #D9A9BF;
 	border-width: 1px;
 	border-style: solid;
 	border-color: #D9A9BF;
 }
 
-.l-debug-show-layout-bounds .l-controlbase .l-control .v-slot-l-layout-compressor {
+.l-debug-show-layout-bounds .l-control .v-slot-l-layout-compressor {
 	background-color: #BFA8B1;
 	border-width: 1px;
 	border-style: solid;
 	border-color: #BFA8B1;
+}
+
+.v-layout {
+/* 	overflow: scroll; */
+}
+
+.v-slot-l-formlayout {
+	min-width: 200px;
+}
+
+.l-form-defaultwidth {
+	width: 300px !important;
+}
+
+.l-background-red {
+	background-color: red !important;
+}
+
+.l-background-white {
+	background-color: white !important;
+}
+
+.l-background-blue {
+	background-color: blue !important;
+}
+
+.l-background-green {
+	background-color: green !important;
+}
+
+.l-background-black {
+	background-color: black !important;
+}
+
+.l-background-yellow {
+	background-color: yellow !important;
+}
+
+.l-background-gray {
+	background-color: gray !important;
+}
+
+.l-background-light-gray {
+	background-color: gray !important;
+}
+
+.l-background-dark-gray {
+	background-color: gray !important;
+}
+
+.l-foreground-red {
+	color: red !important;
+}
+
+.l-foreground-white {
+	color: white !important;
+}
+
+.l-foreground-blue {
+	color: blue !important;
+}
+
+.l-foreground-green {
+	color: green !important;
+}
+
+.l-foreground-black {
+	color: black !important;
+}
+
+.l-foreground-yellow {
+	color: yellow !important;
+}
+
+.l-foreground-gray {
+	color: gray !important;
+}
+
+.l-foreground-light-gray {
+	color: gray !important;
+}
+
+.l-foreground-dark-gray {
+	color: yellow !important;
+}
+
+.l-bold {
+	font-weight: bold !important;
+}
+
+.l-italic {
+	font-style: italic !important;
+}
+
+.l-strikethrough {
+	text-decoration: line-through !important;
+}
+
+.l-underline {
+	text-decoration: underline !important;
+}
+
+.l-border {
+	border: medium !important;
+	border-style: dotted !important;
+}
+
+.l-beansearchfield .v-nativebutton {
+	display: inline-block;
+	zoom: 1;
+	text-align: center !important;
+	text-decoration: none;
+	background: none;
+	background-image: none;
+	border: none;
+	cursor: pointer;
+	white-space: nowrap;
+	margin: 0;
+	color: inherit;
+	font: inherit;
+	font-size: 16px;
+	line-height: normal;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.l-beansearchfield .v-nativebutton:active {
+	background: #ddd;
+	padding: 0px;
+}
+
+.l-beansearchfield .v-nativebutton:focus {
+	outline: none;
+}
+
+.reindeer .v-disabled {
+	opacity: 0.7 !important;
+	filter: alpha(opacity=70) !important;
 }

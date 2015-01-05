@@ -17,7 +17,6 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
@@ -28,6 +27,7 @@ import org.lunifera.ecview.core.extension.model.datatypes.YDateTimeResolution;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YDateTime;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IDateTimeEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -72,7 +72,7 @@ public class DateTimePresentation extends
 			dateField.setImmediate(true);
 			setupComponent(dateField, getCastedModel());
 
-			associateWidget(dateField, modelAccess.yDateTime);
+			associateWidget(dateField, modelAccess.yField);
 
 			if (modelAccess.isCssIdValid()) {
 				dateField.setId(modelAccess.getCssID());
@@ -84,13 +84,13 @@ public class DateTimePresentation extends
 			dateField.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yDateTime, dateField);
+			createBindings(modelAccess.yField, dateField);
 
 			if (modelAccess.isCssClassValid()) {
 				dateField.addStyleName(modelAccess.getCssClass());
 			}
 
-			doApplyDatatype(modelAccess.yDateTime.getDatatype());
+			doApplyDatatype(modelAccess.yField.getDatatype());
 
 			applyCaptions();
 
@@ -263,15 +263,8 @@ public class DateTimePresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			dateField.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				dateField.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), dateField);
 	}
 
 	@Override
@@ -373,11 +366,11 @@ public class DateTimePresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YDateTime yDateTime;
+		private final YDateTime yField;
 
-		public ModelAccess(YDateTime yDateTime) {
+		public ModelAccess(YDateTime yField) {
 			super();
-			this.yDateTime = yDateTime;
+			this.yField = yField;
 		}
 
 		/**
@@ -385,7 +378,7 @@ public class DateTimePresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yDateTime.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -402,7 +395,7 @@ public class DateTimePresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yDateTime.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -415,13 +408,12 @@ public class DateTimePresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
+		 * Returns the label.
 		 * 
 		 * @return
 		 */
-		public boolean isLabelValid() {
-			return yDateTime.getDatadescription() != null
-					&& yDateTime.getDatadescription().getLabel() != null;
+		public String getLabel() {
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -429,8 +421,8 @@ public class DateTimePresentation extends
 		 * 
 		 * @return
 		 */
-		public String getLabel() {
-			return yDateTime.getDatadescription().getLabel();
+		public String getLabelI18nKey() {
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 
 		/**
@@ -440,27 +432,8 @@ public class DateTimePresentation extends
 		 */
 		@SuppressWarnings("unused")
 		public boolean isDateformatValid() {
-			return yDateTime.getDatadescription() != null
-					&& yDateTime.getDatatype().getFormat() != null;
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yDateTime.getDatadescription() != null
-					&& yDateTime.getDatadescription().getLabelI18nKey() != null;
-		}
-
-		/**
-		 * Returns the label.
-		 * 
-		 * @return
-		 */
-		public String getLabelI18nKey() {
-			return yDateTime.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null
+					&& yField.getDatatype().getFormat() != null;
 		}
 	}
 }

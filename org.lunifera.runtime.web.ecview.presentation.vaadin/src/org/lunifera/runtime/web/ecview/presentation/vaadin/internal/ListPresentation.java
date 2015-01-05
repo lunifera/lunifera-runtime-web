@@ -18,7 +18,6 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFProperties;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
@@ -29,8 +28,17 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YList;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IListEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
+import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
+import org.lunifera.runtime.web.vaadin.components.fields.BeanServiceLazyLoadingContainer;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Field;
@@ -39,11 +47,12 @@ import com.vaadin.ui.ListSelect;
 /**
  * This presenter is responsible to render a list on the given layout.
  */
+@SuppressWarnings("restriction")
 public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private ListSelect list;
-	private ObjectProperty property;
+	private ObjectProperty<?> property;
 
 	/**
 	 * Constructor.
@@ -64,11 +73,12 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	public Component doCreateWidget(Object parent) {
 		if (list == null) {
 
-			list = new ListSelect();
+			list = new CustomListSelect();
 			list.addStyleName(CSS_CLASS_CONTROL);
-			list.setMultiSelect(modelAccess.yList.getSelectionType() == YSelectionType.MULTI);
+			list.setMultiSelect(modelAccess.yField.getSelectionType() == YSelectionType.MULTI);
 			list.setImmediate(true);
 			setupComponent(list, getCastedModel());
+			associateWidget(list, modelAccess.yField);
 
 			if (modelAccess.isCssIdValid()) {
 				list.setId(modelAccess.getCssID());
@@ -76,17 +86,64 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 				list.setId(getEditpart().getId());
 			}
 
-			associateWidget(list, modelAccess.yList);
-
 			if (list.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
 			} else {
-				property = new ObjectProperty(null, modelAccess.yList.getType());
+				if (modelAccess.yField.getType() != null) {
+					property = new ObjectProperty(null,
+							modelAccess.yField.getType());
+				} else {
+					property = new ObjectProperty(null, Object.class);
+				}
 			}
 			list.setPropertyDataSource(property);
 
+			if (modelAccess.yField.getType() == String.class) {
+				IndexedContainer datasource = new IndexedContainer();
+				list.setContainerDataSource(datasource);
+				list.setItemCaptionMode(ItemCaptionMode.ID);
+			} else {
+				if (modelAccess.yField.getType() != null) {
+					if (!modelAccess.yField.isUseBeanService()) {
+						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(
+								modelAccess.yField.getType());
+						list.setContainerDataSource(datasource);
+					} else {
+						IBeanSearchServiceFactory factory = getViewContext()
+								.getService(
+										IBeanSearchServiceFactory.class
+												.getName());
+						if (factory != null) {
+							BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
+									factory.createService(modelAccess.yField
+											.getType()),
+									modelAccess.yField.getType());
+							list.setContainerDataSource(datasource);
+						}
+					}
+				} else {
+					IndexedContainer container = new IndexedContainer();
+					container.addContainerProperty("for", String.class, null);
+					container.addContainerProperty("preview", String.class,
+							null);
+					container.addItem(new String[] { "Some value", "other" });
+					list.setContainerDataSource(container);
+				}
+			}
+
+			String itemCaptionProperty = modelAccess.yField
+					.getCaptionProperty();
+			if (itemCaptionProperty != null && !itemCaptionProperty.equals("")) {
+				list.setItemCaptionPropertyId(itemCaptionProperty);
+			}
+
+			String itemImageProperty = modelAccess.yField.getImageProperty();
+			if (itemImageProperty != null && !itemImageProperty.equals("")) {
+				list.setItemIconPropertyId(itemImageProperty);
+			}
+
 			// creates the binding for the field
-			createBindings(modelAccess.yList, list);
+			createBindings(modelAccess.yField, list);
 
 			if (modelAccess.isCssClassValid()) {
 				list.addStyleName(modelAccess.getCssClass());
@@ -112,15 +169,8 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			list.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				list.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), list);
 	}
 
 	@Override
@@ -132,7 +182,8 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	protected IObservable internalGetObservableEndpoint(
 			YEmbeddableBindingEndpoint bindableValue) {
 		if (bindableValue == null) {
-			throw new NullPointerException("BindableValue must not be null!");
+			throw new IllegalArgumentException(
+					"BindableValue must not be null!");
 		}
 
 		if (bindableValue instanceof YEmbeddableCollectionEndpoint) {
@@ -163,7 +214,6 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings({ "restriction" })
 	protected IObservableValue internalGetSelectionEndpoint(
 			YEmbeddableSelectionEndpoint yEndpoint) {
 
@@ -173,8 +223,8 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yList.getType(),
-				modelAccess.yList.getEmfNsURI());
+				attributePath, modelAccess.yField.getType(),
+				modelAccess.yField.getEmfNsURI());
 	}
 
 	/**
@@ -202,7 +252,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 				ExtensionModelPackage.Literals.YLIST__COLLECTION, field,
 				yField.getType()));
 
-		if (modelAccess.yList.getSelectionType() == YSelectionType.MULTI) {
+		if (modelAccess.yField.getSelectionType() == YSelectionType.MULTI) {
 			// create the model binding from ridget to ECView-model
 			registerBinding(createBindingsMultiSelection(
 					castEObject(getModel()),
@@ -267,11 +317,11 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YList yList;
+		private final YList yField;
 
-		public ModelAccess(YList yList) {
+		public ModelAccess(YList yField) {
 			super();
-			this.yList = yList;
+			this.yField = yField;
 		}
 
 		/**
@@ -279,7 +329,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yList.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -296,7 +346,7 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yList.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -309,32 +359,13 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yList.getDatadescription() != null
-					&& yList.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yList.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yList.getDatadescription() != null
-					&& yList.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -343,7 +374,57 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yList.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabelI18nKey() : null;
+		}
+	}
+
+	/**
+	 * Converts the string value of the item icon property to
+	 * {@link ThemeResource}.
+	 */
+	@SuppressWarnings("serial")
+	private static class CustomListSelect extends ListSelect {
+		private Object itemIconPropertyId;
+
+		@Override
+		public void setItemIconPropertyId(Object propertyId)
+				throws IllegalArgumentException {
+			if (propertyId == null) {
+				super.setItemIconPropertyId(propertyId);
+			} else if (!getContainerPropertyIds().contains(propertyId)) {
+				super.setItemIconPropertyId(propertyId);
+			} else if (String.class.isAssignableFrom(getType(propertyId))) {
+				itemIconPropertyId = propertyId;
+			} else {
+				super.setItemIconPropertyId(propertyId);
+			}
+		}
+
+		public Object getItemIconPropertyId() {
+			return itemIconPropertyId != null ? itemIconPropertyId : super
+					.getItemIconPropertyId();
+		}
+
+		public Resource getItemIcon(Object itemId) {
+			if (itemIconPropertyId == null) {
+				return super.getItemIcon(itemId);
+			} else {
+				final Property<?> ip = getContainerProperty(itemId,
+						getItemIconPropertyId());
+				if (ip == null) {
+					return null;
+				}
+				final Object icon = ip.getValue();
+				try {
+					if (icon instanceof String) {
+						return new ThemeResource((String) icon);
+					}
+				} catch (Exception e) {
+					// nothing to do
+				}
+			}
+			return null;
 		}
 	}
 }

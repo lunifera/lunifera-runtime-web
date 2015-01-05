@@ -2,7 +2,7 @@
 <feature
       id="org.lunifera.runtime.web.feature.vaadin.osgi"
       label="%featureName"
-      version="0.7.4"
+      version="0.8.0"
       provider-name="%providerName">
 
    <description>

@@ -18,7 +18,6 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFProperties;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
@@ -29,6 +28,7 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.extension.model.extension.YTree;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITreeEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Component;
@@ -39,11 +39,12 @@ import com.vaadin.ui.Tree;
 /**
  * This presenter is responsible to render a tree on the given layout.
  */
+@SuppressWarnings("restriction")
 public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 	private final ModelAccess modelAccess;
 	private Tree tree;
-	private ObjectProperty property;
+	private ObjectProperty<?> property;
 
 	/**
 	 * Constructor.
@@ -66,11 +67,11 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 			tree = new Tree();
 			tree.addStyleName(CSS_CLASS_CONTROL);
-			tree.setMultiSelect(modelAccess.yTree.getSelectionType() == YSelectionType.MULTI);
+			tree.setMultiSelect(modelAccess.yField.getSelectionType() == YSelectionType.MULTI);
 			tree.setImmediate(true);
 			setupComponent(tree, getCastedModel());
-			
-			associateWidget(tree, modelAccess.yTree);
+
+			associateWidget(tree, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				tree.setId(modelAccess.getCssID());
 			} else {
@@ -80,12 +81,12 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 			if (tree.isMultiSelect()) {
 				property = new ObjectProperty(new HashSet(), Set.class);
 			} else {
-				property = new ObjectProperty(null, modelAccess.yTree.getType());
+				property = new ObjectProperty(null, modelAccess.yField.getType());
 			}
 			tree.setPropertyDataSource(property);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yTree, tree);
+			createBindings(modelAccess.yField, tree);
 
 			if (modelAccess.isCssClassValid()) {
 				tree.addStyleName(modelAccess.getCssClass());
@@ -111,15 +112,8 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			tree.setCaption(service.getValue(modelAccess.getLabelI18nKey(),
-					getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				tree.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), tree);
 	}
 
 	@Override
@@ -175,7 +169,6 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("restriction")
 	protected IObservableValue internalGetSelectionEndpoint(
 			YEmbeddableSelectionEndpoint yEndpoint) {
 
@@ -185,8 +178,8 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 
 		// return the observable value for text
 		return ECViewModelBindable.observeValue(castEObject(getModel()),
-				attributePath, modelAccess.yTree.getType(),
-				modelAccess.yTree.getEmfNsURI());
+				attributePath, modelAccess.yField.getType(),
+				modelAccess.yField.getEmfNsURI());
 	}
 
 	/**
@@ -203,7 +196,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 				yField.getType()));
 
 		// create the model binding from ridget to ECView-model
-		if (modelAccess.yTree.getSelectionType() == YSelectionType.MULTI) {
+		if (modelAccess.yField.getSelectionType() == YSelectionType.MULTI) {
 			// create the model binding from ridget to ECView-model
 			registerBinding(createBindingsMultiSelection(
 					castEObject(getModel()),
@@ -268,11 +261,11 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YTree yTree;
+		private final YTree yField;
 
-		public ModelAccess(YTree yTree) {
+		public ModelAccess(YTree yField) {
 			super();
-			this.yTree = yTree;
+			this.yField = yField;
 		}
 
 		/**
@@ -280,7 +273,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yTree.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -297,7 +290,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yTree.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -310,32 +303,12 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yTree.getDatadescription() != null
-					&& yTree.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yTree.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yTree.getDatadescription() != null
-					&& yTree.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -344,7 +317,7 @@ public class TreePresentation extends AbstractFieldWidgetPresenter<Component> {
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yTree.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

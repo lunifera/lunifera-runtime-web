@@ -19,7 +19,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
@@ -31,6 +30,7 @@ import org.lunifera.ecview.core.extension.model.extension.YDecimalField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IDecimalFieldEditpart;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
@@ -77,7 +77,7 @@ public class DecimalFieldPresentation extends
 			decimalField.setImmediate(true);
 			setupComponent(decimalField, getCastedModel());
 
-			associateWidget(decimalField, modelAccess.yDecimalField);
+			associateWidget(decimalField, modelAccess.yField);
 			if (modelAccess.isCssIdValid()) {
 				decimalField.setId(modelAccess.getCssID());
 			} else {
@@ -103,12 +103,12 @@ public class DecimalFieldPresentation extends
 
 			applyCaptions();
 
-			doApplyDatatype(modelAccess.yDecimalField.getDatatype());
+			doApplyDatatype(modelAccess.yField.getDatatype());
 
 			initializeField(decimalField);
 
 			// creates the binding for the field
-			createBindings(modelAccess.yDecimalField, decimalField);
+			createBindings(modelAccess.yField, decimalField);
 
 			// send an event, that the content was rendered again
 			sendRenderedLifecycleEvent();
@@ -161,15 +161,8 @@ public class DecimalFieldPresentation extends
 	 * Applies the labels to the widgets.
 	 */
 	protected void applyCaptions() {
-		II18nService service = getI18nService();
-		if (service != null && modelAccess.isLabelI18nKeyValid()) {
-			decimalField.setCaption(service.getValue(
-					modelAccess.getLabelI18nKey(), getLocale()));
-		} else {
-			if (modelAccess.isLabelValid()) {
-				decimalField.setCaption(modelAccess.getLabel());
-			}
-		}
+		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
+				modelAccess.getLabelI18nKey(), getLocale(), decimalField);
 	}
 
 	@Override
@@ -304,11 +297,11 @@ public class DecimalFieldPresentation extends
 	 * A helper class.
 	 */
 	private static class ModelAccess {
-		private final YDecimalField yDecimalField;
+		private final YDecimalField yField;
 
-		public ModelAccess(YDecimalField yDecimalField) {
+		public ModelAccess(YDecimalField yField) {
 			super();
-			this.yDecimalField = yDecimalField;
+			this.yField = yField;
 		}
 
 		/**
@@ -316,7 +309,7 @@ public class DecimalFieldPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssClass()
 		 */
 		public String getCssClass() {
-			return yDecimalField.getCssClass();
+			return yField.getCssClass();
 		}
 
 		/**
@@ -333,7 +326,7 @@ public class DecimalFieldPresentation extends
 		 * @see org.lunifera.ecview.core.ui.core.model.core.YCssAble#getCssID()
 		 */
 		public String getCssID() {
-			return yDecimalField.getCssID();
+			return yField.getCssID();
 		}
 
 		/**
@@ -346,32 +339,12 @@ public class DecimalFieldPresentation extends
 		}
 
 		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelValid() {
-			return yDecimalField.getDatadescription() != null
-					&& yDecimalField.getDatadescription().getLabel() != null;
-		}
-
-		/**
 		 * Returns the label.
 		 * 
 		 * @return
 		 */
 		public String getLabel() {
-			return yDecimalField.getDatadescription().getLabel();
-		}
-
-		/**
-		 * Returns true, if the label is valid.
-		 * 
-		 * @return
-		 */
-		public boolean isLabelI18nKeyValid() {
-			return yDecimalField.getDatadescription() != null
-					&& yDecimalField.getDatadescription().getLabelI18nKey() != null;
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -380,7 +353,7 @@ public class DecimalFieldPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yDecimalField.getDatadescription().getLabelI18nKey();
+			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

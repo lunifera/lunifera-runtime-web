@@ -12,18 +12,12 @@ package org.lunifera.runtime.web.vaadin.components.fields.search.filter;
 
 import java.util.Locale;
 
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
-
-import com.vaadin.ui.Component;
-
 public abstract class FilterProperty implements IFilterProperty {
 
 	private Object propertyId;
 	private Locale locale;
-	private IFilterProvider filterProvider;
 
-	public FilterProperty(Object propertyId,
-			Locale locale) {
+	public FilterProperty(Object propertyId, Locale locale) {
 		this.propertyId = propertyId;
 		this.locale = locale;
 	}
@@ -38,21 +32,6 @@ public abstract class FilterProperty implements IFilterProperty {
 	@Override
 	public Object getPropertyId() {
 		return propertyId;
-	}
-
-	/**
-	 * @return the filterProvider
-	 */
-	public IFilterProvider getFilterProvider() {
-		return filterProvider;
-	}
-
-	/**
-	 * @param filterProvider
-	 *            the filterProvider to set
-	 */
-	public void setFilterProvider(IFilterProvider filterProvider) {
-		this.filterProvider = filterProvider;
 	}
 
 }

@@ -13,7 +13,7 @@ package org.lunifera.runtime.web.vaadin.components.fields.search.filter;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import org.lunifera.runtime.web.vaadin.common.IFilterProvider;
+import org.lunifera.runtime.web.vaadin.common.data.filter.Filters;
 import org.lunifera.runtime.web.vaadin.components.converter.DecimalConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +33,8 @@ public class NumericFilterProperty extends FilterProperty {
 	private Wildcard wildcard;
 
 	private Class<? extends Number> type;
+
+	private Filters filterProvider = new Filters();
 
 	public NumericFilterProperty(Class<? extends Number> type,
 			Object propertyId, Locale locale) {
@@ -74,8 +76,8 @@ public class NumericFilterProperty extends FilterProperty {
 
 	@Override
 	public Filter getFilter() {
-		IFilterProvider filterProvider = getFilterProvider();
-		if (filterProvider == null || getNumber() == null) {
+		if (filterProvider == null || getNumber() == null
+				|| getStringValue() == null || getStringValue().equals("")) {
 			return null;
 		}
 		if (wildcard == null || wildcard.equals("")) {
@@ -138,7 +140,7 @@ public class NumericFilterProperty extends FilterProperty {
 	}
 
 	private Number convertToNumber(Double value) {
-		if(value == null){
+		if (value == null) {
 			return null;
 		}
 		Number result = null;
