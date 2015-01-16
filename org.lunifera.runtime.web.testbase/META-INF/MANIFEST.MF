@@ -6,7 +6,7 @@ Created-By: Apache Maven
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: com.vaadin.shared;bundle-version="7.1.1",com.vaadin.se
  rver;bundle-version="7.1.1",com.vaadin.external.org.slf4j;bundle-vers
- ion="1.6.1",com.vaadin.shared.deps;bundle-version="1.0.2",com.vaadin.
+ ion="1.6.1",com.vaadin.
  client-compiled;bundle-version="7.1.1",com.vaadin.themes;bundle-versi
  on="7.1.1",com.vaadin.external.atmosphere.atmosphere-runtime;bundle-v
  ersion="1.0.14",com.vaadin.push;bundle-version="7.1.1",org.eclipse.eq

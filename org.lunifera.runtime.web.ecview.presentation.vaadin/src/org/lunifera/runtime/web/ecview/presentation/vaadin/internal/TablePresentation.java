@@ -227,7 +227,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	}
 
 	protected boolean isNestedColumn(YColumn yColumn) {
-		return yColumn.getPropertyPath().contains(".");
+		return yColumn.getPropertyPath() != null && yColumn.getPropertyPath().contains(".");
 	}
 
 	/**

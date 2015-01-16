@@ -19,8 +19,7 @@ Require-Bundle:
  org.lunifera.runtime.web.vaadin.common;bundle-version="0.0.1",
  org.eclipse.equinox.common;bundle-version="3.6.100",
  com.vaadin.server;bundle-version="7.0.1",
- com.vaadin.shared;bundle-version="7.0.1",
- com.vaadin.shared.deps;bundle-version="1.0.2"
+ com.vaadin.shared;bundle-version="7.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: lunifera.org
 Service-Component: OSGI-INF/*.xml

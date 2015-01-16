@@ -175,6 +175,9 @@ public class FormLayoutPresentation extends
 			// unbind all active bindings
 			unbind();
 
+			// unrender the children
+			unrenderChildren();
+
 			// remove assocations
 			unassociateWidget(formLayout);
 

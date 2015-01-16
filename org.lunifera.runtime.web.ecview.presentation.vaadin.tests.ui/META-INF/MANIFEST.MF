@@ -6,7 +6,6 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-ClassPath: .
 Require-Bundle: com.vaadin.shared;bundle-version="7.0.1",
  com.vaadin.server;bundle-version="7.0.1",
- com.vaadin.shared.deps;bundle-version="1.0.2",
  org.eclipse.emf.ecp.ecview.common.model;bundle-version="0.0.1",
  org.eclipse.emf.ecp.ecview.extension.model;bundle-version="0.0.1",
  org.lunifera.runtime.web.vaadin.common;bundle-version="0.0.1",

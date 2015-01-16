@@ -308,6 +308,9 @@ public class VerticalLayoutPresentation extends
 			// remove assocations
 			unassociateWidget(verticalLayout);
 
+			// unrender the children
+			unrenderChildren();
+
 			verticalLayout = null;
 		}
 	}

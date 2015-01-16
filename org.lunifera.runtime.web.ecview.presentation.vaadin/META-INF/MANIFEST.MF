@@ -19,7 +19,7 @@ Require-Bundle: org.lunifera.ecview.core.extension.editparts;bundle-version="0.8
  org.lunifera.ecview.core.common.editparts.emf;bundle-version="0.8.0",
  com.google.guava;bundle-version="10.0.0",
  org.lunifera.runtime.web.vaadin.common;bundle-version="0.8.0",
- org.json;bundle-version="0.0.20131108"
+ org.json;bundle-version="0.0.1"
 Import-Package: org.osgi.framework;version="1.7.0",
  org.slf4j;version="1.6.4"
 Export-Package: org.lunifera.runtime.web.ecview.presentation.vaadin,
