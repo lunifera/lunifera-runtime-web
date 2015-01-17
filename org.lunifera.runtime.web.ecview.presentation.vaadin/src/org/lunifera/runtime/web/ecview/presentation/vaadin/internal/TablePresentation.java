@@ -24,6 +24,7 @@ import org.eclipse.emf.databinding.EMFProperties;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.filter.IFilterablePresentation;
+import org.lunifera.ecview.core.common.filter.IRefreshRowsPresentation;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableMultiSelectionEndpoint;
@@ -63,7 +64,7 @@ import com.vaadin.ui.Table.RowHeaderMode;
  */
 @SuppressWarnings("restriction")
 public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
-		implements IFilterablePresentation {
+		implements IFilterablePresentation, IRefreshRowsPresentation {
 
 	private final ModelAccess modelAccess;
 	private Table table;
@@ -173,6 +174,13 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		return table;
 	}
 
+	@Override
+	public void refreshRows() {
+		if (isRendered()) {
+			table.refreshRowCache();
+		}
+	}
+
 	/**
 	 * Applies the column setting to the table.
 	 */
@@ -227,7 +235,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	}
 
 	protected boolean isNestedColumn(YColumn yColumn) {
-		return yColumn.getPropertyPath() != null && yColumn.getPropertyPath().contains(".");
+		return yColumn.getPropertyPath() != null
+				&& yColumn.getPropertyPath().contains(".");
 	}
 
 	/**
