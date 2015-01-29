@@ -94,7 +94,7 @@ public class VerticalLayoutPresentation extends
 		List<Cell> cells = new ArrayList<Cell>();
 		for (IEmbeddableEditpart childPresentation : getChildren()) {
 			YEmbeddable yChild = (YEmbeddable) childPresentation.getModel();
-			cells.add(addChild(childPresentation, yStyles.get(yChild)));
+			cells.add(addChildComponent(childPresentation, yStyles.get(yChild)));
 		}
 
 		for (Cell cell : cells) {
@@ -114,7 +114,7 @@ public class VerticalLayoutPresentation extends
 	 * @param yStyle
 	 * @return
 	 */
-	protected Cell addChild(IEmbeddableEditpart editpart,
+	protected Cell addChildComponent(IEmbeddableEditpart editpart,
 			YVerticalLayoutCellStyle yStyle) {
 
 		Component child = (Component) editpart.render(verticalLayout);
@@ -318,7 +318,7 @@ public class VerticalLayoutPresentation extends
 	@Override
 	protected void internalAdd(IEmbeddableEditpart editpart) {
 		YEmbeddable yChild = (YEmbeddable) editpart.getModel();
-		addChild(editpart, modelAccess.getCellStyle(yChild));
+		addChildComponent(editpart, modelAccess.getCellStyle(yChild));
 	}
 
 	@Override
