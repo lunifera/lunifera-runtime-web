@@ -5,8 +5,12 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: 
+ * Contributors:
  * 		Florian Pirchner - Initial implementation
+ *
+ * 		Benno Luthiger
+ * I hereby confirm that the code of the patch/enhancement was written entirely on my own and
+ * I agree to contribute the code to Lunifera under the terms of the EPL. 
  */
 package org.lunifera.runtime.web.vaadin.osgi.webapp;
 
@@ -478,8 +482,11 @@ public class VaadinApplication implements IVaadinApplication {
 				LOGGER.error("{}", e);
 				throw new AppException(e);
 			}
-			httpService.registerResources(RESOURCE_BASE, RESOURCE_BASE,
+			if (!ResourceRegistrationCounter.INSTANCE.hasRegistrations()) {
+				httpService.registerResources(RESOURCE_BASE, RESOURCE_BASE,
 					defaultContext);
+			}
+			ResourceRegistrationCounter.INSTANCE.increment();
 			httpService.registerServlet(servletAlias, servlet, properties,
 					defaultContext);
 		} catch (ServletException e) {
@@ -534,6 +541,7 @@ public class VaadinApplication implements IVaadinApplication {
 
 		try {
 			httpService.unregister(RESOURCE_BASE);
+			ResourceRegistrationCounter.INSTANCE.decrement();
 		} catch (Exception e) {
 			LOGGER.info("{}", e.getMessage());
 		} finally {
