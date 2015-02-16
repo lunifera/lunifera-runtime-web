@@ -17,15 +17,29 @@ Require-Bundle: org.lunifera.ecview.core.extension.editparts;bundle-version="0.8
  org.lunifera.ecview.core.common;bundle-version="0.8.0",
  org.lunifera.ecview.core.common.model;bundle-version="0.8.0",
  org.lunifera.ecview.core.common.editparts.emf;bundle-version="0.8.0",
- com.google.guava;bundle-version="10.0.0",
+ com.google.guava;bundle-version="[10.0.0,19.0.0)",
  org.lunifera.runtime.web.vaadin.common;bundle-version="0.8.0",
- org.json;bundle-version="0.0.1"
+ org.json;bundle-version="0.0.1",
+ org.lunifera.runtime.common
 Import-Package: org.osgi.framework;version="1.7.0",
  org.slf4j;version="1.6.4"
-Export-Package: org.lunifera.runtime.web.ecview.presentation.vaadin,
+Export-Package: org.lunifera.runtime.web.ecview.presentation.vaadin;
+  uses:="com.vaadin.data,
+   org.lunifera.ecview.core.common.presentation,
+   org.eclipse.core.databinding,
+   org.lunifera.ecview.core.common.binding,
+   org.lunifera.ecview.core.common.editpart,
+   org.lunifera.ecview.core.common.context,
+   org.osgi.framework,
+   org.lunifera.ecview.core.common.model.core,
+   com.vaadin.ui",
  org.lunifera.runtime.web.ecview.presentation.vaadin.internal;x-internal:=true,
  org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding;x-internal:=true,
- org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util
+ org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util;
+  uses:="org.lunifera.ecview.core.common.model.visibility,
+   org.lunifera.ecview.core.common.context,
+   org.lunifera.ecview.core.common.visibility,
+   com.vaadin.ui"
 Service-Component: OSGI-INF/*.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

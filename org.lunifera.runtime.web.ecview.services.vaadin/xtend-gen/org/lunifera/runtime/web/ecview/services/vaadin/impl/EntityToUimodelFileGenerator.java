@@ -23,6 +23,7 @@ import org.lunifera.dsl.semantic.common.types.LDataType;
 import org.lunifera.dsl.semantic.common.types.LMultiplicity;
 import org.lunifera.dsl.semantic.common.types.LReference;
 import org.lunifera.dsl.semantic.common.types.LScalarType;
+import org.lunifera.dsl.semantic.common.types.LType;
 import org.lunifera.dsl.semantic.common.types.LTypedPackage;
 import org.lunifera.dsl.semantic.common.types.LUpperBound;
 import org.lunifera.dsl.semantic.entity.LBean;
@@ -543,7 +544,7 @@ public class EntityToUimodelFileGenerator {
       _builder_1.newLineIfNotEmpty();
       _builder_1.append("\t");
       _builder_1.append("type ");
-      LBean _type = ref.getType();
+      LType _type = ref.getType();
       String _name_3 = _type.getName();
       _builder_1.append(_name_3, "\t");
       _builder_1.newLineIfNotEmpty();
@@ -586,7 +587,7 @@ public class EntityToUimodelFileGenerator {
       _builder_3.newLineIfNotEmpty();
       _builder_3.append("\t");
       _builder_3.append("type ");
-      LBean _type_1 = ref.getType();
+      LType _type_1 = ref.getType();
       String _name_7 = _type_1.getName();
       _builder_3.append(_name_7, "\t");
       _builder_3.newLineIfNotEmpty();
@@ -800,7 +801,7 @@ public class EntityToUimodelFileGenerator {
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.append("type ");
-      LBean _type = ref.getType();
+      LType _type = ref.getType();
       String _name_1 = _type.getName();
       _builder.append(_name_1, "\t");
       _builder.newLineIfNotEmpty();
@@ -823,7 +824,7 @@ public class EntityToUimodelFileGenerator {
       _builder_1.newLineIfNotEmpty();
       _builder_1.append("\t");
       _builder_1.append("type ");
-      LBean _type_1 = ref.getType();
+      LType _type_1 = ref.getType();
       String _name_3 = _type_1.getName();
       _builder_1.append(_name_3, "\t");
       _builder_1.newLineIfNotEmpty();

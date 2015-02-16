@@ -17,12 +17,18 @@ Import-Package: org.json,
  org.slf4j;version="1.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.lunifera.runtime.web.vaadin.common,
- org.lunifera.runtime.web.vaadin.common.data,
- org.lunifera.runtime.web.vaadin.common.data.filter
+ org.lunifera.runtime.web.vaadin.common.data;
+  uses:="org.lunifera.dsl.dto.lib.services,
+   org.lunifera.runtime.web.vaadin.databinding.container,
+   com.vaadin.data,
+   com.vaadin.data.util",
+ org.lunifera.runtime.web.vaadin.common.data.filter;uses:="com.vaadin.data,com.vaadin.data.util.filter",
+ org.lunifera.runtime.web.vaadin.common.services.filter
 Bundle-Vendor: Lunifera.org
 Require-Bundle: com.vaadin.server;bundle-version="7.3.1",
  com.vaadin.shared;bundle-version="7.3.1",
  org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.8.0",
  org.lunifera.dsl.dto.lib;bundle-version="0.8.0",
- org.eclipse.xtext.xbase.lib;bundle-version="[2.7.3,2.8.0)"
+ org.eclipse.xtext.xbase.lib;bundle-version="[2.7.3,2.8.0)",
+ org.lunifera.runtime.common
 Service-Component: OSGI-INF/*

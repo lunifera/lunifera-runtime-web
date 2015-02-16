@@ -16,22 +16,23 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.lunifera.ecview.core.common.beans.InMemoryBeanProvider;
-import org.lunifera.ecview.core.common.binding.IECViewBindingManager;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YBeanReferenceField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBeanReferenceFieldEditpart;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.common.annotations.TargetEnumConstraints;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
 import org.lunifera.runtime.web.vaadin.common.data.StatefulInMemoryBeanSearchService;
+import org.lunifera.runtime.web.vaadin.common.services.filter.AnnotationToVaadinFilterConverter;
 import org.lunifera.runtime.web.vaadin.components.fields.BeanReferenceField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Container.Filter;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Field;
@@ -72,7 +73,7 @@ public class BeanReferenceFieldPresentation extends
 
 			IBeanSearchService<?> service = getSearchService(searchServiceFactory);
 			field = new BeanReferenceField(getEditpart().getId(), "",
-					modelAccess.yField.getType(), service);
+					modelAccess.yField.getType(), service, createFilter());
 			field.addStyleName(CSS_CLASS_CONTROL);
 			field.setNullRepresentation("");
 			field.setImmediate(true);
@@ -101,6 +102,39 @@ public class BeanReferenceFieldPresentation extends
 			initializeField(field);
 		}
 		return field;
+	}
+
+	/**
+	 * Creates a vaadin filter for the field annotations.
+	 * 
+	 * @return
+	 */
+	protected Filter createFilter() {
+		Class<?> sourceType = modelAccess.yField.getReferenceSourceType();
+		String sourceProperty = modelAccess.yField
+				.getReferenceSourceTypeProperty();
+		if (sourceType == null || sourceProperty == null
+				|| sourceProperty.equals("")) {
+			return null;
+		}
+
+		try {
+			java.lang.reflect.Field sourceField = sourceType
+					.getDeclaredField(sourceProperty);
+
+			TargetEnumConstraints annotation = sourceField
+					.getAnnotation(TargetEnumConstraints.class);
+			if (annotation != null) {
+				return AnnotationToVaadinFilterConverter
+						.createFilter(annotation);
+			}
+
+		} catch (Throwable e) {
+			LOGGER.warn("{}", e);
+			return null;
+		}
+
+		return null;
 	}
 
 	/**
