@@ -36,5 +36,6 @@ Require-Bundle: com.vaadin.client;bundle-version="7.3.1",
  org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.0.1",
  org.lunifera.runtime.web.vaadin.common;bundle-version="0.7.3",
  org.apache.commons.collections;bundle-version="3.2.0",
- org.lunifera.dsl.dto.lib;bundle-version="0.8.0"
+ org.lunifera.dsl.dto.lib;bundle-version="0.8.0",
+ org.lunifera.runtime.common;bundle-version="0.8.1"
 Service-Component: OSGI-INF/org.lunifera.runtime.web.vaadin.components.fields.BeanSearchServiceFactory.xml

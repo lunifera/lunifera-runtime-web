@@ -11,6 +11,7 @@
 package org.lunifera.runtime.web.vaadin.components.fields;
 
 import org.eclipse.core.databinding.Binding;
+import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 
 import com.vaadin.data.Container.Filter;
@@ -39,12 +40,15 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 	private Object itemCaptionPropertyId;
 	private Object itemIconPropertyId;
 	private Filter filter;
+	private ISharedStateContext sharedState;
 
 	public BeanReferenceField(String id, Object propertyId, Class<BEAN> type,
-			IBeanSearchService<BEAN> searchService, Filter filter) {
+			IBeanSearchService<BEAN> searchService, Filter filter,
+			ISharedStateContext sharedState) {
 		this.type = type;
 		this.searchService = searchService;
 		this.filter = filter;
+		this.sharedState = sharedState;
 
 		property = new ObjectProperty<BEAN>(null, type, false);
 		super.setPropertyDataSource(property);
@@ -62,7 +66,7 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 		comboBox.setInvalidAllowed(false);
 
 		BeanServiceLazyLoadingContainer container = new BeanServiceLazyLoadingContainer(
-				searchService, type);
+				searchService, type, sharedState);
 		// add the passed container filter
 		if (filter != null) {
 			container.addContainerFilter(filter);

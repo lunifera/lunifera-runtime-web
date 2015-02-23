@@ -37,6 +37,7 @@ import org.lunifera.ecview.core.extension.model.extension.YColumn;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.extension.model.extension.YTable;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITableEditpart;
+import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
@@ -134,8 +135,10 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 					}
 					if (modelAccess.yField.isUseBeanService()
 							&& service != null) {
+						ISharedStateContext sharedState = getViewContext().getService(
+								ISharedStateContext.class.getName());
 						BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
-								service, modelAccess.yField.getType());
+								service, modelAccess.yField.getType(), sharedState);
 						table.setContainerDataSource(datasource);
 					} else {
 						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(

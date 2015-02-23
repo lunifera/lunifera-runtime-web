@@ -23,6 +23,7 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YBeanReferenceField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBeanReferenceFieldEditpart;
 import org.lunifera.runtime.common.annotations.TargetEnumConstraints;
+import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
@@ -72,8 +73,11 @@ public class BeanReferenceFieldPresentation extends
 					.getService(IBeanSearchServiceFactory.class.getName());
 
 			IBeanSearchService<?> service = getSearchService(searchServiceFactory);
+			ISharedStateContext sharedState = getViewContext().getService(
+					ISharedStateContext.class.getName());
 			field = new BeanReferenceField(getEditpart().getId(), "",
-					modelAccess.yField.getType(), service, createFilter());
+					modelAccess.yField.getType(), service, createFilter(),
+					sharedState);
 			field.addStyleName(CSS_CLASS_CONTROL);
 			field.setNullRepresentation("");
 			field.setImmediate(true);

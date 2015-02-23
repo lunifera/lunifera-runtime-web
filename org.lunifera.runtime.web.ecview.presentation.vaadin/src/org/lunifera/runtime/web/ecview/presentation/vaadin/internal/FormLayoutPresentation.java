@@ -121,7 +121,7 @@ public class FormLayoutPresentation extends
 			if (!modelAccess.isSpacing()) {
 				formLayout.setSpacing(false);
 			} else {
-				formLayout.setData(IConstants.CSS_CLASS_SPACING);
+				formLayout.addStyleName(IConstants.CSS_CLASS_SPACING);
 				formLayout.setSpacing(true);
 			}
 

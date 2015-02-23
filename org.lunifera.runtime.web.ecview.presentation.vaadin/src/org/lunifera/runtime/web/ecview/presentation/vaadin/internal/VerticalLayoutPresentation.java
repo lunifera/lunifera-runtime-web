@@ -237,7 +237,7 @@ public class VerticalLayoutPresentation extends
 			if (!modelAccess.isSpacing()) {
 				verticalLayout.setSpacing(false);
 			} else {
-				verticalLayout.setData(IConstants.CSS_CLASS_SPACING);
+				verticalLayout.addStyleName(IConstants.CSS_CLASS_SPACING);
 				verticalLayout.setSpacing(true);
 			}
 
