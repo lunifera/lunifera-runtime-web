@@ -2,23 +2,23 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin Components
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components;singleton:=true
-Bundle-Version: 0.9.0
+Bundle-Version: 0.9.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.vaadin.components.converter;version="0.9.0";uses:="com.vaadin.data.util.converter",
- org.lunifera.runtime.web.vaadin.components.fields;version="0.9.0";
+Export-Package: org.lunifera.runtime.web.vaadin.components.converter;version="0.9.1";uses:="com.vaadin.data.util.converter",
+ org.lunifera.runtime.web.vaadin.components.fields;version="0.9.1";
   uses:="org.lunifera.runtime.web.vaadin.components.converter,
    com.vaadin.data,
    org.lunifera.runtime.web.vaadin.common.data,
    com.vaadin.data.util,
    com.vaadin.ui",
- org.lunifera.runtime.web.vaadin.components.fields.search;version="0.9.0";
+ org.lunifera.runtime.web.vaadin.components.fields.search;version="0.9.1";
   uses:="com.vaadin.data,
    org.eclipse.core.databinding,
    com.vaadin.data.util.converter,
    org.lunifera.runtime.web.vaadin.components.fields.search.filter,
    com.vaadin.ui",
- org.lunifera.runtime.web.vaadin.components.fields.search.filter;version="0.9.0";uses:="com.vaadin.data",
- org.lunifera.runtime.web.vaadin.components.validator;version="0.9.0";uses:="com.vaadin.data.validator"
+ org.lunifera.runtime.web.vaadin.components.fields.search.filter;version="0.9.1";uses:="com.vaadin.data",
+ org.lunifera.runtime.web.vaadin.components.validator;version="0.9.1";uses:="com.vaadin.data.validator"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Lunifera.org
 Import-Package: org.json;version="0.0.1",

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.lunifera.runtime.web.ecview.presentation.vaadin.tests.ui
-Bundle-Version: 0.9.0
+Bundle-Version: 0.9.1.qualifier
 Bundle-ClassPath: .
 Require-Bundle: com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",
  com.vaadin.server;bundle-version="[7.3.8,7.3.9)",

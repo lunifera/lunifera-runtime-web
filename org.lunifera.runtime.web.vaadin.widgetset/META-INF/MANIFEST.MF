@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin Components
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.widgetset
-Bundle-Version: 0.9.0
+Bundle-Version: 0.9.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Lunifera.org
@@ -25,4 +25,4 @@ Require-Bundle: com.vaadin.client;bundle-version="[7.3.8,7.3.9)",
  org.eclipse.core.databinding.observable;bundle-version="1.4.1",
  org.eclipse.core.databinding.property;bundle-version="1.4.200",
  org.lunifera.runtime.web.vaadin.databinding;bundle-version="[0.9.0,0.10.0)"
-Export-Package: org.lunifera.runtime.web.vaadin.widgetset;version="0.9.0";uses:="com.vaadin.server,com.vaadin.ui"
+Export-Package: org.lunifera.runtime.web.vaadin.widgetset;version="0.9.1";uses:="com.vaadin.server,com.vaadin.ui"

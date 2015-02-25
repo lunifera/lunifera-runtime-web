@@ -122,7 +122,8 @@ public class EntityToUimodelFileGenerator {
           }
         }
         _builder.append("\t\t\t");
-        _builder.append(this.counter.value = (this.counter.value + 1), "\t\t\t");
+        int _value = this.counter.value = (this.counter.value + 1);
+        _builder.append(_value, "\t\t\t");
         _builder.newLineIfNotEmpty();
       }
     }
@@ -132,7 +133,8 @@ public class EntityToUimodelFileGenerator {
     _builder.append("\t\t");
     _builder.newLine();
     _builder.append("\t\t");
-    _builder.append(this.counter.value = 0, "\t\t");
+    int _value_1 = this.counter.value = 0;
+    _builder.append(_value_1, "\t\t");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t");
     _builder.append("form rightForm {");
@@ -170,7 +172,8 @@ public class EntityToUimodelFileGenerator {
           }
         }
         _builder.append("\t\t\t");
-        _builder.append(this.counter.value = (this.counter.value + 1), "\t\t\t");
+        int _value_2 = this.counter.value = (this.counter.value + 1);
+        _builder.append(_value_2, "\t\t\t");
         _builder.newLineIfNotEmpty();
       }
     }

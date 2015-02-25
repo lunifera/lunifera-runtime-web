@@ -1,4 +1,4 @@
-version=0.9.0
+version=0.9.1-SNAPSHOT
 relengVersion=0.12.5-SNAPSHOT
 relengGroupId=org.lunifera.releng.maven
 relengP2Version=0.12.5-SNAPSHOT

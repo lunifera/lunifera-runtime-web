@@ -141,5 +141,5 @@
 			</build>
 		</profile>
 	</profiles>
-<version>0.9.0</version>
+<version>0.9.1-SNAPSHOT</version>
 </project>

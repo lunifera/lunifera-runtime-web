@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ECView model generator for Vaadin UIs
 Bundle-SymbolicName: org.lunifera.runtime.web.ecview.services.vaadin
-Bundle-Version: 0.9.0
+Bundle-Version: 0.9.1.qualifier
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.ecview.services.vaadin;version="0.9.0";
+Export-Package: org.lunifera.runtime.web.ecview.services.vaadin;version="0.9.1";
   uses:="org.lunifera.dsl.semantic.entity,
    org.lunifera.dsl.semantic.dto,
    org.lunifera.ecview.core.common.context,

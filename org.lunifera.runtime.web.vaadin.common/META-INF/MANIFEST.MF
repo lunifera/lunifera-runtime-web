@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin common stuff
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.common
-Bundle-Version: 0.9.0
+Bundle-Version: 0.9.1.qualifier
 Bundle-ActivationPolicy: lazy
 Import-Package: org.json,
  org.lunifera.runtime.common.dispose,
@@ -16,14 +16,14 @@ Import-Package: org.json,
  org.osgi.util.tracker;version="1.5.1",
  org.slf4j;version="1.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.vaadin.common;version="0.9.0",
- org.lunifera.runtime.web.vaadin.common.data;version="0.9.0";
+Export-Package: org.lunifera.runtime.web.vaadin.common;version="0.9.1",
+ org.lunifera.runtime.web.vaadin.common.data;version="0.9.1";
   uses:="org.lunifera.dsl.dto.lib.services,
    org.lunifera.runtime.web.vaadin.databinding.container,
    com.vaadin.data,
    com.vaadin.data.util",
- org.lunifera.runtime.web.vaadin.common.data.filter;version="0.9.0";uses:="com.vaadin.data,com.vaadin.data.util.filter",
- org.lunifera.runtime.web.vaadin.common.services.filter;version="0.9.0"
+ org.lunifera.runtime.web.vaadin.common.data.filter;version="0.9.1";uses:="com.vaadin.data,com.vaadin.data.util.filter",
+ org.lunifera.runtime.web.vaadin.common.services.filter;version="0.9.1"
 Bundle-Vendor: Lunifera.org
 Require-Bundle: com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
  com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",

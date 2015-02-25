@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.equinox.common;bundle-version="3.6.100",
  com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
  com.vaadin.shared;bundle-version="[7.3.8,7.3.9)"
 Build-Jdk: 1.7.0_15
-Bundle-Version: 0.9.0
+Bundle-Version: 0.9.1.qualifier
 Bundle-Activator: org.lunifera.runtime.web.vaadin.osgi.Activator
 Bundle-ManifestVersion: 2
 Import-Package: javax.servlet;version="2.6.0",
@@ -29,9 +29,9 @@ Import-Package: javax.servlet;version="2.6.0",
  org.osgi.service.log;version="1.3.0",
  org.osgi.util.tracker;version="1.5.1",
  org.slf4j;version="1.6.4"
-Export-Package: org.lunifera.runtime.web.vaadin.osgi;version="0.9.0";x-internal:=true,
- org.lunifera.runtime.web.vaadin.osgi.common;version="0.9.0",
- org.lunifera.runtime.web.vaadin.osgi.servlet;version="0.9.0";x-internal:=true,
- org.lunifera.runtime.web.vaadin.osgi.webapp;version="0.9.0";x-internal:=true
+Export-Package: org.lunifera.runtime.web.vaadin.osgi;version="0.9.1";x-internal:=true,
+ org.lunifera.runtime.web.vaadin.osgi.common;version="0.9.1",
+ org.lunifera.runtime.web.vaadin.osgi.servlet;version="0.9.1";x-internal:=true,
+ org.lunifera.runtime.web.vaadin.osgi.webapp;version="0.9.1";x-internal:=true
 Archiver-Version: Plexus Archiver
 
