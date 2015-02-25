@@ -122,7 +122,7 @@ public class SearchPanelPresentation extends
 			if (!modelAccess.isSpacing()) {
 				horizontalLayout.setSpacing(false);
 			} else {
-				horizontalLayout.setData(IConstants.CSS_CLASS_SPACING);
+				horizontalLayout.addStyleName(IConstants.CSS_CLASS_SPACING);
 				horizontalLayout.setSpacing(true);
 			}
 

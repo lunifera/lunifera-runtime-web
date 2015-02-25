@@ -11,6 +11,7 @@
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +35,7 @@ import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
 import org.lunifera.ecview.core.common.tooling.IWidgetMouseClickService;
 import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
+import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetAssocationsService;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetMouseClickService;
@@ -140,29 +142,29 @@ public class ViewPresentation extends AbstractDisposable implements
 		// }
 	}
 
-//	private boolean isFillVertical(YAlignment alignment) {
-//		switch (alignment) {
-//		case FILL_CENTER:
-//		case FILL_FILL:
-//		case FILL_LEFT:
-//		case FILL_RIGHT:
-//			return true;
-//		default:
-//			return false;
-//		}
-//	}
-//
-//	private boolean isFillHorizontal(YAlignment contentAlignment) {
-//		switch (contentAlignment) {
-//		case MIDDLE_FILL:
-//		case FILL_FILL:
-//		case BOTTOM_FILL:
-//		case TOP_FILL:
-//			return true;
-//		default:
-//			return false;
-//		}
-//	}
+	// private boolean isFillVertical(YAlignment alignment) {
+	// switch (alignment) {
+	// case FILL_CENTER:
+	// case FILL_FILL:
+	// case FILL_LEFT:
+	// case FILL_RIGHT:
+	// return true;
+	// default:
+	// return false;
+	// }
+	// }
+	//
+	// private boolean isFillHorizontal(YAlignment contentAlignment) {
+	// switch (contentAlignment) {
+	// case MIDDLE_FILL:
+	// case FILL_FILL:
+	// case BOTTOM_FILL:
+	// case TOP_FILL:
+	// return true;
+	// default:
+	// return false;
+	// }
+	// }
 
 	/**
 	 * {@inheritDoc}
@@ -175,6 +177,15 @@ public class ViewPresentation extends AbstractDisposable implements
 			componentBase = new CssLayout();
 			componentBase.setSizeFull();
 			componentBase.addStyleName(IConstants.CSS_CLASS_CONTROL_BASE);
+
+			// register shared state
+			ISharedStateContext sharedState = getViewContext().getService(
+					ISharedStateContext.class.getName());
+			if (sharedState != null) {
+				Map<Object, Object> viewData = new HashMap<Object, Object>();
+				viewData.put(ISharedStateContext.class, sharedState);
+				componentBase.setData(viewData);
+			}
 
 			ComponentContainer parentContainer = (ComponentContainer) parent;
 			parentContainer.addComponent(componentBase);

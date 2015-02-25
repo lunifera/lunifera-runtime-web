@@ -11,8 +11,10 @@
 package org.lunifera.runtime.web.vaadin.components.fields;
 
 import org.eclipse.core.databinding.Binding;
+import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 
+import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.Resource;
@@ -37,11 +39,16 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 	private Binding valueBinding;
 	private Object itemCaptionPropertyId;
 	private Object itemIconPropertyId;
+	private Filter filter;
+	private ISharedStateContext sharedState;
 
 	public BeanReferenceField(String id, Object propertyId, Class<BEAN> type,
-			IBeanSearchService<BEAN> searchService) {
+			IBeanSearchService<BEAN> searchService, Filter filter,
+			ISharedStateContext sharedState) {
 		this.type = type;
 		this.searchService = searchService;
+		this.filter = filter;
+		this.sharedState = sharedState;
 
 		property = new ObjectProperty<BEAN>(null, type, false);
 		super.setPropertyDataSource(property);
@@ -57,8 +64,14 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 		comboBox.setImmediate(true);
 		comboBox.setNullSelectionAllowed(false);
 		comboBox.setInvalidAllowed(false);
-		comboBox.setContainerDataSource(new BeanServiceLazyLoadingContainer(
-				searchService, type));
+
+		BeanServiceLazyLoadingContainer container = new BeanServiceLazyLoadingContainer(
+				searchService, type, sharedState);
+		// add the passed container filter
+		if (filter != null) {
+			container.addContainerFilter(filter);
+		}
+		comboBox.setContainerDataSource(container);
 		comboBox.setFilteringMode(FilteringMode.CONTAINS);
 
 		if (itemCaptionPropertyId != null) {

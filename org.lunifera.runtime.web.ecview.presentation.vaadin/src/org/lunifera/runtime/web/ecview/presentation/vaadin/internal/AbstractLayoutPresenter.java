@@ -24,9 +24,8 @@ import com.vaadin.ui.Component;
 /**
  * An abstract base class implementing {@link ILayoutPresentation}.
  */
-public abstract class AbstractLayoutPresenter<A extends Component>
-		extends AbstractVaadinWidgetPresenter<A> implements
-		ILayoutPresentation<A> {
+public abstract class AbstractLayoutPresenter<A extends Component> extends
+		AbstractVaadinWidgetPresenter<A> implements ILayoutPresentation<A> {
 
 	private List<IEmbeddableEditpart> children;
 
@@ -62,14 +61,14 @@ public abstract class AbstractLayoutPresenter<A extends Component>
 	}
 
 	@Override
-	public void add(IEmbeddableEditpart presentation) {
+	public void add(IEmbeddableEditpart editPart) {
 		ensureChildren();
 
-		if (!children.contains(presentation)) {
-			children.add(presentation);
+		if (!children.contains(editPart)) {
+			children.add(editPart);
 
 			if (!renderLock) {
-				internalAdd(presentation);
+				internalAdd(editPart);
 			}
 		}
 	}
@@ -87,13 +86,13 @@ public abstract class AbstractLayoutPresenter<A extends Component>
 	}
 
 	@Override
-	public void remove(IEmbeddableEditpart presentation) {
+	public void remove(IEmbeddableEditpart editPart) {
 		if (children == null) {
 			return;
 		}
 
-		if (children.remove(presentation) && !renderLock) {
-			internalRemove(presentation);
+		if (children.remove(editPart) && !renderLock) {
+			internalRemove(editPart);
 		}
 	}
 
@@ -110,10 +109,10 @@ public abstract class AbstractLayoutPresenter<A extends Component>
 	}
 
 	@Override
-	public void insert(IEmbeddableEditpart presentation, int index) {
+	public void insert(IEmbeddableEditpart editPart, int index) {
 		ensureChildren();
 
-		int currentIndex = children.indexOf(presentation);
+		int currentIndex = children.indexOf(editPart);
 		if (currentIndex > -1 && currentIndex != index) {
 			throw new RuntimeException(
 					String.format(
@@ -121,8 +120,11 @@ public abstract class AbstractLayoutPresenter<A extends Component>
 							index, currentIndex));
 		}
 
-		children.add(index, presentation);
-		internalInsert(presentation, index);
+		children.add(index, editPart);
+
+		if (!renderLock) {
+			internalInsert(editPart, index);
+		}
 	}
 
 	/**
@@ -140,25 +142,25 @@ public abstract class AbstractLayoutPresenter<A extends Component>
 	}
 
 	@Override
-	public void move(IEmbeddableEditpart presentation, int index) {
+	public void move(IEmbeddableEditpart editpart, int index) {
 		if (children == null) {
 			throw new RuntimeException(
 					"Move not possible. No children present.");
 		}
 
-		if (!children.contains(presentation)) {
+		if (!children.contains(editpart)) {
 			throw new RuntimeException(
 					String.format(
 							"Move to index %d not possible since presentation not added yet!",
 							index));
 		}
 
-		int currentIndex = children.indexOf(presentation);
-		children.remove(presentation);
-		children.add(index, presentation);
+		int currentIndex = children.indexOf(editpart);
+		children.remove(editpart);
+		children.add(index, editpart);
 
 		if (!renderLock) {
-			internalMove(presentation, currentIndex, index);
+			internalMove(editpart, currentIndex, index);
 		}
 	}
 

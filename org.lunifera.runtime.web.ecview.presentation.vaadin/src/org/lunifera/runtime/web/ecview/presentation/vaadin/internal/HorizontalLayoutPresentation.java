@@ -258,7 +258,7 @@ public class HorizontalLayoutPresentation extends
 			if (!modelAccess.isSpacing()) {
 				horizontalLayout.setSpacing(false);
 			} else {
-				horizontalLayout.setData(IConstants.CSS_CLASS_SPACING);
+				horizontalLayout.addStyleName(IConstants.CSS_CLASS_SPACING);
 				horizontalLayout.setSpacing(true);
 			}
 
@@ -326,6 +326,9 @@ public class HorizontalLayoutPresentation extends
 			// remove assocations
 			unassociateWidget(horizontalLayout);
 
+			// unrender the children
+			unrenderChildren();
+
 			horizontalLayout.removeAllComponents();
 			horizontalLayout = null;
 		}
@@ -373,6 +376,7 @@ public class HorizontalLayoutPresentation extends
 	protected void unrenderChildren() {
 		for (IEmbeddableEditpart editpart : getChildren()) {
 			if (editpart.isRendered()) {
+				// TODO Pirchner - remove undrendered from componentLayout
 				editpart.unrender();
 			}
 		}
