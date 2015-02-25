@@ -2,7 +2,7 @@
 <feature
       id="org.lunifera.runtime.web.feature.testbase"
       label="%featureName"
-      version="0.0.1.qualifier"
+      version="0.9.0"
       provider-name="%providerName">
 
    <description>
@@ -18,7 +18,7 @@
    </license>
 
    <requires>
-      <import feature="org.lunifera.runtime.web.feature.jetty" version="0.0.0"/>
+      <import feature="org.lunifera.runtime.web.feature.jetty" version="0.9.0"/>
    </requires>
 
    <plugin

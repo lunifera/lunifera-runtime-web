@@ -2,40 +2,40 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin Components
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components;singleton:=true
-Bundle-Version: 0.8.1.qualifier
+Bundle-Version: 0.9.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.vaadin.components.converter;uses:="com.vaadin.data.util.converter",
- org.lunifera.runtime.web.vaadin.components.fields;
+Export-Package: org.lunifera.runtime.web.vaadin.components.converter;version="0.9.0";uses:="com.vaadin.data.util.converter",
+ org.lunifera.runtime.web.vaadin.components.fields;version="0.9.0";
   uses:="org.lunifera.runtime.web.vaadin.components.converter,
    com.vaadin.data,
    org.lunifera.runtime.web.vaadin.common.data,
    com.vaadin.data.util,
    com.vaadin.ui",
- org.lunifera.runtime.web.vaadin.components.fields.search;
+ org.lunifera.runtime.web.vaadin.components.fields.search;version="0.9.0";
   uses:="com.vaadin.data,
    org.eclipse.core.databinding,
    com.vaadin.data.util.converter,
    org.lunifera.runtime.web.vaadin.components.fields.search.filter,
    com.vaadin.ui",
- org.lunifera.runtime.web.vaadin.components.fields.search.filter;uses:="com.vaadin.data",
- org.lunifera.runtime.web.vaadin.components.validator;uses:="com.vaadin.data.validator"
+ org.lunifera.runtime.web.vaadin.components.fields.search.filter;version="0.9.0";uses:="com.vaadin.data",
+ org.lunifera.runtime.web.vaadin.components.validator;version="0.9.0";uses:="com.vaadin.data.validator"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Lunifera.org
 Import-Package: org.json;version="0.0.1",
  org.osgi.service.component;version="1.2.2",
  org.osgi.service.component.annotations;version="1.2.0",
  org.slf4j;version="1.7.2"
-Require-Bundle: com.vaadin.client;bundle-version="7.3.1",
- com.vaadin.server;bundle-version="7.3.1",
- com.vaadin.shared;bundle-version="7.3.1",
+Require-Bundle: com.vaadin.client;bundle-version="[7.3.8,7.3.9)",
+ com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
+ com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",
  com.google.guava;bundle-version="[10.0.0,19.0.0)",
  org.eclipse.core.databinding;bundle-version="1.4.1",
  org.eclipse.core.databinding.beans;bundle-version="1.2.200",
  org.eclipse.core.databinding.observable;bundle-version="1.4.1",
  org.eclipse.core.databinding.property;bundle-version="1.4.200",
- org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.0.1",
- org.lunifera.runtime.web.vaadin.common;bundle-version="0.7.3",
+ org.lunifera.runtime.web.vaadin.databinding;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.runtime.web.vaadin.common;bundle-version="[0.9.0,0.10.0)",
  org.apache.commons.collections;bundle-version="3.2.0",
- org.lunifera.dsl.dto.lib;bundle-version="0.8.0",
- org.lunifera.runtime.common;bundle-version="0.8.1"
+ org.lunifera.dsl.dto.lib;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.runtime.common;bundle-version="[0.9.0,0.10.0)"
 Service-Component: OSGI-INF/org.lunifera.runtime.web.vaadin.components.fields.BeanSearchServiceFactory.xml

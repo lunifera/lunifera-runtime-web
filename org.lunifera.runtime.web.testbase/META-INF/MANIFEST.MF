@@ -4,7 +4,7 @@ Built-By: root
 Bundle-Name: Bootstrap
 Created-By: Apache Maven
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: com.vaadin.shared;bundle-version="7.1.1",com.vaadin.se
+Require-Bundle: com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",com.vaadin.se
  rver;bundle-version="7.1.1",com.vaadin.external.org.slf4j;bundle-vers
  ion="1.6.1",com.vaadin.
  client-compiled;bundle-version="7.1.1",com.vaadin.themes;bundle-versi
@@ -19,7 +19,7 @@ Require-Bundle: com.vaadin.shared;bundle-version="7.1.1",com.vaadin.se
  rsion="8.1.11",org.eclipse.equinox.http.servlet;bundle-version="1.1.4
  00"
 Build-Jdk: 1.7.0_15
-Bundle-Version: 0.0.1.201307311808
+Bundle-Version: 0.9.0
 Bundle-ManifestVersion: 2
 Bundle-Activator: org.lunifera.runtime.web.testbase.Activator
 Import-Package: javax.servlet;version="2.6.0",javax.servlet.http;versi

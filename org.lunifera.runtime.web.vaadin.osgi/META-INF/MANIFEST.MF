@@ -1,19 +1,17 @@
 Manifest-Version: 1.0
-Export-Package: org.lunifera.runtime.web.vaadin.osgi;x-internal:=true,
- org.lunifera.runtime.web.vaadin.osgi.common,
- org.lunifera.runtime.web.vaadin.osgi.servlet;x-internal:=true,
- org.lunifera.runtime.web.vaadin.osgi.webapp;x-internal:=true
 Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy
 Built-By: root
 Bundle-Name: Vaadin 7 OSGi bridge
+Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.osgi;singleton:=t
+ rue
 Created-By: Apache Maven
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.equinox.common;bundle-version="3.6.100",
- com.vaadin.server;bundle-version="7.1.0",
- com.vaadin.shared;bundle-version="7.1.0"
+ com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
+ com.vaadin.shared;bundle-version="[7.3.8,7.3.9)"
 Build-Jdk: 1.7.0_15
-Bundle-Version: 0.8.1.qualifier
+Bundle-Version: 0.9.0
 Bundle-Activator: org.lunifera.runtime.web.vaadin.osgi.Activator
 Bundle-ManifestVersion: 2
 Import-Package: javax.servlet;version="2.6.0",
@@ -31,7 +29,9 @@ Import-Package: javax.servlet;version="2.6.0",
  org.osgi.service.log;version="1.3.0",
  org.osgi.util.tracker;version="1.5.1",
  org.slf4j;version="1.6.4"
-Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.osgi;singleton:=t
- rue
+Export-Package: org.lunifera.runtime.web.vaadin.osgi;version="0.9.0";x-internal:=true,
+ org.lunifera.runtime.web.vaadin.osgi.common;version="0.9.0",
+ org.lunifera.runtime.web.vaadin.osgi.servlet;version="0.9.0";x-internal:=true,
+ org.lunifera.runtime.web.vaadin.osgi.webapp;version="0.9.0";x-internal:=true
 Archiver-Version: Plexus Archiver
 
