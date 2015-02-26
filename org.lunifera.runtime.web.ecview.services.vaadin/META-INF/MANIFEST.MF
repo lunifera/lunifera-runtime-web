@@ -2,37 +2,37 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ECView model generator for Vaadin UIs
 Bundle-SymbolicName: org.lunifera.runtime.web.ecview.services.vaadin
-Bundle-Version: 0.8.1.qualifier
+Bundle-Version: 0.9.1.qualifier
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.ecview.services.vaadin;
+Export-Package: org.lunifera.runtime.web.ecview.services.vaadin;version="0.9.1";
   uses:="org.lunifera.dsl.semantic.entity,
    org.lunifera.dsl.semantic.dto,
    org.lunifera.ecview.core.common.context,
    org.lunifera.ecview.core.common.model.core,
    com.vaadin.ui"
 Bundle-Vendor: Lunifera.org
-Require-Bundle: com.vaadin.server;bundle-version="7.3.1",
- com.vaadin.shared;bundle-version="7.3.1",
- org.lunifera.ecview.core.common;bundle-version="0.8.0",
- org.lunifera.ecview.core.common.editparts.emf;bundle-version="0.8.0",
- org.lunifera.ecview.core.common.model;bundle-version="0.8.0",
- org.lunifera.ecview.core.databinding.beans;bundle-version="0.8.0",
- org.lunifera.ecview.core.databinding.emf;bundle-version="0.8.0",
- org.lunifera.ecview.core.extension.editparts;bundle-version="0.8.0",
- org.lunifera.ecview.core.extension.model;bundle-version="0.8.0",
- org.lunifera.ecview.core.ui.presentation.common;bundle-version="0.8.0",
- org.lunifera.ecview.core.util.emf;bundle-version="0.8.0",
- org.lunifera.runtime.web.ecview.presentation.vaadin;bundle-version="0.8.0",
- org.lunifera.dsl.semantic.common;bundle-version="0.8.0",
- org.lunifera.dsl.semantic.dto;bundle-version="0.8.0",
- org.lunifera.dsl.semantic.entity;bundle-version="0.8.0",
- org.lunifera.dsl.xtext.builder.participant;bundle-version="0.8.0",
+Require-Bundle: com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
+ com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",
+ org.lunifera.ecview.core.common;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.ecview.core.common.editparts.emf;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.ecview.core.common.model;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.ecview.core.databinding.beans;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.ecview.core.databinding.emf;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.ecview.core.extension.editparts;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.ecview.core.extension.model;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.ecview.core.ui.presentation.common;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.ecview.core.util.emf;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.runtime.web.ecview.presentation.vaadin;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.dsl.semantic.common;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.dsl.semantic.dto;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.dsl.semantic.entity;bundle-version="[0.9.0,0.10.0)",
+ org.lunifera.dsl.xtext.builder.participant;bundle-version="[0.9.0,0.10.0)",
  com.google.inject;bundle-version="3.0.0",
  org.junit;bundle-version="4.11.0",
  org.eclipse.xtext;bundle-version="[2.7.3,2.8.0)",
  org.lunifera.xtext.builder.types.bundles,
- org.lunifera.runtime.common;bundle-version="0.8.0",
+ org.lunifera.runtime.common;bundle-version="[0.9.0,0.10.0)",
  org.eclipse.xtend.lib;bundle-version="[2.7.3,2.8.0)",
  com.google.guava;bundle-version="[10.0.0,19.0.0)",
  org.eclipse.xtext.xbase.lib;bundle-version="[2.7.3,2.8.0)"

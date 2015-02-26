@@ -2,27 +2,27 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin Components
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.widgetset
-Bundle-Version: 0.8.1.qualifier
+Bundle-Version: 0.9.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Lunifera.org
-Import-Package: com.vaadin.data;version="7.0.0",
- com.vaadin.data.util.converter;version="7.0.0",
- com.vaadin.data.validator;version="7.0.0",
- com.vaadin.event;version="7.0.0",
- com.vaadin.server;version="7.0.0",
- com.vaadin.shared;version="7.0.0",
+Import-Package: com.vaadin.data;version="[7.3.8,7.3.9)",
+ com.vaadin.data.util.converter;version="[7.3.8,7.3.9)",
+ com.vaadin.data.validator;version="[7.3.8,7.3.9)",
+ com.vaadin.event;version="[7.3.8,7.3.9)",
+ com.vaadin.server;version="[7.3.8,7.3.9)",
+ com.vaadin.shared;version="[7.3.8,7.3.9)",
  com.vaadin.shared.communication;version="7.0.1.nightly-faf98c84bd260b2a8315dc1cc62a1f932dfd2f37-366",
- com.vaadin.shared.ui;version="7.0.0",
- com.vaadin.ui;version="7.0.0",
+ com.vaadin.shared.ui;version="[7.3.8,7.3.9)",
+ com.vaadin.ui;version="[7.3.8,7.3.9)",
  org.json;version="0.0.1"
-Require-Bundle: com.vaadin.client;bundle-version="7.3.1",
- com.vaadin.server;bundle-version="7.3.1",
- com.vaadin.shared;bundle-version="7.3.1",
+Require-Bundle: com.vaadin.client;bundle-version="[7.3.8,7.3.9)",
+ com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
+ com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",
  com.google.guava;bundle-version="[10.0.0,19.0.0)",
  org.eclipse.core.databinding;bundle-version="1.4.1",
  org.eclipse.core.databinding.beans;bundle-version="1.2.200",
  org.eclipse.core.databinding.observable;bundle-version="1.4.1",
  org.eclipse.core.databinding.property;bundle-version="1.4.200",
- org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.0.1"
-Export-Package: org.lunifera.runtime.web.vaadin.widgetset;uses:="com.vaadin.server,com.vaadin.ui"
+ org.lunifera.runtime.web.vaadin.databinding;bundle-version="[0.9.0,0.10.0)"
+Export-Package: org.lunifera.runtime.web.vaadin.widgetset;version="0.9.1";uses:="com.vaadin.server,com.vaadin.ui"
