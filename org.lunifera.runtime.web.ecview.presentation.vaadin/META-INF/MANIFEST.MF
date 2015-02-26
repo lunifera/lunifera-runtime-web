@@ -41,5 +41,5 @@ Export-Package: org.lunifera.runtime.web.ecview.presentation.vaadin;version="0.9
    org.lunifera.ecview.core.common.visibility,
    com.vaadin.ui"
 Service-Component: OSGI-INF/*.xml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

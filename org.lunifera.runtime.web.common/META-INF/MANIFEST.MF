@@ -6,9 +6,7 @@ Bundle-Version: 0.9.1.qualifier
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Lunifera.org
-Import-Package: org.lunifera.runtime.common.dispose;version="[0.9.0,0.10.0)",
- org.lunifera.runtime.common.user;version="[0.9.0,0.10.0)",
- org.osgi.service.component;version="1.2.0",
+Import-Package: org.osgi.service.component;version="1.2.0",
  org.osgi.service.prefs;version="1.1.1"
 Export-Package: org.lunifera.runtime.web.common;version="0.9.1";uses:="org.lunifera.runtime.common.user,org.lunifera.runtime.common.dispose",
  org.lunifera.runtime.web.common.context;version="0.9.1";
@@ -18,3 +16,4 @@ Export-Package: org.lunifera.runtime.web.common;version="0.9.1";uses:="org.lunif
    org.osgi.service.component,
    org.lunifera.runtime.web.common",
  org.lunifera.runtime.web.common.context.preferences;version="0.9.1";x-internal:=true
+Require-Bundle: org.lunifera.runtime.common;bundle-version="[0.9.1,0.10.0)"
