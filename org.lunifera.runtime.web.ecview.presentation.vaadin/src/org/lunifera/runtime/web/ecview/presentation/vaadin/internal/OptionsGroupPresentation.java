@@ -30,9 +30,9 @@ import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IOptionsGroupEditpart;
 import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.data.BeanServiceLazyLoadingContainer;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
-import org.lunifera.runtime.web.vaadin.components.fields.BeanServiceLazyLoadingContainer;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;

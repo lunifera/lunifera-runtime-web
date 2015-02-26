@@ -27,6 +27,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumCon
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumOptionBean;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumOptionBeanHelper;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.resource.IResourceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -333,7 +334,7 @@ public class EnumComboBoxPresentation extends
 	 * {@link ThemeResource}.
 	 */
 	@SuppressWarnings("serial")
-	private static class CustomComboBox extends ComboBox {
+	private class CustomComboBox extends ComboBox {
 
 		private Object itemIconPropertyId;
 
@@ -376,7 +377,9 @@ public class EnumComboBoxPresentation extends
 				final Object icon = ip.getValue();
 				try {
 					if (icon instanceof String) {
-						return new ThemeResource((String) icon);
+						IResourceProvider provider = getViewContext()
+								.getService(IResourceProvider.class.getName());
+						return provider.getResource((String) icon);
 					}
 				} catch (Exception e) {
 				}

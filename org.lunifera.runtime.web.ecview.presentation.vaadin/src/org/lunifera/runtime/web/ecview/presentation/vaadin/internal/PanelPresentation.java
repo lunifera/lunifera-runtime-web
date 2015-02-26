@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.themes.Reindeer;
 
 /**
  * This presenter is responsible to render a text field on the given layout.

@@ -37,12 +37,15 @@ import org.lunifera.ecview.core.extension.model.extension.YColumn;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.extension.model.extension.YTable;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITableEditpart;
+import org.lunifera.runtime.common.annotations.DtoUtils;
 import org.lunifera.runtime.common.state.ISharedStateContext;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumOptionBeanHelper;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.data.BeanServiceLazyLoadingContainer;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
-import org.lunifera.runtime.web.vaadin.components.fields.BeanServiceLazyLoadingContainer;
+import org.lunifera.runtime.web.vaadin.common.resource.IResourceProvider;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
@@ -50,6 +53,8 @@ import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
@@ -59,6 +64,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.RowHeaderMode;
+import com.vaadin.ui.UI;
 
 /**
  * This presenter is responsible to render a table on the given layout.
@@ -135,10 +141,11 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 					}
 					if (modelAccess.yField.isUseBeanService()
 							&& service != null) {
-						ISharedStateContext sharedState = getViewContext().getService(
-								ISharedStateContext.class.getName());
+						ISharedStateContext sharedState = getViewContext()
+								.getService(ISharedStateContext.class.getName());
 						BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
-								service, modelAccess.yField.getType(), sharedState);
+								service, modelAccess.yField.getType(),
+								sharedState);
 						table.setContainerDataSource(datasource);
 					} else {
 						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(
@@ -187,7 +194,10 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	/**
 	 * Applies the column setting to the table.
 	 */
+	@SuppressWarnings("serial")
 	protected void applyColumns() {
+		Class<?> type = modelAccess.yField.getType();
+
 		// set the visible columns and icons
 		List<String> columns = new ArrayList<String>();
 		Collection<?> propertyIds = table.getContainerDataSource()
@@ -215,11 +225,18 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		table.setVisibleColumns(columns.toArray(new Object[columns.size()]));
 		table.setColumnCollapsingAllowed(true);
 
+		final String dirtyProperty = getDirtyProperty(type);
+
+		II18nService i18nService = getViewContext().getService(
+				II18nService.class.getName());
+		IResourceProvider resourceProvider = (IResourceProvider) getViewContext()
+				.getService(IResourceProvider.class.getName());
 		// traverse the columns again and set other properties
 		for (YColumn yColumn : modelAccess.yField.getColumns()) {
 			if (yColumn.isVisible()
 					&& (propertyIds.contains(yColumn.getPropertyPath()) || isNestedColumn(yColumn))) {
 				String columnId = yColumn.getPropertyPath();
+
 				table.setColumnHeader(columnId, getColumnHeader(yColumn));
 				table.setColumnAlignment(columnId,
 						toAlign(yColumn.getAlignment()));
@@ -230,11 +247,48 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 							yColumn.getExpandRatio());
 				}
 				if (yColumn.getIcon() != null && !yColumn.getIcon().equals("")) {
-					table.setColumnIcon(columnId,
-							new ThemeResource(yColumn.getIcon()));
+					if (i18nService != null) {
+						String translation = i18nService.getValue(
+								yColumn.getIcon(), UI.getCurrent().getLocale());
+						table.setColumnIcon(columnId,
+								resourceProvider.getResource(translation));
+					} else {
+						table.setColumnIcon(columnId,
+								resourceProvider.getResource(yColumn.getIcon()));
+					}
 				}
 			}
 		}
+
+		// if a dirty property is available, we use it
+		if (dirtyProperty != null) {
+			table.setCellStyleGenerator(new Table.CellStyleGenerator() {
+				@Override
+				public String getStyle(Table source, Object itemId,
+						Object propertyId) {
+					if (propertyId == null) {
+						return null;
+					}
+					if (propertyId.equals(dirtyProperty)) {
+						try {
+							boolean dirty = DtoUtils.invokeDirtyGetter(itemId);
+							return dirty ? "dirty" : null;
+						} catch (IllegalAccessException e) {
+						}
+					}
+					return null;
+				}
+			});
+		}
+	}
+
+	protected String getDirtyProperty(Class<?> type) {
+		String temp = null;
+		java.lang.reflect.Field dirtyField = DtoUtils.getDirtyField(type);
+		if (dirtyField != null) {
+			temp = dirtyField.getName();
+		}
+		return temp;
 	}
 
 	protected boolean isNestedColumn(YColumn yColumn) {
@@ -530,7 +584,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	 * {@link ThemeResource}.
 	 */
 	@SuppressWarnings("serial")
-	private static class CustomTable extends Table {
+	private class CustomTable extends Table {
 		private Object itemIconPropertyId;
 
 		@Override
@@ -567,6 +621,69 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 				}
 			}
 			return null;
+		}
+
+		protected String formatPropertyValue(Object rowId, Object colId,
+				Property<?> property) {
+			if (property == null) {
+				return "";
+			}
+			Converter<String, Object> converter = null;
+
+			if (hasConverter(colId)) {
+				converter = getConverter(colId);
+			} else {
+				converter = (Converter) ConverterUtil.getConverter(
+						String.class, property.getType(), getSession());
+			}
+			Object value = property.getValue();
+			if (converter != null) {
+				return converter.convertToPresentation(value, String.class,
+						getLocale());
+			} else {
+				if (value instanceof Enum<?>) {
+					return formatEnum(value);
+				} else if (value instanceof Boolean) {
+					return formatBoolean((Boolean) value);
+				}
+			}
+			return (null != value) ? value.toString() : "";
+		}
+
+		/**
+		 * Formats the enum literal.
+		 * 
+		 * @param value
+		 * @return
+		 */
+		public String formatEnum(Object value) {
+			Enum<?> enumx = (Enum<?>) value;
+			String i18nKey = EnumOptionBeanHelper.getI18nKey(enumx.getClass()
+					.getName(), enumx);
+			II18nService i18nService = getI18nService();
+
+			String result = null;
+			if (i18nService != null) {
+				result = i18nService.getValue(i18nKey, getLocale());
+			}
+
+			if (result == null || result.trim().equals("")) {
+				result = enumx.name();
+			}
+
+			return result;
+		}
+
+		public String formatBoolean(Boolean value) {
+			String result = getI18nService().getValue(
+					Boolean.class.getName() + "." + value.toString(),
+					getLocale());
+
+			if (result == null || result.trim().equals("")) {
+				result = value.toString();
+			}
+
+			return result;
 		}
 	}
 }

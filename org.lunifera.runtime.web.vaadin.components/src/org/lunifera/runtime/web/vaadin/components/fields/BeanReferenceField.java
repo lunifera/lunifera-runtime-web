@@ -12,6 +12,7 @@ package org.lunifera.runtime.web.vaadin.components.fields;
 
 import org.eclipse.core.databinding.Binding;
 import org.lunifera.runtime.common.state.ISharedStateContext;
+import org.lunifera.runtime.web.vaadin.common.data.BeanServiceLazyLoadingContainer;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 
 import com.vaadin.data.Container.Filter;

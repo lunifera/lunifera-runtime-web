@@ -8,24 +8,24 @@
  * Contributors: 
  * 		Florian Pirchner - Initial implementation
  */
-package org.lunifera.runtime.web.vaadin.components.fields;
+package org.lunifera.runtime.web.vaadin.common.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.lunifera.dsl.dto.lib.services.SortBy;
 import org.lunifera.dsl.dto.lib.services.SortOrder;
+import org.lunifera.runtime.common.annotations.DtoUtils;
 import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.common.state.SharedStateUnitOfWork;
-import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItem;
-import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
-import org.lunifera.runtime.web.vaadin.common.data.StatefulInMemoryBeanSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +59,7 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 	@SuppressWarnings("unused")
 	private Class<BEANTYPE> type;
 
+	private Set<String> sortableProperties = new HashSet<String>();
 	private LinkedHashMap<String, VaadinPropertyDescriptor<BEANTYPE>> model;
 
 	private Map<Object, DeepResolvingBeanItem<BEANTYPE>> cache = new HashMap<Object, DeepResolvingBeanItem<BEANTYPE>>();
@@ -75,6 +76,14 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 		this.type = type;
 		model = DeepResolvingBeanItem
 				.getPropertyDescriptors((Class<BEANTYPE>) type);
+
+		// create all sortable columns
+		for (String column : model.keySet()) {
+			if (DtoUtils.isDirtyField(type, column)) {
+				continue;
+			}
+			sortableProperties.add(column);
+		}
 		this.sharedState = sharedState;
 	}
 
@@ -365,7 +374,7 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 
 	@Override
 	public Collection<?> getSortableContainerPropertyIds() {
-		return getContainerPropertyIds();
+		return sortableProperties;
 	}
 
 	@Override

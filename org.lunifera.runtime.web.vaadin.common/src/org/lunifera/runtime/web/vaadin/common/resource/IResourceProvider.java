@@ -7,18 +7,18 @@
  * 
  * Contributors: 
  * 		Florian Pirchner - Initial implementation
- * 		Hans Georg Glöckler - Initial implementation
  */
-package org.lunifera.runtime.web.vaadin.components.fields;
+package org.lunifera.runtime.web.vaadin.common.resource;
 
-/**
- * Marks a clear able container.
- */
-public interface IClearable {
+import com.vaadin.server.Resource;
+
+public interface IResourceProvider {
 
 	/**
-	 * Clears the container.
+	 * Returns the vaadin resource for the given path.
+	 * @param resourcePath
+	 * @return
 	 */
-	void clear();
+	Resource getResource(String resourcePath);
 	
 }

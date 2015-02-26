@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.And;
 
-@SuppressWarnings("restriction")
 public class StatefulDelegatingDtoSearchService<BEAN> implements
 		IBeanSearchService<BEAN> {
 

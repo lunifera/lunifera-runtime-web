@@ -58,11 +58,11 @@ public class EnumOptionBeanHelper {
 		return result;
 	}
 
-	protected static String getI18nKey(String enumName, Enum<?> literal) {
+	public static String getI18nKey(String enumName, Enum<?> literal) {
 		return enumName + "." + literal.name();
 	}
 
-	protected static String getImageI18nKey(String enumName, Enum<?> literal) {
+	public static String getImageI18nKey(String enumName, Enum<?> literal) {
 		return enumName + "." + literal.name() + ".image";
 	}
 

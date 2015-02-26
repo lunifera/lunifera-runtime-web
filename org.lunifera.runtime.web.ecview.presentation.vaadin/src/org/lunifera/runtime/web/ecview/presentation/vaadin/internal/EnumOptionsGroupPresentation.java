@@ -31,6 +31,7 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumOpt
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumOptionBeanHelper;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumSetConverter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.resource.IResourceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -366,7 +367,7 @@ public class EnumOptionsGroupPresentation extends
 	 * {@link ThemeResource}.
 	 */
 	@SuppressWarnings("serial")
-	private static class CustomOptionsGroup extends OptionGroup {
+	private class CustomOptionsGroup extends OptionGroup {
 
 		private Object itemIconPropertyId;
 
@@ -409,7 +410,9 @@ public class EnumOptionsGroupPresentation extends
 				final Object icon = ip.getValue();
 				try {
 					if (icon instanceof String) {
-						return new ThemeResource((String) icon);
+						IResourceProvider provider = getViewContext()
+								.getService(IResourceProvider.class.getName());
+						return provider.getResource((String) icon);
 					}
 				} catch (Exception e) {
 				}
