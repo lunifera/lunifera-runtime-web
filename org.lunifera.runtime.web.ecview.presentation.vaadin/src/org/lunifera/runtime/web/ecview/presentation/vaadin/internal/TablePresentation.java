@@ -21,6 +21,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFProperties;
+import org.lunifera.ecview.core.common.context.I18nUtil;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.filter.IFilterablePresentation;
@@ -39,12 +40,13 @@ import org.lunifera.ecview.core.extension.model.extension.YTable;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITableEditpart;
 import org.lunifera.runtime.common.annotations.DtoUtils;
 import org.lunifera.runtime.common.state.ISharedStateContext;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumOptionBeanHelper;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.BeanServiceLazyLoadingContainer;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
+import org.lunifera.runtime.web.vaadin.common.data.ILazyRefreshFilterable;
+import org.lunifera.runtime.web.vaadin.common.data.INestedPropertyAble;
 import org.lunifera.runtime.web.vaadin.common.resource.IResourceProvider;
 
 import com.vaadin.data.Container;
@@ -212,8 +214,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 		}
 
 		// add nested properties
-		if (table.getContainerDataSource() instanceof DeepResolvingBeanItemContainer) {
-			DeepResolvingBeanItemContainer<?> container = (DeepResolvingBeanItemContainer<?>) table
+		if (table.getContainerDataSource() instanceof INestedPropertyAble) {
+			INestedPropertyAble<?> container = (INestedPropertyAble<?>) table
 					.getContainerDataSource();
 			for (String property : columns) {
 				if (property.contains(".")) {
@@ -368,6 +370,11 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			filterable.removeAllContainerFilters();
 			if (filter != null) {
 				filterable.addContainerFilter((Filter) filter);
+			} else {
+				if (container instanceof ILazyRefreshFilterable) {
+					ILazyRefreshFilterable lazyFilterable = (ILazyRefreshFilterable) container;
+					lazyFilterable.refreshFilters();
+				}
 			}
 		}
 	}
@@ -623,6 +630,7 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			return null;
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		protected String formatPropertyValue(Object rowId, Object colId,
 				Property<?> property) {
 			if (property == null) {
@@ -642,48 +650,17 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 						getLocale());
 			} else {
 				if (value instanceof Enum<?>) {
-					return formatEnum(value);
+					return I18nUtil.translateEnum(getI18nService(), value,
+							getLocale());
 				} else if (value instanceof Boolean) {
-					return formatBoolean((Boolean) value);
+					return I18nUtil.translateBoolean(getI18nService(),
+							(Boolean) value, getLocale());
+				} else if (value instanceof Number) {
+					return I18nUtil.translateNumber(getI18nService(),
+							(Number) value, getLocale());
 				}
 			}
 			return (null != value) ? value.toString() : "";
-		}
-
-		/**
-		 * Formats the enum literal.
-		 * 
-		 * @param value
-		 * @return
-		 */
-		public String formatEnum(Object value) {
-			Enum<?> enumx = (Enum<?>) value;
-			String i18nKey = EnumOptionBeanHelper.getI18nKey(enumx.getClass()
-					.getName(), enumx);
-			II18nService i18nService = getI18nService();
-
-			String result = null;
-			if (i18nService != null) {
-				result = i18nService.getValue(i18nKey, getLocale());
-			}
-
-			if (result == null || result.trim().equals("")) {
-				result = enumx.name();
-			}
-
-			return result;
-		}
-
-		public String formatBoolean(Boolean value) {
-			String result = getI18nService().getValue(
-					Boolean.class.getName() + "." + value.toString(),
-					getLocale());
-
-			if (result == null || result.trim().equals("")) {
-				result = value.toString();
-			}
-
-			return result;
 		}
 	}
 }

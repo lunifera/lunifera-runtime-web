@@ -85,4 +85,9 @@ public class ValidatorAdapter extends AbstractValidator implements IValidator {
 		wrappedValidator.setI18nService(i18nService);
 	}
 
+	@Override
+	public boolean isDisposing() {
+		return false;
+	}
+
 }

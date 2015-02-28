@@ -102,6 +102,8 @@ public class TextFieldPresentation extends
 	protected void applyCaptions() {
 		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
 				modelAccess.getLabelI18nKey(), getLocale(), text);
+//		Util.applyCaptionIcons(getI18nService(), getResourceProvider(),
+//				modelAccess.getLabelI18nKey(), getLocale(), text);
 	}
 
 	@Override
@@ -244,7 +246,8 @@ public class TextFieldPresentation extends
 		 * @return
 		 */
 		public String getLabel() {
-			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -253,7 +256,8 @@ public class TextFieldPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabelI18nKey() : null;
 		}
 	}
 }

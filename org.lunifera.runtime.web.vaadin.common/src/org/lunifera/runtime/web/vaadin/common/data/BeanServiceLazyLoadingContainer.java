@@ -39,6 +39,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.AbstractContainer;
+import com.vaadin.data.util.NestedPropertyDescriptor;
 import com.vaadin.data.util.VaadinPropertyDescriptor;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
@@ -46,8 +47,9 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
 @SuppressWarnings("serial")
 public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 		AbstractContainer implements Filterable, Indexed, SimpleFilterable,
-		Sortable, ValueChangeListener, Container.ItemSetChangeNotifier,
-		Container.PropertySetChangeNotifier, IClearable {
+		ILazyRefreshFilterable, Sortable, ValueChangeListener,
+		Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier,
+		IClearable, INestedPropertyAble<BEANTYPE> {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
@@ -353,6 +355,50 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 		throw new UnsupportedOperationException();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.lunifera.runtime.web.vaadin.common.data.INestedPropertyAble#
+	 * addNestedContainerProperty(java.lang.String)
+	 */
+	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public boolean addNestedContainerProperty(String propertyId) {
+		return addContainerProperty(propertyId, new NestedPropertyDescriptor(
+				propertyId, type));
+	}
+
+	/**
+	 * Adds a property for the container and all its items.
+	 * 
+	 * Primarily for internal use, may change in future versions.
+	 * 
+	 * @param propertyId
+	 * @param propertyDescriptor
+	 * @return true if the property was added
+	 */
+	protected final boolean addContainerProperty(String propertyId,
+			VaadinPropertyDescriptor<BEANTYPE> propertyDescriptor) {
+		if (null == propertyId || null == propertyDescriptor) {
+			return false;
+		}
+
+		// Fails if the Property is already present
+		if (model.containsKey(propertyId)) {
+			return false;
+		}
+
+		model.put(propertyId, propertyDescriptor);
+
+		// add to sortable properties
+		sortableProperties.add(propertyId);
+
+		// Sends a change event
+		fireContainerPropertySetChange();
+
+		return true;
+	}
+
 	@Override
 	public boolean removeAllItems() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
@@ -439,6 +485,11 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 	@Override
 	public Collection<Filter> getContainerFilters() {
 		return Collections.unmodifiableList(filters);
+	}
+
+	@Override
+	public void refreshFilters() {
+		fireItemSetChange();
 	}
 
 	@SuppressWarnings("unchecked")

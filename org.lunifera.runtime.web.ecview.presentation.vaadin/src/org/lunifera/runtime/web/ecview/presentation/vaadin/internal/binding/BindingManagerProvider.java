@@ -13,8 +13,8 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding;
 
 import org.lunifera.ecview.core.common.context.IContext;
 import org.lunifera.ecview.core.common.context.IViewContext;
-import org.lunifera.ecview.core.common.disposal.IDisposable;
 import org.lunifera.ecview.core.common.services.IServiceProvider;
+import org.lunifera.runtime.common.dispose.IDisposable;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 

@@ -42,6 +42,8 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 	private Object itemIconPropertyId;
 	private Filter filter;
 	private ISharedStateContext sharedState;
+	private NativeButton searchButton;
+	private Resource searchButtonIcon;
 
 	public BeanReferenceField(String id, Object propertyId, Class<BEAN> type,
 			IBeanSearchService<BEAN> searchService, Filter filter,
@@ -83,7 +85,7 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 			comboBox.setItemIconPropertyId(itemIconPropertyId);
 		}
 
-		NativeButton searchButton = new NativeButton();
+		searchButton = new NativeButton();
 		searchButton.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -91,7 +93,11 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 			}
 		});
 		searchButton.setWidth("26px");
-		searchButton.setIcon(new ThemeResource("icons/SearchButton.png"));
+		if (searchButtonIcon != null) {
+			searchButton.setIcon(searchButtonIcon);
+		} else {
+			searchButton.setIcon(new ThemeResource("icons/SearchButton.png"));
+		}
 
 		root.addComponent(comboBox);
 		root.addComponent(searchButton);
@@ -167,6 +173,14 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 		if (valueBinding != null) {
 			valueBinding.dispose();
 			valueBinding = null;
+		}
+	}
+
+	public void setSearchButtonIcon(Resource resource) {
+		if (searchButton != null) {
+			searchButton.setIcon(resource);
+		} else {
+			searchButtonIcon = resource;
 		}
 	}
 

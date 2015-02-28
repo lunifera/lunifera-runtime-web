@@ -12,13 +12,16 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util;
 
 import java.util.Locale;
 
+import org.lunifera.ecview.core.common.context.I18nUtil;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.model.visibility.VisibilityFactory;
 import org.lunifera.ecview.core.common.model.visibility.YColor;
 import org.lunifera.ecview.core.common.model.visibility.YVisibilityProperties;
 import org.lunifera.ecview.core.common.visibility.Color;
 import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
+import org.lunifera.runtime.web.vaadin.common.resource.IResourceProvider;
 
+import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
@@ -109,8 +112,43 @@ public class Util {
 		}
 	}
 
+	public static void applyCaptionIcons(II18nService service,
+			IResourceProvider provider, String i18nLabelKey, Locale locale,
+			Component component) {
+		String iconKey = I18nUtil.getImageKey(i18nLabelKey);
+
+		if (service != null && provider != null && isValid(iconKey)) {
+			String iconResourcePath = service.getValue(iconKey, locale);
+			if (iconResourcePath != null && !iconResourcePath.equals("")) {
+				component.setIcon(provider.getResource(iconResourcePath));
+			}
+		}
+	}
+
+	public static void applyCaptionIcons(II18nService service,
+			IResourceProvider provider, String i18nLabelKey, Locale locale,
+			ResourceCallback callback) {
+		String iconKey = I18nUtil.getImageKey(i18nLabelKey);
+
+		if (service != null && provider != null && isValid(iconKey)) {
+			String iconResourcePath = service.getValue(iconKey, locale);
+			if (iconResourcePath != null && !iconResourcePath.equals("")) {
+				callback.setIcon(provider.getResource(iconResourcePath));
+			}
+		}
+	}
+
 	private static boolean isValid(String value) {
 		return value != null && !value.equals("");
+	}
+
+	/**
+	 * Callback to set resources.
+	 */
+	public interface ResourceCallback {
+
+		void setIcon(Resource resource);
+
 	}
 
 }

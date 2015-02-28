@@ -254,4 +254,9 @@ public class DeepResolvingBeanItemContainer<BEANTYPE> extends
 				"BeanItemContainer always uses an IdentityBeanIdResolver");
 	}
 
+	@Override
+	public void refreshFilters() {
+		// not used in this scenario since container applies filter immediately
+	}
+
 }

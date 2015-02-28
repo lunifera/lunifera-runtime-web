@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.lunifera.ecview.core.common.context.I18nUtil;
 import org.lunifera.ecview.core.common.context.II18nService;
 
 public class EnumOptionBeanHelper {
@@ -40,7 +41,7 @@ public class EnumOptionBeanHelper {
 			String description = literal.name();
 			if (i18nService != null) {
 				String temp = i18nService.getValue(
-						getI18nKey(enumName, literal), locale);
+						I18nUtil.getI18nKey(enumName, literal), locale);
 				if (temp != null && !temp.equals("")) {
 					description = temp;
 				}
@@ -49,21 +50,13 @@ public class EnumOptionBeanHelper {
 			String imagePath = null;
 			if (i18nService != null) {
 				imagePath = i18nService.getValue(
-						getImageI18nKey(enumName, literal), locale);
+						I18nUtil.getImageI18nKey(enumName, literal), locale);
 			}
 
 			result.add(new EnumOptionBean(literal, description, imagePath));
 		}
 
 		return result;
-	}
-
-	public static String getI18nKey(String enumName, Enum<?> literal) {
-		return enumName + "." + literal.name();
-	}
-
-	public static String getImageI18nKey(String enumName, Enum<?> literal) {
-		return enumName + "." + literal.name() + ".image";
 	}
 
 }

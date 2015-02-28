@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.context.ILocaleChangedService;
 import org.lunifera.ecview.core.common.context.IViewContext;
-import org.lunifera.ecview.core.common.disposal.AbstractDisposable;
 import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.lunifera.ecview.core.common.model.core.YEmbeddable;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
@@ -31,6 +30,7 @@ import org.lunifera.ecview.core.common.notification.LifecycleEvent;
 import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
 import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITabEditpart;
+import org.lunifera.runtime.common.dispose.AbstractDisposable;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 
 import com.vaadin.ui.Component;

@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Container.Filter;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Field;
@@ -189,6 +190,14 @@ public class BeanReferenceFieldPresentation extends
 	protected void applyCaptions() {
 		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
 				modelAccess.getLabelI18nKey(), getLocale(), field);
+		Util.applyCaptionIcons(getI18nService(), getResourceProvider(),
+				modelAccess.getLabelI18nKey(), getLocale(),
+				new Util.ResourceCallback() {
+					@Override
+					public void setIcon(Resource resource) {
+						field.setSearchButtonIcon(resource);
+					}
+				});
 	}
 
 	@Override

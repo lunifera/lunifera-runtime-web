@@ -29,7 +29,6 @@ import java.util.Map;
 import org.lunifera.runtime.web.vaadin.databinding.container.IEnhancedFilterableContainer;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
 import com.vaadin.data.Container.SimpleFilterable;
 import com.vaadin.data.Container.Sortable;
@@ -83,8 +82,9 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
 public abstract class AbstractDeepResolvingBeanContainer<IDTYPE, BEANTYPE>
 		extends
 		AbstractInMemoryContainer<IDTYPE, String, DeepResolvingBeanItem<BEANTYPE>>
-		implements Filterable, SimpleFilterable, Sortable, ValueChangeListener,
-		PropertySetChangeNotifier, IEnhancedFilterableContainer<IDTYPE> {
+		implements ILazyRefreshFilterable, SimpleFilterable, Sortable,
+		ValueChangeListener, PropertySetChangeNotifier,
+		IEnhancedFilterableContainer<IDTYPE>, INestedPropertyAble<BEANTYPE> {
 
 	/**
 	 * Resolver that maps beans to their (item) identifiers, removing the need
@@ -184,8 +184,7 @@ public abstract class AbstractDeepResolvingBeanContainer<IDTYPE, BEANTYPE>
 	 *             If {@code type} is null
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractDeepResolvingBeanContainer(
-			Class<? super BEANTYPE> type) {
+	protected AbstractDeepResolvingBeanContainer(Class<? super BEANTYPE> type) {
 		if (type == null) {
 			throw new IllegalArgumentException(
 					"The bean type passed to AbstractBeanContainer must not be null");
@@ -861,19 +860,6 @@ public abstract class AbstractDeepResolvingBeanContainer<IDTYPE, BEANTYPE>
 		return true;
 	}
 
-	/**
-	 * Adds a nested container property for the container, e.g.
-	 * "manager.address.street".
-	 * 
-	 * All intermediate getters must exist and should return non-null values
-	 * when the property value is accessed. If an intermediate getter returns
-	 * null, a null value will be returned.
-	 * 
-	 * @see NestedMethodProperty
-	 * 
-	 * @param propertyId
-	 * @return true if the property was added
-	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public boolean addNestedContainerProperty(String propertyId) {
 		return addContainerProperty(propertyId, new NestedPropertyDescriptor(

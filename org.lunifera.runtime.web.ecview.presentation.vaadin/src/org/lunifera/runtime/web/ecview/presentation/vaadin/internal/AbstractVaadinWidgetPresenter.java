@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.context.ILocaleChangedService;
 import org.lunifera.ecview.core.common.context.IViewContext;
-import org.lunifera.ecview.core.common.disposal.AbstractDisposable;
 import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.editpart.datatypes.IDatatypeEditpart.DatatypeChangeEvent;
 import org.lunifera.ecview.core.common.model.core.YEditable;
@@ -53,9 +52,11 @@ import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
 import org.lunifera.ecview.core.common.services.IWidgetAssocationsService;
 import org.lunifera.ecview.core.common.visibility.IVisibilityHandler;
 import org.lunifera.ecview.core.databinding.emf.common.ECViewUpdateValueStrategy;
+import org.lunifera.runtime.common.dispose.AbstractDisposable;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.lunifera.runtime.web.vaadin.common.resource.IResourceProvider;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.lunifera.runtime.web.vaadin.databinding.values.IVaadinObservableList;
 import org.slf4j.Logger;
@@ -155,6 +156,15 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	 */
 	protected II18nService getI18nService() {
 		return viewContext.getService(II18nService.ID);
+	}
+	
+	/**
+	 * Returns the IResourceProvider or <code>null</code> if no service is available.
+	 * 
+	 * @return
+	 */
+	protected IResourceProvider getResourceProvider() {
+		return viewContext.getService(IResourceProvider.class.getName());
 	}
 
 	@Override

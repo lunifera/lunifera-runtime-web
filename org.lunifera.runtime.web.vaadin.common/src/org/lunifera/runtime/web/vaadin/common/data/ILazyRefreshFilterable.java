@@ -10,14 +10,17 @@
  */
 package org.lunifera.runtime.web.vaadin.common.data;
 
+import com.vaadin.data.Container.Filterable;
+
 /**
- * Marks a clear able container.
+ * Used to remove the container filter without notification. Notifications are
+ * sent by adding filters or by calling {@link #refreshFilters()}.
  */
-public interface IClearable {
+public interface ILazyRefreshFilterable extends Filterable {
 
 	/**
-	 * Clears the container.
+	 * Will refresh the filter.
 	 */
-	void clear();
-	
+	void refreshFilters();
+
 }
