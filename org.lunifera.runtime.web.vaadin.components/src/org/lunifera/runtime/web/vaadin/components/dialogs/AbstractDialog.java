@@ -121,6 +121,7 @@ public abstract class AbstractDialog {
 	 */
 	protected void prepareLayout() {
 		window = new Window();
+		window.setModal(true);
 		mainLayout = new VerticalLayout();
 		mainLayout.setSizeFull();
 		mainLayout.setMargin(true);
