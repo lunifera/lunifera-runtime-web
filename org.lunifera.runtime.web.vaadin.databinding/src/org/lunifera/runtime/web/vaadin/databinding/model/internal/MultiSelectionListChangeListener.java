@@ -73,7 +73,7 @@ public class MultiSelectionListChangeListener extends NativePropertyListener
 
 	@Override
 	public void valueChange(ValueChangeEvent event) {
-		List<?> oldValues = oldItems;
+		List<Object> oldValues = oldItems;
 		ListDiff diffs = Diffs.computeListDiff(oldValues,
 				convertToList((Collection<?>) event.getProperty().getValue()));
 		cacheOldValues(source);

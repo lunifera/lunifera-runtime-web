@@ -74,7 +74,7 @@ public class ContainerItemSetChangeListener extends NativePropertyListener
 
 	@Override
 	public void containerItemSetChange(Container.ItemSetChangeEvent event) {
-		List<?> oldValues = oldItems;
+		List<Object> oldValues = oldItems;
 		ListDiff diffs = Diffs.computeListDiff(oldValues, convertToList(event
 				.getContainer().getItemIds()));
 		cacheOldItems(source);
