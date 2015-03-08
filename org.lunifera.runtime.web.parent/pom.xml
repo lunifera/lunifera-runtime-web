@@ -52,18 +52,19 @@
 						<target>1.8</target>
 					</configuration>
 				</plugin>
-				<!-- Quickfix until we move to 1.8 in releng -->
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-compiler-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<configuration>
-						<compilerVersion>1.8</compilerVersion>
-						<encoding>UTF-8</encoding>
-						<source>1.8</source>
-						<target>1.8</target>
-					</configuration>
-				</plugin>
+<!-- Quickfix until we move to 1.8 in releng -->
+		<plugin>
+			<groupId>org.eclipse.tycho</groupId>
+			<artifactId>tycho-compiler-plugin</artifactId>
+			<version>${tycho-version}</version>
+			<configuration>
+				<compilerVersion>1.8</compilerVersion>
+				<encoding>UTF-8</encoding>
+				<source>1.8</source>
+				<target>1.8</target>
+			</configuration>
+		</plugin>
+<!-- End Quickfix -->
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>target-platform-configuration</artifactId>
@@ -97,19 +98,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-<!-- Quickfix until we move to 1.8 in releng -->
-		<plugin>
-			<groupId>org.eclipse.tycho</groupId>
-			<artifactId>tycho-compiler-plugin</artifactId>
-			<version>${tycho-version}</version>
-			<configuration>
-				<compilerVersion>1.8</compilerVersion>
-				<encoding>UTF-8</encoding>
-				<source>1.8</source>
-				<target>1.8</target>
-			</configuration>
-		</plugin>
-<!-- End Quickfix -->
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
