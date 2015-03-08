@@ -139,7 +139,6 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-			</plugins>
 <!-- Quickfix until we move to 1.8 in releng -->
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -153,6 +152,7 @@
 				</configuration>
 			</plugin>
 <!-- End Quickfix -->
+			</plugins>
 		</pluginManagement>
 	</build>
 </project>
