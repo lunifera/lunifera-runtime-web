@@ -141,17 +141,17 @@
 				</plugin>
 			</plugins>
 <!-- Quickfix until we move to 1.8 in releng -->
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.eclipse.tycho</groupId> -->
-<!-- 				<artifactId>tycho-compiler-plugin</artifactId> -->
-<!-- 				<version>${tycho-version}</version> -->
-<!-- 				<configuration> -->
-<!-- 					<compilerVersion>1.8</compilerVersion> -->
-<!-- 					<encoding>UTF-8</encoding> -->
-<!-- 					<source>1.8</source> -->
-<!-- 					<target>1.8</target> -->
-<!-- 				</configuration> -->
-<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<compilerVersion>1.8</compilerVersion>
+					<encoding>UTF-8</encoding>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
 <!-- End Quickfix -->
 		</pluginManagement>
 	</build>
