@@ -210,6 +210,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<name>Vaadin components for Lunifera</name>
-	<description>Contains different fields like NumericField, DecimalField,…</description>
+	<name>Default widgetset for Lunifera Runtime Web</name>
+	<description>Default widgetset for Lunifera Runtime Web</description>
 </project>

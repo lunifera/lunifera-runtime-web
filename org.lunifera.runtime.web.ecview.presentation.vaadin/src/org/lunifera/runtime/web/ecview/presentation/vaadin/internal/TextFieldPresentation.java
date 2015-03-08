@@ -24,6 +24,7 @@ import org.lunifera.ecview.core.ui.core.editparts.extension.ITextFieldEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Field;
@@ -102,8 +103,8 @@ public class TextFieldPresentation extends
 	protected void applyCaptions() {
 		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
 				modelAccess.getLabelI18nKey(), getLocale(), text);
-//		Util.applyCaptionIcons(getI18nService(), getResourceProvider(),
-//				modelAccess.getLabelI18nKey(), getLocale(), text);
+		// Util.applyCaptionIcons(getI18nService(), getResourceProvider(),
+		// modelAccess.getLabelI18nKey(), getLocale(), text);
 	}
 
 	@Override

@@ -1,10 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin Components
-Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components;singleton:=true
+Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.components
 Bundle-Version: 0.9.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.lunifera.runtime.web.vaadin.components.converter;version="0.9.1";uses:="com.vaadin.data.util.converter",
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.lunifera.runtime.web.vaadin.components.container,
+ org.lunifera.runtime.web.vaadin.components.converter;version="0.9.1";uses:="com.vaadin.data.util.converter",
  org.lunifera.runtime.web.vaadin.components.dialogs,
  org.lunifera.runtime.web.vaadin.components.fields;version="0.9.1";
   uses:="org.lunifera.runtime.web.vaadin.components.converter,
@@ -40,5 +41,6 @@ Require-Bundle: com.vaadin.client;bundle-version="[7.3.8,7.3.9)",
  org.lunifera.dsl.dto.lib;bundle-version="[0.9.0,0.10.0)",
  org.lunifera.runtime.common;bundle-version="[0.9.0,0.10.0)",
  org.lunifera.ecview.core.common
-Service-Component: OSGI-INF/org.lunifera.runtime.web.vaadin.components.fields.BeanSearchServiceFactory.xml
+Service-Component: OSGI-INF/org.lunifera.runtime.web.vaadin.components.fields.BeanSearchServiceFactory.xml,
+ OSGI-INF/org.lunifera.runtime.web.vaadin.components.container.DatasourceServiceFactoryDelegate.xml
 Lun-ECView-I18nProvider: 

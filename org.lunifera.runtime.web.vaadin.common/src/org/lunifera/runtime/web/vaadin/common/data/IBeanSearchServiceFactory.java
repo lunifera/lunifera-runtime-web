@@ -10,9 +10,9 @@ public interface IBeanSearchServiceFactory {
 	 * Returns the {@link IBeanSearchService} for the given type. If no proper
 	 * implementation could be found, an in memory service will be returned.
 	 * 
-	 * @param bean
+	 * @param type
 	 * @return
 	 */
-	<BEAN> IBeanSearchService<BEAN> createService(Class<BEAN> bean);
+	<BEAN> IBeanSearchService<BEAN> createService(Class<BEAN> type);
 
 }
