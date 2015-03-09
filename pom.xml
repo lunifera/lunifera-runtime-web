@@ -37,7 +37,8 @@
 				<module>org.lunifera.runtime.web.ecview.presentation.vaadin</module>
 				<!-- <module>org.lunifera.runtime.web.ecview.presentation.vaadin.tests</module> -->
 				<module>org.lunifera.runtime.web.ecview.services.vaadin</module>
-
+				<module>org.lunifera.runtime.web.atmosphere.fragment</module>
+				
 				<module>org.lunifera.runtime.web.feature.ecview.presentation.vaadin</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.addon.osgi</module>
 				<module>org.lunifera.runtime.web.feature.vaadin.common</module>
