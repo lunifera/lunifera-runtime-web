@@ -18,8 +18,8 @@
    </license>
 
    <requires>
-      <import feature="org.lunifera.runtime.web.feature.vaadin.common" version="0.9.0"/>
-      <import feature="org.lunifera.runtime.feature.common" version="0.9.0"/>
+      <import feature="org.lunifera.runtime.web.feature.vaadin.common" version="0.9.1" match="equivalent"/>
+      <import feature="org.lunifera.runtime.feature.common" version="0.9.1" match="equivalent"/>
    </requires>
 
    <plugin

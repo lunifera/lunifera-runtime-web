@@ -1,12 +1,11 @@
 package org.lunifera.runtime.web.ecview.services.vaadin.impl
 
-import org.lunifera.runtime.common.annotations.DomainDescription
-import org.lunifera.runtime.common.annotations.DomainKey
-import org.eclipse.xtext.common.types.JvmDeclaredType
-import org.lunifera.dsl.semantic.entity.LEntity
-import org.lunifera.dsl.semantic.entity.LBean
 import org.lunifera.dsl.semantic.common.types.LAnnotationDef
 import org.lunifera.dsl.semantic.common.types.LOperation
+import org.lunifera.dsl.semantic.entity.LBean
+import org.lunifera.dsl.semantic.entity.LEntity
+import org.lunifera.runtime.common.annotations.DomainDescription
+import org.lunifera.runtime.common.annotations.DomainKey
 
 class BeanHelper {
 
@@ -32,7 +31,7 @@ class BeanHelper {
 		if (beanClass == null) {
 			return null
 		}
- 
+  
 		// try to find annotation in class
 		for (field : beanClass.declaredFields) {
 			if (field.isAnnotationPresent(typeof(DomainKey))) {
