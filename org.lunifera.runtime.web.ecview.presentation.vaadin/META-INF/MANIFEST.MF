@@ -43,3 +43,4 @@ Export-Package: org.lunifera.runtime.web.ecview.presentation.vaadin;version="0.9
 Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Lun-ECView-I18nProvider: 
