@@ -103,8 +103,6 @@ public class TextFieldPresentation extends
 	protected void applyCaptions() {
 		Util.applyCaptions(getI18nService(), modelAccess.getLabel(),
 				modelAccess.getLabelI18nKey(), getLocale(), text);
-		// Util.applyCaptionIcons(getI18nService(), getResourceProvider(),
-		// modelAccess.getLabelI18nKey(), getLocale(), text);
 	}
 
 	@Override
