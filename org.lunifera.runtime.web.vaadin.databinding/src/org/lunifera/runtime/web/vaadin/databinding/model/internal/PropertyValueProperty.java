@@ -19,6 +19,7 @@ import org.lunifera.runtime.web.vaadin.databinding.properties.AbstractVaadinValu
 import org.lunifera.runtime.web.vaadin.databinding.properties.Util;
 
 import com.vaadin.data.Property;
+import com.vaadin.ui.AbstractField;
 
 /**
  */
@@ -44,8 +45,19 @@ public class PropertyValueProperty extends AbstractVaadinValueProperty {
 		return property.getValue();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void doSetValue(Object source, Object value) {
+		if (source instanceof AbstractField) {
+			AbstractField field = (AbstractField) source;
+			if (!field.isValid()) {
+				// workaround - if value is invalid, then property#setValue will
+				// not change the field value. So we need to reset the value
+				// internally to the datasource value
+				field.discard();
+			}
+		}
+
 		Property<Object> property = Util.getProperty(source);
 		property.setValue(value);
 	}
