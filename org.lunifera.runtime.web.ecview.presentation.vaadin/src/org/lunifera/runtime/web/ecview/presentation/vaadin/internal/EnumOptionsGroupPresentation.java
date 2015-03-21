@@ -123,6 +123,8 @@ public class EnumOptionsGroupPresentation extends
 					optionsGroup.setConverter(new EnumConverter(
 							(Class<Enum<?>>) modelAccess.yField.getType(),
 							optionsGroup));
+
+					optionsGroup.setNullSelectionAllowed(true);
 				}
 
 				optionsGroup.setItemCaptionPropertyId("description");
@@ -234,13 +236,13 @@ public class EnumOptionsGroupPresentation extends
 	 */
 	protected void createBindings(YEnumOptionsGroup yField, OptionGroup field) {
 		if (modelAccess.yField.getSelectionType() == YSelectionType.MULTI) {
-			// create the model binding from ridget to ECView-model
+			// create the model binding from widget to ECView-model
 			registerBinding(createBindingsMultiSelection(
 					castEObject(getModel()),
 					ExtensionModelPackage.Literals.YENUM_OPTIONS_GROUP__MULTI_SELECTION,
 					field, yField.getType()));
 		} else {
-			// create the model binding from ridget to ECView-model
+			// create the model binding from widget to ECView-model
 			registerBinding(createBindingsSelection(
 					castEObject(getModel()),
 					ExtensionModelPackage.Literals.YENUM_OPTIONS_GROUP__SELECTION,

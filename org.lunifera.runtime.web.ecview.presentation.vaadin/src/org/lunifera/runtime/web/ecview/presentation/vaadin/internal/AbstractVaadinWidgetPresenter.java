@@ -551,6 +551,9 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 				@SuppressWarnings({ "unchecked", "rawtypes" })
 				@Override
 				public IStatus validate(Object value) {
+					if(value == null){
+						return Status.OK_STATUS;
+					}
 					Object convertedValue = value;
 					if (value != null && !value.equals("")) {
 						Converter converter = field.getConverter();
