@@ -25,6 +25,7 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YComboBox;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IComboBoxEditpart;
 import org.lunifera.runtime.common.state.ISharedStateContext;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.BeanServiceLazyLoadingContainer;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;

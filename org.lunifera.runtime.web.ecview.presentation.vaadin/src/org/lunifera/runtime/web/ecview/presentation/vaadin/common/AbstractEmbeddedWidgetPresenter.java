@@ -8,7 +8,7 @@
  * Contributors: 
  * 		Florian Pirchner - Initial implementation
  */
-package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.common;
 
 import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;

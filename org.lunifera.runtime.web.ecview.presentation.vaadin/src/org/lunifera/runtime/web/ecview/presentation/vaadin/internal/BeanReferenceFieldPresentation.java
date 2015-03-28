@@ -24,6 +24,7 @@ import org.lunifera.ecview.core.extension.model.extension.YBeanReferenceField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBeanReferenceFieldEditpart;
 import org.lunifera.runtime.common.annotations.TargetEnumConstraints;
 import org.lunifera.runtime.common.state.ISharedStateContext;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;

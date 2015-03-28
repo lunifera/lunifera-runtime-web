@@ -26,6 +26,7 @@ import org.lunifera.ecview.core.extension.model.extension.YTextSearchField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITextSearchFieldEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.components.fields.search.TextSearchField;
 import org.slf4j.Logger;

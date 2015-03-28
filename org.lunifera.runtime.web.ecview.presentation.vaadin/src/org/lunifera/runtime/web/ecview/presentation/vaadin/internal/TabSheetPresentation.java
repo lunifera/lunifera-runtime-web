@@ -17,6 +17,7 @@ import org.lunifera.ecview.core.extension.model.extension.YTabSheet;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITabEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITabSheetEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.presentation.ITabSheetPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractTabSheetPresenter;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;

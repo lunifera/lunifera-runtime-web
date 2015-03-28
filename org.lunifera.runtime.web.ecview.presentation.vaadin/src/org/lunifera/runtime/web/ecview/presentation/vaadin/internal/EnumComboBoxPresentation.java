@@ -23,6 +23,7 @@ import org.lunifera.ecview.core.databinding.emf.model.ECViewModelBindable;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YEnumComboBox;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IEnumComboBoxEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumConverter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumOptionBean;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.data.EnumOptionBeanHelper;

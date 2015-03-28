@@ -30,6 +30,7 @@ import org.lunifera.ecview.core.extension.model.extension.YNumericField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.INumericFieldEditpart;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.components.fields.NumericField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;

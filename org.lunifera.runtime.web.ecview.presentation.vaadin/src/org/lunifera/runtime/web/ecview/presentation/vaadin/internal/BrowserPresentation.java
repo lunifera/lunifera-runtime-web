@@ -27,6 +27,7 @@ import org.lunifera.ecview.core.extension.model.extension.YBrowser;
 import org.lunifera.ecview.core.extension.model.extension.YBrowserStreamInput;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBrowserEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractEmbeddedWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

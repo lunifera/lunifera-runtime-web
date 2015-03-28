@@ -36,6 +36,7 @@ Export-Package: org.lunifera.runtime.web.ecview.presentation.vaadin;version="0.9
    org.osgi.framework,
    org.lunifera.ecview.core.common.model.core,
    com.vaadin.ui",
+ org.lunifera.runtime.web.ecview.presentation.vaadin.common;version="0.9.1",
  org.lunifera.runtime.web.ecview.presentation.vaadin.internal;version="0.9.1";x-internal:=true,
  org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding;version="0.9.1";x-internal:=true,
  org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util;version="0.9.1";

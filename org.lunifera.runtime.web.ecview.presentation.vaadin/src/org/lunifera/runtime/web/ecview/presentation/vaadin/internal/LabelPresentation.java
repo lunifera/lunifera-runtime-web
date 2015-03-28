@@ -16,6 +16,7 @@ import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YLabel;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ILabelEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractEmbeddedWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;

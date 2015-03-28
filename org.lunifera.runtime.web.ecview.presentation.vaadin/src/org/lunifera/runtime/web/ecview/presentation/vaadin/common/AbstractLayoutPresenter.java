@@ -8,7 +8,7 @@
  * Contributors: 
  * 		Florian Pirchner - Initial implementation
  */
-package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.common;
 
 import java.util.ArrayList;
 import java.util.Collections;

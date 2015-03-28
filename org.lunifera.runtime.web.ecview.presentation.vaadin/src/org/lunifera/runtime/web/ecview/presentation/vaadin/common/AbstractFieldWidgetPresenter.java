@@ -8,7 +8,7 @@
  * Contributors: 
  * 		Florian Pirchner - Initial implementation
  */
-package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
+package org.lunifera.runtime.web.ecview.presentation.vaadin.common;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +17,7 @@ import java.util.Map;
 import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.presentation.IFieldPresentation;
 import org.lunifera.ecview.core.common.validation.IValidator;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ValidatorAdapter;
 
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Component;

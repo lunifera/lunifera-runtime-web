@@ -25,6 +25,7 @@ import org.lunifera.ecview.core.common.model.core.YEmbeddable;
 import org.lunifera.ecview.core.extension.model.extension.YVerticalLayout;
 import org.lunifera.ecview.core.extension.model.extension.YVerticalLayoutCellStyle;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractLayoutPresenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

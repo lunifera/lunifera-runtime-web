@@ -33,6 +33,7 @@ import org.lunifera.ecview.core.extension.model.extension.YMasterDetail;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IMasterDetailEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.presentation.IMasterDetailPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.ui.Component;

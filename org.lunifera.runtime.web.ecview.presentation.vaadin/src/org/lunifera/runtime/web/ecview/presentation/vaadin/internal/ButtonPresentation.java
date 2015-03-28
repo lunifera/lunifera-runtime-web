@@ -16,6 +16,7 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YButton;
 import org.lunifera.ecview.core.extension.model.extension.listener.YButtonClickListener;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IButtonEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.ui.Button;

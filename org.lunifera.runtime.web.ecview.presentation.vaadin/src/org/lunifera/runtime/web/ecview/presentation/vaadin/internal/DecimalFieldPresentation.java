@@ -30,6 +30,7 @@ import org.lunifera.ecview.core.extension.model.extension.YDecimalField;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IDecimalFieldEditpart;
 import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;

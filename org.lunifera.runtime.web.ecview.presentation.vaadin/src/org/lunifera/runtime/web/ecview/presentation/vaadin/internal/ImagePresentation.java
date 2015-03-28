@@ -21,6 +21,7 @@ import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YImage;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IImageEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractEmbeddedWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 

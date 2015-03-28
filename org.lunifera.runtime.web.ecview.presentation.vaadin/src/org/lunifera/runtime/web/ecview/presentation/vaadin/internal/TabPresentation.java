@@ -20,6 +20,7 @@ import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
 import org.lunifera.ecview.core.extension.model.extension.YTab;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITabEditpart;
 import org.lunifera.ecview.core.ui.core.editparts.extension.presentation.ITabPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractTabPresenter;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
