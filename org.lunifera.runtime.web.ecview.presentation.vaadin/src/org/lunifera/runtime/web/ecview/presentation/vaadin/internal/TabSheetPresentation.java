@@ -117,20 +117,20 @@ public class TabSheetPresentation extends
 		if (componentBase == null) {
 			componentBase = new CssLayout();
 			setupComponent(componentBase, getCastedModel());
-			
+
 			componentBase.addStyleName(CSS_CLASS_CONTROL_BASE);
 			if (modelAccess.isCssIdValid()) {
 				componentBase.setId(modelAccess.getCssID());
 			} else {
 				componentBase.setId(getEditpart().getId());
 			}
-			
+
 			associateWidget(componentBase, modelAccess.yLayout);
 
 			tabSheet = new TabSheet();
 			tabSheet.setSizeFull();
 			componentBase.addComponent(tabSheet);
-			
+
 			associateWidget(tabSheet, modelAccess.yLayout);
 
 			if (modelAccess.isCssClassValid()) {
@@ -138,6 +138,8 @@ public class TabSheetPresentation extends
 			} else {
 				tabSheet.addStyleName(CSS_CLASS_CONTROL);
 			}
+
+			initialize(tabSheet, getCastedModel());
 
 			renderTabs(false);
 		}

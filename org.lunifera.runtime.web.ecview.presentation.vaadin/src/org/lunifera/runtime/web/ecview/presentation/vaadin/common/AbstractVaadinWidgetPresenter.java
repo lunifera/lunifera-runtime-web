@@ -39,6 +39,7 @@ import org.lunifera.ecview.core.common.model.core.YElement;
 import org.lunifera.ecview.core.common.model.core.YEmbeddable;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEnable;
+import org.lunifera.ecview.core.common.model.core.YFocusable;
 import org.lunifera.ecview.core.common.model.core.YVisibleable;
 import org.lunifera.ecview.core.common.model.core.util.CoreModelUtil;
 import org.lunifera.ecview.core.common.model.datatypes.YDatatype;
@@ -71,6 +72,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.Field;
 
 /**
@@ -157,9 +159,10 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	protected II18nService getI18nService() {
 		return viewContext.getService(II18nService.ID);
 	}
-	
+
 	/**
-	 * Returns the IResourceProvider or <code>null</code> if no service is available.
+	 * Returns the IResourceProvider or <code>null</code> if no service is
+	 * available.
 	 * 
 	 * @return
 	 */
@@ -551,7 +554,7 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 				@SuppressWarnings({ "unchecked", "rawtypes" })
 				@Override
 				public IStatus validate(Object value) {
-					if(value == null){
+					if (value == null) {
 						return Status.OK_STATUS;
 					}
 					Object convertedValue = value;
@@ -751,6 +754,24 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 	@Override
 	protected void internalDispose() {
 		unregisterFromLocaleChangedService();
+	}
+
+	/**
+	 * Does general initialization of the widget.
+	 * 
+	 * @param component
+	 * @param model
+	 */
+	protected void initialize(Component component, YElement model) {
+
+		// initialize the tab index
+		if (component instanceof Focusable && model instanceof YFocusable) {
+			YFocusable yFocusable = (YFocusable) model;
+			Focusable focusable = (Focusable) component;
+			if (yFocusable.getTabIndex() >= 0) {
+				focusable.setTabIndex(yFocusable.getTabIndex());
+			}
+		}
 	}
 
 	/**

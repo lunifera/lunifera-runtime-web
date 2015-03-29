@@ -297,7 +297,7 @@ public class DialogPresentation extends AbstractDisposable implements
 
 	@Override
 	public void apply(IVisibilityHandler handler) {
-		
+
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.lunifera.ecview.core.common.context.ILocaleChangedService;
 import org.lunifera.ecview.core.common.context.IViewContext;
 import org.lunifera.ecview.core.common.editpart.IDialogEditpart;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
 import org.lunifera.ecview.core.common.editpart.IViewEditpart;
 import org.lunifera.ecview.core.common.editpart.binding.IBindableEndpointEditpart;
@@ -45,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
@@ -278,6 +280,17 @@ public class ViewPresentation extends AbstractDisposable implements
 	public void setContent(IEmbeddableEditpart editpart) {
 		this.content = editpart;
 		renderContent();
+	}
+
+	@Override
+	public void requestFocus(IElementEditpart toFocus) {
+		if (toFocus instanceof IEmbeddableEditpart) {
+			Component component = (Component) ((IEmbeddableEditpart) toFocus)
+					.getWidget();
+			if (component instanceof Focusable) {
+				((Focusable) component).focus();
+			}
+		}
 	}
 
 	@Override

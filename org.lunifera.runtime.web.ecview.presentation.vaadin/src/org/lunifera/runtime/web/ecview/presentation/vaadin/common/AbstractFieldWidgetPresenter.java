@@ -129,12 +129,15 @@ public abstract class AbstractFieldWidgetPresenter<A extends Component> extends
 	protected abstract Field<?> doGetField();
 
 	/**
-	 * Called by subclasses to initialize the field with validators.
+	 * Called by subclasses to initialize the field with validators, tabindex
+	 * and more general stuff.
 	 * 
 	 * @param field
 	 *            - the field to be initialized.
 	 */
 	protected void initializeField(Field<?> field) {
 		attachValidators(field);
+
+		super.initialize(field, getCastedModel());
 	}
 }

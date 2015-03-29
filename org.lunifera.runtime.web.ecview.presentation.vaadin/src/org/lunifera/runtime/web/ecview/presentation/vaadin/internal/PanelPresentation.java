@@ -100,6 +100,8 @@ public class PanelPresentation extends AbstractLayoutPresenter<Component> {
 				panel.addStyleName(CSS_CLASS_CONTROL);
 			}
 
+			initialize(panel, getCastedModel());
+			
 			applyCaptions();
 
 			// creates the binding for the field

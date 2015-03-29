@@ -85,6 +85,8 @@ public class BrowserPresentation extends
 				browser.setId(getEditpart().getId());
 			}
 
+			initialize(browser, getCastedModel());
+			
 			// creates the binding for the field
 			createBindings(modelAccess.yField, browser, null);
 
