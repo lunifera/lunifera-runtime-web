@@ -2,18 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Databinding for Vaadin Tests
 Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.databinding.tests
-Bundle-Version: 0.8.0
+Bundle-Version: 0.9.0
 Bundle-ActivationPolicy: lazy
 Require-Bundle: javax.servlet;bundle-version="3.0.0";visibility:=reexport,
- com.vaadin.shared;bundle-version="7.0.0";visibility:=reexport,
- com.vaadin.server;bundle-version="7.0.0";visibility:=reexport,
- com.vaadin.shared.deps;bundle-version="1.0.2";visibility:=reexport,
+ com.vaadin.shared;bundle-version="[7.3.8,7.3.9)";visibility:=reexport,
+ com.vaadin.server;bundle-version="[7.3.8,7.3.9)";visibility:=reexport,
  org.eclipse.core.databinding;bundle-version="1.4.1";visibility:=reexport,
  org.eclipse.core.databinding.beans;bundle-version="1.2.200";visibility:=reexport,
  org.eclipse.core.databinding.observable;bundle-version="1.4.1";visibility:=reexport,
  org.eclipse.core.databinding.property;bundle-version="1.4.200";visibility:=reexport,
  org.apache.commons.beanutils;bundle-version="1.8.0",
- org.lunifera.runtime.web.vaadin.databinding;bundle-version="0.0.1",
+ org.lunifera.runtime.web.vaadin.databinding;bundle-version="[0.9.0,0.10.0)",
  org.junit;bundle-version="4.10.0",
  org.apache.commons.logging;bundle-version="1.0.4"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

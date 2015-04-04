@@ -24,6 +24,7 @@ import org.lunifera.ecview.core.databinding.emf.model.ECViewModelBindable;
 import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YComboBox;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IComboBoxEditpart;
+import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
@@ -103,10 +104,12 @@ public class ComboBoxPresentation extends
 										IBeanSearchServiceFactory.class
 												.getName());
 						if (factory != null) {
+							ISharedStateContext sharedState = getViewContext().getService(
+									ISharedStateContext.class.getName());
 							BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
 									factory.createService(modelAccess.yField
 											.getType()),
-									modelAccess.yField.getType());
+									modelAccess.yField.getType(), sharedState);
 							combo.setContainerDataSource(datasource);
 						}
 					}

@@ -24,6 +24,7 @@ import org.eclipse.emf.databinding.EMFProperties;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
 import org.lunifera.ecview.core.common.filter.IFilterablePresentation;
+import org.lunifera.ecview.core.common.filter.IRefreshRowsPresentation;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
 import org.lunifera.ecview.core.common.model.core.YEmbeddableMultiSelectionEndpoint;
@@ -36,6 +37,7 @@ import org.lunifera.ecview.core.extension.model.extension.YColumn;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.extension.model.extension.YTable;
 import org.lunifera.ecview.core.ui.core.editparts.extension.ITableEditpart;
+import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchService;
@@ -63,7 +65,7 @@ import com.vaadin.ui.Table.RowHeaderMode;
  */
 @SuppressWarnings("restriction")
 public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
-		implements IFilterablePresentation {
+		implements IFilterablePresentation, IRefreshRowsPresentation {
 
 	private final ModelAccess modelAccess;
 	private Table table;
@@ -133,8 +135,10 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 					}
 					if (modelAccess.yField.isUseBeanService()
 							&& service != null) {
+						ISharedStateContext sharedState = getViewContext().getService(
+								ISharedStateContext.class.getName());
 						BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
-								service, modelAccess.yField.getType());
+								service, modelAccess.yField.getType(), sharedState);
 						table.setContainerDataSource(datasource);
 					} else {
 						DeepResolvingBeanItemContainer datasource = new DeepResolvingBeanItemContainer(
@@ -171,6 +175,13 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 			initializeField(table);
 		}
 		return table;
+	}
+
+	@Override
+	public void refreshRows() {
+		if (isRendered()) {
+			table.refreshRowCache();
+		}
 	}
 
 	/**
@@ -227,7 +238,8 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 	}
 
 	protected boolean isNestedColumn(YColumn yColumn) {
-		return yColumn.getPropertyPath().contains(".");
+		return yColumn.getPropertyPath() != null
+				&& yColumn.getPropertyPath().contains(".");
 	}
 
 	/**

@@ -28,6 +28,7 @@ import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YList;
 import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IListEditpart;
+import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 import org.lunifera.runtime.web.vaadin.common.data.DeepResolvingBeanItemContainer;
 import org.lunifera.runtime.web.vaadin.common.data.IBeanSearchServiceFactory;
@@ -114,10 +115,12 @@ public class ListPresentation extends AbstractFieldWidgetPresenter<Component> {
 										IBeanSearchServiceFactory.class
 												.getName());
 						if (factory != null) {
+							ISharedStateContext sharedState = getViewContext().getService(
+									ISharedStateContext.class.getName());
 							BeanServiceLazyLoadingContainer<?> datasource = new BeanServiceLazyLoadingContainer(
 									factory.createService(modelAccess.yField
 											.getType()),
-									modelAccess.yField.getType());
+									modelAccess.yField.getType(), sharedState);
 							list.setContainerDataSource(datasource);
 						}
 					}

@@ -121,7 +121,7 @@ public class FormLayoutPresentation extends
 			if (!modelAccess.isSpacing()) {
 				formLayout.setSpacing(false);
 			} else {
-				formLayout.setData(IConstants.CSS_CLASS_SPACING);
+				formLayout.addStyleName(IConstants.CSS_CLASS_SPACING);
 				formLayout.setSpacing(true);
 			}
 
@@ -174,6 +174,9 @@ public class FormLayoutPresentation extends
 
 			// unbind all active bindings
 			unbind();
+
+			// unrender the children
+			unrenderChildren();
 
 			// remove assocations
 			unassociateWidget(formLayout);

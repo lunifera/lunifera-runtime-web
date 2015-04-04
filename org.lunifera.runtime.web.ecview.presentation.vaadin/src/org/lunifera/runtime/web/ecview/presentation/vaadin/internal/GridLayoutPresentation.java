@@ -403,7 +403,7 @@ public class GridLayoutPresentation extends
 			}
 
 			if (modelAccess.isSpacing()) {
-				gridlayout.setData(IConstants.CSS_CLASS_SPACING);
+				gridlayout.addStyleName(IConstants.CSS_CLASS_SPACING);
 				gridlayout.setSpacing(true);
 			}
 

@@ -10,13 +10,32 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Locale;
 
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.extension.model.extension.ExtensionModelPackage;
 import org.lunifera.ecview.core.extension.model.extension.YBrowser;
+import org.lunifera.ecview.core.extension.model.extension.YBrowserStreamInput;
 import org.lunifera.ecview.core.ui.core.editparts.extension.IBrowserEditpart;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.IBindingManager;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.StreamResource;
+import com.vaadin.ui.AbstractComponentContainer;
+import com.vaadin.ui.AbstractEmbedded;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -27,7 +46,11 @@ import com.vaadin.ui.ComponentContainer;
 public class BrowserPresentation extends
 		AbstractEmbeddedWidgetPresenter<Component> {
 
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(BrowserPresentation.class);
+
 	private final ModelAccess modelAccess;
+	private SourceConverter sourceConverter;
 	private BrowserFrame browser;
 
 	/**
@@ -52,7 +75,7 @@ public class BrowserPresentation extends
 			browser.addStyleName(CSS_CLASS_CONTROL);
 			browser.setImmediate(true);
 			setupComponent(browser, getCastedModel());
-			
+
 			associateWidget(browser, modelAccess.yField);
 
 			if (modelAccess.isCssIdValid()) {
@@ -72,6 +95,44 @@ public class BrowserPresentation extends
 			applyCaptions();
 		}
 		return browser;
+	}
+
+	/**
+	 * Creates the bindings for the given values.
+	 * 
+	 * @param yField
+	 * @param field
+	 */
+	protected void createBindings(YBrowser yField, BrowserFrame field,
+			AbstractComponentContainer parent) {
+
+		// bind the model to the source converter
+		registerBinding(createBindingsSource(castEObject(getModel()),
+				ExtensionModelPackage.Literals.YBROWSER__VALUE, field));
+
+		super.createBindings(yField, field, parent);
+	}
+
+	protected Binding createBindingsSource(EObject model,
+			EStructuralFeature modelFeature, AbstractEmbedded field) {
+		IBindingManager bindingManager = getViewContext()
+				.getService(
+						org.lunifera.ecview.core.common.binding.IECViewBindingManager.class
+								.getName());
+		if (bindingManager != null) {
+
+			sourceConverter = new SourceConverter();
+
+			// bind the value of yText to textRidget
+			IObservableValue modelObservable = EMFObservables.observeValue(
+					model, modelFeature);
+			IObservableValue uiObservable = PojoObservables.observeValue(
+					sourceConverter, "source");
+			return bindingManager.bindValue(uiObservable, modelObservable,
+					new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+					new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+		}
+		return null;
 	}
 
 	@Override
@@ -120,6 +181,7 @@ public class BrowserPresentation extends
 				parent.removeComponent(browser);
 			}
 			browser = null;
+			sourceConverter = null;
 		}
 	}
 
@@ -186,7 +248,8 @@ public class BrowserPresentation extends
 		 * @return
 		 */
 		public String getLabel() {
-			return yField.getDatadescription() != null ? yField.getDatadescription().getLabel() : null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabel() : null;
 		}
 
 		/**
@@ -195,7 +258,48 @@ public class BrowserPresentation extends
 		 * @return
 		 */
 		public String getLabelI18nKey() {
-			return yField.getDatadescription() != null ? yField.getDatadescription().getLabelI18nKey() : null;
+			return yField.getDatadescription() != null ? yField
+					.getDatadescription().getLabelI18nKey() : null;
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class SourceConverter {
+
+		private Object source;
+
+		@SuppressWarnings("unused")
+		public Object getSource() {
+			return source;
+		}
+
+		@SuppressWarnings("unused")
+		public void setSource(Object source) {
+			this.source = source;
+
+			if (browser == null) {
+				LOGGER.error("Browser instance is null, but binding still active!");
+				return;
+			}
+
+			Resource resource = null;
+			if (source instanceof String) {
+				resource = new ExternalResource((URL) source);
+			} else if (source instanceof YBrowserStreamInput) {
+				YBrowserStreamInput input = (YBrowserStreamInput) source;
+				final InputStream stream = input.getInputStream();
+				StreamResource tempResource = new StreamResource(
+						new StreamResource.StreamSource() {
+							@Override
+							public InputStream getStream() {
+								return stream;
+							}
+						}, input.getFilename());
+				tempResource.setMIMEType(input.getMimeType());
+				resource = tempResource;
+			}
+
+			browser.setSource(resource);
 		}
 	}
 }
