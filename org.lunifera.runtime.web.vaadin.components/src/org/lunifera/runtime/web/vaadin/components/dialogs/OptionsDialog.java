@@ -10,7 +10,7 @@
  */
 package org.lunifera.runtime.web.vaadin.components.dialogs;
 
-public class OptionsDialog extends AbstractDialog {
+public class OptionsDialog extends AbstractMessageDialog {
 
 	public static void showDialog(DialogConfig config, Option... options) {
 		OptionsDialog dialog = new OptionsDialog(config, options);
