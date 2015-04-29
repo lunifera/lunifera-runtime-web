@@ -22,7 +22,6 @@ import org.lunifera.ecview.core.common.services.AbstractWidgetAssocationsService
 
 import com.vaadin.ui.Component;
 
-@SuppressWarnings("restriction")
 public class WidgetAssocationsService extends
 		AbstractWidgetAssocationsService<Component, YElement> {
 

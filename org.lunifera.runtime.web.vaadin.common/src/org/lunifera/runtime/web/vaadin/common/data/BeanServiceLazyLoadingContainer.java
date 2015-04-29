@@ -58,7 +58,6 @@ public class BeanServiceLazyLoadingContainer<BEANTYPE> extends
 	private IBeanSearchService<BEANTYPE> service;
 	private SortOrder sortOrder = new SortOrder();
 	private List<Filter> filters = new ArrayList<Filter>();
-	@SuppressWarnings("unused")
 	private Class<BEANTYPE> type;
 
 	private Set<String> sortableProperties = new HashSet<String>();

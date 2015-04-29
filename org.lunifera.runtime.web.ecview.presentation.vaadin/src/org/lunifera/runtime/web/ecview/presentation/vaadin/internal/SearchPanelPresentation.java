@@ -39,6 +39,7 @@ public class SearchPanelPresentation extends
 		AbstractLayoutPresenter<ComponentContainer> implements
 		IFilterProvidingPresentation {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SearchPanelPresentation.class);
 

@@ -26,6 +26,7 @@ import org.lunifera.dsl.xtext.types.bundles.BundleSpaceTypeScopeProvider;
 
 import com.google.inject.name.Names;
 
+@SuppressWarnings("restriction")
 public class XtextModule extends AbstractGenericModule {
 
 	public XtextModule() {

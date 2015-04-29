@@ -35,6 +35,7 @@ public class EntityTextSearchField<BEAN> extends SearchField<Object> {
 
 	private Binding valueBinding;
 	private TextFilterProperty filterProperty;
+	@SuppressWarnings("unused")
 	private IBeanSearchService<BEAN> searchService;
 
 	public EntityTextSearchField(String id, Object propertyId,

@@ -42,6 +42,7 @@ import com.vaadin.ui.Field;
 public class BooleanSearchFieldPresentation extends
 		AbstractFieldWidgetPresenter<Component> implements IFilterProvidingPresentation {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(BooleanSearchFieldPresentation.class);
 	

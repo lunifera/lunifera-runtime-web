@@ -44,6 +44,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * This presenter is responsible to render a text field on the given layout.
  */
+@SuppressWarnings("restriction")
 public class MasterDetailPresentation extends
 		AbstractVaadinWidgetPresenter<ComponentContainer> implements
 		IMasterDetailPresentation<ComponentContainer> {
@@ -208,7 +209,6 @@ public class MasterDetailPresentation extends
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("restriction")
 	protected IObservableValue internalGetSelectionEndpoint(
 			YEmbeddableSelectionEndpoint yEndpoint) {
 
@@ -406,6 +406,7 @@ public class MasterDetailPresentation extends
 		 * 
 		 * @return
 		 */
+		@SuppressWarnings("unused")
 		public boolean isCssClassValid() {
 			return getCssClass() != null && !getCssClass().equals("");
 		}

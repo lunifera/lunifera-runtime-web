@@ -11,8 +11,8 @@
 package org.lunifera.runtime.web.vaadin.common.validator;
 
 import com.vaadin.data.validator.AbstractValidator;
-import com.vaadin.data.validator.BeanValidator;
 
+@SuppressWarnings("serial")
 public class BeanValidationValidator<T> extends AbstractValidator<T> {
 
 	public BeanValidationValidator(String errorMessage) {

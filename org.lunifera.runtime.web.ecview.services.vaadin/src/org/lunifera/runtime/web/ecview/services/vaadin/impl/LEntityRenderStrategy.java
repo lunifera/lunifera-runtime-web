@@ -26,6 +26,7 @@ public class LEntityRenderStrategy implements ILEntityRenderStrategy {
 
 	@Inject
 	private EntityToUimodelFileGenerator generator;
+	@SuppressWarnings("unused")
 	private SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 
 	@Override

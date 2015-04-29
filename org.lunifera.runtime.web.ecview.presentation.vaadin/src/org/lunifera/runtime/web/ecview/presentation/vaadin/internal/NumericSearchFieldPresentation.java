@@ -43,6 +43,7 @@ public class NumericSearchFieldPresentation extends
 		AbstractFieldWidgetPresenter<Component> implements
 		IFilterProvidingPresentation {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(NumericSearchFieldPresentation.class);
 

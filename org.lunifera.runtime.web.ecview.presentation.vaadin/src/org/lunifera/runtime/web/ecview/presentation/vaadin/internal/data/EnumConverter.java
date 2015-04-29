@@ -18,6 +18,8 @@ import com.vaadin.data.util.converter.Converter;
 /**
  * This converter is used to support enums in vaadin combobox, optionsgroup,...
  */
+// TODO add generics
+@SuppressWarnings("serial")
 public class EnumConverter implements Converter {
 
 	private Class<Enum<?>> type;

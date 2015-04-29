@@ -44,6 +44,7 @@ public class TextSearchFieldPresentation extends
 		AbstractFieldWidgetPresenter<Component> implements
 		IFilterProvidingPresentation {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(TextSearchFieldPresentation.class);
 

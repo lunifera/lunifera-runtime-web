@@ -25,7 +25,6 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldW
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.util.Util;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Field;
