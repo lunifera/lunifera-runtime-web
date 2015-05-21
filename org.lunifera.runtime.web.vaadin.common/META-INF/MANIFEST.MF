@@ -23,15 +23,17 @@ Export-Package: org.lunifera.runtime.web.vaadin.common;version="0.9.1",
    com.vaadin.data,
    com.vaadin.data.util",
  org.lunifera.runtime.web.vaadin.common.data.filter;version="0.9.1";uses:="com.vaadin.data,com.vaadin.data.util.filter",
- org.lunifera.runtime.web.vaadin.common.services.filter;version="0.9.1",
  org.lunifera.runtime.web.vaadin.common.resource;version="0.9.1",
- org.lunifera.runtime.web.vaadin.common.sharedState;version="0.9.1"
+ org.lunifera.runtime.web.vaadin.common.resource.impl,
+ org.lunifera.runtime.web.vaadin.common.services.filter;version="0.9.1",
+ org.lunifera.runtime.web.vaadin.common.sharedState;version="0.9.1",
+ org.lunifera.runtime.web.vaadin.common.validator
 Bundle-Vendor: Lunifera.org
 Require-Bundle: com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
  com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",
  org.lunifera.runtime.web.vaadin.databinding;bundle-version="[0.9.0,0.10.0)",
- org.lunifera.dsl.dto.lib;bundle-version="[0.9.0,0.10.0)",
- org.eclipse.xtext.xbase.lib;bundle-version="[2.7.3,2.8.0)",
+ org.lunifera.dsl.dto.lib;bundle-version="[0.9.0,0.10.0)";resolution:=optional,
+ org.eclipse.xtext.xbase.lib;bundle-version="[2.7.3,2.8.0)";resolution:=optional,
  org.lunifera.runtime.common
 Service-Component: OSGI-INF/org.lunifera.runtime.web.vaadin.common.resource.impl.ThemeResourceProvider.xml,
  OSGI-INF/org.lunifera.runtime.web.vaadin.common.data.StatefulDelegatingDtoSearchServiceFactoryDelegate.xml

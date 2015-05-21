@@ -40,6 +40,7 @@ import org.lunifera.runtime.common.state.ISharedStateContext;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.IConstants;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetAssocationsService;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal.WidgetMouseClickService;
+import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -310,6 +311,7 @@ public class ViewPresentation extends AbstractDisposable implements
 
 	@Override
 	public void exec(Runnable runnable) {
+		VaadinObservables.activateRealm(componentBase.getUI());
 		componentBase.getUI().accessSynchronously(runnable);
 	}
 
