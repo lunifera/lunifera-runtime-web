@@ -24,10 +24,10 @@ Export-Package: org.lunifera.runtime.web.vaadin.common;version="0.9.1",
    com.vaadin.data.util",
  org.lunifera.runtime.web.vaadin.common.data.filter;version="0.9.1";uses:="com.vaadin.data,com.vaadin.data.util.filter",
  org.lunifera.runtime.web.vaadin.common.resource;version="0.9.1",
- org.lunifera.runtime.web.vaadin.common.resource.impl,
+ org.lunifera.runtime.web.vaadin.common.resource.impl;version="0.9.1",
  org.lunifera.runtime.web.vaadin.common.services.filter;version="0.9.1",
  org.lunifera.runtime.web.vaadin.common.sharedState;version="0.9.1",
- org.lunifera.runtime.web.vaadin.common.validator
+ org.lunifera.runtime.web.vaadin.common.validator;version="0.9.1"
 Bundle-Vendor: Lunifera.org
 Require-Bundle: com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
  com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",
