@@ -37,6 +37,11 @@ public class OSGiServletService extends VaadinServletService {
 	}
 
 	@Override
+	public ClassLoader getClassLoader() {
+		return getClass().getClassLoader();
+	}
+
+	@Override
 	protected VaadinSession createVaadinSession(VaadinRequest request)
 			throws ServiceException {
 		return factory.createSession(request, getCurrentServletRequest());

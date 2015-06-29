@@ -49,6 +49,8 @@ public class Util {
 		yProps.setStrikethrough(handler.isStrikethrough());
 		yProps.setUnderline(handler.isUnderline());
 		yProps.setVisible(handler.isVisible());
+		yProps.setCssClass(handler.getCssClass());
+		yProps.setCssId(handler.getCssId());
 
 		return yProps;
 	}
