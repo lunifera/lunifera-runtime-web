@@ -8,8 +8,8 @@ Bundle-SymbolicName: org.lunifera.runtime.web.vaadin.osgi;singleton:=t
 Created-By: Apache Maven
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.equinox.common;bundle-version="3.6.100",
- com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
- com.vaadin.shared;bundle-version="[7.3.8,7.3.9)"
+ com.vaadin.server;bundle-version="7.3.8",
+ com.vaadin.shared;bundle-version="7.3.8"
 Build-Jdk: 1.7.0_15
 Bundle-Version: 0.9.1.qualifier
 Bundle-Activator: org.lunifera.runtime.web.vaadin.osgi.Activator
@@ -34,4 +34,3 @@ Export-Package: org.lunifera.runtime.web.vaadin.osgi;version="0.9.1";x-internal:
  org.lunifera.runtime.web.vaadin.osgi.servlet;version="0.9.1";x-internal:=true,
  org.lunifera.runtime.web.vaadin.osgi.webapp;version="0.9.1";x-internal:=true
 Archiver-Version: Plexus Archiver
-

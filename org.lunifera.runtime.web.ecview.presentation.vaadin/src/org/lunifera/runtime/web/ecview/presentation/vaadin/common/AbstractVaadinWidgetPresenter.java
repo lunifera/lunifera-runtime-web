@@ -960,6 +960,26 @@ public abstract class AbstractVaadinWidgetPresenter<A extends Component>
 			applyBackgroundColor(yProps);
 		}
 
+		public void applyCssClass(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			String yCssClass = yProps.getCssClass();
+			if (yCssClass != null) {
+				component.addStyleName(yCssClass);
+			}
+		}
+
+		public void applyCssId(YVisibilityProperties yProps) {
+			if (yProps == null) {
+				return;
+			}
+			String yCssId = yProps.getCssId();
+			if (yCssId != null) {
+				component.setId(yCssId);
+			}
+		}
+
 		public void applyUnderline(YVisibilityProperties yProps) {
 			if (yProps == null) {
 				return;

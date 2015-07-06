@@ -253,8 +253,13 @@ public class TablePresentation extends AbstractFieldWidgetPresenter<Component>
 					if (i18nService != null) {
 						String translation = i18nService.getValue(
 								yColumn.getIcon(), UI.getCurrent().getLocale());
-						table.setColumnIcon(columnId,
-								resourceProvider.getResource(translation));
+						if (translation != null && !translation.equals("")) {
+							Resource icon = resourceProvider
+									.getResource(translation);
+							if (icon != null) {
+								table.setColumnIcon(columnId, icon);
+							}
+						}
 					} else {
 						table.setColumnIcon(columnId,
 								resourceProvider.getResource(yColumn.getIcon()));
