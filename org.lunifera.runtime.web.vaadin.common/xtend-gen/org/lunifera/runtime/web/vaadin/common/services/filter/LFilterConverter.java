@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
+ * Copyright (c) 2011 - 2015, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- * 		Florian Pirchner - Initial implementation
+ *         Florian Pirchner - Initial implementation
  */
 package org.lunifera.runtime.web.vaadin.common.services.filter;
 
@@ -22,10 +22,9 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Consumer;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.lunifera.dsl.dto.lib.services.filters.ILFilter;
 import org.lunifera.dsl.dto.lib.services.filters.LAnd;
 import org.lunifera.dsl.dto.lib.services.filters.LBetween;
@@ -50,13 +49,13 @@ public class LFilterConverter {
   protected ILFilter _convert(final And vFilter) {
     final ArrayList<ILFilter> children = CollectionLiterals.<ILFilter>newArrayList();
     Collection<Container.Filter> _filters = vFilter.getFilters();
-    final Procedure1<Container.Filter> _function = new Procedure1<Container.Filter>() {
-      public void apply(final Container.Filter it) {
+    final Consumer<Container.Filter> _function = new Consumer<Container.Filter>() {
+      public void accept(final Container.Filter it) {
         ILFilter _convert = LFilterConverter.this.convert(it);
         children.add(_convert);
       }
     };
-    IterableExtensions.<Container.Filter>forEach(_filters, _function);
+    _filters.forEach(_function);
     final LAnd result = new LAnd(((ILFilter[])Conversions.unwrapArray(children, ILFilter.class)));
     return result;
   }
@@ -64,13 +63,13 @@ public class LFilterConverter {
   protected ILFilter _convert(final Or vFilter) {
     final ArrayList<ILFilter> children = CollectionLiterals.<ILFilter>newArrayList();
     Collection<Container.Filter> _filters = vFilter.getFilters();
-    final Procedure1<Container.Filter> _function = new Procedure1<Container.Filter>() {
-      public void apply(final Container.Filter it) {
+    final Consumer<Container.Filter> _function = new Consumer<Container.Filter>() {
+      public void accept(final Container.Filter it) {
         ILFilter _convert = LFilterConverter.this.convert(it);
         children.add(_convert);
       }
     };
-    IterableExtensions.<Container.Filter>forEach(_filters, _function);
+    _filters.forEach(_function);
     final LOr result = new LOr(((ILFilter[])Conversions.unwrapArray(children, ILFilter.class)));
     return result;
   }

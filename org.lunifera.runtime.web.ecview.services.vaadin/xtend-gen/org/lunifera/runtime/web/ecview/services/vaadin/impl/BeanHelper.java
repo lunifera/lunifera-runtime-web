@@ -1,23 +1,23 @@
+/**
+ * Copyright (c) 2011 - 2015, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *         Florian Pirchner - Initial implementation
+ */
 package org.lunifera.runtime.web.ecview.services.vaadin.impl;
 
 import com.google.common.base.Objects;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.xtext.common.types.JvmType;
-import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.lunifera.dsl.semantic.common.types.LAnnotationDef;
-import org.lunifera.dsl.semantic.common.types.LAnnotationTarget;
 import org.lunifera.dsl.semantic.entity.LBean;
 import org.lunifera.dsl.semantic.entity.LBeanAttribute;
-import org.lunifera.dsl.semantic.entity.LBeanFeature;
 import org.lunifera.dsl.semantic.entity.LEntity;
 import org.lunifera.dsl.semantic.entity.LEntityAttribute;
-import org.lunifera.dsl.semantic.entity.LEntityFeature;
-import org.lunifera.dsl.semantic.entity.LOperation;
 import org.lunifera.runtime.common.annotations.DomainDescription;
 import org.lunifera.runtime.common.annotations.DomainKey;
 import org.lunifera.runtime.web.ecview.services.vaadin.impl.OperationExtensions;
@@ -228,133 +228,25 @@ public class BeanHelper {
    * Returns the description property if it could be found. Null otherwise.
    */
   public static String findDescriptionProperty(final LEntity entity) {
-    boolean _equals = Objects.equal(entity, null);
-    if (_equals) {
-      return null;
-    }
-    List<LEntityAttribute> _attributes = entity.getAttributes();
-    for (final LEntityAttribute field : _attributes) {
-      boolean _isDomainDescription = field.isDomainDescription();
-      if (_isDomainDescription) {
-        return field.getName();
-      }
-    }
-    List<LOperation> _operations = entity.getOperations();
-    for (final LOperation method : _operations) {
-      {
-        EList<LAnnotationDef> _annotations = method.getAnnotations();
-        final Function1<LAnnotationDef, Boolean> _function = new Function1<LAnnotationDef, Boolean>() {
-          public Boolean apply(final LAnnotationDef it) {
-            XAnnotation _annotation = it.getAnnotation();
-            JvmType _annotationType = _annotation.getAnnotationType();
-            String _qualifiedName = _annotationType.getQualifiedName();
-            String _canonicalName = DomainDescription.class.getCanonicalName();
-            return Boolean.valueOf(_qualifiedName.equals(_canonicalName));
-          }
-        };
-        final LAnnotationDef def = IterableExtensions.<LAnnotationDef>findFirst(_annotations, _function);
-        boolean _notEquals = (!Objects.equal(def, null));
-        if (_notEquals) {
-          String _name = method.getName();
-          return OperationExtensions.toPropertyName(_name);
-        }
-      }
-    }
-    List<LEntityAttribute> _allAttributes = entity.getAllAttributes();
-    for (final LEntityAttribute field_1 : _allAttributes) {
-      boolean _isDomainDescription_1 = field_1.isDomainDescription();
-      if (_isDomainDescription_1) {
-        return field_1.getName();
-      }
-    }
-    List<LEntityFeature> _allFeatures = entity.getAllFeatures();
-    for (final LEntityFeature method_1 : _allFeatures) {
-      if ((method_1 instanceof org.lunifera.dsl.semantic.common.types.LOperation)) {
-        EList<LAnnotationDef> _annotations = ((LAnnotationTarget)method_1).getAnnotations();
-        final Function1<LAnnotationDef, Boolean> _function = new Function1<LAnnotationDef, Boolean>() {
-          public Boolean apply(final LAnnotationDef it) {
-            XAnnotation _annotation = it.getAnnotation();
-            JvmType _annotationType = _annotation.getAnnotationType();
-            String _qualifiedName = _annotationType.getQualifiedName();
-            String _canonicalName = DomainDescription.class.getCanonicalName();
-            return Boolean.valueOf(_qualifiedName.equals(_canonicalName));
-          }
-        };
-        final LAnnotationDef def = IterableExtensions.<LAnnotationDef>findFirst(_annotations, _function);
-        boolean _notEquals = (!Objects.equal(def, null));
-        if (_notEquals) {
-          String _name = method_1.getName();
-          return OperationExtensions.toPropertyName(_name);
-        }
-      }
-    }
-    return null;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method annotationType is undefined for the type BeanHelper"
+      + "\nThe method annotationType is undefined for the type BeanHelper"
+      + "\nqualifiedName cannot be resolved"
+      + "\nequals cannot be resolved"
+      + "\nqualifiedName cannot be resolved"
+      + "\nequals cannot be resolved");
   }
   
   /**
    * Returns the description property if it could be found. Null otherwise.
    */
   public static String findDescriptionProperty(final LBean bean) {
-    boolean _equals = Objects.equal(bean, null);
-    if (_equals) {
-      return null;
-    }
-    List<LBeanAttribute> _attributes = bean.getAttributes();
-    for (final LBeanAttribute field : _attributes) {
-      boolean _isDomainDescription = field.isDomainDescription();
-      if (_isDomainDescription) {
-        return field.getName();
-      }
-    }
-    List<LOperation> _operations = bean.getOperations();
-    for (final LOperation method : _operations) {
-      {
-        EList<LAnnotationDef> _annotations = method.getAnnotations();
-        final Function1<LAnnotationDef, Boolean> _function = new Function1<LAnnotationDef, Boolean>() {
-          public Boolean apply(final LAnnotationDef it) {
-            XAnnotation _annotation = it.getAnnotation();
-            JvmType _annotationType = _annotation.getAnnotationType();
-            String _qualifiedName = _annotationType.getQualifiedName();
-            String _canonicalName = DomainDescription.class.getCanonicalName();
-            return Boolean.valueOf(_qualifiedName.equals(_canonicalName));
-          }
-        };
-        final LAnnotationDef def = IterableExtensions.<LAnnotationDef>findFirst(_annotations, _function);
-        boolean _notEquals = (!Objects.equal(def, null));
-        if (_notEquals) {
-          String _name = method.getName();
-          return OperationExtensions.toPropertyName(_name);
-        }
-      }
-    }
-    List<LBeanAttribute> _allAttributes = bean.getAllAttributes();
-    for (final LBeanAttribute field_1 : _allAttributes) {
-      boolean _isDomainDescription_1 = field_1.isDomainDescription();
-      if (_isDomainDescription_1) {
-        return field_1.getName();
-      }
-    }
-    List<LBeanFeature> _allFeatures = bean.getAllFeatures();
-    for (final LBeanFeature method_1 : _allFeatures) {
-      if ((method_1 instanceof org.lunifera.dsl.semantic.common.types.LOperation)) {
-        EList<LAnnotationDef> _annotations = ((LAnnotationTarget)method_1).getAnnotations();
-        final Function1<LAnnotationDef, Boolean> _function = new Function1<LAnnotationDef, Boolean>() {
-          public Boolean apply(final LAnnotationDef it) {
-            XAnnotation _annotation = it.getAnnotation();
-            JvmType _annotationType = _annotation.getAnnotationType();
-            String _qualifiedName = _annotationType.getQualifiedName();
-            String _canonicalName = DomainDescription.class.getCanonicalName();
-            return Boolean.valueOf(_qualifiedName.equals(_canonicalName));
-          }
-        };
-        final LAnnotationDef def = IterableExtensions.<LAnnotationDef>findFirst(_annotations, _function);
-        boolean _notEquals = (!Objects.equal(def, null));
-        if (_notEquals) {
-          String _name = method_1.getName();
-          return OperationExtensions.toPropertyName(_name);
-        }
-      }
-    }
-    return null;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method annotationType is undefined for the type BeanHelper"
+      + "\nThe method annotationType is undefined for the type BeanHelper"
+      + "\nqualifiedName cannot be resolved"
+      + "\nequals cannot be resolved"
+      + "\nqualifiedName cannot be resolved"
+      + "\nequals cannot be resolved");
   }
 }

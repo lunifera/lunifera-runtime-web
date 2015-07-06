@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 - 2014, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
+ * Copyright (c) 2011 - 2015, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,9 +16,6 @@ import javax.inject.Inject;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.common.types.JvmType;
-import org.eclipse.xtext.common.types.JvmTypeReference;
-import org.eclipse.xtext.xbase.lib.StringExtensions;
 import org.lunifera.dsl.semantic.common.types.LDataType;
 import org.lunifera.dsl.semantic.common.types.LMultiplicity;
 import org.lunifera.dsl.semantic.common.types.LReference;
@@ -205,151 +202,11 @@ public class EntityToUimodelFileGenerator {
   }
   
   public String getToAttributeUiField(final LEntityAttribute attribute) {
-    LScalarType _type = attribute.getType();
-    final LDataType datatype = ((LDataType) _type);
-    boolean _isDate = datatype.isDate();
-    if (_isDate) {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("bind ds.");
-      String _name = attribute.getName();
-      _builder.append(_name, "");
-      _builder.append(" <--> [this.");
-      {
-        if (((this.counter.value % 2) == 0)) {
-          _builder.append("leftform");
-        } else {
-          _builder.append("rightform");
-        }
-      }
-      _builder.append(".");
-      String _name_1 = attribute.getName();
-      _builder.append(_name_1, "");
-      _builder.append("].value");
-      this.bindings.add(_builder.toString());
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("datefield ");
-      String _name_2 = attribute.getName();
-      _builder_1.append(_name_2, "");
-      _builder_1.newLineIfNotEmpty();
-      return _builder_1.toString();
-    } else {
-      JvmTypeReference _jvmTypeReference = datatype.getJvmTypeReference();
-      JvmType _type_1 = _jvmTypeReference.getType();
-      boolean _isString = this.typeHelper.isString(_type_1);
-      if (_isString) {
-        StringConcatenation _builder_2 = new StringConcatenation();
-        _builder_2.append("bind ds.");
-        String _name_3 = attribute.getName();
-        _builder_2.append(_name_3, "");
-        _builder_2.append(" <--> [this.");
-        {
-          if (((this.counter.value % 2) == 0)) {
-            _builder_2.append("leftform");
-          } else {
-            _builder_2.append("rightform");
-          }
-        }
-        _builder_2.append(".");
-        String _name_4 = attribute.getName();
-        _builder_2.append(_name_4, "");
-        _builder_2.append("].value");
-        this.bindings.add(_builder_2.toString());
-        StringConcatenation _builder_3 = new StringConcatenation();
-        _builder_3.append("textfield ");
-        String _name_5 = attribute.getName();
-        _builder_3.append(_name_5, "");
-        _builder_3.newLineIfNotEmpty();
-        return _builder_3.toString();
-      } else {
-        JvmTypeReference _jvmTypeReference_1 = datatype.getJvmTypeReference();
-        JvmType _type_2 = _jvmTypeReference_1.getType();
-        boolean _isBoolean = this.typeHelper.isBoolean(_type_2);
-        if (_isBoolean) {
-          StringConcatenation _builder_4 = new StringConcatenation();
-          _builder_4.append("bind ds.");
-          String _name_6 = attribute.getName();
-          _builder_4.append(_name_6, "");
-          _builder_4.append(" <--> [this.");
-          {
-            if (((this.counter.value % 2) == 0)) {
-              _builder_4.append("leftform");
-            } else {
-              _builder_4.append("rightform");
-            }
-          }
-          _builder_4.append(".");
-          String _name_7 = attribute.getName();
-          _builder_4.append(_name_7, "");
-          _builder_4.append("].value");
-          this.bindings.add(_builder_4.toString());
-          StringConcatenation _builder_5 = new StringConcatenation();
-          _builder_5.append("checkbox ");
-          String _name_8 = attribute.getName();
-          _builder_5.append(_name_8, "");
-          _builder_5.newLineIfNotEmpty();
-          return _builder_5.toString();
-        } else {
-          JvmTypeReference _jvmTypeReference_2 = datatype.getJvmTypeReference();
-          JvmType _type_3 = _jvmTypeReference_2.getType();
-          boolean _isNumber = this.typeHelper.isNumber(_type_3);
-          if (_isNumber) {
-            JvmTypeReference _jvmTypeReference_3 = datatype.getJvmTypeReference();
-            JvmType _type_4 = _jvmTypeReference_3.getType();
-            boolean _isDecimal = this.typeHelper.isDecimal(_type_4);
-            if (_isDecimal) {
-              StringConcatenation _builder_6 = new StringConcatenation();
-              _builder_6.append("bind ds.");
-              String _name_9 = attribute.getName();
-              _builder_6.append(_name_9, "");
-              _builder_6.append(" <--> [this.");
-              {
-                if (((this.counter.value % 2) == 0)) {
-                  _builder_6.append("leftform");
-                } else {
-                  _builder_6.append("rightform");
-                }
-              }
-              _builder_6.append(".");
-              String _name_10 = attribute.getName();
-              _builder_6.append(_name_10, "");
-              _builder_6.append("].value");
-              this.bindings.add(_builder_6.toString());
-              StringConcatenation _builder_7 = new StringConcatenation();
-              _builder_7.append("decimalField ");
-              String _name_11 = attribute.getName();
-              _builder_7.append(_name_11, "");
-              _builder_7.newLineIfNotEmpty();
-              return _builder_7.toString();
-            } else {
-              StringConcatenation _builder_8 = new StringConcatenation();
-              _builder_8.append("bind ds.");
-              String _name_12 = attribute.getName();
-              _builder_8.append(_name_12, "");
-              _builder_8.append(" <--> [this.");
-              {
-                if (((this.counter.value % 2) == 0)) {
-                  _builder_8.append("leftform");
-                } else {
-                  _builder_8.append("rightform");
-                }
-              }
-              _builder_8.append(".");
-              String _name_13 = attribute.getName();
-              _builder_8.append(_name_13, "");
-              _builder_8.append("].value");
-              this.bindings.add(_builder_8.toString());
-              StringConcatenation _builder_9 = new StringConcatenation();
-              _builder_9.append("numericField ");
-              String _name_14 = attribute.getName();
-              _builder_9.append(_name_14, "");
-              _builder_9.newLineIfNotEmpty();
-              return _builder_9.toString();
-            }
-          }
-        }
-      }
-    }
-    return null;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method type is undefined for the type EntityToUimodelFileGenerator"
+      + "\nThe method type is undefined for the type EntityToUimodelFileGenerator"
+      + "\nThe method type is undefined for the type EntityToUimodelFileGenerator"
+      + "\nThe method type is undefined for the type EntityToUimodelFileGenerator");
   }
   
   public String getToEntityRefUiField(final LEntityFeature feature) {
@@ -617,174 +474,11 @@ public class EntityToUimodelFileGenerator {
   }
   
   public String getToBeanAttributeUiField(final LBeanAttribute attribute) {
-    LScalarType _type = attribute.getType();
-    final LDataType datatype = ((LDataType) _type);
-    EObject _eContainer = attribute.eContainer();
-    String _name = ((LBean) _eContainer).getName();
-    final String beanName = StringExtensions.toFirstLower(_name);
-    boolean _isDate = datatype.isDate();
-    if (_isDate) {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("bind ds.");
-      _builder.append(beanName, "");
-      _builder.append(".");
-      String _name_1 = attribute.getName();
-      _builder.append(_name_1, "");
-      _builder.append(" <--> [this.");
-      {
-        if (((this.counter.value % 2) == 0)) {
-          _builder.append("leftform");
-        } else {
-          _builder.append("rightform");
-        }
-      }
-      _builder.append(".");
-      _builder.append(beanName, "");
-      _builder.append(".");
-      String _name_2 = attribute.getName();
-      _builder.append(_name_2, "");
-      _builder.append("].value");
-      this.bindings.add(_builder.toString());
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("datefield ");
-      String _name_3 = attribute.getName();
-      _builder_1.append(_name_3, "");
-      _builder_1.newLineIfNotEmpty();
-      return _builder_1.toString();
-    } else {
-      JvmTypeReference _jvmTypeReference = datatype.getJvmTypeReference();
-      JvmType _type_1 = _jvmTypeReference.getType();
-      boolean _isString = this.typeHelper.isString(_type_1);
-      if (_isString) {
-        StringConcatenation _builder_2 = new StringConcatenation();
-        _builder_2.append("bind ds.");
-        _builder_2.append(beanName, "");
-        _builder_2.append(".");
-        String _name_4 = attribute.getName();
-        _builder_2.append(_name_4, "");
-        _builder_2.append(" <--> [this.");
-        {
-          if (((this.counter.value % 2) == 0)) {
-            _builder_2.append("leftform");
-          } else {
-            _builder_2.append("rightform");
-          }
-        }
-        _builder_2.append(".");
-        _builder_2.append(beanName, "");
-        _builder_2.append(".");
-        String _name_5 = attribute.getName();
-        _builder_2.append(_name_5, "");
-        _builder_2.append("].value");
-        this.bindings.add(_builder_2.toString());
-        StringConcatenation _builder_3 = new StringConcatenation();
-        _builder_3.append("textfield ");
-        String _name_6 = attribute.getName();
-        _builder_3.append(_name_6, "");
-        _builder_3.newLineIfNotEmpty();
-        return _builder_3.toString();
-      } else {
-        JvmTypeReference _jvmTypeReference_1 = datatype.getJvmTypeReference();
-        JvmType _type_2 = _jvmTypeReference_1.getType();
-        boolean _isBoolean = this.typeHelper.isBoolean(_type_2);
-        if (_isBoolean) {
-          StringConcatenation _builder_4 = new StringConcatenation();
-          _builder_4.append("bind ds.");
-          _builder_4.append(beanName, "");
-          _builder_4.append(".");
-          String _name_7 = attribute.getName();
-          _builder_4.append(_name_7, "");
-          _builder_4.append(" <--> [this.");
-          {
-            if (((this.counter.value % 2) == 0)) {
-              _builder_4.append("leftform");
-            } else {
-              _builder_4.append("rightform");
-            }
-          }
-          _builder_4.append(".");
-          _builder_4.append(beanName, "");
-          _builder_4.append(".");
-          String _name_8 = attribute.getName();
-          _builder_4.append(_name_8, "");
-          _builder_4.append("].value");
-          this.bindings.add(_builder_4.toString());
-          StringConcatenation _builder_5 = new StringConcatenation();
-          _builder_5.append("checkbox ");
-          String _name_9 = attribute.getName();
-          _builder_5.append(_name_9, "");
-          _builder_5.newLineIfNotEmpty();
-          return _builder_5.toString();
-        } else {
-          JvmTypeReference _jvmTypeReference_2 = datatype.getJvmTypeReference();
-          JvmType _type_3 = _jvmTypeReference_2.getType();
-          boolean _isNumber = this.typeHelper.isNumber(_type_3);
-          if (_isNumber) {
-            JvmTypeReference _jvmTypeReference_3 = datatype.getJvmTypeReference();
-            JvmType _type_4 = _jvmTypeReference_3.getType();
-            boolean _isDecimal = this.typeHelper.isDecimal(_type_4);
-            if (_isDecimal) {
-              StringConcatenation _builder_6 = new StringConcatenation();
-              _builder_6.append("bind ds.");
-              _builder_6.append(beanName, "");
-              _builder_6.append(".");
-              String _name_10 = attribute.getName();
-              _builder_6.append(_name_10, "");
-              _builder_6.append(" <--> [this.");
-              {
-                if (((this.counter.value % 2) == 0)) {
-                  _builder_6.append("leftform");
-                } else {
-                  _builder_6.append("rightform");
-                }
-              }
-              _builder_6.append(".");
-              _builder_6.append(beanName, "");
-              _builder_6.append(".");
-              String _name_11 = attribute.getName();
-              _builder_6.append(_name_11, "");
-              _builder_6.append("].value");
-              this.bindings.add(_builder_6.toString());
-              StringConcatenation _builder_7 = new StringConcatenation();
-              _builder_7.append("decimalField ");
-              String _name_12 = attribute.getName();
-              _builder_7.append(_name_12, "");
-              _builder_7.newLineIfNotEmpty();
-              return _builder_7.toString();
-            } else {
-              StringConcatenation _builder_8 = new StringConcatenation();
-              _builder_8.append("bind ds.");
-              _builder_8.append(beanName, "");
-              _builder_8.append(".");
-              String _name_13 = attribute.getName();
-              _builder_8.append(_name_13, "");
-              _builder_8.append(" <--> [this.");
-              {
-                if (((this.counter.value % 2) == 0)) {
-                  _builder_8.append("leftform");
-                } else {
-                  _builder_8.append("rightform");
-                }
-              }
-              _builder_8.append(".");
-              _builder_8.append(beanName, "");
-              _builder_8.append(".");
-              String _name_14 = attribute.getName();
-              _builder_8.append(_name_14, "");
-              _builder_8.append("].value");
-              this.bindings.add(_builder_8.toString());
-              StringConcatenation _builder_9 = new StringConcatenation();
-              _builder_9.append("numericField ");
-              String _name_15 = attribute.getName();
-              _builder_9.append(_name_15, "");
-              _builder_9.newLineIfNotEmpty();
-              return _builder_9.toString();
-            }
-          }
-        }
-      }
-    }
-    return null;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method type is undefined for the type EntityToUimodelFileGenerator"
+      + "\nThe method type is undefined for the type EntityToUimodelFileGenerator"
+      + "\nThe method type is undefined for the type EntityToUimodelFileGenerator"
+      + "\nThe method type is undefined for the type EntityToUimodelFileGenerator");
   }
   
   public String getToBeanReferenceUiField(final LBeanAttribute attribute) {
