@@ -23,15 +23,15 @@
 
 	<properties>
 		<lunifera.deployment.p2.label>runtime-web</lunifera.deployment.p2.label>
-		<ecview.repository.url>http://lun.lunifera.org/downloads/p2/ecview/nightly/</ecview.repository.url>
+<!-- 		<ecview.repository.url>http://lun.lunifera.org/downloads/p2/ecview/nightly/</ecview.repository.url> -->
 	</properties>
 
 	<repositories>
-		<repository>
-			<id>ecview</id>
-			<url>${ecview.repository.url}</url>
-			<layout>p2</layout>
-		</repository>
+<!-- 		<repository> -->
+<!-- 			<id>ecview</id> -->
+<!-- 			<url>${ecview.repository.url}</url> -->
+<!-- 			<layout>p2</layout> -->
+<!-- 		</repository> -->
 		<repository>
 			<id>xtext-releases</id>
 			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>

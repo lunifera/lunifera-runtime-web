@@ -22,9 +22,10 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.function.Consumer;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.lunifera.dsl.dto.lib.services.filters.ILFilter;
 import org.lunifera.dsl.dto.lib.services.filters.LAnd;
 import org.lunifera.dsl.dto.lib.services.filters.LBetween;
@@ -49,13 +50,13 @@ public class LFilterConverter {
   protected ILFilter _convert(final And vFilter) {
     final ArrayList<ILFilter> children = CollectionLiterals.<ILFilter>newArrayList();
     Collection<Container.Filter> _filters = vFilter.getFilters();
-    final Consumer<Container.Filter> _function = new Consumer<Container.Filter>() {
-      public void accept(final Container.Filter it) {
+    final Procedure1<Container.Filter> _function = new Procedure1<Container.Filter>() {
+      public void apply(final Container.Filter it) {
         ILFilter _convert = LFilterConverter.this.convert(it);
         children.add(_convert);
       }
     };
-    _filters.forEach(_function);
+    IterableExtensions.<Container.Filter>forEach(_filters, _function);
     final LAnd result = new LAnd(((ILFilter[])Conversions.unwrapArray(children, ILFilter.class)));
     return result;
   }
@@ -63,13 +64,13 @@ public class LFilterConverter {
   protected ILFilter _convert(final Or vFilter) {
     final ArrayList<ILFilter> children = CollectionLiterals.<ILFilter>newArrayList();
     Collection<Container.Filter> _filters = vFilter.getFilters();
-    final Consumer<Container.Filter> _function = new Consumer<Container.Filter>() {
-      public void accept(final Container.Filter it) {
+    final Procedure1<Container.Filter> _function = new Procedure1<Container.Filter>() {
+      public void apply(final Container.Filter it) {
         ILFilter _convert = LFilterConverter.this.convert(it);
         children.add(_convert);
       }
     };
-    _filters.forEach(_function);
+    IterableExtensions.<Container.Filter>forEach(_filters, _function);
     final LOr result = new LOr(((ILFilter[])Conversions.unwrapArray(children, ILFilter.class)));
     return result;
   }
