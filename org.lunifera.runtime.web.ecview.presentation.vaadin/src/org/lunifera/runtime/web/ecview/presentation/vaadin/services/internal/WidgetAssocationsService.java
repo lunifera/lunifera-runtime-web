@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2011 - 2015, Lunifera GmbH (Gross Enzersdorf), Loetz KG (Heidelberg)
  * All rights reserved. This program and the accompanying materials
@@ -9,7 +8,6 @@
  * Contributors:
  *         Florian Pirchner - Initial implementation
  */
-
 
 package org.lunifera.runtime.web.ecview.presentation.vaadin.services.internal;
 

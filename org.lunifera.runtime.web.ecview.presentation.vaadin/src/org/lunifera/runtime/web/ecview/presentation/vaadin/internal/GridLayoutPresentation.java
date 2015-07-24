@@ -418,10 +418,27 @@ public class GridLayoutPresentation extends
 			// creates the binding for the field
 			createBindings(modelAccess.yLayout, gridlayout, null);
 
+			initializeChildren();
+
+			// and now render children
 			renderChildren(false);
 		}
 
 		return gridlayout;
+	}
+
+	/**
+	 * Adds the children to the superclass and prevents rendering.
+	 */
+	private void initializeChildren() {
+		setRenderLock(true);
+		try {
+			for (IEmbeddableEditpart editPart : getEditpart().getElements()) {
+				super.add(editPart);
+			}
+		} finally {
+			setRenderLock(false);
+		}
 	}
 
 	@Override
