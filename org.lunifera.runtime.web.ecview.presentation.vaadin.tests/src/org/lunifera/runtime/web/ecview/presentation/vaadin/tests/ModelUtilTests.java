@@ -10,45 +10,44 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.databinding.Binding;
-import org.eclipse.emf.ecp.ecview.common.binding.IECViewBindingManager;
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.context.IViewSetContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableValueBindingEndpointEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewSetEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.binding.IBindingSetEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.binding.IValueBindingEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBinding;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelFactory;
-import org.eclipse.emf.ecp.ecview.common.model.core.CoreModelPackage;
-import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlot;
-import org.eclipse.emf.ecp.ecview.common.model.core.YBeanSlotValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.model.core.YViewSet;
-import org.eclipse.emf.ecp.ecview.common.notification.ILifecycleService;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.binding.IECViewBindingManager;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableValueBindingEndpointEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.editpart.binding.IBindingEditpart;
+import org.lunifera.ecview.core.common.editpart.binding.IBindingSetEditpart;
+import org.lunifera.ecview.core.common.editpart.binding.IValueBindingEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBinding;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.CoreModelFactory;
+import org.lunifera.ecview.core.common.model.core.CoreModelPackage;
+import org.lunifera.ecview.core.common.model.core.YBeanSlot;
+import org.lunifera.ecview.core.common.model.core.YBeanSlotValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.notification.ILifecycleService;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YDecimalField;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation.DefaultUI;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.UI;
 
 public class ModelUtilTests {
 
@@ -64,12 +63,9 @@ public class ModelUtilTests {
 	private YBindingSet yBindingSet;
 	private ValueBean bean1;
 	private ValueBean bean2;
-	private YViewSet yViewSet;
 	private YView yView;
 	private IViewEditpart viewEditpart;
-	private IViewSetEditpart viewSetEditpart;
 	private YGridLayout yLayout;
-	private IViewSetContext viewSetContext;
 	private IViewContext viewContext;
 	private YEmbeddableValueEndpoint yText1ValueEndpoint;
 	private YBinding yText1ValueBinding;
@@ -79,9 +75,10 @@ public class ModelUtilTests {
 
 		Locale.setDefault(Locale.US);
 
-		yViewSet = factory.createViewSet();
+		UI.setCurrent(new DefaultUI());
+		UI.getCurrent().setContent(rootLayout);
+
 		yView = factory.createView();
-		yViewSet.getViews().add(yView);
 		yLayout = factory.createGridLayout();
 		yView.setContent(yLayout);
 		yText1 = factory.createDecimalField();
@@ -94,23 +91,17 @@ public class ModelUtilTests {
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		viewSetEditpart = ModelUtil.getEditpart(yViewSet);
 		viewEditpart = ModelUtil.getEditpart(yView);
 		layoutEditpart = ModelUtil.getEditpart(yLayout);
 		text1Editpart = ModelUtil.getEditpart(yText1);
 		text2Editpart = ModelUtil.getEditpart(yText2);
-		viewSetContext = ModelUtil.getViewSetContext(yLayout);
 		viewContext = ModelUtil.getViewContext(yLayout);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
-		text1 = (DecimalField) unwrapText(text1BaseComponentContainer);
-		text2 = (DecimalField) unwrapText(text2BaseComponentContainer);
+		text1 = (DecimalField) text1Presentation.getWidget();
+		text2 = (DecimalField) text2Presentation.getWidget();
 
 		yBindingSet = yView.getOrCreateBindingSet();
 		yView.setBindingSet(yBindingSet);
@@ -171,25 +162,25 @@ public class ModelUtilTests {
 		assertEquals(viewEditpart, testPart);
 	}
 
-	@Test
-	public void test_getViewSetEditPart() {
-		IViewSetEditpart testPart = ModelUtil.getViewSetEditpart(yText1);
-		assertEquals(viewSetEditpart, testPart);
-		testPart = ModelUtil.getViewSetEditpart(yText2);
-		assertEquals(viewSetEditpart, testPart);
-		testPart = ModelUtil.getViewSetEditpart(yLayout);
-		assertEquals(viewSetEditpart, testPart);
-	}
-
-	@Test
-	public void test_getViewSetContext() {
-		IViewSetContext testContext = ModelUtil.getViewSetContext(yText1);
-		assertEquals(viewSetContext, testContext);
-		testContext = ModelUtil.getViewSetContext(yText2);
-		assertEquals(viewSetContext, testContext);
-		testContext = ModelUtil.getViewSetContext(yLayout);
-		assertEquals(viewSetContext, testContext);
-	}
+	// @Test
+	// public void test_getViewSetEditPart() {
+	// IViewSetEditpart testPart = ModelUtil.getViewSetEditpart(yText1);
+	// assertEquals(viewSetEditpart, testPart);
+	// testPart = ModelUtil.getViewSetEditpart(yText2);
+	// assertEquals(viewSetEditpart, testPart);
+	// testPart = ModelUtil.getViewSetEditpart(yLayout);
+	// assertEquals(viewSetEditpart, testPart);
+	// }
+	//
+	// @Test
+	// public void test_getViewSetContext() {
+	// IViewSetContext testContext = ModelUtil.getViewSetContext(yText1);
+	// assertEquals(viewSetContext, testContext);
+	// testContext = ModelUtil.getViewSetContext(yText2);
+	// assertEquals(viewSetContext, testContext);
+	// testContext = ModelUtil.getViewSetContext(yLayout);
+	// assertEquals(viewSetContext, testContext);
+	// }
 
 	@Test
 	public void test_getViewContext() {
@@ -201,14 +192,14 @@ public class ModelUtilTests {
 		assertEquals(viewContext, testContext);
 	}
 
-	@Test
-	public void test_addNewViewByEditpart() {
-		viewSetEditpart.removeView(viewEditpart);
-		assertEquals(0, viewSetEditpart.getViews().size());
-		IViewEditpart part = ModelUtil.addNewViewByEditpart(viewSetEditpart);
-		assertEquals(1, viewSetEditpart.getViews().size());
-		assertNotNull(part);
-	}
+	// @Test
+	// public void test_addNewViewByEditpart() {
+	// viewSetEditpart.removeView(viewEditpart);
+	// assertEquals(0, viewSetEditpart.getViews().size());
+	// IViewEditpart part = ModelUtil.addNewViewByEditpart(viewSetEditpart);
+	// assertEquals(1, viewSetEditpart.getViews().size());
+	// assertNotNull(part);
+	// }
 
 	@Test
 	public void test_getWidget() {
@@ -303,14 +294,14 @@ public class ModelUtilTests {
 		assertEquals(manager, ModelUtil.getBindingManager(viewContext));
 	}
 
-	@Test
-	public void test_createViewSetByEditpart() {
-		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
-				.createEditpart(CoreModelPackage.eNS_URI,
-						IViewSetEditpart.class);
-		YViewSet set = (YViewSet) editpart.getModel();
-		assertNotNull(set);
-	}
+	// @Test
+	// public void test_createViewSetByEditpart() {
+	// IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
+	// .createEditpart(CoreModelPackage.eNS_URI,
+	// IViewSetEditpart.class);
+	// YViewSet set = (YViewSet) editpart.getModel();
+	// assertNotNull(set);
+	// }
 
 	@Test
 	public void test_createViewByEditpart() {
@@ -334,21 +325,21 @@ public class ModelUtilTests {
 		assertEquals("view://bean/slotNo1", ModelUtil.getURI(ySlot).toString());
 	}
 
-	@Test
-	public void test_URI_ForBeanSlot_ViewSetContext() {
-		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
-				.createEditpart(CoreModelPackage.eNS_URI,
-						IViewSetEditpart.class);
-		YViewSet yViewSet = (YViewSet) editpart.getModel();
-
-		YBeanSlot ySlot = factory.createBeanSlot();
-		ySlot.setName("slotNo1");
-		ySlot.setValueType(String.class);
-		yViewSet.getBeanSlots().add(ySlot);
-
-		assertEquals("viewset://bean/slotNo1", ModelUtil.getURI(ySlot)
-				.toString());
-	}
+	// @Test
+	// public void test_URI_ForBeanSlot_ViewSetContext() {
+	// IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
+	// .createEditpart(CoreModelPackage.eNS_URI,
+	// IViewSetEditpart.class);
+	// YViewSet yViewSet = (YViewSet) editpart.getModel();
+	//
+	// YBeanSlot ySlot = factory.createBeanSlot();
+	// ySlot.setName("slotNo1");
+	// ySlot.setValueType(String.class);
+	// yViewSet.getBeanSlots().add(ySlot);
+	//
+	// assertEquals("viewset://bean/slotNo1", ModelUtil.getURI(ySlot)
+	// .toString());
+	// }
 
 	@Test
 	public void test_URI_ForBeanSlotBinding_ViewContext() {
@@ -368,27 +359,6 @@ public class ModelUtilTests {
 
 		assertEquals("view://bean/slotNo1#item.group.name",
 				ModelUtil.getURI(yEndpoint).toString());
-	}
-
-	@Test
-	public void test_URI_ForBeanSlotBinding_ViewSetContext() {
-		IViewSetEditpart editpart = DelegatingEditPartManager.getInstance()
-				.createEditpart(CoreModelPackage.eNS_URI,
-						IViewSetEditpart.class);
-		YViewSet yViewSet = (YViewSet) editpart.getModel();
-
-		YBeanSlot ySlot = factory.createBeanSlot();
-		ySlot.setName("slotNo1");
-		ySlot.setValueType(String.class);
-		yViewSet.getBeanSlots().add(ySlot);
-
-		YBeanSlotValueBindingEndpoint yEndpoint = CoreModelFactory.eINSTANCE
-				.createYBeanSlotValueBindingEndpoint();
-		yEndpoint.setAttributePath("item.group.name");
-		yEndpoint.setBeanSlot(ySlot);
-
-		assertEquals("viewset://bean/slotNo1#item.group.name", ModelUtil
-				.getURI(yEndpoint).toString());
 	}
 
 	/**

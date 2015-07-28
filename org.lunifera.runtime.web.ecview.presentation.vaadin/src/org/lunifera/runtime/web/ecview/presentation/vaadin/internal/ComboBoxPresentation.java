@@ -88,6 +88,10 @@ public class ComboBoxPresentation extends
 			} else {
 				combo.setId(getEditpart().getId());
 			}
+			
+			if (modelAccess.isCssClassValid()) {
+				combo.addStyleName(modelAccess.getCssClass());
+			}
 
 			try {
 				property = new ObjectProperty(null,

@@ -12,35 +12,35 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YDateTime;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDateTimeEditpart;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YDateTime;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IDateTimeEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.DateTimePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
@@ -48,7 +48,6 @@ import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.UI;
@@ -132,14 +131,9 @@ public class DateTimePresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		DateField text = (DateField) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		DateField text = (DateField) presentation.getWidget();
+		assertNotNull(text);
 	}
 
 	/**
@@ -175,29 +169,19 @@ public class DateTimePresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
 
-		DateField text1 = (DateField) unwrapText(text1BaseComponentContainer);
-		DateField text2 = (DateField) unwrapText(text2BaseComponentContainer);
+		DateField text1 = (DateField) text1Presentation.getWidget();
+		DateField text2 = (DateField) text2Presentation.getWidget();
 
 		// assert css class
-		assertTrue(text1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(text2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(text1.getStyleName().contains("anyOtherClass"));
 		assertTrue(text2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", text1BaseComponentContainer.getId());
-		assertNull(text1.getId());
-		assertEquals(text2Editpart.getId(), text2BaseComponentContainer.getId());
-		assertNull(text2.getId());
+		assertEquals("ID_0815", text1.getId());
+		assertEquals(text2Editpart.getId(), text2.getId());
 	}
 
 	/**
@@ -231,12 +215,8 @@ public class DateTimePresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
-		DateField text1 = (DateField) unwrapText(text1BaseComponentContainer);
-		DateField text2 = (DateField) unwrapText(text2BaseComponentContainer);
+		DateField text1 = (DateField) text1Presentation.getWidget();
+		DateField text2 = (DateField) text2Presentation.getWidget();
 
 		// start tests
 		//
@@ -249,7 +229,7 @@ public class DateTimePresentationTests {
 		assertFalse(text2.isReadOnly());
 
 		yText1.setVisible(false);
-		assertFalse(text1.getParent().isVisible());
+		assertFalse(text1.isVisible());
 
 		yText1.setEnabled(false);
 		assertFalse(text1.isEnabled());
@@ -290,9 +270,7 @@ public class DateTimePresentationTests {
 				.getInstance().getEditpart(yText1);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		DateField text1 = (DateField) unwrapText(text1BaseComponentContainer);
+		DateField text1 = (DateField) text1Presentation.getWidget();
 
 		// start tests
 		//
@@ -367,13 +345,13 @@ public class DateTimePresentationTests {
 		yGridlayout.getElements().add(yText);
 
 		// set the i18n key
-		yText.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yText.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
@@ -405,7 +383,7 @@ public class DateTimePresentationTests {
 				.getEditpart(yText);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		DateField datetime = (DateField) unwrapText(presentation.getWidget());
+		DateField datetime = (DateField) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -444,7 +422,7 @@ public class DateTimePresentationTests {
 				.getEditpart(yText);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		DateField datetime = (DateField) unwrapText(presentation.getWidget());
+		DateField datetime = (DateField) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -456,7 +434,7 @@ public class DateTimePresentationTests {
 
 		// test binding
 		assertFalse(yText.isVisible());
-		assertFalse(datetime.getParent().isVisible());
+		assertFalse(datetime.isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);
@@ -483,7 +461,7 @@ public class DateTimePresentationTests {
 				.getEditpart(yText);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		DateField datetime = (DateField) unwrapText(presentation.getWidget());
+		DateField datetime = (DateField) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -502,21 +480,6 @@ public class DateTimePresentationTests {
 		assertTrue(yText.isEnabled());
 		assertTrue(datetime.isEnabled());
 		assertTrue(bean.isBoolValue());
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapText(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**

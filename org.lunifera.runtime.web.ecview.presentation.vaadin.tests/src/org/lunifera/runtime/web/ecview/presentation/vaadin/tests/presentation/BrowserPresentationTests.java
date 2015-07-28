@@ -12,34 +12,33 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YBrowser;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IBrowserEditpart;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YBrowser;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IBrowserEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.BrowserPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
@@ -131,14 +130,9 @@ public class BrowserPresentationTests {
 				.getEditpart(yBrowser);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		BrowserFrame text = (BrowserFrame) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		BrowserFrame text = (BrowserFrame) presentation.getWidget();
+		assertNotNull(text);
 	}
 
 	/**
@@ -174,29 +168,18 @@ public class BrowserPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
 
-		BrowserFrame text1 = (BrowserFrame) unwrapText(text1BaseComponentContainer);
-		BrowserFrame text2 = (BrowserFrame) unwrapText(text2BaseComponentContainer);
+		BrowserFrame text1 = (BrowserFrame) text1Presentation.getWidget();
+		BrowserFrame text2 = (BrowserFrame) text2Presentation.getWidget();
 
 		// assert css class
-		assertTrue(text1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(text2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-
 		assertTrue(text1.getStyleName().contains("anyOtherClass"));
 		assertTrue(text2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", text1BaseComponentContainer.getId());
-		assertNull(text1.getId());
-		assertEquals(text2Editpart.getId(), text2BaseComponentContainer.getId());
-		assertNull(text2.getId());
+		assertEquals("ID_0815", text1.getId());
+		assertEquals(text2Editpart.getId(), text2.getId());
 	}
 
 	/**
@@ -230,12 +213,8 @@ public class BrowserPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
-		BrowserFrame text1 = (BrowserFrame) unwrapText(text1BaseComponentContainer);
-		BrowserFrame text2 = (BrowserFrame) unwrapText(text2BaseComponentContainer);
+		BrowserFrame text1 = (BrowserFrame) text1Presentation.getWidget();
+		BrowserFrame text2 = (BrowserFrame) text2Presentation.getWidget();
 
 		// start tests
 		//
@@ -281,34 +260,16 @@ public class BrowserPresentationTests {
 				.getEditpart(yBrowser);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
-		assertEquals(1, baseComponentContainer.getComponentCount());
-		assertEquals(3, presentation.getUIBindings().size());
+		assertEquals(4, presentation.getUIBindings().size());
 
 		presentation.dispose();
 		assertFalse(presentation.isRendered());
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapText(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**
@@ -347,13 +308,13 @@ public class BrowserPresentationTests {
 		yGridlayout.getElements().add(yBrowser);
 
 		// set the i18n key
-		yBrowser.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yBrowser.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
@@ -385,8 +346,7 @@ public class BrowserPresentationTests {
 				.getEditpart(yBrowser);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		BrowserFrame browser = (BrowserFrame) unwrapText(presentation
-				.getWidget());
+		BrowserFrame browser = (BrowserFrame) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -425,8 +385,7 @@ public class BrowserPresentationTests {
 				.getEditpart(yBrowser);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		BrowserFrame browser = (BrowserFrame) unwrapText(presentation
-				.getWidget());
+		BrowserFrame browser = (BrowserFrame) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -465,8 +424,7 @@ public class BrowserPresentationTests {
 				.getEditpart(yBrowser);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		BrowserFrame browser = (BrowserFrame) unwrapText(presentation
-				.getWidget());
+		BrowserFrame browser = (BrowserFrame) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory

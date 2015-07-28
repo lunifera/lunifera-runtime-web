@@ -13,10 +13,10 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.extension.model.extension.YTextField;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.binding.BindingManager;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 import org.osgi.framework.BundleException;

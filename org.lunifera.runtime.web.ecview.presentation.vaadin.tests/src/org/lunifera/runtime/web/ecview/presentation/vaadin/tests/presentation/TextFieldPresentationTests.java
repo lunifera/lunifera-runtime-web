@@ -12,6 +12,7 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -20,35 +21,35 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.context.ViewSetContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewSetEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.model.core.YViewSet;
-import org.eclipse.emf.ecp.ecview.common.model.validation.ValidationFactory;
-import org.eclipse.emf.ecp.ecview.common.model.validation.YMaxLengthValidator;
-import org.eclipse.emf.ecp.ecview.common.model.validation.YMinLengthValidator;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YTextDatatype;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
-import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.context.ViewSetContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewSetEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.model.core.YViewSet;
+import org.lunifera.ecview.core.common.model.validation.ValidationFactory;
+import org.lunifera.ecview.core.common.model.validation.YMaxLengthValidator;
+import org.lunifera.ecview.core.common.model.validation.YMinLengthValidator;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.datatypes.YTextDatatype;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.YTextField;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ITextFieldEditpart;
+import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
@@ -139,14 +140,10 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		TextField text = (TextField) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		TextField text = (TextField) presentation.getWidget();
+		;
+		assertNotNull(text);
 	}
 
 	/**
@@ -182,29 +179,21 @@ public class TextFieldPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
 
-		TextField text1 = (TextField) unwrapText(text1BaseComponentContainer);
-		TextField text2 = (TextField) unwrapText(text2BaseComponentContainer);
+		TextField text1 = (TextField) text1Presentation
+				.getWidget();
+		TextField text2 = (TextField) text2Presentation
+				.getWidget();
 
 		// assert css class
-		assertTrue(text1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(text2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(text1.getStyleName().contains("anyOtherClass"));
 		assertTrue(text2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", text1BaseComponentContainer.getId());
-		assertNull(text1.getId());
-		assertEquals(text2Editpart.getId(), text2BaseComponentContainer.getId());
-		assertNull(text2.getId());
+		assertEquals("ID_0815", text1.getId());
+		assertEquals(text2Editpart.getId(), text2.getId());
 	}
 
 	/**
@@ -238,12 +227,10 @@ public class TextFieldPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
-		TextField text1 = (TextField) unwrapText(text1BaseComponentContainer);
-		TextField text2 = (TextField) unwrapText(text2BaseComponentContainer);
+		TextField text1 = (TextField) text1Presentation
+				.getWidget();;
+		TextField text2 = (TextField) text2Presentation
+				.getWidget();;
 
 		// start tests
 		//
@@ -261,7 +248,7 @@ public class TextFieldPresentationTests {
 		assertEquals("", text2.getValue());
 
 		yText1.setVisible(false);
-		assertFalse(text1.getParent().isVisible());
+		assertFalse(text1.isVisible());
 
 		yText1.setEnabled(false);
 		assertFalse(text1.isEnabled());
@@ -298,9 +285,8 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+		TextField text = (TextField) textPresentation
 				.getWidget();
-		TextField text = (TextField) unwrapText(textBaseComponentContainer);
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -339,9 +325,8 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+		TextField text = (TextField) textPresentation
 				.getWidget();
-		TextField text = (TextField) unwrapText(textBaseComponentContainer);
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -353,7 +338,7 @@ public class TextFieldPresentationTests {
 
 		// test binding
 		assertFalse(yText.isVisible());
-		assertFalse(text.getParent().isVisible());
+		assertFalse(text.isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);
@@ -380,9 +365,8 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
+		TextField text = (TextField) textPresentation
 				.getWidget();
-		TextField text = (TextField) unwrapText(textBaseComponentContainer);
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -423,9 +407,8 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText1);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
+		TextField text1 = (TextField) text1Presentation
 				.getWidget();
-		TextField text1 = (TextField) unwrapText(text1BaseComponentContainer);
 
 		// start tests
 		//
@@ -482,21 +465,6 @@ public class TextFieldPresentationTests {
 		assertFalse(presentation.isRendered());
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapText(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**
@@ -599,13 +567,13 @@ public class TextFieldPresentationTests {
 		yGridlayout.getElements().add(yText);
 
 		// set the i18n key
-		yText.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yText.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
@@ -638,13 +606,13 @@ public class TextFieldPresentationTests {
 		yGridlayout.getElements().add(yText);
 
 		// set the i18n key
-		yText.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yText.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, parameter);

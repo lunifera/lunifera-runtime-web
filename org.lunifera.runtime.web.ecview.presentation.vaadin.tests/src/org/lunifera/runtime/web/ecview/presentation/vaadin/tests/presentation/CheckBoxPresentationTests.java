@@ -10,34 +10,33 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YCheckBox;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ICheckboxEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.CheckBoxPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
@@ -45,7 +44,6 @@ import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.UI;
 
@@ -128,14 +126,9 @@ public class CheckBoxPresentationTests {
 				.getInstance().getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = checkBoxEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		CheckBox checkBox = (CheckBox) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		CheckBox checkBox = (CheckBox) presentation.getWidget();
+		assertNotNull(checkBox);
 	}
 
 	/**
@@ -171,30 +164,19 @@ public class CheckBoxPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> checkBox2Presentation = checkBox2Editpart
 				.getPresentation();
-		ComponentContainer checkBox1BaseComponentContainer = (ComponentContainer) checkBox1Presentation
-				.getWidget();
-		ComponentContainer checkBox2BaseComponentContainer = (ComponentContainer) checkBox2Presentation
-				.getWidget();
 
-		CheckBox checkBox1 = (CheckBox) unwrapText(checkBox1BaseComponentContainer);
-		CheckBox checkBox2 = (CheckBox) unwrapText(checkBox2BaseComponentContainer);
+		CheckBox checkBox1 = (CheckBox) checkBox1Presentation.getWidget();
+		CheckBox checkBox2 = (CheckBox) checkBox2Presentation.getWidget();
 
 		// assert css class
-		assertTrue(checkBox1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(checkBox2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(checkBox1.getStyleName().contains("anyOtherClass"));
 		assertTrue(checkBox2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", checkBox1BaseComponentContainer.getId());
-		assertNull(checkBox1.getId());
-		assertEquals(checkBox2Editpart.getId(),
-				checkBox2BaseComponentContainer.getId());
-		assertNull(checkBox2.getId());
+		assertEquals("ID_0815", checkBox1.getId());
+		assertEquals(checkBox2Editpart.getId(), checkBox2.getId());
 	}
 
 	/**
@@ -228,12 +210,8 @@ public class CheckBoxPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> checkBox2Presentation = checkBox2Editpart
 				.getPresentation();
-		ComponentContainer checkBox1BaseComponentContainer = (ComponentContainer) checkBox1Presentation
-				.getWidget();
-		ComponentContainer checkBox2BaseComponentContainer = (ComponentContainer) checkBox2Presentation
-				.getWidget();
-		CheckBox checkBox1 = (CheckBox) unwrapText(checkBox1BaseComponentContainer);
-		CheckBox checkBox2 = (CheckBox) unwrapText(checkBox2BaseComponentContainer);
+		CheckBox checkBox1 = (CheckBox) checkBox1Presentation.getWidget();
+		CheckBox checkBox2 = (CheckBox) checkBox2Presentation.getWidget();
 
 		// start tests
 		//
@@ -247,7 +225,7 @@ public class CheckBoxPresentationTests {
 		assertFalse(checkBox2.isReadOnly());
 
 		yCheckBox1.setVisible(false);
-		assertFalse(checkBox1.getParent().isVisible());
+		assertFalse(checkBox1.isVisible());
 
 		yCheckBox1.setEnabled(false);
 		assertFalse(checkBox1.isEnabled());
@@ -286,16 +264,15 @@ public class CheckBoxPresentationTests {
 				.getInstance().getEditpart(yCheckBox1);
 		IWidgetPresentation<Component> checkBox1Presentation = checkBox1Editpart
 				.getPresentation();
-		ComponentContainer checkBox1BaseComponentContainer = (ComponentContainer) checkBox1Presentation
-				.getWidget();
-		CheckBox checkBox1 = (CheckBox) unwrapText(checkBox1BaseComponentContainer);
+		CheckBox checkBox1 = (CheckBox) checkBox1Presentation.getWidget();
 
 		// start tests
 		//
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
 		checkBox1.setValue(false);
-		YBeanValueBindingEndpoint beanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint beanBinding = factory
+				.createBeanBindingEndpoint();
 		ValueBean bean = new ValueBean(true);
 		beanBinding.setPropertyPath("boolValue");
 		beanBinding.setBean(bean);
@@ -346,8 +323,7 @@ public class CheckBoxPresentationTests {
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 	}
-	
-	
+
 	@Test
 	public void test_i18n() throws ContextException {
 
@@ -361,40 +337,24 @@ public class CheckBoxPresentationTests {
 		yGridlayout.getElements().add(yCheckBox);
 
 		// set the i18n key
-		yCheckBox.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yCheckBox.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
-		ICheckboxEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yCheckBox);
-		CheckBoxPresentation presentation = editpart
-				.getPresentation();
+		ICheckboxEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yCheckBox);
+		CheckBoxPresentation presentation = editpart.getPresentation();
 
 		assertEquals("Alter", presentation.getWidget().getCaption());
 
 		context.setLocale(Locale.ENGLISH);
 		assertEquals("Age", presentation.getWidget().getCaption());
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapText(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**
@@ -419,7 +379,7 @@ public class CheckBoxPresentationTests {
 		Component widget = presentation.getWidget();
 		return widget;
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Readonly_Binding() throws Exception {
@@ -430,35 +390,36 @@ public class CheckBoxPresentationTests {
 		yView.setContent(yLayout);
 		YCheckBox yCheckBox = factory.createCheckBox();
 		yLayout.getElements().add(yCheckBox);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ICheckboxEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yCheckBox);
+		ICheckboxEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
-		
+		CheckBox box = (CheckBox) presentation.getWidget();
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yCheckBox.createEditableEndpoint(),
-				yBeanBinding);
+		yBindingSet
+				.addBinding(yCheckBox.createEditableEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yCheckBox.isEditable());
 		assertFalse(!box.isReadOnly());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yCheckBox.isEditable());
 		assertTrue(!box.isReadOnly());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Visible_Binding() throws Exception {
@@ -469,35 +430,35 @@ public class CheckBoxPresentationTests {
 		yView.setContent(yLayout);
 		YCheckBox yCheckBox = factory.createCheckBox();
 		yLayout.getElements().add(yCheckBox);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ICheckboxEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yCheckBox);
+		ICheckboxEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
-		
+		CheckBox box = (CheckBox) presentation.getWidget();
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yCheckBox.createVisibleEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yCheckBox.createVisibleEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yCheckBox.isVisible());
-		assertFalse(box.getParent().isVisible());
+		assertFalse(box.isVisible());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yCheckBox.isVisible());
 		assertTrue(box.isVisible());
 		assertTrue(bean.isBoolValue());
 	}
-	
+
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_Enabled_Binding() throws Exception {
@@ -508,29 +469,29 @@ public class CheckBoxPresentationTests {
 		yView.setContent(yLayout);
 		YCheckBox yCheckBox = factory.createCheckBox();
 		yLayout.getElements().add(yCheckBox);
-		
+
 		VaadinRenderer renderer = new VaadinRenderer();
 		renderer.render(rootLayout, yView, null);
 
-		ICheckboxEditpart editpart = DelegatingEditPartManager
-				.getInstance().getEditpart(yCheckBox);
+		ICheckboxEditpart editpart = DelegatingEditPartManager.getInstance()
+				.getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		CheckBox box = (CheckBox) unwrapText(presentation.getWidget());		
-		
+		CheckBox box = (CheckBox) presentation.getWidget();
+
 		ValueBean bean = new ValueBean(false);
-		YBeanValueBindingEndpoint yBeanBinding = factory.createBeanBindingEndpoint();
+		YBeanValueBindingEndpoint yBeanBinding = factory
+				.createBeanBindingEndpoint();
 		yBeanBinding.setBean(bean);
 		yBeanBinding.setPropertyPath("boolValue");
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
-		yBindingSet.addBinding(yCheckBox.createEnabledEndpoint(),
-				yBeanBinding);
+		yBindingSet.addBinding(yCheckBox.createEnabledEndpoint(), yBeanBinding);
 
 		// test binding
 		assertFalse(yCheckBox.isEnabled());
 		assertFalse(box.isEnabled());
 		assertFalse(bean.isBoolValue());
-		
+
 		bean.setBoolValue(true);
 		assertTrue(yCheckBox.isEnabled());
 		assertTrue(box.isEnabled());

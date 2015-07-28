@@ -2,13 +2,13 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import java.util.Locale;
 
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.disposal.AbstractDisposable;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.runtime.common.dispose.AbstractDisposable;
 
 /**
  * A test I18n service.
  */
-public class TestI18nService extends AbstractDisposable implements II18nService {
+public class I18nServiceForTests extends AbstractDisposable implements II18nService {
 
 	public static final String KEY__NAME = "tests.name";
 	public static final String KEY__AGE = "tests.age";

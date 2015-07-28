@@ -12,43 +12,43 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.Binding;
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.binding.IValueBindingEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableValueEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YDecimalDatatype;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YDecimalField;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IDecimalFieldEditpart;
-import org.eclipse.emf.ecp.ecview.util.emf.ModelUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.editpart.binding.IValueBindingEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.datatypes.YDecimalDatatype;
+import org.lunifera.ecview.core.extension.model.extension.YDecimalField;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IDecimalFieldEditpart;
+import org.lunifera.ecview.core.util.emf.ModelUtil;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractFieldWidgetPresenter;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
@@ -56,7 +56,6 @@ import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.UI;
 
@@ -140,14 +139,8 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-
-		DecimalField text = (DecimalField) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		DecimalField text = (DecimalField) presentation.getWidget();
+		assertNotNull(text);
 	}
 
 	/**
@@ -183,29 +176,19 @@ public class DecimalFieldPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
 
-		DecimalField text1 = (DecimalField) unwrapText(text1BaseComponentContainer);
-		DecimalField text2 = (DecimalField) unwrapText(text2BaseComponentContainer);
+		DecimalField text1 = (DecimalField) text1Presentation.getWidget();
+		DecimalField text2 = (DecimalField) text2Presentation.getWidget();
 
 		// assert css class
-		assertTrue(text1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(text2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(text1.getStyleName().contains("anyOtherClass"));
 		assertTrue(text2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", text1BaseComponentContainer.getId());
-		assertNull(text1.getId());
-		assertEquals(text2Editpart.getId(), text2BaseComponentContainer.getId());
-		assertNull(text2.getId());
+		assertEquals("ID_0815", text1.getId());
+		assertEquals(text2Editpart.getId(), text2.getId());
 	}
 
 	/**
@@ -239,12 +222,8 @@ public class DecimalFieldPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
-		DecimalField text1 = (DecimalField) unwrapText(text1BaseComponentContainer);
-		DecimalField text2 = (DecimalField) unwrapText(text2BaseComponentContainer);
+		DecimalField text1 = (DecimalField) text1Presentation.getWidget();
+		DecimalField text2 = (DecimalField) text2Presentation.getWidget();
 
 		// start tests
 		//
@@ -257,7 +236,7 @@ public class DecimalFieldPresentationTests {
 		assertFalse(text2.isReadOnly());
 
 		yText1.setVisible(false);
-		assertFalse(text1.getParent().isVisible());
+		assertFalse(text1.isVisible());
 
 		yText1.setEnabled(false);
 		assertFalse(text1.isEnabled());
@@ -299,9 +278,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yField1);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		DecimalField field1 = (DecimalField) unwrapText(text1BaseComponentContainer);
+		DecimalField field1 = (DecimalField) text1Presentation.getWidget();
 
 		// start tests
 		//
@@ -360,9 +337,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yField1);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		DecimalField field1 = (DecimalField) unwrapText(text1BaseComponentContainer);
+		DecimalField field1 = (DecimalField) text1Presentation.getWidget();
 
 		assertEquals("9.988,77", field1.getValue());
 		assertEquals(9988.77, yField1.getValue(), 0);
@@ -402,10 +377,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		DecimalField field = (DecimalField) unwrapText(baseComponentContainer);
-
+		DecimalField field = (DecimalField) presentation.getWidget();
 		yText.setValue(99);
 		assertEquals("99,00", field.getValue());
 		assertFalse(field.getStyleName().contains("lun-negative-value"));
@@ -443,17 +415,13 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yField1);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		DecimalField field1 = (DecimalField) unwrapText(text1BaseComponentContainer);
+		DecimalField field1 = (DecimalField) text1Presentation.getWidget();
 
 		IDecimalFieldEditpart text2Editpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yField2);
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
-		DecimalField field2 = (DecimalField) unwrapText(text2BaseComponentContainer);
+		DecimalField field2 = (DecimalField) text2Presentation.getWidget();
 
 		// start tests
 		//
@@ -534,17 +502,13 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yField1);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		DecimalField field1 = (DecimalField) unwrapText(text1BaseComponentContainer);
+		DecimalField field1 = (DecimalField) text1Presentation.getWidget();
 
 		IDecimalFieldEditpart text2Editpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yField2);
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		ComponentContainer text2BaseComponentContainer = (ComponentContainer) text2Presentation
-				.getWidget();
-		DecimalField field2 = (DecimalField) unwrapText(text2BaseComponentContainer);
+		DecimalField field2 = (DecimalField) text2Presentation.getWidget();
 
 		// start tests
 		//
@@ -616,11 +580,8 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		AbstractVaadinWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		DecimalField text = (DecimalField) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
+		DecimalField text = (DecimalField) presentation.getWidget();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -680,11 +641,8 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		AbstractVaadinWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		DecimalField text = (DecimalField) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
+		DecimalField text = (DecimalField) presentation.getWidget();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -800,11 +758,8 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		AbstractVaadinWidgetPresenter<Component> presentation = textEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		DecimalField text = (DecimalField) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
+		DecimalField text = (DecimalField) presentation.getWidget();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -866,7 +821,6 @@ public class DecimalFieldPresentationTests {
 		textEditpart = DelegatingEditPartManager.getInstance().getEditpart(
 				yText);
 		presentation = textEditpart.getPresentation();
-		baseComponentContainer = (ComponentContainer) presentation.getWidget();
 
 		beanBindingEditPart = DelegatingEditPartManager.getInstance()
 				.getEditpart(beanBinding);
@@ -926,9 +880,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yField);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		DecimalField field = (DecimalField) unwrapText(text1BaseComponentContainer);
+		DecimalField field = (DecimalField) text1Presentation.getWidget();
 
 		// start tests
 		yField.setDatatype(dt1);
@@ -964,9 +916,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yField);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		DecimalField field = (DecimalField) unwrapText(text1BaseComponentContainer);
+		DecimalField field = (DecimalField) text1Presentation.getWidget();
 
 		// start tests
 		yField.setDatatype(dt1);
@@ -1006,9 +956,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yField);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		ComponentContainer text1BaseComponentContainer = (ComponentContainer) text1Presentation
-				.getWidget();
-		DecimalField field = (DecimalField) unwrapText(text1BaseComponentContainer);
+		DecimalField field = (DecimalField) text1Presentation.getWidget();
 
 		// start tests
 		yField.setDatatype(dt1);
@@ -1044,13 +992,13 @@ public class DecimalFieldPresentationTests {
 		yGridlayout.getElements().add(yDecimal);
 
 		// set the i18n key
-		yDecimal.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yDecimal.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
@@ -1059,8 +1007,7 @@ public class DecimalFieldPresentationTests {
 		AbstractFieldWidgetPresenter<Component> presentation = decimalEditpart
 				.getPresentation();
 
-		DecimalField decimalField = (DecimalField) unwrapText(presentation
-				.getWidget());
+		DecimalField decimalField = (DecimalField) presentation.getWidget();
 		assertEquals("Alter", presentation.getWidget().getCaption());
 		assertEquals("123.456.789,1122", decimalField.getValue());
 
@@ -1087,8 +1034,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yDecimal);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		DecimalField decimalField = (DecimalField) unwrapText(presentation
-				.getWidget());
+		DecimalField decimalField = (DecimalField) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -1127,8 +1073,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yDecimal);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		DecimalField decimalField = (DecimalField) unwrapText(presentation
-				.getWidget());
+		DecimalField decimalField = (DecimalField) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -1140,7 +1085,7 @@ public class DecimalFieldPresentationTests {
 
 		// test binding
 		assertFalse(yDecimal.isVisible());
-		assertFalse(decimalField.getParent().isVisible());
+		assertFalse(decimalField.isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);
@@ -1167,8 +1112,7 @@ public class DecimalFieldPresentationTests {
 				.getInstance().getEditpart(yDecimal);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		DecimalField decimalField = (DecimalField) unwrapText(presentation
-				.getWidget());
+		DecimalField decimalField = (DecimalField) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -1187,21 +1131,6 @@ public class DecimalFieldPresentationTests {
 		assertTrue(yDecimal.isEnabled());
 		assertTrue(decimalField.isEnabled());
 		assertTrue(bean.isBoolValue());
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapText(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**

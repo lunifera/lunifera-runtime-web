@@ -12,41 +12,40 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YProgressBar;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IProgressBarEditpart;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.YProgressBar;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IProgressBarEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ProgressBarPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.UI;
@@ -130,14 +129,9 @@ public class ProgressBarPresentationTests {
 				.getInstance().getEditpart(yProgressBar);
 		IWidgetPresentation<Component> presentation = progressBarEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		ProgressBar text = (ProgressBar) unwrapText(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		ProgressBar text = (ProgressBar) presentation.getWidget();
+		assertNotNull(text);
 	}
 
 	/**
@@ -173,30 +167,20 @@ public class ProgressBarPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> progressBar2Presentation = progressBar2Editpart
 				.getPresentation();
-		ComponentContainer progressBar1BaseComponentContainer = (ComponentContainer) progressBar1Presentation
-				.getWidget();
-		ComponentContainer progressBar2BaseComponentContainer = (ComponentContainer) progressBar2Presentation
-				.getWidget();
 
-		ProgressBar progressBar1 = (ProgressBar) unwrapText(progressBar1BaseComponentContainer);
-		ProgressBar progressBar2 = (ProgressBar) unwrapText(progressBar2BaseComponentContainer);
+		ProgressBar progressBar1 = (ProgressBar) progressBar1Presentation
+				.getWidget();
+		ProgressBar progressBar2 = (ProgressBar) progressBar2Presentation
+				.getWidget();
 
 		// assert css class
-		assertTrue(progressBar1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(progressBar2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-
 		assertTrue(progressBar1.getStyleName().contains("anyOtherClass"));
 		assertTrue(progressBar2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", progressBar1BaseComponentContainer.getId());
-		assertNull(progressBar1.getId());
-		assertEquals(progressBar2Editpart.getId(),
-				progressBar2BaseComponentContainer.getId());
-		assertNull(progressBar2.getId());
+		assertEquals("ID_0815", progressBar1.getId());
+		assertEquals(progressBar2Editpart.getId(), progressBar2.getId());
 	}
 
 	/**
@@ -230,12 +214,10 @@ public class ProgressBarPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> progressBar2Presentation = progressBar2Editpart
 				.getPresentation();
-		ComponentContainer progressBar1BaseComponentContainer = (ComponentContainer) progressBar1Presentation
+		ProgressBar progressBar1 = (ProgressBar) progressBar1Presentation
 				.getWidget();
-		ComponentContainer progressBar2BaseComponentContainer = (ComponentContainer) progressBar2Presentation
+		ProgressBar progressBar2 = (ProgressBar) progressBar2Presentation
 				.getWidget();
-		ProgressBar progressBar1 = (ProgressBar) unwrapText(progressBar1BaseComponentContainer);
-		ProgressBar progressBar2 = (ProgressBar) unwrapText(progressBar2BaseComponentContainer);
 
 		// start tests
 		//
@@ -253,7 +235,7 @@ public class ProgressBarPresentationTests {
 		assertEquals(0.0f, progressBar2.getValue(), 0);
 
 		yProgressBar1.setVisible(false);
-		assertFalse(progressBar1.getParent().isVisible());
+		assertFalse(progressBar1.isVisible());
 
 		yProgressBar1.setEnabled(false);
 		assertFalse(progressBar1.isEnabled());
@@ -292,9 +274,8 @@ public class ProgressBarPresentationTests {
 				.getInstance().getEditpart(yProgressBar1);
 		IWidgetPresentation<Component> progressBar1Presentation = progressBar1Editpart
 				.getPresentation();
-		ComponentContainer progressBar1BaseComponentContainer = (ComponentContainer) progressBar1Presentation
+		ProgressBar progressBar1 = (ProgressBar) progressBar1Presentation
 				.getWidget();
-		ProgressBar progressBar1 = (ProgressBar) unwrapText(progressBar1BaseComponentContainer);
 
 		// start tests
 		//
@@ -367,13 +348,13 @@ public class ProgressBarPresentationTests {
 		yGridlayout.getElements().add(yProgressBar);
 
 		// set the i18n key
-		yProgressBar.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yProgressBar.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
@@ -405,9 +386,7 @@ public class ProgressBarPresentationTests {
 				.getEditpart(yProgressBar);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		ProgressBar progressBar1 = (ProgressBar) unwrapText(baseComponentContainer);
+		ProgressBar progressBar1 = (ProgressBar) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -447,9 +426,7 @@ public class ProgressBarPresentationTests {
 				.getEditpart(yProgressBar);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		ProgressBar progressBar1 = (ProgressBar) unwrapText(textBaseComponentContainer);
+		ProgressBar progressBar1 = (ProgressBar) presentation.getWidget();
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
 				.createBeanBindingEndpoint();
@@ -461,7 +438,7 @@ public class ProgressBarPresentationTests {
 
 		// test binding
 		assertFalse(yProgressBar.isVisible());
-		assertFalse(progressBar1.getParent().isVisible());
+		assertFalse(progressBar1.isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);
@@ -488,9 +465,7 @@ public class ProgressBarPresentationTests {
 				.getEditpart(yProgressBar);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-		ProgressBar progressBar1 = (ProgressBar) unwrapText(textBaseComponentContainer);
+		ProgressBar progressBar1 = (ProgressBar) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -510,21 +485,6 @@ public class ProgressBarPresentationTests {
 		assertTrue(yProgressBar.isEnabled());
 		assertTrue(progressBar1.isEnabled());
 		assertTrue(bean.isBoolValue());
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapText(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**

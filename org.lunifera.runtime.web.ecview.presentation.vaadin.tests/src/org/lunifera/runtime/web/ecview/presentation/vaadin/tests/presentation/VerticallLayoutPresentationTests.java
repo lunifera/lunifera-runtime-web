@@ -10,35 +10,34 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Iterator;
 import java.util.Locale;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ICheckboxEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IVerticalLayoutEditpart;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YCheckBox;
+import org.lunifera.ecview.core.extension.model.extension.YTextField;
+import org.lunifera.ecview.core.extension.model.extension.YVerticalLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ICheckboxEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ITextFieldEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IVerticalLayoutEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.CheckBoxPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.VerticalLayoutPresentation;
@@ -58,7 +57,7 @@ import com.vaadin.ui.VerticalLayout;
  * Tests the {@link VerticalLayoutPresentation}.
  */
 @SuppressWarnings("restriction")
-public class VerticallLayoutPresentationTests{
+public class VerticallLayoutPresentationTests {
 
 	private SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 	private CssLayout rootLayout = new CssLayout();
@@ -121,7 +120,7 @@ public class VerticallLayoutPresentationTests{
 		assertFalse(checkBoxPres.isRendered());
 
 		yView.setContent(yLayout);
-		
+
 		layoutEP = DelegatingEditPartManager.getInstance().getEditpart(yLayout);
 		checkBoxEP = DelegatingEditPartManager.getInstance().getEditpart(
 				yCheckBox);
@@ -160,8 +159,7 @@ public class VerticallLayoutPresentationTests{
 		CheckBoxPresentation checkBoxPres = checkBoxEP.getPresentation();
 		TextFieldPresentation textPres = textEP.getPresentation();
 
-		VerticalLayout layout = (VerticalLayout) unwrapLayout(layoutPres
-				.getWidget());
+		VerticalLayout layout = (VerticalLayout) layoutPres.getWidget();
 
 		assertTrue(layoutPres.isRendered());
 		assertTrue(checkBoxPres.isRendered());
@@ -225,14 +223,9 @@ public class VerticallLayoutPresentationTests{
 				.getInstance().getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = checkBoxEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		CheckBox checkBox = (CheckBox) unwrapLayout(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		CheckBox checkBox = (CheckBox) presentation.getWidget();
+		assertNotNull(checkBox);
 	}
 
 	/**
@@ -268,30 +261,18 @@ public class VerticallLayoutPresentationTests{
 				.getPresentation();
 		IWidgetPresentation<Component> checkBox2Presentation = checkBox2Editpart
 				.getPresentation();
-		ComponentContainer checkBox1BaseComponentContainer = (ComponentContainer) checkBox1Presentation
-				.getWidget();
-		ComponentContainer checkBox2BaseComponentContainer = (ComponentContainer) checkBox2Presentation
-				.getWidget();
 
-		CheckBox checkBox1 = (CheckBox) unwrapLayout(checkBox1BaseComponentContainer);
-		CheckBox checkBox2 = (CheckBox) unwrapLayout(checkBox2BaseComponentContainer);
+		CheckBox checkBox1 = (CheckBox) checkBox1Presentation.getWidget();
+		CheckBox checkBox2 = (CheckBox) checkBox2Presentation.getWidget();
 
 		// assert css class
-		assertTrue(checkBox1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(checkBox2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-
 		assertTrue(checkBox1.getStyleName().contains("anyOtherClass"));
 		assertTrue(checkBox2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", checkBox1BaseComponentContainer.getId());
-		assertNull(checkBox1.getId());
-		assertEquals(checkBox2Editpart.getId(),
-				checkBox2BaseComponentContainer.getId());
-		assertNull(checkBox2.getId());
+		assertEquals("ID_0815", checkBox1.getId());
+		assertEquals(checkBox2Editpart.getId(), checkBox2.getId());
 	}
 
 	/**
@@ -315,9 +296,7 @@ public class VerticallLayoutPresentationTests{
 
 		IVerticalLayoutEditpart layoutEP = DelegatingEditPartManager
 				.getInstance().getEditpart(yLayout);
-		IWidgetPresentation<Component> layoutPres = layoutEP.getPresentation();
-		VerticalLayout layout = (VerticalLayout) unwrapLayout(layoutPres
-				.getWidget());
+		VerticalLayout layout = (VerticalLayout) layoutEP.getPresentation().getWidget();
 
 		// start tests
 		//
@@ -326,7 +305,7 @@ public class VerticallLayoutPresentationTests{
 		assertFalse(layout.isReadOnly());
 
 		yLayout.setVisible(false);
-		assertFalse(layout.getParent().isVisible());
+		assertFalse(layout.isVisible());
 
 	}
 
@@ -367,7 +346,7 @@ public class VerticallLayoutPresentationTests{
 		assertFalse(layoutPres.isRendered());
 		assertFalse(textPres.isRendered());
 		assertFalse(checkBoxPres.isRendered());
-		
+
 		assertTrue(layoutPres.isDisposed());
 		assertTrue(textPres.isDisposed());
 		assertTrue(checkBoxPres.isDisposed());
@@ -391,8 +370,8 @@ public class VerticallLayoutPresentationTests{
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, null);
-		IViewEditpart viewEP = DelegatingEditPartManager
-				.getInstance().getEditpart(yView);
+		IViewEditpart viewEP = DelegatingEditPartManager.getInstance()
+				.getEditpart(yView);
 		IVerticalLayoutEditpart layoutEP = DelegatingEditPartManager
 				.getInstance().getEditpart(yLayout);
 		ICheckboxEditpart checkBoxEP = DelegatingEditPartManager.getInstance()
@@ -423,7 +402,7 @@ public class VerticallLayoutPresentationTests{
 		Assert.assertNotNull(yView.getContent());
 		assertEquals(2, yLayout.getElements().size());
 	}
-	
+
 	/**
 	 * Test the automatic disposal of bindings
 	 * 
@@ -445,7 +424,7 @@ public class VerticallLayoutPresentationTests{
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
-		assertEquals(1, presentation.getUIBindings().size());
+		assertEquals(3, presentation.getUIBindings().size());
 
 		presentation.dispose();
 		assertFalse(presentation.isRendered());
@@ -494,7 +473,7 @@ public class VerticallLayoutPresentationTests{
 		assertFalse(layoutPres.isDisposed());
 		assertFalse(textPres.isDisposed());
 		assertFalse(checkBoxPres.isDisposed());
-		
+
 		layoutEP.requestRender();
 		assertTrue(layoutPres.isRendered());
 		assertTrue(textPres.isRendered());
@@ -502,7 +481,7 @@ public class VerticallLayoutPresentationTests{
 		assertFalse(layoutPres.isDisposed());
 		assertFalse(textPres.isDisposed());
 		assertFalse(checkBoxPres.isDisposed());
-		
+
 		layoutEP.requestDispose();
 		assertFalse(layoutPres.isRendered());
 		assertFalse(textPres.isRendered());
@@ -549,8 +528,7 @@ public class VerticallLayoutPresentationTests{
 		assertTrue(textPres.isRendered());
 		assertFalse(checkBoxPres.isRendered());
 
-		VerticalLayout layout = (VerticalLayout) unwrapLayout(layoutPres
-				.getWidget());
+		VerticalLayout layout = (VerticalLayout) layoutPres.getWidget();
 		Assert.assertSame(textPres.getWidget(), layout.getComponent(0));
 		assertEquals(1, layout.getComponentCount());
 
@@ -560,21 +538,6 @@ public class VerticallLayoutPresentationTests{
 		assertTrue(checkBoxPres.isRendered());
 		assertEquals(2, layout.getComponentCount());
 
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapLayout(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**
@@ -618,7 +581,7 @@ public class VerticallLayoutPresentationTests{
 				.getEditpart(yCheckBox);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		CheckBox box = (CheckBox) unwrapLayout(presentation.getWidget());
+		CheckBox box = (CheckBox) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory

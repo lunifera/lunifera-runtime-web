@@ -12,6 +12,7 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -19,38 +20,37 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YDetailValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableCollectionEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableMultiSelectionEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YEmbeddableSelectionEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YSelectionType;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTable;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITableEditpart;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.ITextFieldEditpart;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.binding.YDetailValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableCollectionEndpoint;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableMultiSelectionEndpoint;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableSelectionEndpoint;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.YSelectionType;
+import org.lunifera.ecview.core.extension.model.extension.YTable;
+import org.lunifera.ecview.core.extension.model.extension.YTextField;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ITableEditpart;
+import org.lunifera.ecview.core.ui.core.editparts.extension.ITextFieldEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TablePresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfFoo;
@@ -66,7 +66,6 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -153,14 +152,9 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = tableEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
 
-		Table label = (Table) unwrapTable(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		Table label = (Table) presentation.getWidget();
+		assertNotNull(label);
 	}
 
 	/**
@@ -198,30 +192,19 @@ public class TablePresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> table2Presentation = table2Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		ComponentContainer table2BaseComponentContainer = (ComponentContainer) table2Presentation
-				.getWidget();
 
-		Table label1 = (Table) unwrapTable(table1BaseComponentContainer);
-		Table label2 = (Table) unwrapTable(table2BaseComponentContainer);
+		Table label1 = (Table) table1Presentation.getWidget();
+		Table label2 = (Table) table2Presentation.getWidget();
 
 		// assert css class
-		assertTrue(table1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(table2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
 
 		assertTrue(label1.getStyleName().contains("anyOtherClass"));
 		assertTrue(label2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", table1BaseComponentContainer.getId());
-		assertNull(label1.getId());
-		assertEquals(table2Editpart.getId(),
-				table2BaseComponentContainer.getId());
-		assertNull(label2.getId());
+		assertEquals("ID_0815", label1.getId());
+		assertEquals(table2Editpart.getId(), label2.getId());
 	}
 
 	/**
@@ -257,12 +240,8 @@ public class TablePresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> table2Presentation = label2Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		ComponentContainer table2BaseComponentContainer = (ComponentContainer) table2Presentation
-				.getWidget();
-		Table label1 = (Table) unwrapTable(table1BaseComponentContainer);
-		Table label2 = (Table) unwrapTable(table2BaseComponentContainer);
+		Table label1 = (Table) table1Presentation.getWidget();
+		Table label2 = (Table) table2Presentation.getWidget();
 
 		// start tests
 		//
@@ -275,7 +254,7 @@ public class TablePresentationTests {
 		assertFalse(label2.isReadOnly());
 
 		yTable1.setVisible(false);
-		assertFalse(label1.getParent().isVisible());
+		assertFalse(label1.isVisible());
 
 		yTable1.setEnabled(false);
 		assertFalse(label1.isEnabled());
@@ -308,9 +287,7 @@ public class TablePresentationTests {
 				.getEditpart(yTable1);
 		IWidgetPresentation<Component> table1Presentation = table1Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
 
 		// start tests
 		//
@@ -381,12 +358,8 @@ public class TablePresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> table2Presentation = table2Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		ComponentContainer table2BaseComponentContainer = (ComponentContainer) table2Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
-		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
+		Table table2 = (Table) table2Presentation.getWidget();
 
 		Container.Indexed indexedDs1 = (Indexed) table1
 				.getContainerDataSource();
@@ -496,9 +469,7 @@ public class TablePresentationTests {
 				.getEditpart(yTable1);
 		IWidgetPresentation<Component> table1Presentation = table1Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
 
 		// start tests
 		//
@@ -588,9 +559,7 @@ public class TablePresentationTests {
 				.getEditpart(yTable1);
 		IWidgetPresentation<Component> table1Presentation = table1Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
 
 		// start tests
 		//
@@ -644,12 +613,8 @@ public class TablePresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> table2Presentation = table2Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		ComponentContainer table2BaseComponentContainer = (ComponentContainer) table2Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
-		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
+		Table table2 = (Table) table2Presentation.getWidget();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -834,9 +799,7 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> tablePresentation = tableEditpart
 				.getPresentation();
-		ComponentContainer tableBaseComponentContainer = (ComponentContainer) tablePresentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(tableBaseComponentContainer);
+		Table table1 = (Table) tablePresentation.getWidget();
 
 		// start tests
 		//
@@ -856,8 +819,9 @@ public class TablePresentationTests {
 		yTable.getMultiSelection().add("Haha");
 		assertEquals("Huhu", yTable.getMultiSelection().get(0));
 		assertEquals("Haha", yTable.getMultiSelection().get(1));
-		assertEquals("Huhu", asList(table1.getValue()).get(0));
-		assertEquals("Haha", asList(table1.getValue()).get(1));
+		// no sort order defined by vaadin -> Set
+		assertTrue(asList(table1.getValue()).contains("Huhu"));
+		assertTrue(asList(table1.getValue()).contains("Haha"));
 		assertEquals(2, yTable.getMultiSelection().size());
 		assertEquals(2, asList(table1.getValue()).size());
 
@@ -887,8 +851,8 @@ public class TablePresentationTests {
 		table1.setValue(selection);
 		assertEquals("Huhu", yTable.getMultiSelection().get(0));
 		assertEquals("Haha", yTable.getMultiSelection().get(1));
-		assertEquals("Huhu", asList(table1.getValue()).get(0));
-		assertEquals("Haha", asList(table1.getValue()).get(1));
+		assertTrue(asList(table1.getValue()).contains("Huhu"));
+		assertTrue(asList(table1.getValue()).contains("Haha"));
 		assertEquals(2, yTable.getMultiSelection().size());
 		assertEquals(2, asList(table1.getValue()).size());
 
@@ -941,12 +905,8 @@ public class TablePresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> table2Presentation = table2Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		ComponentContainer table2BaseComponentContainer = (ComponentContainer) table2Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
-		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
+		Table table2 = (Table) table2Presentation.getWidget();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -1001,15 +961,15 @@ public class TablePresentationTests {
 
 		yTable2.getMultiSelection().add("Haha");
 		assertEquals("Huhu", yTable1.getMultiSelection().get(0));
-		assertEquals("Huhu", asList(table1.getValue()).get(0));
 		assertEquals("Haha", yTable1.getMultiSelection().get(1));
-		assertEquals("Haha", asList(table1.getValue()).get(1));
+		assertTrue(asList(table1.getValue()).contains("Huhu"));
+		assertTrue(asList(table1.getValue()).contains("Haha"));
 		assertEquals(2, yTable1.getMultiSelection().size());
 		assertEquals(2, asList(table1.getValue()).size());
 		assertEquals("Huhu", yTable2.getMultiSelection().get(0));
-		assertEquals("Huhu", asList(table2.getValue()).get(0));
 		assertEquals("Haha", yTable2.getMultiSelection().get(1));
-		assertEquals("Haha", asList(table2.getValue()).get(1));
+		assertTrue(asList(table2.getValue()).contains("Huhu"));
+		assertTrue(asList(table2.getValue()).contains("Haha"));
 		assertEquals(2, yTable2.getMultiSelection().size());
 		assertEquals(2, asList(table2.getValue()).size());
 
@@ -1046,15 +1006,15 @@ public class TablePresentationTests {
 		selection.add("Haha");
 		table2.setValue(selection);
 		assertEquals("Huhu", yTable1.getMultiSelection().get(0));
-		assertEquals("Huhu", asList(table1.getValue()).get(0));
 		assertEquals("Haha", yTable1.getMultiSelection().get(1));
-		assertEquals("Haha", asList(table1.getValue()).get(1));
+		assertTrue(asList(table1.getValue()).contains("Huhu"));
+		assertTrue(asList(table1.getValue()).contains("Haha"));
 		assertEquals(2, yTable1.getMultiSelection().size());
 		assertEquals(2, asList(table1.getValue()).size());
 		assertEquals("Huhu", yTable2.getMultiSelection().get(0));
-		assertEquals("Huhu", asList(table2.getValue()).get(0));
 		assertEquals("Haha", yTable2.getMultiSelection().get(1));
-		assertEquals("Haha", asList(table2.getValue()).get(1));
+		assertTrue(asList(table2.getValue()).contains("Huhu"));
+		assertTrue(asList(table2.getValue()).contains("Haha"));
 		assertEquals(2, yTable2.getMultiSelection().size());
 		assertEquals(2, asList(table2.getValue()).size());
 
@@ -1098,12 +1058,8 @@ public class TablePresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> table2Presentation = table2Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		ComponentContainer table2BaseComponentContainer = (ComponentContainer) table2Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
-		Table table2 = (Table) unwrapTable(table2BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
+		Table table2 = (Table) table2Presentation.getWidget();
 
 		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
 
@@ -1266,17 +1222,13 @@ public class TablePresentationTests {
 				.getEditpart(yTable1);
 		IWidgetPresentation<Component> table1Presentation = table1Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
 
 		ITextFieldEditpart textEditpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
-				.getWidget();
-		TextField text = (TextField) unwrapTable(textBaseComponentContainer);
+		TextField text = (TextField) textPresentation.getWidget();
 
 		// start tests
 		//
@@ -1409,17 +1361,13 @@ public class TablePresentationTests {
 				.getEditpart(yTable1);
 		IWidgetPresentation<Component> table1Presentation = table1Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
 
 		ITextFieldEditpart textEditpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
-				.getWidget();
-		TextField text = (TextField) unwrapTable(textBaseComponentContainer);
+		TextField text = (TextField) textPresentation.getWidget();
 
 		// start tests
 		//
@@ -1557,17 +1505,13 @@ public class TablePresentationTests {
 				.getEditpart(yTable1);
 		IWidgetPresentation<Component> table1Presentation = table1Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		Table table1 = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table1 = (Table) table1Presentation.getWidget();
 
 		ITextFieldEditpart textEditpart = DelegatingEditPartManager
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		ComponentContainer textBaseComponentContainer = (ComponentContainer) textPresentation
-				.getWidget();
-		TextField text = (TextField) unwrapTable(textBaseComponentContainer);
+		TextField text = (TextField) textPresentation.getWidget();
 
 		// start tests
 		//
@@ -1684,13 +1628,13 @@ public class TablePresentationTests {
 		yLayout.getElements().add(yTable);
 
 		// set the i18n key
-		yTable.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yTable.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
@@ -1723,7 +1667,7 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		Table table = (Table) unwrapTable(presentation.getWidget());
+		Table table = (Table) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -1763,7 +1707,7 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		Table table = (Table) unwrapTable(presentation.getWidget());
+		Table table = (Table) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -1775,7 +1719,7 @@ public class TablePresentationTests {
 
 		// test binding
 		assertFalse(yTable.isVisible());
-		assertFalse(table.getParent().isVisible());
+		assertFalse(table.isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);
@@ -1803,7 +1747,7 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		Table table = (Table) unwrapTable(presentation.getWidget());
+		Table table = (Table) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -1845,9 +1789,7 @@ public class TablePresentationTests {
 				.getEditpart(yTable);
 		IWidgetPresentation<Component> table1Presentation = table1Editpart
 				.getPresentation();
-		ComponentContainer table1BaseComponentContainer = (ComponentContainer) table1Presentation
-				.getWidget();
-		Table table = (Table) unwrapTable(table1BaseComponentContainer);
+		Table table = (Table) table1Presentation.getWidget();
 
 		// start tests
 		//
@@ -1863,21 +1805,6 @@ public class TablePresentationTests {
 		assertEquals("Blabla", itemCaption);
 		assertSame(ItemCaptionMode.ID, table.getItemCaptionMode());
 
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapTable(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**

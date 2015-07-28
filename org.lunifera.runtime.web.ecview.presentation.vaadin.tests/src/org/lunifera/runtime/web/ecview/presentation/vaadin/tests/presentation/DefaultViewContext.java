@@ -10,7 +10,7 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
-import org.eclipse.emf.ecp.ecview.common.context.ViewContext;
+import org.lunifera.ecview.core.common.context.ViewContext;
 
 public class DefaultViewContext extends ViewContext {
 

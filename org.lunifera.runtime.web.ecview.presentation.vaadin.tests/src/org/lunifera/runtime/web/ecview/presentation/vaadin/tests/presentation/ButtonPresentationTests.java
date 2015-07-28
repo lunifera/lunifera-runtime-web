@@ -12,34 +12,34 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.context.II18nService;
-import org.eclipse.emf.ecp.ecview.common.context.IViewContext;
-import org.eclipse.emf.ecp.ecview.common.editpart.DelegatingEditPartManager;
-import org.eclipse.emf.ecp.ecview.common.editpart.IElementEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IEmbeddableEditpart;
-import org.eclipse.emf.ecp.ecview.common.editpart.IViewEditpart;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBeanValueBindingEndpoint;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YElement;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.common.presentation.IWidgetPresentation;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YButton;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YGridLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
-import org.eclipse.emf.ecp.ecview.ui.core.editparts.extension.IButtonEditpart;
 import org.junit.Before;
 import org.junit.Test;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.context.II18nService;
+import org.lunifera.ecview.core.common.context.IViewContext;
+import org.lunifera.ecview.core.common.editpart.DelegatingEditPartManager;
+import org.lunifera.ecview.core.common.editpart.IElementEditpart;
+import org.lunifera.ecview.core.common.editpart.IEmbeddableEditpart;
+import org.lunifera.ecview.core.common.editpart.IViewEditpart;
+import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.common.presentation.IWidgetPresentation;
+import org.lunifera.ecview.core.extension.model.extension.YButton;
+import org.lunifera.ecview.core.extension.model.extension.YGridLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.ui.core.editparts.extension.IButtonEditpart;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
-import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.AbstractVaadinWidgetPresenter;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.ButtonPresentation;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
@@ -130,14 +130,8 @@ public class ButtonPresentationTests {
 				.getInstance().getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = buttonEditpart
 				.getPresentation();
-		ComponentContainer baseComponentContainer = (ComponentContainer) presentation
-				.getWidget();
-
-		Button button = (Button) unwrapButton(baseComponentContainer);
-		assertEquals(1, baseComponentContainer.getComponentCount());
-
-		// assert layout
-		CssLayout layout = (CssLayout) baseComponentContainer;
+		Button button = (Button) presentation.getWidget();
+		assertNotNull(button);
 	}
 
 	/**
@@ -173,30 +167,19 @@ public class ButtonPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> button2Presentation = button2Editpart
 				.getPresentation();
-		ComponentContainer button1BaseComponentContainer = (ComponentContainer) button1Presentation
-				.getWidget();
-		ComponentContainer button2BaseComponentContainer = (ComponentContainer) button2Presentation
-				.getWidget();
 
-		Button button1 = (Button) unwrapButton(button1BaseComponentContainer);
-		Button button2 = (Button) unwrapButton(button2BaseComponentContainer);
+		Button button1 = (Button) button1Presentation.getWidget();
+		Button button2 = (Button) button2Presentation.getWidget();
 
 		// assert css class
-		assertTrue(button1BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-		assertTrue(button2BaseComponentContainer.getStyleName().contains(
-				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL_BASE));
-
 		assertTrue(button1.getStyleName().contains("anyOtherClass"));
 		assertTrue(button2.getStyleName().contains(
 				AbstractVaadinWidgetPresenter.CSS_CLASS_CONTROL));
 
 		// assert css id
-		assertEquals("ID_0815", button1BaseComponentContainer.getId());
-		assertNull(button1.getId());
+		assertEquals("ID_0815", button1.getId());
 		assertEquals(button2Editpart.getId(),
-				button2BaseComponentContainer.getId());
-		assertNull(button2.getId());
+				button2.getId());
 	}
 
 	/**
@@ -230,12 +213,10 @@ public class ButtonPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> button2Presentation = button2Editpart
 				.getPresentation();
-		ComponentContainer button1BaseComponentContainer = (ComponentContainer) button1Presentation
+		Button button1 = (Button) button1Presentation
 				.getWidget();
-		ComponentContainer button2BaseComponentContainer = (ComponentContainer) button2Presentation
+		Button button2 = (Button) button2Presentation
 				.getWidget();
-		Button button1 = (Button) unwrapButton(button1BaseComponentContainer);
-		Button button2 = (Button) unwrapButton(button2BaseComponentContainer);
 
 		// start tests
 		//
@@ -248,7 +229,7 @@ public class ButtonPresentationTests {
 		assertFalse(button2.isReadOnly());
 
 		yButton1.setVisible(false);
-		assertFalse(button1.getParent().isVisible());
+		assertFalse(button1.isVisible());
 
 		yButton1.setEnabled(false);
 		assertFalse(button1.isEnabled());
@@ -278,28 +259,13 @@ public class ButtonPresentationTests {
 				.getPresentation();
 		assertTrue(presentation.isRendered());
 		assertFalse(presentation.isDisposed());
-		assertEquals(3, presentation.getUIBindings().size());
+		assertEquals(4, presentation.getUIBindings().size());
 
 		presentation.dispose();
 		assertFalse(presentation.isRendered());
 		assertTrue(presentation.isDisposed());
 		assertEquals(0, presentation.getUIBindings().size());
 
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapButton(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**
@@ -338,13 +304,13 @@ public class ButtonPresentationTests {
 		yGridlayout.getElements().add(yButton);
 
 		// set the i18n key
-		yButton.setLabelI18nKey(TestI18nService.KEY__AGE);
+		yButton.setLabelI18nKey(I18nServiceForTests.KEY__AGE);
 
 		// prepare the I18nService and pass it to the renderer
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		Map<String, Object> services = new HashMap<String, Object>();
 		parameter.put(IViewContext.PARAM_SERVICES, services);
-		services.put(II18nService.ID, new TestI18nService());
+		services.put(II18nService.ID, new I18nServiceForTests());
 
 		VaadinRenderer renderer = new VaadinRenderer();
 		IViewContext context = renderer.render(rootLayout, yView, parameter);
@@ -352,7 +318,7 @@ public class ButtonPresentationTests {
 				.getEditpart(yButton);
 		ButtonPresentation presentation = editpart.getPresentation();
 
-		Button button = (Button) unwrapButton(presentation.getWidget());
+		Button button = (Button) presentation.getWidget();
 		assertEquals("Alter", button.getCaption());
 
 		context.setLocale(Locale.ENGLISH);
@@ -377,7 +343,7 @@ public class ButtonPresentationTests {
 				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		Button button = (Button) unwrapButton(presentation.getWidget());
+		Button button = (Button) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -416,7 +382,7 @@ public class ButtonPresentationTests {
 				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		Button button = (Button) unwrapButton(presentation.getWidget());
+		Button button = (Button) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -428,7 +394,7 @@ public class ButtonPresentationTests {
 
 		// test binding
 		assertFalse(yButton.isVisible());
-		assertFalse(button.getParent().isVisible());
+		assertFalse(button.isVisible());
 		assertFalse(bean.isBoolValue());
 
 		bean.setBoolValue(true);
@@ -455,7 +421,7 @@ public class ButtonPresentationTests {
 				.getEditpart(yButton);
 		IWidgetPresentation<Component> presentation = editpart
 				.getPresentation();
-		Button button = (Button) unwrapButton(presentation.getWidget());
+		Button button = (Button) presentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
