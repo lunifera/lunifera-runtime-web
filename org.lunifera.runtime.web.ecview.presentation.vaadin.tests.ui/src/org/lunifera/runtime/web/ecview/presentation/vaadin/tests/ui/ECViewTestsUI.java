@@ -10,7 +10,6 @@
  */
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.ui;
 
-import org.eclipse.core.databinding.observable.Realm;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
 import com.vaadin.annotations.Theme;
@@ -18,7 +17,6 @@ import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;

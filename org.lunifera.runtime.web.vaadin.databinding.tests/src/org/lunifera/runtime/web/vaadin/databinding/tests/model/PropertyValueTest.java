@@ -14,6 +14,7 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.lunifera.runtime.web.vaadin.databinding.VaadinObservables;
 
@@ -22,9 +23,15 @@ import com.vaadin.ui.TextField;
 
 public class PropertyValueTest {
 
+	@Before
+	public void setup() {
+		DefaultUI.setCurrent(new DefaultUI());
+		VaadinObservables.getRealm(DefaultUI.getCurrent());
+	}
+	
 	@Test
 	public void test_propertyValue() {
-		VaadinObservables.getRealm(null);
+		VaadinObservables.getRealm(DefaultUI.getCurrent());
 		ObjectProperty<String> property = new ObjectProperty<String>("");
 
 		WritableValue value = new WritableValue();
@@ -40,7 +47,7 @@ public class PropertyValueTest {
 
 	@Test
 	public void test_propertyValue_updateFromTarget() {
-		VaadinObservables.getRealm(null);
+		VaadinObservables.getRealm(DefaultUI.getCurrent());
 		ObjectProperty<String> property = new ObjectProperty<String>("Huhu");
 
 		WritableValue value = new WritableValue();

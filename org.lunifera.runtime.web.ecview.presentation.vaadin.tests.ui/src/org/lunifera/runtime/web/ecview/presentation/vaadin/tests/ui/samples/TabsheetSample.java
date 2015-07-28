@@ -11,17 +11,14 @@
 
 package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.ui.samples;
 
-import org.eclipse.emf.ecp.ecview.common.context.ContextException;
-import org.eclipse.emf.ecp.ecview.common.model.binding.YBindingSet;
-import org.eclipse.emf.ecp.ecview.common.model.core.YView;
-import org.eclipse.emf.ecp.ecview.extension.model.datatypes.YTextDatatype;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YCheckBox;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YHorizontalLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTab;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTabSheet;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YTextField;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.YVerticalLayout;
-import org.eclipse.emf.ecp.ecview.extension.model.extension.util.SimpleExtensionModelFactory;
+import org.lunifera.ecview.core.common.context.ContextException;
+import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.core.YView;
+import org.lunifera.ecview.core.extension.model.extension.YTab;
+import org.lunifera.ecview.core.extension.model.extension.YTabSheet;
+import org.lunifera.ecview.core.extension.model.extension.YTextField;
+import org.lunifera.ecview.core.extension.model.extension.YVerticalLayout;
+import org.lunifera.ecview.core.extension.model.extension.util.SimpleExtensionModelFactory;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 
 import com.vaadin.ui.CssLayout;
@@ -71,13 +68,11 @@ public class TabsheetSample extends CustomComponent {
 		}
 	}
 	
-	
 	public void tab1(YTabSheet yTabsheet) {
 		YTab yTab1 = factory.createTab();
 		yTab1.setLabel("Tab 1");
 		
 		YVerticalLayout yTab1Content = factory.createVerticalLayout();
-		yTab1Content.setFillVertical(false);
 		yTab1.setEmbeddable(yTab1Content);
 		
 		YTextField yTextfield1 = factory.createTextField();
@@ -93,7 +88,6 @@ public class TabsheetSample extends CustomComponent {
 		yTab2.setLabel("Tab 2");
 		
 		YVerticalLayout yTab2Content = factory.createVerticalLayout();
-		yTab2Content.setFillVertical(false);
 		yTab2.setEmbeddable(yTab2Content);
 		
 		YTextField yTextfield2 = factory.createTextField();

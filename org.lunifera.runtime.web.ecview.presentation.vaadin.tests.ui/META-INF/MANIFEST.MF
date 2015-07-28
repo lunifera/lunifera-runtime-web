@@ -6,17 +6,22 @@ Bundle-Version: 0.9.1.qualifier
 Bundle-ClassPath: .
 Require-Bundle: com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",
  com.vaadin.server;bundle-version="[7.3.8,7.3.9)",
- org.eclipse.emf.ecp.ecview.common.model;bundle-version="0.0.1",
- org.eclipse.emf.ecp.ecview.extension.model;bundle-version="0.0.1",
  org.lunifera.runtime.web.vaadin.common;bundle-version="[0.9.0,0.10.0)",
  org.lunifera.runtime.web.ecview.presentation.vaadin;bundle-version="[0.9.0,0.10.0)",
  org.lunifera.runtime.web.vaadin.databinding;bundle-version="[0.9.0,0.10.0)",
  org.lunifera.runtime.web.vaadin.components,
- org.eclipse.emf.ecp.ecview.util.emf,
  org.eclipse.emf.databinding;bundle-version="1.3.0",
- org.eclipse.emf.ecp.ecview.databinding.emf;bundle-version="0.0.1",
  org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.lunifera.ecview.core.common;bundle-version="0.9.1",
+ org.lunifera.ecview.core.common.editparts.emf;bundle-version="0.9.1",
+ org.lunifera.ecview.core.common.model;bundle-version="0.9.1",
+ org.lunifera.ecview.core.databinding.beans;bundle-version="0.9.1",
+ org.lunifera.ecview.core.databinding.emf;bundle-version="0.9.1",
+ org.lunifera.ecview.core.extension.editparts.emf;bundle-version="0.9.1",
+ org.lunifera.ecview.core.ui.presentation.common;bundle-version="0.9.1",
+ org.lunifera.ecview.core.util.emf;bundle-version="0.9.1",
+ org.json;bundle-version="0.0.20080701"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %providerName
 Import-Package: javax.servlet;version="2.6.0",

@@ -23,7 +23,8 @@ public class ContainerItemSetTest {
 
 	@Before
 	public void setup() {
-		VaadinObservables.getRealm(null);
+		DefaultUI.setCurrent(new DefaultUI());
+		VaadinObservables.getRealm(DefaultUI.getCurrent());
 	}
 
 	@Test
