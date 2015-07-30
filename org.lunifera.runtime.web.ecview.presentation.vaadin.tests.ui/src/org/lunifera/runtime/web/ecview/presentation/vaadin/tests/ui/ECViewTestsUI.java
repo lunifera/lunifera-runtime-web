@@ -42,7 +42,8 @@ public class ECViewTestsUI extends UI {
 		getPage().addUriFragmentChangedListener(
 				new Page.UriFragmentChangedListener() {
 					@Override
-					public void uriFragmentChanged(final UriFragmentChangedEvent event) {
+					public void uriFragmentChanged(
+							final UriFragmentChangedEvent event) {
 						getUI().accessSynchronously(new Runnable() {
 							@Override
 							public void run() {
@@ -53,6 +54,9 @@ public class ECViewTestsUI extends UI {
 						});
 					}
 				});
+
+		String fragment = request.getPathInfo().replace("/", "");
+		handleFragment(SAMPLE_PACKAGE + "." + fragment);
 	}
 
 	protected void handleFragment(String className) {

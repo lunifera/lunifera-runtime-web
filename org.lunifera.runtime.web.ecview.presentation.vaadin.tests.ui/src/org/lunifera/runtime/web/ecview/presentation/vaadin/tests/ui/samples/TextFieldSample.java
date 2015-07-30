@@ -66,7 +66,7 @@ public class TextFieldSample extends CustomComponent {
 			layout.addComponent(new Label(e.toString()));
 		}
 	}
-	
+
 	public void row3() {
 		// test row 1
 		YHorizontalLayout row1 = factory.createHorizontalLayout();
@@ -78,10 +78,10 @@ public class TextFieldSample extends CustomComponent {
 		row1.addElement(yCheckbox);
 		row1.addElement(yText);
 
-//		yText.setEditable(value);
-		
+		// yText.setEditable(value);
+
 		yBindingSet.addBinding(yText.createValueEndpoint(),
-				yText.getValueBindingEndpoint());
+				yText.createValueEndpoint());
 	}
 
 	public void row2() {
@@ -91,6 +91,7 @@ public class TextFieldSample extends CustomComponent {
 
 		YTextField yText2_1 = factory.createTextField();
 		yText2_1.setLabel("minLength 3");
+		yText2_1.setCssID("minLength");
 		row2.addElement(yText2_1);
 		YTextDatatype yDt2_2 = factory.createTextDatatype();
 		yDt2_2.setMinLength(3);
@@ -98,6 +99,7 @@ public class TextFieldSample extends CustomComponent {
 
 		YTextField yText2_2 = factory.createTextField();
 		yText2_2.setLabel("maxLength 10:");
+		yText2_2.setCssID("maxLength");
 		row2.addElement(yText2_2);
 		YTextDatatype yDt2_1 = factory.createTextDatatype();
 		yDt2_1.setMaxLength(10);
@@ -105,6 +107,7 @@ public class TextFieldSample extends CustomComponent {
 
 		YTextField yText2_3 = factory.createTextField();
 		yText2_3.setLabel("regexp: \\d+");
+		yText2_3.setCssID("regexp");
 		row2.addElement(yText2_3);
 		YTextDatatype yDt2_3 = factory.createTextDatatype();
 		yDt2_3.setRegExpression("\\d+");
@@ -116,13 +119,15 @@ public class TextFieldSample extends CustomComponent {
 		YHorizontalLayout row1 = factory.createHorizontalLayout();
 		yLayout.addElement(row1);
 		YTextField yText1_1 = factory.createTextField();
+		yText1_1.setCssID("field1");
 		yText1_1.setLabel("A (binds to B):");
 		YTextField yText1_2 = factory.createTextField();
 		yText1_2.setLabel("B (binds to A):");
+		yText1_2.setCssID("field2");
 		row1.addElement(yText1_1);
 		row1.addElement(yText1_2);
 
 		yBindingSet.addBinding(yText1_1.createValueEndpoint(),
-				yText1_2.getValueBindingEndpoint());
+				yText1_2.createValueEndpoint());
 	}
 }

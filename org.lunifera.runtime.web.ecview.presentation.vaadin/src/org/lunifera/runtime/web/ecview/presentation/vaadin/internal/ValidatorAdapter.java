@@ -14,10 +14,9 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.internal;
 import java.util.Locale;
 
 import org.lunifera.ecview.core.common.context.II18nService;
-import org.lunifera.ecview.core.common.validation.IStatus;
-import org.lunifera.ecview.core.common.validation.IStatus.Severity;
 import org.lunifera.ecview.core.common.validation.IValidator;
-import org.lunifera.ecview.core.common.validation.Status;
+import org.lunifera.runtime.common.validation.IStatus;
+import org.lunifera.runtime.common.validation.Status;
 
 import com.vaadin.data.validator.AbstractValidator;
 
@@ -56,12 +55,12 @@ public class ValidatorAdapter extends AbstractValidator implements IValidator {
 	protected boolean isValidType(Object value) {
 		boolean result = super.isValidType(value);
 		if (!result) {
-			status = Status.createStatus("", getClass(), Severity.ERROR,
-					"Required type {0}");
+			status = Status.createStatus("", getClass(),
+					IStatus.Severity.ERROR, "Required type {0}");
 		} else {
 			status = null;
 		}
-		
+
 		return result;
 	}
 

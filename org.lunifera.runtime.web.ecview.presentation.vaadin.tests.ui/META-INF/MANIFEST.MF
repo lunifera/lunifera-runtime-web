@@ -21,7 +21,8 @@ Require-Bundle: com.vaadin.shared;bundle-version="[7.3.8,7.3.9)",
  org.lunifera.ecview.core.extension.editparts.emf;bundle-version="0.9.1",
  org.lunifera.ecview.core.ui.presentation.common;bundle-version="0.9.1",
  org.lunifera.ecview.core.util.emf;bundle-version="0.9.1",
- org.json;bundle-version="0.0.20080701"
+ org.json;bundle-version="0.0.20080701",
+ com.vaadin.client-compiled;bundle-version="7.3.8"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %providerName
 Import-Package: javax.servlet;version="2.6.0",
