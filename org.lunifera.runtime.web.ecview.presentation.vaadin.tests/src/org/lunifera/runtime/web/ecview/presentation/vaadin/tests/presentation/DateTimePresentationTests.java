@@ -13,7 +13,6 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
@@ -112,7 +111,6 @@ public class DateTimePresentationTests {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_InternalStructure() throws Exception {

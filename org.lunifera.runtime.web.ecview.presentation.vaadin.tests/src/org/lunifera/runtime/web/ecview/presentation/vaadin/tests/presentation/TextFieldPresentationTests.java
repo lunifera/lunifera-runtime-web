@@ -123,7 +123,6 @@ public class TextFieldPresentationTests {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_InternalStructure() throws Exception {
@@ -788,7 +787,7 @@ public class TextFieldPresentationTests {
 		// ensure field is bound to bean2
 		assertEquals("Lunifera", bean2.getName());
 		assertEquals("Lunifera", text.getValue());
-		
+
 		text.setValue("Huhu");
 		assertEquals("Lunifera", bean.getName());
 		assertEquals("Huhu", bean2.getName());

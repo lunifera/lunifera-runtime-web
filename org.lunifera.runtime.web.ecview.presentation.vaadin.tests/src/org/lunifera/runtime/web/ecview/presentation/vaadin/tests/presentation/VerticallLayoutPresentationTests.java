@@ -204,7 +204,6 @@ public class VerticallLayoutPresentationTests {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_InternalStructure() throws Exception {
@@ -296,7 +295,8 @@ public class VerticallLayoutPresentationTests {
 
 		IVerticalLayoutEditpart layoutEP = DelegatingEditPartManager
 				.getInstance().getEditpart(yLayout);
-		VerticalLayout layout = (VerticalLayout) layoutEP.getPresentation().getWidget();
+		VerticalLayout layout = (VerticalLayout) layoutEP.getPresentation()
+				.getWidget();
 
 		// start tests
 		//

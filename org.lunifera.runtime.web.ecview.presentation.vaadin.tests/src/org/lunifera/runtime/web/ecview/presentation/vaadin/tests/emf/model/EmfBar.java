@@ -5,15 +5,18 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Emf Bar</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '
+ * <em><b>Emf Bar</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar#getName <em>Name</em>}</li>
- *   <li>{@link org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar#getMyfoo <em>Myfoo</em>}</li>
+ * <li>
+ * {@link org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar#getName
+ * <em>Name</em>}</li>
+ * <li>
+ * {@link org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar#getMyfoo
+ * <em>Myfoo</em>}</li>
  * </ul>
  * </p>
  *
@@ -23,13 +26,14 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface EmfBar extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really
+	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.ModelPackage#getEmfBar_Name()
@@ -39,10 +43,12 @@ public interface EmfBar extends EObject {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * Sets the value of the '
+	 * {@link org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar#getName
+	 * <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
@@ -56,6 +62,7 @@ public interface EmfBar extends EObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Myfoo</em>' containment reference.
 	 * @see #setMyfoo(EmfFoo)
 	 * @see org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.ModelPackage#getEmfBar_Myfoo()
@@ -65,10 +72,13 @@ public interface EmfBar extends EObject {
 	EmfFoo getMyfoo();
 
 	/**
-	 * Sets the value of the '{@link org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar#getMyfoo <em>Myfoo</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Myfoo</em>' containment reference.
+	 * Sets the value of the '
+	 * {@link org.lunifera.runtime.web.ecview.presentation.vaadin.tests.emf.model.EmfBar#getMyfoo
+	 * <em>Myfoo</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Myfoo</em>' containment reference.
 	 * @see #getMyfoo()
 	 * @generated
 	 */

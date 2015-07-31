@@ -13,7 +13,6 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -47,7 +46,6 @@ import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.UI;
 
@@ -111,7 +109,6 @@ public class ButtonPresentationTests {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_InternalStructure() throws Exception {
@@ -178,8 +175,7 @@ public class ButtonPresentationTests {
 
 		// assert css id
 		assertEquals("ID_0815", button1.getId());
-		assertEquals(button2Editpart.getId(),
-				button2.getId());
+		assertEquals(button2Editpart.getId(), button2.getId());
 	}
 
 	/**
@@ -213,10 +209,8 @@ public class ButtonPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> button2Presentation = button2Editpart
 				.getPresentation();
-		Button button1 = (Button) button1Presentation
-				.getWidget();
-		Button button2 = (Button) button2Presentation
-				.getWidget();
+		Button button1 = (Button) button1Presentation.getWidget();
+		Button button2 = (Button) button2Presentation.getWidget();
 
 		// start tests
 		//

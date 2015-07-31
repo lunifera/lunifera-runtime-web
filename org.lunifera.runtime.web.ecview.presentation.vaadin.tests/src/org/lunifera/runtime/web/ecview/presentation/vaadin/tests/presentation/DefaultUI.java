@@ -28,8 +28,9 @@ public class DefaultUI extends UI {
 
 	public DefaultUI() {
 		try {
-			VaadinSession session = new CustomVaadinSession(new VaadinServletService(
-					null, new CustomDeploymentConfiguration()));
+			VaadinSession session = new CustomVaadinSession(
+					new VaadinServletService(null,
+							new CustomDeploymentConfiguration()));
 			setSession(session);
 
 			VaadinSession.setCurrent(session);
@@ -47,7 +48,7 @@ public class DefaultUI extends UI {
 	private class CustomVaadinSession extends VaadinSession {
 
 		Lock lock = new ReentrantLock();
-		
+
 		public CustomVaadinSession(VaadinService service) {
 			super(service);
 		}
@@ -56,10 +57,9 @@ public class DefaultUI extends UI {
 		public Lock getLockInstance() {
 			return lock;
 		}
-		
+
 	}
-	
-	
+
 	private static class CustomDeploymentConfiguration implements
 			DeploymentConfiguration {
 
@@ -109,6 +109,7 @@ public class DefaultUI extends UI {
 			return null;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public LegacyProperyToStringMode getLegacyPropertyToStringMode() {
 			// TODO Auto-generated method stub

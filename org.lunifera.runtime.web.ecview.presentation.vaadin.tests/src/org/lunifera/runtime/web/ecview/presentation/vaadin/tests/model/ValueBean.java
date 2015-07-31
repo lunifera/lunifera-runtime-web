@@ -41,7 +41,7 @@ public class ValueBean extends AbstractBean {
 		super();
 		this.doubleValue = value;
 	}
-	
+
 	public ValueBean(float value) {
 		super();
 		this.floatValue = value;
@@ -105,7 +105,7 @@ public class ValueBean extends AbstractBean {
 		firePropertyChanged("doubleValue", this.doubleValue,
 				this.doubleValue = doubleValue);
 	}
-	
+
 	public float getFloatValue() {
 		return floatValue;
 	}
