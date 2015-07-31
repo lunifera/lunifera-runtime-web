@@ -34,6 +34,11 @@ import com.vaadin.ui.Label;
 
 public class DatetimeFieldSample extends CustomComponent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private final SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 
 	private CssLayout layout;
