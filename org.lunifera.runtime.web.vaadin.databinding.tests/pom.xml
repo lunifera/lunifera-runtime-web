@@ -22,7 +22,7 @@
 					</includes>
 					<failIfNoTests>false</failIfNoTests>
 					<showEclipseLog>true</showEclipseLog>
-					<argLine>${ui.test.vmargs} ${argLine}</argLine>
+<!-- 					<argLine>${ui.test.vmargs} ${argLine}</argLine> -->
 					<bundleStartLevel>
 					
 						<!--  WS -->
