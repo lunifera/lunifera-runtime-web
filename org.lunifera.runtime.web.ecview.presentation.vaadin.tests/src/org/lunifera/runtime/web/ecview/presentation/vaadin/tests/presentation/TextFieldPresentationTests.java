@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lunifera.ecview.core.common.binding.IECViewBindingManager;
 import org.lunifera.ecview.core.common.context.ContextException;
 import org.lunifera.ecview.core.common.context.II18nService;
 import org.lunifera.ecview.core.common.context.IViewContext;
@@ -740,13 +739,13 @@ public class TextFieldPresentationTests {
 
 	/**
 	 * If a textfield is bound to a beanslot and a new bean with the same
-	 * hashcode is set to the slot, then the databinding is not refreshed and
-	 * the old bean instance is still bound.
+	 * hashcode and values is set to the slot, then the databinding is not
+	 * refreshed and the old bean instance is still bound.
 	 * 
 	 * @throws ContextException
 	 */
 	@Test
-	public void fix_MP81() throws ContextException {
+	public void fix_MP76() throws ContextException {
 		YView yView = factory.createView();
 		YBeanSlot yBeanSlot = factory.createBeanSlot();
 		yBeanSlot.setName("main");
@@ -778,19 +777,22 @@ public class TextFieldPresentationTests {
 		bean.setName("Lunifera");
 		context.setBean("main", bean);
 
+		// ensure field is bound to bean
 		assertEquals("Lunifera", text.getValue());
 		assertEquals("Lunifera", bean.getName());
 
 		BarHashById bean2 = new BarHashById("112233");
-		bean2.setName("AnotherName");
+		bean2.setName("Lunifera");
 		context.setBean("main", bean2);
 
-//		IECViewBindingManager bindingManager = context
-//				.getService(IECViewBindingManager.class.getName());
-//		bindingManager.updateTarget();
-
-		assertEquals("AnotherName", bean2.getName());
-		assertEquals("AnotherName", text.getValue());
+		// ensure field is bound to bean2
+		assertEquals("Lunifera", bean2.getName());
+		assertEquals("Lunifera", text.getValue());
+		
+		text.setValue("Huhu");
+		assertEquals("Lunifera", bean.getName());
+		assertEquals("Huhu", bean2.getName());
+		assertEquals("Huhu", text.getValue());
 
 	}
 }
