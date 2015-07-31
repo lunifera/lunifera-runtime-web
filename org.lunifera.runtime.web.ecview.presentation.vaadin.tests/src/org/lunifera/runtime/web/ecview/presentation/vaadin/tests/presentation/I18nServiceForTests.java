@@ -8,7 +8,8 @@ import org.lunifera.runtime.common.dispose.AbstractDisposable;
 /**
  * A test I18n service.
  */
-public class I18nServiceForTests extends AbstractDisposable implements II18nService {
+public class I18nServiceForTests extends AbstractDisposable implements
+		II18nService {
 
 	public static final String KEY__NAME = "tests.name";
 	public static final String KEY__AGE = "tests.age";

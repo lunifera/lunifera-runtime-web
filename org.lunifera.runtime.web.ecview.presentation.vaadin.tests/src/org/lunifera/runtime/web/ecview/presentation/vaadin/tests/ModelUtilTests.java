@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -45,7 +44,6 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation.De
 import org.lunifera.runtime.web.vaadin.components.fields.DecimalField;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.UI;
 
@@ -359,21 +357,6 @@ public class ModelUtilTests {
 
 		assertEquals("view://bean/slotNo1#item.group.name",
 				ModelUtil.getURI(yEndpoint).toString());
-	}
-
-	/**
-	 * Unwraps the component from its parent composite.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Component unwrapText(Component component) {
-		if (component instanceof ComponentContainer) {
-			ComponentContainer composite = (ComponentContainer) component;
-			Iterator<Component> iter = composite.iterator();
-			return iter.next();
-		}
-		return component;
 	}
 
 	/**

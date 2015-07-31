@@ -13,11 +13,9 @@ package org.lunifera.runtime.web.ecview.presentation.vaadin.tests.presentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,7 +32,11 @@ import org.lunifera.ecview.core.common.editpart.IViewEditpart;
 import org.lunifera.ecview.core.common.editpart.IViewSetEditpart;
 import org.lunifera.ecview.core.common.model.binding.YBeanValueBindingEndpoint;
 import org.lunifera.ecview.core.common.model.binding.YBindingSet;
+import org.lunifera.ecview.core.common.model.binding.YBindingUpdateStrategy;
+import org.lunifera.ecview.core.common.model.core.YBeanSlot;
+import org.lunifera.ecview.core.common.model.core.YBeanSlotValueBindingEndpoint;
 import org.lunifera.ecview.core.common.model.core.YElement;
+import org.lunifera.ecview.core.common.model.core.YEmbeddableValueEndpoint;
 import org.lunifera.ecview.core.common.model.core.YView;
 import org.lunifera.ecview.core.common.model.core.YViewSet;
 import org.lunifera.ecview.core.common.model.validation.ValidationFactory;
@@ -51,12 +53,12 @@ import org.lunifera.runtime.web.ecview.presentation.vaadin.VaadinRenderer;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractFieldWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.common.AbstractVaadinWidgetPresenter;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.internal.TextFieldPresentation;
+import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.BarHashById;
 import org.lunifera.runtime.web.ecview.presentation.vaadin.tests.model.ValueBean;
 import org.osgi.framework.BundleException;
 import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -121,7 +123,6 @@ public class TextFieldPresentationTests {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_InternalStructure() throws Exception {
@@ -180,10 +181,8 @@ public class TextFieldPresentationTests {
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
 
-		TextField text1 = (TextField) text1Presentation
-				.getWidget();
-		TextField text2 = (TextField) text2Presentation
-				.getWidget();
+		TextField text1 = (TextField) text1Presentation.getWidget();
+		TextField text2 = (TextField) text2Presentation.getWidget();
 
 		// assert css class
 
@@ -227,10 +226,10 @@ public class TextFieldPresentationTests {
 				.getPresentation();
 		IWidgetPresentation<Component> text2Presentation = text2Editpart
 				.getPresentation();
-		TextField text1 = (TextField) text1Presentation
-				.getWidget();;
-		TextField text2 = (TextField) text2Presentation
-				.getWidget();;
+		TextField text1 = (TextField) text1Presentation.getWidget();
+		;
+		TextField text2 = (TextField) text2Presentation.getWidget();
+		;
 
 		// start tests
 		//
@@ -285,8 +284,7 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		TextField text = (TextField) textPresentation
-				.getWidget();
+		TextField text = (TextField) textPresentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -325,8 +323,7 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		TextField text = (TextField) textPresentation
-				.getWidget();
+		TextField text = (TextField) textPresentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -365,8 +362,7 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText);
 		IWidgetPresentation<Component> textPresentation = textEditpart
 				.getPresentation();
-		TextField text = (TextField) textPresentation
-				.getWidget();
+		TextField text = (TextField) textPresentation.getWidget();
 
 		ValueBean bean = new ValueBean(false);
 		YBeanValueBindingEndpoint yBeanBinding = factory
@@ -407,8 +403,7 @@ public class TextFieldPresentationTests {
 				.getInstance().getEditpart(yText1);
 		IWidgetPresentation<Component> text1Presentation = text1Editpart
 				.getPresentation();
-		TextField text1 = (TextField) text1Presentation
-				.getWidget();
+		TextField text1 = (TextField) text1Presentation.getWidget();
 
 		// start tests
 		//
@@ -739,5 +734,64 @@ public class TextFieldPresentationTests {
 
 		assertEquals(0, yText.getInternalValidators().size());
 		assertEquals(0, presentation.getValidators().size());
+	}
+
+	/**
+	 * If a textfield is bound to a beanslot and a new bean with the same
+	 * hashcode and values is set to the slot, then the databinding is not
+	 * refreshed and the old bean instance is still bound.
+	 * 
+	 * @throws ContextException
+	 */
+	@Test
+	public void fix_MP76() throws ContextException {
+		YView yView = factory.createView();
+		YBeanSlot yBeanSlot = factory.createBeanSlot();
+		yBeanSlot.setName("main");
+		yBeanSlot.setValueType(BarHashById.class);
+		yView.getBeanSlots().add(yBeanSlot);
+		YGridLayout yLayout = factory.createGridLayout();
+		yView.setContent(yLayout);
+		YTextField yText = factory.createTextField();
+		yLayout.getElements().add(yText);
+
+		YBeanSlotValueBindingEndpoint slotEP = yBeanSlot
+				.createBindingEndpoint("name");
+		YEmbeddableValueEndpoint textEP = yText.createValueEndpoint();
+
+		YBindingSet yBindingSet = yView.getOrCreateBindingSet();
+		yBindingSet.addBinding(textEP, slotEP, YBindingUpdateStrategy.UPDATE,
+				YBindingUpdateStrategy.UPDATE);
+
+		VaadinRenderer renderer = new VaadinRenderer();
+		IViewContext context = renderer.render(rootLayout, yView, null);
+
+		ITextFieldEditpart textEditpart = DelegatingEditPartManager
+				.getInstance().getEditpart(yText);
+		IWidgetPresentation<Component> textPresentation = textEditpart
+				.getPresentation();
+		TextField text = (TextField) textPresentation.getWidget();
+
+		BarHashById bean = new BarHashById("112233");
+		bean.setName("Lunifera");
+		context.setBean("main", bean);
+
+		// ensure field is bound to bean
+		assertEquals("Lunifera", text.getValue());
+		assertEquals("Lunifera", bean.getName());
+
+		BarHashById bean2 = new BarHashById("112233");
+		bean2.setName("Lunifera");
+		context.setBean("main", bean2);
+
+		// ensure field is bound to bean2
+		assertEquals("Lunifera", bean2.getName());
+		assertEquals("Lunifera", text.getValue());
+
+		text.setValue("Huhu");
+		assertEquals("Lunifera", bean.getName());
+		assertEquals("Huhu", bean2.getName());
+		assertEquals("Huhu", text.getValue());
+
 	}
 }

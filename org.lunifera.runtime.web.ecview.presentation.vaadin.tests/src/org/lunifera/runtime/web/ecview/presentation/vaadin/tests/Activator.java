@@ -41,8 +41,8 @@ public class Activator implements BundleActivator {
 
 		BundleAssert.setDefaultBundleContext(context);
 		ServiceAssert.setDefaultBundleContext(context);
-		
-//		BundleHelper.ensureSetup();
+
+		// BundleHelper.ensureSetup();
 	}
 
 	/**

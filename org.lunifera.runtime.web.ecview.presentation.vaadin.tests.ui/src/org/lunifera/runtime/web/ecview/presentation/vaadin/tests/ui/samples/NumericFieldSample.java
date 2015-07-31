@@ -27,6 +27,11 @@ import com.vaadin.ui.Label;
 
 public class NumericFieldSample extends CustomComponent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private final SimpleExtensionModelFactory factory = new SimpleExtensionModelFactory();
 
 	private CssLayout layout;

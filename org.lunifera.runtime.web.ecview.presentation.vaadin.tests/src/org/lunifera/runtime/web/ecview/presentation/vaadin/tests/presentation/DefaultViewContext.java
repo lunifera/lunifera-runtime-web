@@ -14,7 +14,7 @@ import org.lunifera.ecview.core.common.context.ViewContext;
 
 public class DefaultViewContext extends ViewContext {
 
-	public DefaultViewContext(){
-		
+	public DefaultViewContext() {
+
 	}
 }

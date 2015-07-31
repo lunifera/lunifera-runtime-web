@@ -47,7 +47,6 @@ import org.osgi.service.cm.ConfigurationException;
 
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.UI;
 
@@ -111,7 +110,6 @@ public class BrowserPresentationTests {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	// BEGIN SUPRESS CATCH EXCEPTION
 	public void test_InternalStructure() throws Exception {
