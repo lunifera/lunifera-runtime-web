@@ -23,7 +23,6 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.HorizontalLayout;
@@ -79,6 +78,9 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 
 		if (itemCaptionPropertyId != null) {
 			comboBox.setItemCaptionPropertyId(itemCaptionPropertyId);
+
+			container.sort(new Object[] { itemCaptionPropertyId },
+					new boolean[] { true });
 		}
 
 		if (itemIconPropertyId != null) {
@@ -184,7 +186,7 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 		}
 	}
 
-	private static class CustomComboBox extends ComboBox {
+	private static class CustomComboBox extends LazyLoadingComboBox {
 		private Object itemIconPropertyId;
 
 		@Override
@@ -222,6 +224,18 @@ public class BeanReferenceField<BEAN> extends CustomField<BEAN> {
 				}
 			}
 			return null;
+		}
+
+		@Override
+		public void setValue(Object newValue)
+				throws com.vaadin.data.Property.ReadOnlyException {
+			super.setValue(newValue);
+		}
+
+		@Override
+		protected void setValue(Object newValue, boolean repaintIsNotNeeded)
+				throws com.vaadin.data.Property.ReadOnlyException {
+			super.setValue(newValue, repaintIsNotNeeded);
 		}
 	}
 }
